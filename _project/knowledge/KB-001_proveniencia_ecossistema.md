@@ -78,9 +78,23 @@ Conhecimento de referência. Nenhuma fonte externa é plano executável nem auto
 | `docs/architecture/decisions/0002-benchmarks-diarios-sgs.md` | `a15237dd1fd08632c1d7555f8a1dddd0c87b626f` |
 | `docs/architecture/decisions/0003-retorno-modified-dietz.md` | `b7cf8dca628b8f70b5f4e756693e7803780c6989` |
 
-### Fonte tipográfica IBM Plex Sans
+### Fonte tipográfica IBM Plex Sans 1.1.0
 
-Origem, versão, URL e licença dos arquivos `woff2` são registradas aqui pela PR da issue B, no momento do download.
+- Função: única família tipográfica do produto (`design-system/DESIGN.md`, seção 3), servida localmente.
+- Limite: arquivos de terceiros sob a SIL Open Font License 1.1; o nome reservado "Plex" não pode ser usado em versões modificadas. Os arquivos são versionados sem modificação e sem subset.
+- Release oficial: <https://github.com/IBM/plex/releases/tag/%40ibm%2Fplex-sans%401.1.0> (tag `@ibm/plex-sans@1.1.0`, publicada em 2024-11-13).
+- Pacote baixado em 2026-10-12: `ibm-plex-sans.zip`, 9.921.777 bytes, SHA-256 `fb365d910566e6d199cc2c15579a7dd9a267128e18431a394ed81f1970c69200`.
+- Arquivos versionados, copiados de `ibm-plex-sans/fonts/complete/woff2/`:
+
+| Arquivo em `design-system/assets/fonts/` | SHA-256 |
+| :-- | :-- |
+| `IBMPlexSans-Regular.woff2` | `ba711a3085ff9f27440b6b9c4550cfc47c97bf36591d5da958b975bb3add8c1a` |
+| `IBMPlexSans-Medium.woff2` | `5660f8a658f8bb50dbc005232f885eadffd2bc1c235c4f6fbb63469d1f9cde6d` |
+| `IBMPlexSans-SemiBold.woff2` | `f78048030eab62e860efa39a0df79e2e5581bf122eb95b9bc42c0b8a4988d205` |
+| `OFL.txt` (cópia de `license.txt` do mesmo diretório) | `91c25c350d3cac39da2736d74f7ba37ef648f5237a4e330a240615bc8d8c4360` |
+
+- Algarismos: a fonte não tem a feature `tnum`, mas os algarismos padrão são tabulares (medição na task da issue #3).
+- Os contornos do logotipo (`design-system/assets/logo-saldo-futuro.svg`) foram extraídos dos TTF SemiBold e Regular do mesmo pacote.
 
 ## Ecossistema de domínios
 
@@ -127,3 +141,4 @@ Painel, transações (lançamentos), ativos, benchmark, comparação e ajuda.
 | Data | Ciclo | Alteração |
 | :-- | :-- | :-- |
 | 2026-10-12 | `000` | Criação (issue #2) |
+| 2026-10-12 | `000` | Proveniência da IBM Plex Sans 1.1.0 (issue #3) |
