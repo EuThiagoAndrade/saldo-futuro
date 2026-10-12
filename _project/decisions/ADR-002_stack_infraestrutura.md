@@ -33,7 +33,7 @@ As decisões abaixo foram aprovadas pelo responsável em 2026-10-11 e 2026-10-12
 
 ### Stack (decisão 2)
 
-- Next.js com App Router, TypeScript, Tailwind CSS 4, `@supabase/ssr`, Zod, Vitest e Playwright, na mesma linha do `mae-no-controle`. As versões exatas são fixadas no ciclo `001`; a referência observada é o `package.json` do `mae-no-controle` @ `2f4a304`.
+- Next.js com App Router, sobre React (no `mae-no-controle`, React 19), TypeScript, Tailwind CSS 4, `@supabase/ssr`, Zod, Vitest e Playwright, na mesma linha do `mae-no-controle`. As versões exatas são fixadas no ciclo `001`; a referência observada é o `package.json` do `mae-no-controle` @ `2f4a304`.
 - Hospedagem na Vercel, integrada ao GitHub, e banco Supabase (PostgreSQL).
 - Dados em tabelas relacionais, não no agregado JSONB usado pelo `mae-no-controle`.
 - A biblioteca de gráficos **não** faz parte desta decisão. O design system define a paleta em tokens agnósticos, e a escolha fica para o ciclo `003`, registrada em ADR.
