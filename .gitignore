@@ -1,0 +1,45 @@
+# Segredos e variáveis de ambiente (G3)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Dados reais de trabalho local (G3)
+local/
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.db
+*.db-*
+
+# Planilhas e exportações: permitidas só como fixtures fictícias (G3)
+*.csv
+*.xlsx
+!tests/fixtures/**/*.csv
+!tests/fixtures/**/*.xlsx
+
+# Supabase local
+supabase/.temp/
+supabase/.branches/
+
+# Node.js, Next.js e Vercel
+node_modules/
+.next/
+out/
+.vercel/
+*.tsbuildinfo
+next-env.d.ts
+
+# Testes
+coverage/
+test-results/
+playwright-report/
+
+# Sistema operacional e editores
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/*
+!.vscode/extensions.json
+.idea/
