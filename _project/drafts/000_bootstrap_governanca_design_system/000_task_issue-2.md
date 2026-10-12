@@ -48,6 +48,7 @@ Não se aplica.
 - [x] Item 4 — Issue Forms, template de PR no caminho padrão e `governance.yml`: `6c32555`.
 - [x] Item 5 — manifesto, validador e 26 testes cobrindo os 19 cenários: `5336b20`.
 - [x] Item 6 — README expandido; `.gitignore` do commit raiz já atende ao cenário 13: `0373bf9`.
+- [x] Ajuste pedido pelo responsável na revisão da PR: React explícito na stack da ADR-002 e do README: `d34193c`.
 
 ## Evidências
 
