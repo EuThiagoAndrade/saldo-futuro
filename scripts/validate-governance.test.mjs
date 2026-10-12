@@ -74,6 +74,10 @@ function shortTask(issue, { eligibility = true, barriers = true } = {}) {
   ].join('\n');
 }
 
+function designDoc(keywords) {
+  return `# Design\n\n${keywords.map((keyword, index) => `## ${index + 1}. Seção de ${keyword}`).join('\n\n')}\n`;
+}
+
 async function fixture() {
   const root = await mkdtemp(path.join(tmpdir(), 'saldo-futuro-governance-'));
   for (const file of manifest.requiredFiles) {
@@ -88,6 +92,7 @@ async function fixture() {
       content = `---\nname: ${path.basename(path.dirname(file))}\ndescription: "Skill de teste."\n---\n\n${content}`;
     }
     if (file === '.gitignore') content = `${manifest.gitignoreRequired.join('\n')}\n`;
+    if (file === manifest.designSystem.file) content = designDoc(manifest.designSystem.sectionKeywords);
     await put(root, file, content);
   }
   await put(root, 'scripts/governance-manifest.json', await readFile(manifestSource, 'utf8'));
@@ -140,9 +145,9 @@ test('2. arquivo obrigatório ausente', () =>
 test('2. novo arquivo obrigatório exige editar só o manifesto (G6)', () =>
   withFixture(async (root) => {
     const local = JSON.parse(await read(root, 'scripts/governance-manifest.json'));
-    local.requiredFiles.push('design-system/DESIGN.md');
+    local.requiredFiles.push('docs/novo-obrigatorio.md');
     await put(root, 'scripts/governance-manifest.json', JSON.stringify(local));
-    await expectError(root, /Arquivo obrigatório ausente: design-system\/DESIGN\.md/);
+    await expectError(root, /Arquivo obrigatório ausente: docs\/novo-obrigatorio\.md/);
   }));
 
 test('3. adapter sem referência ao núcleo', () =>
@@ -319,11 +324,17 @@ test('17. task da trilha curta completa passa', () =>
 test('18. DESIGN.md, quando existir, exige as seções normativas', () =>
   withFixture(async (root) => {
     const { file, sectionKeywords } = manifest.designSystem;
-    assert.ok((await validate(root)).manual.some((item) => item.includes(file)));
     await put(root, file, '# Design\n\n## 1. Princípios\n');
     await expectError(root, /DESIGN\.md sem a seção normativa "tipografia"/);
-    await put(root, file, `# Design\n\n${sectionKeywords.map((keyword, index) => `## ${index + 1}. Seção de ${keyword}`).join('\n\n')}\n`);
+    await put(root, file, designDoc(sectionKeywords));
     await expectValid(root);
+    // Sem o arquivo no manifesto e no disco, a regra é condicional: só um item manual.
+    const local = JSON.parse(await read(root, 'scripts/governance-manifest.json'));
+    local.requiredFiles = local.requiredFiles.filter((item) => item !== file);
+    await put(root, 'scripts/governance-manifest.json', JSON.stringify(local));
+    await rm(path.join(root, file));
+    await expectValid(root);
+    assert.ok((await validate(root)).manual.some((item) => item.includes(file)));
   }));
 
 test('19. template de PR fora do caminho padrão ou sem as barreiras', () =>
