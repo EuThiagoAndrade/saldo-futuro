@@ -1,0 +1,59 @@
+name: Correção
+description: Relatar comportamento incorreto reproduzível. Nunca inclua dados reais de carteira.
+title: "[FIX] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use somente dados fictícios. Valores, saldos, ativos e instituições reais nunca entram em issues (barreira G3).
+  - type: textarea
+    id: problema
+    attributes:
+      label: Problema observado
+    validations:
+      required: true
+  - type: textarea
+    id: reproducao
+    attributes:
+      label: Como reproduzir
+      description: Passos com dados fictícios.
+    validations:
+      required: true
+  - type: textarea
+    id: esperado
+    attributes:
+      label: Comportamento esperado
+      description: Cite o plano, ADR, KB ou DESIGN.md que especifica o comportamento correto.
+    validations:
+      required: true
+  - type: textarea
+    id: impacto
+    attributes:
+      label: Impacto e evidências
+    validations:
+      required: true
+  - type: dropdown
+    id: trilha
+    attributes:
+      label: Trilha
+      description: A trilha curta exige os quatro critérios de elegibilidade de _project/README.md.
+      options:
+        - Normal (ciclo com plano)
+        - Curta (correção elegível)
+    validations:
+      required: true
+  - type: textarea
+    id: elegibilidade
+    attributes:
+      label: Elegibilidade da trilha curta
+      description: "Na trilha curta, justifique: comportamento já especificado, sem mudança de escopo, sem schema que altere semântica, sem mudança de contrato visual. Na trilha normal, escreva \"Não se aplica\"."
+    validations:
+      required: true
+  - type: input
+    id: plano
+    attributes:
+      label: Ciclo e plano relacionados
+      placeholder: "Ciclo NNN — caminho do plano, ou \"trilha curta\""
+    validations:
+      required: true

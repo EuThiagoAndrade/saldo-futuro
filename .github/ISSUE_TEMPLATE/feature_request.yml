@@ -1,0 +1,39 @@
+name: Feature
+description: Propor uma capacidade aprovada ou candidata a planejamento.
+title: "[FEATURE] "
+labels: []
+body:
+  - type: textarea
+    id: contexto
+    attributes:
+      label: Contexto
+      description: Qual problema ou necessidade esta entrega atende?
+    validations:
+      required: true
+  - type: textarea
+    id: escopo
+    attributes:
+      label: Escopo
+      description: Descreva o que está dentro e fora desta unidade de entrega.
+    validations:
+      required: true
+  - type: textarea
+    id: aceite
+    attributes:
+      label: Critérios de aceite
+      description: Liste resultados objetivos e verificáveis.
+    validations:
+      required: true
+  - type: input
+    id: plano
+    attributes:
+      label: Ciclo e plano relacionados
+      placeholder: "Ciclo NNN — _project/drafts/.../NNN_plan.md"
+    validations:
+      required: true
+  - type: textarea
+    id: dependencias
+    attributes:
+      label: Dependências, riscos e autorizações
+    validations:
+      required: true
