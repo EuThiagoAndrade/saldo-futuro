@@ -40,6 +40,11 @@
     ".github/ISSUE_TEMPLATE/config.yml",
     ".github/pull_request_template.md",
     ".github/workflows/governance.yml",
+    "design-system/DESIGN.md",
+    "design-system/referencia.html",
+    "design-system/assets/logo-saldo-futuro.svg",
+    "design-system/assets/logo-simbolo.svg",
+    "design-system/assets/fonts/OFL.txt",
     "scripts/governance-manifest.json",
     "scripts/validate-governance.mjs",
     "scripts/validate-governance.test.mjs"

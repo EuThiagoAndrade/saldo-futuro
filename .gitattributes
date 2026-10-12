@@ -13,3 +13,6 @@
 *.ttf binary
 *.otf binary
 *.pdf binary
+
+# Licença de terceiros versionada sem modificação
+design-system/assets/fonts/OFL.txt -whitespace

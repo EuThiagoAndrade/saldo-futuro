@@ -32,6 +32,7 @@ O processo é agnóstico de ferramenta de IA. Os adapters [`AGENTS.md`](AGENTS.m
 - [`_project/README.md`](_project/README.md): ciclo de vida, trilha curta para correções e barreiras de domínio (exatidão financeira, isolamento por RLS, privacidade e migrações só aditivas).
 - [`_project/decisions/`](_project/decisions/): decisões duradouras (ADRs).
 - [`_project/knowledge/`](_project/knowledge/): conhecimento de referência (KBs).
+- [`design-system/DESIGN.md`](design-system/DESIGN.md): identidade visual e contrato de interface. A [página de referência](design-system/referencia.html) mostra o contrato com dados fictícios e abre localmente, sem rede.
 
 Validação da governança, com Node.js 24 e sem dependências:
 
