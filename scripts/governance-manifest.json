@@ -1,0 +1,226 @@
+{
+  "$comment": "Regras estruturais do validador de governança. Adicionar um arquivo obrigatório exige editar só este manifesto (G6). A política vive em .agent/ai_behavior.md e _project/README.md.",
+  "requiredFiles": [
+    "README.md",
+    "LICENSE",
+    ".gitignore",
+    ".gitattributes",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "GEMINI.md",
+    ".agent/ai_behavior.md",
+    ".agent/lessons_learned.md",
+    ".agent/task.md",
+    ".agent/workflows/idear.md",
+    ".agent/workflows/rascunhar_plano.md",
+    ".agent/workflows/revisar_plano.md",
+    ".agent/workflows/criar_issues.md",
+    ".agent/workflows/implementar_issue.md",
+    ".agent/workflows/listar_issues.md",
+    ".agent/workflows/atualizar_docs.md",
+    ".agent/workflows/health_check.md",
+    ".agent/workflows/corrigir_trilha_curta.md",
+    ".agent/templates/ideacao.md",
+    ".agent/templates/plano_implementacao.md",
+    ".agent/templates/task.md",
+    ".agent/templates/adr.md",
+    ".agent/templates/kb.md",
+    ".agent/skills/governance-check/governance-check.md",
+    ".agent/skills/doc-updater/doc-updater.md",
+    ".agent/skills/design-system-check/design-system-check.md",
+    "_project/README.md",
+    "_project/cycles.md",
+    "_project/decisions/ADR-001_governanca_agnostica_adapters.md",
+    "_project/decisions/ADR-002_stack_infraestrutura.md",
+    "_project/decisions/ADR-003_acesso_privacidade_publicacao.md",
+    "_project/knowledge/KB-001_proveniencia_ecossistema.md",
+    ".github/ISSUE_TEMPLATE/feature_request.yml",
+    ".github/ISSUE_TEMPLATE/bug_report.yml",
+    ".github/ISSUE_TEMPLATE/chore.yml",
+    ".github/ISSUE_TEMPLATE/config.yml",
+    ".github/pull_request_template.md",
+    ".github/workflows/governance.yml",
+    "scripts/governance-manifest.json",
+    "scripts/validate-governance.mjs",
+    "scripts/validate-governance.test.mjs"
+  ],
+  "requiredText": {
+    ".agent/ai_behavior.md": [
+      "## Matriz de autoridade",
+      "## Contrato canônico de handoff",
+      "handoff_schema_version: 1",
+      "## Autorizações e gates",
+      "## Privacidade de dados financeiros"
+    ],
+    "_project/README.md": [
+      "## Estados válidos",
+      "## Trilha curta",
+      "## Barreiras de domínio",
+      "### G1",
+      "### G2",
+      "### G3",
+      "### G4",
+      "## Branches, commits e migrações",
+      "## Gates mínimos"
+    ],
+    ".agent/templates/task.md": [
+      "**Trilha:**",
+      "## Elegibilidade da trilha curta",
+      "## Barreiras de domínio",
+      "G1 —",
+      "G2 —",
+      "G3 —",
+      "G4 —"
+    ],
+    ".agent/templates/plano_implementacao.md": [
+      "### Gates humanos",
+      "## Barreiras de domínio",
+      "## Revisão crítica"
+    ],
+    ".agent/workflows/health_check.md": ["node scripts/validate-governance.mjs"],
+    ".github/pull_request_template.md": [
+      "Closes #",
+      "## Barreiras de domínio",
+      "G1 —",
+      "G2 —",
+      "G3 —",
+      "G4 —"
+    ],
+    ".github/ISSUE_TEMPLATE/feature_request.yml": ["[FEATURE]"],
+    ".github/ISSUE_TEMPLATE/bug_report.yml": ["[FIX]", "Curta (correção elegível)"],
+    ".github/ISSUE_TEMPLATE/chore.yml": ["[CHORE]"],
+    ".github/ISSUE_TEMPLATE/config.yml": ["blank_issues_enabled: false"],
+    ".github/workflows/governance.yml": [
+      "contents: read",
+      "fetch-depth: 0",
+      "package-manager-cache: false",
+      "node --test scripts/validate-governance.test.mjs",
+      "node scripts/validate-governance.mjs",
+      "supabase/migrations/"
+    ]
+  },
+  "adapters": {
+    "files": ["AGENTS.md", "CLAUDE.md", "GEMINI.md"],
+    "reference": ".agent/ai_behavior.md"
+  },
+  "workflows": {
+    "dir": ".agent/workflows",
+    "frontmatter": ["description"],
+    "mutating": [
+      "idear",
+      "rascunhar_plano",
+      "revisar_plano",
+      "criar_issues",
+      "implementar_issue",
+      "atualizar_docs",
+      "corrigir_trilha_curta"
+    ],
+    "mutatingText": [
+      "handoff_schema_version",
+      "identity_source",
+      "rejection_rule",
+      "logical_key",
+      "check_before_mutation",
+      "reconcile_existing",
+      "ambiguous_state"
+    ],
+    "readOnly": ["listar_issues", "health_check"],
+    "readOnlyText": ["mutation"]
+  },
+  "skills": {
+    "dir": ".agent/skills",
+    "frontmatter": ["name", "description"]
+  },
+  "cycles": {
+    "file": "_project/cycles.md",
+    "states": {
+      "Ideação": "ideations",
+      "Planejamento": "drafts",
+      "Em execução": "drafts",
+      "Concluído": "executed",
+      "Cancelado": null,
+      "Substituído": "archived"
+    }
+  },
+  "plans": {
+    "statesByLocation": {
+      "drafts": ["Rascunho", "Em Revisão", "Aprovado", "Em Execução"],
+      "executed": ["Concluído"],
+      "archived": ["Cancelado", "Substituído"]
+    }
+  },
+  "tasks": {
+    "states": ["Em andamento", "Aguardando integração", "Concluída", "Bloqueada"],
+    "doneState": "Concluída"
+  },
+  "naming": {
+    "cycleDir": "^\\d{3}_[a-z0-9_]+$",
+    "cycleFile": "^(?<cycle>\\d{3})_(plan|task_issue-\\d+|task_issues-\\d+(-\\d+)+|task_closure|research_[a-z0-9_-]+|validation_[a-z0-9_-]+|handoff[a-z0-9_-]*)\\.md$",
+    "ideation": "^\\d{3}_[a-z0-9_]+\\.md$",
+    "adr": "^ADR-\\d{3}_[a-z0-9_]+\\.md$",
+    "kb": "^KB-\\d{3}_[a-z0-9_]+\\.md$",
+    "fix": "^fix_task_issue-(?<issue>\\d+)\\.md$"
+  },
+  "shortTrack": {
+    "dir": "_project/fixes",
+    "eligibilityHeading": "## Elegibilidade da trilha curta",
+    "eligibilityCriteria": [
+      "Correção de comportamento já especificado",
+      "Sem mudança de escopo",
+      "Sem mudança de schema que altere semântica",
+      "Sem mudança de contrato visual"
+    ],
+    "barriers": ["G1", "G2", "G3", "G4"]
+  },
+  "siblingCheck": {
+    "roots": ["AGENTS.md", "CLAUDE.md", "GEMINI.md", ".agent", ".github", "scripts"],
+    "extensions": [".md", ".yml", ".yaml", ".json", ".mjs"],
+    "repositories": [
+      "Meus-Investimentos",
+      "mae-no-controle",
+      "euthiagoandrade-api",
+      "euthiagoandrade-site",
+      "euthiagoandrade-admin"
+    ]
+  },
+  "gitignoreRequired": [".env", ".env.*", "!.env.example", "*.sqlite", "*.db", "local/", "supabase/.temp/"],
+  "dataFiles": {
+    "extensions": [".sqlite", ".sqlite3", ".db", ".csv", ".xlsx"],
+    "allowedDirs": ["tests/fixtures/"],
+    "sqlAllowedDirs": ["supabase/migrations/", "supabase/tests/", "tests/fixtures/"],
+    "sqlAllowedFiles": ["supabase/seed.sql"]
+  },
+  "scanExclusions": [
+    ".git/",
+    "node_modules/",
+    "local/",
+    "supabase/.temp/",
+    "supabase/.branches/",
+    ".next/",
+    "coverage/",
+    "test-results/",
+    "playwright-report/"
+  ],
+  "migrations": {
+    "dir": "supabase/migrations",
+    "namePattern": "^\\d{14}_[a-z0-9_]+\\.sql$"
+  },
+  "designSystem": {
+    "file": "design-system/DESIGN.md",
+    "sectionKeywords": [
+      "principios",
+      "cores",
+      "tipografia",
+      "espacamento",
+      "tailwind",
+      "componentes",
+      "acessibilidade",
+      "marca"
+    ]
+  },
+  "manualChecks": [
+    "Referências documentais em _project/ (fora do escopo do cenário 12) citam fontes por URL e commit, sem caminho local.",
+    "Textos, fixtures e prints não contêm dados do usuário (G3).",
+    "Semântica das barreiras declaradas nas tasks e PRs."
+  ]
+}
