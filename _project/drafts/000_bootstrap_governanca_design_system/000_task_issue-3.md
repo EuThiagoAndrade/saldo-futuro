@@ -61,7 +61,7 @@ Não se aplica.
 | Logo | Renderizado a 128, 64, 32 e 16 px; nenhum `<text>` nos SVGs; `viewBox` definido; sem recurso externo |
 | Testes | `node --test scripts/validate-governance.test.mjs`: 26 testes, 26 aprovados |
 | Validação | `node scripts/validate-governance.mjs`: 0 erros, 1 aviso esperado (sem `package.json`) |
-| `git diff --check` | Ver o commit final |
+| `git diff --check` | Sem ocorrências em `main...chore/issue-3`, depois de excluir a `OFL.txt` original da verificação de whitespace no `.gitattributes` |
 | Checks remotos | Pendente |
 
 ## Decisões incidentais e desvios
@@ -72,6 +72,7 @@ Não se aplica.
 - **Gerador de fixtures dos testes:** ao tornar o `DESIGN.md` obrigatório, o gerador da fixture válida precisou também derivar do manifesto as seções do design system. O validador (`validate-governance.mjs`) não mudou: o critério "a PR B altera o manifesto e não a lógica do validador" é atendido, mas o gerador de testes era menos genérico do que o declarado na issue A. Os testes 2 e 18 foram reescritos para testar um novo arquivo hipotético e a regra condicional sem o `DESIGN.md` no manifesto.
 - **Menu "Mais":** o `DESIGN.md` deixa o conteúdo exato para o ciclo `003`. A página de referência mostra "Comparação" e "Ajuda" só como ilustração.
 - **Tema escuro:** só os nomes dos tokens estão preparados; nenhum valor escuro foi definido, conforme o escopo.
+- **`.gitattributes`:** a `OFL.txt` da IBM tem espaço no fim de uma linha. Para versioná-la sem modificação (o SHA-256 da KB-001 continua válido), o arquivo foi marcado como `-whitespace`.
 
 ## Resultado
 
