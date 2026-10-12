@@ -6,13 +6,13 @@ O Saldo Futuro substitui o [Meus-Investimentos](https://github.com/EuThiagoAndra
 
 ## Estado atual
 
-O repositório está em bootstrap. O ciclo `000` implanta a governança do projeto e o design system. **Ainda não existe código de aplicação, e nenhuma funcionalidade está disponível.**
+O ciclo `000` implantou a governança do projeto e o design system. **Ainda não existe código de aplicação, e nenhuma funcionalidade está disponível.** O próximo ciclo é o `001`, de fundação da aplicação.
 
 ## Mapa de ciclos
 
 | Ciclo | Entrega | Estado |
 | :-- | :-- | :-- |
-| `000` | Governança e design system | Em execução |
+| `000` | Governança e design system | Concluído |
 | `001` | Fundação: aplicação Next.js, Supabase, autenticação, perfis, RLS, deploy e release-please | Planejado |
 | `002` | Regras financeiras: eventos, fechamento, consolidação, Modified Dietz e benchmarks, com casos de referência | Planejado |
 | `003` | Telas pensadas primeiro para o celular | Planejado |

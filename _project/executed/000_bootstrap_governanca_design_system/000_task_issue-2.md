@@ -2,13 +2,13 @@
 
 > **Ciclo:** `000`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `chore`
 > **Issue:** `#2`
-> **Plano:** `_project/drafts/000_bootstrap_governanca_design_system/000_plan.md`
+> **Plano:** `_project/executed/000_bootstrap_governanca_design_system/000_plan.md`
 > **Branch:** `chore/issue-2`
-> **PR:** —
-> **Integração:** `Pendente`
+> **PR:** [#4](https://github.com/EuThiagoAndrade/saldo-futuro/pull/4)
+> **Integração:** `Integrada por squash em a01da6f (2026-10-12)`
 > **Início:** 2026-10-12
 > **Última atualização:** 2026-10-12
 > **handoff_schema_version:** `1`
@@ -59,7 +59,7 @@ Não se aplica.
 | `git diff --check` | Sem ocorrências em `main...chore/issue-2` |
 | Passo G4 (demonstração) | Bloco `run` extraído do `governance.yml` e executado num repositório temporário: primeiro push ignorado (0); sem pasta de migrações (0); adição (0); edição `M` (1); renomeação `R100` (1); remoção `D` (1); `before` inalcançável após push forçado, falha fechada (128, ressalva S5); PR com adição (0); PR com edição (1) |
 | Adapters | Sintaxe revalidada em 2026-10-12 na documentação do Claude Code (`@caminho` relativo ao arquivo; leitura de `AGENTS.md`) e do Gemini CLI (`@./caminho`) |
-| Checks remotos | Pendente |
+| Checks remotos | `Validate governance` aprovado na PR #4 (run 38303264357) |
 
 ## Decisões incidentais e desvios
 
@@ -76,7 +76,7 @@ Não se aplica.
 
 ## Resultado
 
-Itens 1 a 6 implementados e validados localmente. Aguardando checks remotos e o Gate M-A.
+Itens 1 a 6 implementados e integrados. Gate M-A concedido pelo responsável em 2026-10-12; PR #4 integrada por squash em `a01da6f`; issue #2 fechada.
 
 ### Handoff de execução
 
@@ -85,13 +85,13 @@ Itens 1 a 6 implementados e validados localmente. Aguardando checks remotos e o 
 - `identity_source`: `repository + cycle + workflow + logical_target + source_revision` (alvo: issue #2, Itens 1 a 6; base `a448ec4`).
 - `effect_class`: `local_mutation -> remote_mutation`
 - `state_before`: plano `Aprovado` em `main` (`a448ec4`), issue #2 aberta, Gate C concedido em 2026-10-12.
-- `state_after`: Itens 1 a 6 implementados em `chore/issue-2`, plano `Em Execução`, ciclo `000` `Em execução`, PR aberta.
+- `state_after`: Itens 1 a 6 integrados em `main` (`a01da6f`), PR #4 integrada e issue #2 fechada (reconciliado no encerramento).
 - `next_transition`: `PR -> checks -> Gate M-A`.
 - `preconditions`: checks verdes do workflow `Governance` e aprovação humana do Gate M-A.
 - `authority`: Thiago Andrade (Gate M-A); GitHub (checks).
 - `evidence`: esta task, commits `a1af945` a `0373bf9`, checks da PR.
 - `acceptance`: critérios de aceite dos Itens 1 a 6 atendidos, checks verdes, escopo restrito à issue A.
-- `blockers`: checks remotos e Gate M-A pendentes.
+- `blockers`: nenhum.
 - `result`: `executed`
 - `next_workflow_recommended`: integração da PR após o Gate M-A; depois, a issue B (#3).
 - `next_workflow_authorized`: nenhum além da publicação da PR; merge exige o Gate M-A.
