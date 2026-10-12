@@ -1,0 +1,36 @@
+name: Chore
+description: Registrar manutenção, governança ou infraestrutura sem capacidade funcional nova.
+title: "[CHORE] "
+labels: []
+body:
+  - type: textarea
+    id: contexto
+    attributes:
+      label: Contexto
+    validations:
+      required: true
+  - type: textarea
+    id: mudancas
+    attributes:
+      label: Mudanças previstas
+    validations:
+      required: true
+  - type: textarea
+    id: aceite
+    attributes:
+      label: Critérios de aceite
+    validations:
+      required: true
+  - type: textarea
+    id: dependencias
+    attributes:
+      label: Dependências e autorizações
+    validations:
+      required: true
+  - type: input
+    id: plano
+    attributes:
+      label: Ciclo e plano relacionados
+      placeholder: "Ciclo NNN — _project/drafts/.../NNN_plan.md"
+    validations:
+      required: true

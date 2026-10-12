@@ -1,0 +1,68 @@
+name: Governance
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: governance-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate governance
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        # actions/checkout v6.1.0
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          fetch-depth: 0
+      - name: Setup Node.js 24
+        # actions/setup-node v6.5.0
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Test governance validator
+        run: node --test scripts/validate-governance.test.mjs
+      - name: Validate governance
+        run: node scripts/validate-governance.mjs
+      - name: Check migrations are append-only (G4)
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_REF: ${{ github.base_ref }}
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            RANGE="origin/${BASE_REF}...HEAD"
+          elif [ "$EVENT_NAME" = "push" ]; then
+            if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+              echo "Primeiro push da branch: verificação de migrações ignorada."
+              exit 0
+            fi
+            RANGE="${BEFORE}..${AFTER}"
+          else
+            echo "Evento ${EVENT_NAME}: verificação de migrações não se aplica."
+            exit 0
+          fi
+          CHANGES="$(git diff --name-status --find-renames "$RANGE" -- supabase/migrations/)"
+          VIOLATIONS="$(printf '%s\n' "$CHANGES" | awk 'NF && $1 != "A"')"
+          if [ -n "$VIOLATIONS" ]; then
+            echo "::error::Migrações versionadas só podem ser adicionadas (G4). Alterações proibidas:"
+            printf '%s\n' "$VIOLATIONS"
+            exit 1
+          fi
+          echo "Migrações: nenhuma alteração proibida em ${RANGE}."

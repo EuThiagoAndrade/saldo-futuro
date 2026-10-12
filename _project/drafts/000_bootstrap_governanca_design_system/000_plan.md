@@ -1,7 +1,7 @@
 # Plano de Implementação — Bootstrap da Governança e do Design System do Saldo Futuro
 
 > **Ciclo:** `000`
-> **Status:** `Aprovado`
+> **Status:** `Em Execução`
 > **Versão:** `v2`
 > **Data de criação:** 2026-10-12
 > **Última atualização:** 2026-10-12
@@ -551,9 +551,9 @@ A PR B depende da PR A integrada, porque usa o template de task, a skill `design
 
 | Campo | Valor |
 | :-- | :-- |
-| Issue(s) | — |
-| PR(s) | — |
-| Branch(es) | — |
+| Issue(s) | [#2](https://github.com/EuThiagoAndrade/saldo-futuro/issues/2) (A) e [#3](https://github.com/EuThiagoAndrade/saldo-futuro/issues/3) (B) |
+| PR(s) | [#1](https://github.com/EuThiagoAndrade/saldo-futuro/pull/1) (plano, integrada em `a448ec4`) |
+| Branch(es) | `chore/cycle-000-plan` (integrada), `chore/issue-2` |
 | `handoff_schema_version` | `1` |
 | `handoff_id` | `saldo-futuro:000:revisar_plano:000_plan:v2-no-commit` (anteriores: `…:rascunhar_plano:000_plan:no-commit`, `…:revisar_plano:000_plan:v1-no-commit` e `…:rascunhar_plano:000_plan:v2-no-commit`, todos aceitos) |
 | Destino após conclusão | `_project/executed/000_bootstrap_governanca_design_system/000_plan.md` |
