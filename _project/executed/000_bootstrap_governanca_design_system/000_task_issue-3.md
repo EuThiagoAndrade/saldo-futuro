@@ -2,13 +2,13 @@
 
 > **Ciclo:** `000`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `chore`
 > **Issue:** `#3`
-> **Plano:** `_project/drafts/000_bootstrap_governanca_design_system/000_plan.md`
+> **Plano:** `_project/executed/000_bootstrap_governanca_design_system/000_plan.md`
 > **Branch:** `chore/issue-3`
-> **PR:** —
-> **Integração:** `Pendente`
+> **PR:** [#5](https://github.com/EuThiagoAndrade/saldo-futuro/pull/5)
+> **Integração:** `Integrada por squash em 6fe1ff1 (2026-10-12)`
 > **Início:** 2026-10-12
 > **Última atualização:** 2026-10-12
 > **handoff_schema_version:** `1`
@@ -62,7 +62,7 @@ Não se aplica.
 | Testes | `node --test scripts/validate-governance.test.mjs`: 26 testes, 26 aprovados |
 | Validação | `node scripts/validate-governance.mjs`: 0 erros, 1 aviso esperado (sem `package.json`) |
 | `git diff --check` | Sem ocorrências em `main...chore/issue-3`, depois de excluir a `OFL.txt` original da verificação de whitespace no `.gitattributes` |
-| Checks remotos | Pendente |
+| Checks remotos | `Validate governance` aprovado na PR #5 (run 38305918696) |
 
 ## Decisões incidentais e desvios
 
@@ -76,7 +76,7 @@ Não se aplica.
 
 ## Resultado
 
-Item 7 implementado e validado localmente. Aguardando checks remotos, o Gate D (aprovação da identidade visual) e o Gate M-B.
+Item 7 implementado e integrado. Gates D (identidade visual) e M-B concedidos pelo responsável em 2026-10-12, na conversa de execução; PR #5 integrada por squash em `6fe1ff1`; issue #3 fechada.
 
 ### Handoff de execução
 
@@ -85,13 +85,13 @@ Item 7 implementado e validado localmente. Aguardando checks remotos, o Gate D (
 - `identity_source`: `repository + cycle + workflow + logical_target + source_revision` (alvo: issue #3, Item 7; base `a01da6f`).
 - `effect_class`: `local_mutation -> remote_mutation`
 - `state_before`: PR #4 integrada em `a01da6f`, issue #3 aberta, Gate C válido.
-- `state_after`: design system, logo, fonte e página de referência em `chore/issue-3`; PR aberta.
+- `state_after`: design system integrado em `main` (`6fe1ff1`), PR #5 integrada e issue #3 fechada (reconciliado no encerramento).
 - `next_transition`: `PR -> Gate D -> checks -> Gate M-B`.
 - `preconditions`: aprovação explícita da identidade visual na PR (Gate D), checks verdes e aprovação do Gate M-B.
 - `authority`: Thiago Andrade (Gates D e M-B); GitHub (checks).
 - `evidence`: esta task, a página de referência, os commits da branch e os checks da PR.
 - `acceptance`: critérios do Item 7 atendidos, com a S1 decidida; identidade aprovada.
-- `blockers`: Gate D, checks remotos e Gate M-B pendentes.
+- `blockers`: nenhum.
 - `result`: `executed`
 - `next_workflow_recommended`: Gate D e, após o Gate M-B, o encerramento do ciclo (Gate E).
 - `next_workflow_authorized`: nenhum além da publicação da PR.

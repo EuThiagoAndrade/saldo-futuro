@@ -21,3 +21,11 @@ Origem: ciclo `002` do api. Um handoff útil separa identidade lógica de tentat
 ### 2026-08-19 — Encerramentos exigem reconciliação pós-merge
 
 Origem: api. Uma PR de encerramento tem duas fases: preparação pré-merge e reconciliação pós-merge. A regra autorreferencial impede registrar o próprio SHA dentro da PR, mas não elimina a atualização posterior da task, do handoff e dos registros canônicos. Após o merge, esses artefatos devem refletir o estado real; sempre que possível, o validador deve detectar inconsistências, como ciclo concluído com task ainda pendente.
+
+### 2026-10-12 — Critérios devem expressar o objetivo verificável, não o mecanismo
+
+Origem: ciclo `000`, ressalva S1. O critério "confirmar que a fonte expõe `tnum`" representava o objetivo "algarismos tabulares". A IBM Plex Sans 1.1.0 não tem `tnum` porque seus algarismos padrão já são tabulares, e o critério literal mandaria parar sem necessidade. Ao escrever critérios e ressalvas, declare o resultado mensurável (por exemplo, "todos os dígitos com a mesma largura de avanço") e, quando citar um mecanismo, deixe claro que ele é só um meio. Na divergência, meça o objetivo e leve a decisão ao responsável.
+
+### 2026-10-12 — Testes não podem depender de maiúsculas e minúsculas no sistema de arquivos
+
+Origem: ciclo `000`, PR #4. Um teste renomeava `pull_request_template.md` para `PULL_REQUEST_TEMPLATE.md` e esperava o arquivo ausente. No Windows, o sistema de arquivos ignora maiúsculas e o arquivo continuava encontrado, enquanto no runner Linux o teste teria outro resultado. Fixtures devem distinguir caminhos por nome ou diretório, nunca só pela caixa das letras, para que o gate local e o CI concordem.

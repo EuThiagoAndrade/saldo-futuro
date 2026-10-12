@@ -1,7 +1,7 @@
 # Plano de Implementação — Bootstrap da Governança e do Design System do Saldo Futuro
 
 > **Ciclo:** `000`
-> **Status:** `Em Execução`
+> **Status:** `Concluído`
 > **Versão:** `v2`
 > **Data de criação:** 2026-10-12
 > **Última atualização:** 2026-10-12
@@ -552,8 +552,8 @@ A PR B depende da PR A integrada, porque usa o template de task, a skill `design
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | [#2](https://github.com/EuThiagoAndrade/saldo-futuro/issues/2) (A) e [#3](https://github.com/EuThiagoAndrade/saldo-futuro/issues/3) (B) |
-| PR(s) | [#1](https://github.com/EuThiagoAndrade/saldo-futuro/pull/1) (plano, integrada em `a448ec4`) |
-| Branch(es) | `chore/cycle-000-plan` (integrada), `chore/issue-2` |
+| PR(s) | [#1](https://github.com/EuThiagoAndrade/saldo-futuro/pull/1) (plano, `a448ec4`), [#4](https://github.com/EuThiagoAndrade/saldo-futuro/pull/4) (issue A, `a01da6f`), [#5](https://github.com/EuThiagoAndrade/saldo-futuro/pull/5) (issue B, `6fe1ff1`) e a PR de encerramento, verificável no GitHub |
+| Branch(es) | `chore/cycle-000-plan`, `chore/issue-2`, `chore/issue-3` (integradas e removidas) e `chore/cycle-000-closure` |
 | `handoff_schema_version` | `1` |
 | `handoff_id` | `saldo-futuro:000:revisar_plano:000_plan:v2-no-commit` (anteriores: `…:rascunhar_plano:000_plan:no-commit`, `…:revisar_plano:000_plan:v1-no-commit` e `…:rascunhar_plano:000_plan:v2-no-commit`, todos aceitos) |
 | Destino após conclusão | `_project/executed/000_bootstrap_governanca_design_system/000_plan.md` |
@@ -697,6 +697,14 @@ Nenhuma aplicada nesta rodada. Os ajustes textuais de S2 e S4 podem ser aplicado
 
 ## Pós-mortem
 
-- **Data de conclusão:** —
-- **Desvios:** —
-- **Lições comprovadas:** —
+- **Data de conclusão:** 2026-10-12.
+- **Entregas:** commit raiz `6698169`; PR #1 do plano (`a448ec4`); PR #4 da issue A (`a01da6f`); PR #5 da issue B (`6fe1ff1`); PR de encerramento.
+- **Gates:** A (2026-10-11 e 2026-10-12), B, C, M-A, D, M-B e E, todos concedidos pelo responsável em 2026-10-12. Os Gates D e M-B foram concedidos na conversa de execução, e não como comentário na PR #5 como previa a tabela de gates. O registro está na task de encerramento.
+- **Desvios:**
+  - Revisão formal em duas rodadas: a `v1` recebeu `REQUER NOVA RODADA` (B1 a B4), e a `v2`, `APTO COM RESSALVAS`.
+  - O primeiro merge da PR do plano foi bloqueado pelo classificador da ferramenta, apesar de autorizado pelo Gate B. O responsável então autorizou de forma permanente os merges após cada gate, o que ficou registrado em `.agent/ai_behavior.md`.
+  - Ressalva S1: a IBM Plex Sans 1.1.0 não tem a feature `tnum`, mas seus algarismos padrão são tabulares. O responsável decidiu seguir, e o critério do Item 7 foi cumprido por medição de largura.
+  - Ajuste fora do texto original, pedido pelo responsável na PR #4: o React passou a constar explicitamente da stack na ADR-002 e no README.
+  - O gerador de fixtures dos testes precisou ser generalizado na PR #5 para tornar o `DESIGN.md` obrigatório. O validador não mudou.
+  - A `OFL.txt` original foi excluída da verificação de whitespace no `.gitattributes`, para ser versionada sem modificação.
+- **Lições comprovadas:** registradas em `.agent/lessons_learned.md` (2026-10-12): critério de ressalva expresso pelo objetivo verificável, e não pelo mecanismo; e testes independentes de maiúsculas e minúsculas no sistema de arquivos.
