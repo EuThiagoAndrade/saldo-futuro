@@ -359,7 +359,6 @@ test('a CLI retorna 0 sem erros e 1 com erro bloqueante', () =>
     const cli = path.join(scriptsDir, 'validate-governance.mjs');
     const ok = spawnSync(process.execPath, [cli, '--root', root], { encoding: 'utf8' });
     assert.equal(ok.status, 0, ok.stdout + ok.stderr);
-    assert.match(ok.stdout, /\[AVISO\] Nenhum package\.json/);
     assert.match(ok.stdout, /\[MANUAL\]/);
     await rm(path.join(root, 'LICENSE'));
     const fail = spawnSync(process.execPath, [cli, '--root', root], { encoding: 'utf8' });

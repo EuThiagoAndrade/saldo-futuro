@@ -40,6 +40,9 @@
     ".github/ISSUE_TEMPLATE/config.yml",
     ".github/pull_request_template.md",
     ".github/workflows/governance.yml",
+    ".github/workflows/ci.yml",
+    ".env.example",
+    "package.json",
     "design-system/DESIGN.md",
     "design-system/referencia.html",
     "design-system/assets/logo-saldo-futuro.svg",
@@ -102,7 +105,8 @@
       "node --test scripts/validate-governance.test.mjs",
       "node scripts/validate-governance.mjs",
       "supabase/migrations/"
-    ]
+    ],
+    ".github/workflows/ci.yml": ["contents: read", "package-manager-cache: false"]
   },
   "adapters": {
     "files": ["AGENTS.md", "CLAUDE.md", "GEMINI.md"],
