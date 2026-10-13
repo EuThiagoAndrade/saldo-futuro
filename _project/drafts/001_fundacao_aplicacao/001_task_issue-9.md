@@ -2,13 +2,13 @@
 
 > **Ciclo:** `001`
 > **Trilha:** `normal`
-> **Estado:** `Em andamento`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#9`
 > **Plano:** `_project/drafts/001_fundacao_aplicacao/001_plan.md`
 > **Branch:** `feature/issue-9`
-> **PR:** —
-> **Integração:** `Pendente`
+> **PR:** [#12](https://github.com/EuThiagoAndrade/saldo-futuro/pull/12)
+> **Integração:** `Integrada por squash em 8d304b8 (2026-10-12)`
 > **Início:** 2026-10-12
 > **Última atualização:** 2026-10-12
 > **handoff_schema_version:** `1`
@@ -46,8 +46,8 @@ Não se aplica.
 - [x] B3: clientes `@supabase/ssr`, `src/proxy.ts` sem redirecionamento, rotas `/entrar`, `/auth/callback`, `/sair` e `/`, login por senha só com `NEXT_PUBLIC_ENABLE_PASSWORD_LOGIN=true`, aviso "Preview sem backend", testes ponta a ponta.
 - [x] Reconciliação da task da issue #8 (integrada) e da rastreabilidade do plano.
 - [x] Gates locais executados (ver Evidências).
-- [ ] PR publicada, checks remotos e tempos dos jobs `app` e `database` registrados.
-- [ ] Gate M-B: merge, após checks verdes e revisão manual das políticas e funções registrada na PR.
+- [x] PR #12 publicada; checks remotos verdes e tempos dos jobs registrados.
+- [x] Gate M-B concedido pelo responsável em 2026-10-12; merge por squash após checks verdes e revisão manual das políticas e funções registrada na PR.
 
 ## Evidências
 
@@ -64,16 +64,18 @@ Não se aplica.
 | `npm run test:e2e` com backend | 6 passaram e 3 foram ignorados (os de preview): `/` sem sessão redireciona para `/entrar`; `axe` sem violações em `/entrar`; usuário entra, vê e-mail e perfil e sai; admin vê "Administrador"; senha errada mostra mensagem neutra; cadastro de e-mail fora da lista é recusado e não cria usuário, conferido com o cliente administrativo |
 | Validador | `node --test scripts/validate-governance.test.mjs`: 26 de 26; `node scripts/validate-governance.mjs`: 0 erro e 0 aviso, com a migração e a RLS reconhecidas |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos (PR #12) | `app` 1 min 35 s, `database` 2 min 13 s e `Governance` 7 s, todos com sucesso. Em `main`, após o merge: `app` 1 min 22 s, `database` 2 min 33 s, `Governance` e `Release Please` com sucesso |
+| Gate M-B | Concedido em 2026-10-12; merge `8d304b8` e issue #9 fechada |
 
 ## Decisões incidentais e desvios
 
 - **Hook testado em duas camadas.** No `supabase test db` a conexão é do papel `postgres`, que não pode assumir `supabase_auth_admin` ("role memberships are reserved"). O pgTAP testa o comportamento da função e os privilégios que o `supabase_auth_admin` precisa (uso dos schemas, `EXECUTE` e a política de leitura da lista); a execução como esse papel é provada pelo teste ponta a ponta e pelo `signup` no GoTrue real.
-- **Job `database` separado do `app`.** O build sem variáveis do Supabase (previews) e o build com backend precisam de ambientes distintos, porque `NEXT_PUBLIC_*` é substituída no build. O job `app` constrói sem variáveis e roda os testes de preview; o job `database` sobe o Supabase, roda `supabase test db`, exporta as variáveis a partir de `supabase status -o env` (com a chave secreta mascarada), constrói com backend e roda os testes de autenticação. Cada job instala o Chromium. O custo em minutos é medido no CI e registrado abaixo.
+- **Job `database` separado do `app`.** O build sem variáveis do Supabase (previews) e o build com backend precisam de ambientes distintos, porque `NEXT_PUBLIC_*` é substituída no build. O job `app` constrói sem variáveis e roda os testes de preview; o job `database` sobe o Supabase, roda `supabase test db`, exporta as variáveis a partir de `supabase status -o env` (com a chave secreta mascarada), constrói com backend e roda os testes de autenticação. Cada job instala o Chromium. Tempo medido na PR #12: `app` 1 min 35 s e `database` 2 min 13 s, cerca de 3 min 48 s de runner por execução, contra a cota de 2.000 minutos mensais.
 - **`home.spec.ts` substituído.** A página `/` deixou de ser pública, então os testes da página inicial provisória foram trocados por `preview.spec.ts` (sem backend) e `auth.spec.ts` (com backend). O `axe` continua cobrindo a página de entrada e o aviso.
 - **Proxy.** O `proxy.ts` só renova a sessão com `getClaims()`; a decisão de acesso de `/` usa `getUser()` no servidor.
 - **Observação para ciclos futuros.** `profiles.email` é copiado na criação do usuário e não acompanha uma troca posterior de e-mail em `auth.users`. A autorização depende da lista só na criação (D1 trata a revogação). Não foi alterado por estar fora do escopo.
 - **Senha de teste.** `auth.spec.ts` usa uma senha fictícia de teste para usuários criados e removidos no Supabase local; ela não é credencial real.
+- **Efeito no release-please.** O `feat` desta PR fez o release-please abrir a PR de release #13 propondo `1.0.0`, e não `0.1.0`, com a branch `release-please--branches--main--components--saldo-futuro`. A correção segue pela trilha curta (issue #14) e a PR #13 não deve ser integrada antes dela (Gate M-R).
 - **`npm audit`.** Mesmas 5 vulnerabilidades de desenvolvimento registradas na task da issue #8; as novas dependências não acrescentaram outras.
 
 ## Resultado
@@ -84,16 +86,16 @@ Não se aplica.
 - `handoff_id`: `saldo-futuro:001:implementar_issue:issue-9:52583ce`
 - `identity_source`: `repository + cycle + workflow + logical_target + source_revision`; timestamp e UUID não definem a identidade.
 - `effect_class`: `local_mutation -> remote_mutation`
-- `state_before` / `state_after`: antes, `main` @ `52583ce` com a issue A integrada, issue #9 aberta e sem branch nem PR; depois, a preencher.
+- `state_before` / `state_after`: antes, `main` @ `52583ce` com a issue A integrada, issue #9 aberta e sem branch nem PR; depois, PR #12 integrada em `8d304b8`, com a issue #9 fechada.
 - `next_transition`: PR B -> checks -> revisão manual das políticas -> Gate M-B.
 - `preconditions`: Gate X-B concedido; issue #8 integrada.
 - `authority`: o responsável (Thiago Andrade).
-- `evidence`: a preencher.
+- `evidence`: PR #12, commit `4ac3199` da branch (squash `8d304b8`), checks `app`, `database`, `Governance` e `Release Please`, e a seção "Evidências".
 - `acceptance`: critérios B1 a B3 da issue #9 atendidos, escopo preservado, gates registrados e PR rastreável.
-- `blockers`: nenhum até aqui.
-- `result`: `not_executed`
-- `next_workflow_recommended` / `next_workflow_authorized`: revisão da PR B e Gate M-B / nenhum merge autorizado.
-- `actions_prohibited`: integrar a PR, iniciar a issue #10, `db push`, tocar em projeto remoto do Supabase, ampliar escopo.
+- `blockers`: nenhum para a issue #9; a divergência do release-please é tratada pela issue #14.
+- `result`: `executed`
+- `next_workflow_recommended` / `next_workflow_authorized`: `implementar_issue` para a issue #10 após o Gate X-C / nenhuma ação autorizada além da correção da issue #14.
+- `actions_prohibited`: iniciar a issue #10, `db push`, tocar em projeto remoto do Supabase, ampliar escopo.
 - `rejection_rule`: o receptor recusa handoff ausente, incompatível, contraditório ou sem evidência material.
 - `logical_key`: `saldo-futuro + 001 + implementar_issue + issue-9(B1-B3) + 52583ce`.
 - `check_before_mutation`: nenhuma task, branch ou PR existia para a chave lógica antes desta criação.

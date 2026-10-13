@@ -206,7 +206,7 @@ Uma única convenção, nomeada pelo tipo semântico e sem prefixo de ferramenta
 
 Os commits seguem Conventional Commits, compatíveis com o release-please a partir do ciclo `001`. PRs são integradas por squash.
 
-Exceção: o release-please cria por conta própria a branch `release-please--branches--main` e o commit de release `chore(main): release x.y.z`, que não seguem as convenções acima. As PRs abertas com o `GITHUB_TOKEN` não disparam outros workflows; os checks da PR de release são executados por `workflow_dispatch`. Os nomes reais são conferidos na primeira execução do workflow.
+Exceção: o release-please cria por conta própria a branch `release-please--branches--main--components--saldo-futuro` e o commit de release `chore(main): release x.y.z`, que não seguem as convenções acima. As PRs abertas com o `GITHUB_TOKEN` não disparam outros workflows; os checks da PR de release são executados por `workflow_dispatch`. Os nomes foram conferidos na primeira PR de release (#13).
 
 ## Gates mínimos
 

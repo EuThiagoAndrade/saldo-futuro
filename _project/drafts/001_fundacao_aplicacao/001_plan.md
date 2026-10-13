@@ -547,7 +547,7 @@ As issues são sequenciais: B usa o CI e o scaffold de A; C usa o schema e a aut
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | A: [#8](https://github.com/EuThiagoAndrade/saldo-futuro/issues/8); B: [#9](https://github.com/EuThiagoAndrade/saldo-futuro/issues/9); C: [#10](https://github.com/EuThiagoAndrade/saldo-futuro/issues/10) |
-| PR(s) | A: [#11](https://github.com/EuThiagoAndrade/saldo-futuro/pull/11), integrada por squash em `52583ce` |
+| PR(s) | A: [#11](https://github.com/EuThiagoAndrade/saldo-futuro/pull/11), integrada por squash em `52583ce`; B: [#12](https://github.com/EuThiagoAndrade/saldo-futuro/pull/12), integrada por squash em `8d304b8` |
 | Branch(es) | A: `chore/issue-8`; B: `feature/issue-9` |
 | `handoff_schema_version` | `1` |
 | `handoff_id` | `saldo-futuro + 001 + revisar_plano + 001_plan + v2` (anteriores: `saldo-futuro + 001 + rascunhar_plano + 001_plan + aa5fa81`, `saldo-futuro + 001 + revisar_plano + 001_plan + v1` e `saldo-futuro + 001 + rascunhar_plano + 001_plan + v2`, aceitos) |
