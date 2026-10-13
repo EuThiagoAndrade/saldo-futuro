@@ -75,11 +75,15 @@ jobs:
           value() { grep "^$1=" "$RUNNER_TEMP/supabase.env" | cut -d= -f2- | tr -d '"'; }
           SECRET_KEY="$(value SECRET_KEY)"
           echo "::add-mask::$SECRET_KEY"
+          # Segredo descartável do cron, só para o teste ponta a ponta do keepalive.
+          CRON_SECRET="$(openssl rand -hex 24)"
+          echo "::add-mask::$CRON_SECRET"
           {
             echo "NEXT_PUBLIC_SUPABASE_URL=$(value API_URL)"
             echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$(value PUBLISHABLE_KEY)"
             echo "SUPABASE_SECRET_KEY=$SECRET_KEY"
             echo "NEXT_PUBLIC_ENABLE_PASSWORD_LOGIN=true"
+            echo "CRON_SECRET=$CRON_SECRET"
           } >> "$GITHUB_ENV"
       - name: Build with backend
         run: npm run build
