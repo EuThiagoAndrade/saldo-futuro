@@ -6,23 +6,39 @@ O Saldo Futuro substitui o [Meus-Investimentos](https://github.com/EuThiagoAndra
 
 ## Estado atual
 
-O ciclo `000` implantou a governança do projeto e o design system. **Ainda não existe código de aplicação, e nenhuma funcionalidade está disponível.** O próximo ciclo é o `001`, de fundação da aplicação.
+O ciclo `000` implantou a governança do projeto e o design system. O ciclo `001`, de fundação da aplicação, está em execução: já existe o scaffold Next.js com uma página inicial provisória. **Nenhuma funcionalidade de produto está disponível.**
 
 ## Mapa de ciclos
 
 | Ciclo | Entrega | Estado |
 | :-- | :-- | :-- |
 | `000` | Governança e design system | Concluído |
-| `001` | Fundação: aplicação Next.js, Supabase, autenticação, perfis, RLS, deploy e release-please | Planejado |
+| `001` | Fundação: aplicação Next.js, Supabase, autenticação, perfis, RLS, deploy e release-please | Em execução |
 | `002` | Regras financeiras: eventos, fechamento, consolidação, Modified Dietz e benchmarks, com casos de referência | Planejado |
 | `003` | Telas pensadas primeiro para o celular | Planejado |
 | `004` | Migração única dos dados e virada | Planejado |
 
-O registro oficial dos ciclos é [`_project/cycles.md`](_project/cycles.md). Os ciclos `001` a `004` ainda não têm plano.
+O registro oficial dos ciclos é [`_project/cycles.md`](_project/cycles.md). Os ciclos `002` a `004` ainda não têm plano.
 
 ## Stack decidida
 
 Next.js (App Router) com React, TypeScript, Tailwind CSS 4, Supabase (PostgreSQL com RLS), Zod, Vitest e Playwright, hospedados na Vercel. A decisão está na [ADR-002](_project/decisions/ADR-002_stack_infraestrutura.md) e é implantada a partir do ciclo `001`.
+
+## Desenvolvimento local
+
+Pré-requisitos: Node.js 24 e npm.
+
+```sh
+npm ci
+npm run dev        # servidor de desenvolvimento em http://localhost:3000
+npm run lint
+npm run typecheck
+npm test           # testes unitários (Vitest)
+npm run build
+npm run test:e2e   # ponta a ponta (Playwright); executa o build antes
+```
+
+O Playwright usa o Chromium dele; `npx playwright install chromium` o instala. Para usar o Chrome já instalado, defina `PLAYWRIGHT_CHANNEL=chrome`. Copie `.env.example` para `.env.local` se precisar de variáveis de ambiente; sem elas, a aplicação roda sem backend.
 
 ## Governança
 

@@ -206,6 +206,8 @@ Uma única convenção, nomeada pelo tipo semântico e sem prefixo de ferramenta
 
 Os commits seguem Conventional Commits, compatíveis com o release-please a partir do ciclo `001`. PRs são integradas por squash.
 
+Exceção: o release-please cria por conta própria a branch `release-please--branches--main` e o commit de release `chore(main): release x.y.z`, que não seguem as convenções acima. As PRs abertas com o `GITHUB_TOKEN` não disparam outros workflows; os checks da PR de release são executados por `workflow_dispatch`. Os nomes reais são conferidos na primeira execução do workflow.
+
 ## Gates mínimos
 
 O tooling de governança usa somente Node.js 24 e APIs nativas, sem `npm install`.
@@ -215,6 +217,17 @@ node --test scripts/validate-governance.test.mjs
 node scripts/validate-governance.mjs
 git diff --check
 git status --short
+```
+
+Entregas que tocam a aplicação executam também, a partir do ciclo `001`:
+
+```sh
+npm ci
+npm run lint
+npm run typecheck
+npm test
+npm run build
+npm run test:e2e
 ```
 
 Antes de publicar uma entrega, execute também os gates adicionais definidos no plano e confirme que o staging contém somente o escopo autorizado. Registre resultados reais na task. Checks críticos devem passar antes do merge, mesmo sem proteção técnica de branch no plano gratuito do GitHub. Falhas semânticas que a automação não cobre exigem revisão manual.

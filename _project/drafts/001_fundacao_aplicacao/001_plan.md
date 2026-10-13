@@ -1,7 +1,7 @@
 # Plano de Implementação — Fundação da aplicação
 
 > **Ciclo:** `001`
-> **Status:** `Aprovado`
+> **Status:** `Em Execução`
 > **Versão:** `v2`
 > **Data de criação:** 2026-10-12
 > **Última atualização:** 2026-10-12
@@ -546,9 +546,9 @@ As issues são sequenciais: B usa o CI e o scaffold de A; C usa o schema e a aut
 
 | Campo | Valor |
 | :-- | :-- |
-| Issue(s) | — |
+| Issue(s) | A: [#8](https://github.com/EuThiagoAndrade/saldo-futuro/issues/8); B: [#9](https://github.com/EuThiagoAndrade/saldo-futuro/issues/9); C: [#10](https://github.com/EuThiagoAndrade/saldo-futuro/issues/10) |
 | PR(s) | — |
-| Branch(es) | — |
+| Branch(es) | A: `chore/issue-8` |
 | `handoff_schema_version` | `1` |
 | `handoff_id` | `saldo-futuro + 001 + revisar_plano + 001_plan + v2` (anteriores: `saldo-futuro + 001 + rascunhar_plano + 001_plan + aa5fa81`, `saldo-futuro + 001 + revisar_plano + 001_plan + v1` e `saldo-futuro + 001 + rascunhar_plano + 001_plan + v2`, aceitos) |
 | Destino após conclusão | `_project/executed/001_fundacao_aplicacao/001_plan.md` |

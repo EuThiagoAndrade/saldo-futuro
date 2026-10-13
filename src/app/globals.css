@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+@theme {
+  --color-*: initial;
+  --color-surface: #ffffff;
+  --color-surface-subtle: #f4f6f9;
+  --color-surface-sunken: #e8ecf2;
+  --color-text: #0f1b2d;
+  --color-text-secondary: #45526a;
+  --color-text-muted: #5e6a7e;
+  --color-border: #d3dae4;
+  --color-border-strong: #7d899b;
+  --color-primary: #0b2a55;
+  --color-primary-hover: #163c73;
+  --color-primary-subtle: #e7edf6;
+  --color-on-primary: #ffffff;
+  --color-gain: #1f6b47;
+  --color-gain-subtle: #e6f2eb;
+  --color-loss: #a63a35;
+  --color-loss-subtle: #f8e9e7;
+  --color-neutral: #5e6a7e;
+  --color-neutral-subtle: #eef1f5;
+  --color-warning: #8a5a00;
+  --color-warning-subtle: #fbf1dc;
+  --color-focus: #2e6bd9;
+  --color-chart-1: #0b2a55;
+  --color-chart-2: #2c7a80;
+  --color-chart-3: #a86f12;
+  --color-chart-4: #6b5a9c;
+  --color-chart-5: #5e6a7e;
+  --color-chart-6: #b04f6f;
+
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --shadow-overlay: 0 8px 24px rgb(15 27 45 / 0.16);
+
+  --breakpoint-sm: 40rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 80rem;
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  src: url("../../design-system/assets/fonts/IBMPlexSans-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  src: url("../../design-system/assets/fonts/IBMPlexSans-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  src: url("../../design-system/assets/fonts/IBMPlexSans-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-surface-subtle);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
