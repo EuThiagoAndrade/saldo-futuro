@@ -2,13 +2,13 @@
 
 > **Ciclo:** `001`
 > **Trilha:** `normal`
-> **Estado:** `Em andamento`
+> **Estado:** `Concluída`
 > **Tipo:** `chore`
 > **Issue:** `#8`
 > **Plano:** `_project/drafts/001_fundacao_aplicacao/001_plan.md`
 > **Branch:** `chore/issue-8`
-> **PR:** —
-> **Integração:** `Pendente`
+> **PR:** [#11](https://github.com/EuThiagoAndrade/saldo-futuro/pull/11)
+> **Integração:** `Integrada por squash em 52583ce (2026-10-12)`
 > **Início:** 2026-10-12
 > **Última atualização:** 2026-10-12
 > **handoff_schema_version:** `1`
@@ -46,8 +46,8 @@ Não se aplica.
 - [x] A2: ESLint, `typecheck`, Vitest (esquema de ambiente e contrato de tokens), Playwright com axe, `.env.example`, `ci.yml`, manifesto do validador e gates mínimos em `_project/README.md`.
 - [x] A3: `release-please-config.json`, `.release-please-manifest.json` em `0.0.0`, `release-please.yml` e a exceção documentada em `_project/README.md`.
 - [x] Gates locais executados (ver Evidências).
-- [ ] PR publicada, checks remotos e tempo do workflow `CI` registrados.
-- [ ] Após o merge: workflow `Release Please` sem erro e nomes reais da branch e do commit conferidos (critério A3, depende do Gate M-A).
+- [x] PR #11 publicada; checks remotos verdes e tempo do workflow `CI` registrados.
+- [x] Após o merge gerou-se `Release Please` sem erro e sem PR de release (commit `chore`). Os nomes reais da branch e do commit de release seguem pendentes de conferência na primeira PR de release, que aparece após o primeiro `feat` (Gate M-R).
 
 ## Evidências
 
@@ -64,7 +64,8 @@ Não se aplica.
 | Versões | Nenhuma versão com `^` ou `~` em `package.json`; `package-lock.json` versionado; as versões são as da tabela do plano |
 | Validador | `node --test scripts/validate-governance.test.mjs`: 26 de 26 passaram; `node scripts/validate-governance.mjs`: 0 erro, 0 aviso; remover `package.json`, `ci.yml` ou `.env.example` produz erro de arquivo obrigatório ausente |
 | `git diff --check` | Ver a seção "Resultado" após o staging |
-| Checks remotos | Pendente |
+| Checks remotos (PR #11) | `CI` passou em 1 min 14 s e `Governance` em 13 s. Em `main`, após o merge: `CI` 1 min 15 s, `Governance` e `Release Please` com sucesso; este não abriu PR de release |
+| Gate M-A | Concedido pelo responsável em 2026-10-12. A opção "Allow GitHub Actions to create and approve pull requests" continuava desabilitada na API no momento do merge e deve ser habilitada antes do primeiro `feat` |
 
 ## Decisões incidentais e desvios
 
@@ -86,16 +87,16 @@ Não se aplica.
 - `handoff_id`: `saldo-futuro:001:implementar_issue:issue-8:9bb4f8a`
 - `identity_source`: `repository + cycle + workflow + logical_target + source_revision`; timestamp e UUID não definem a identidade.
 - `effect_class`: `local_mutation -> remote_mutation`
-- `state_before` / `state_after`: antes, `main` @ `9bb4f8a` limpa, issue #8 aberta e sem branch nem PR; depois, a preencher.
+- `state_before` / `state_after`: antes, `main` @ `9bb4f8a` limpa, issue #8 aberta e sem branch nem PR; depois, PR #11 integrada em `52583ce`, com a issue #8 fechada.
 - `next_transition`: PR A -> checks -> Gate M-A.
 - `preconditions`: Gate X-A concedido; issues #8, #9 e #10 abertas.
 - `authority`: o responsável (Thiago Andrade).
-- `evidence`: a preencher.
+- `evidence`: PR #11, commit `4ac3199` (squash `52583ce`), checks `CI`, `Governance` e `Release Please`, e a seção "Evidências".
 - `acceptance`: critérios de aceite A0 a A3 da issue #8 atendidos, escopo preservado, gates registrados e PR rastreável.
-- `blockers`: nenhum até aqui.
-- `result`: `not_executed`
-- `next_workflow_recommended` / `next_workflow_authorized`: revisão da PR A e Gate M-A / nenhum merge autorizado.
-- `actions_prohibited`: integrar a PR, iniciar a issue #9, ampliar escopo, configurar serviço externo.
+- `blockers`: nenhum para a issue #8; a permissão do Actions é ação pendente do responsável.
+- `result`: `executed`
+- `next_workflow_recommended` / `next_workflow_authorized`: `implementar_issue` para a issue #9 / autorizado pelo Gate X-B em 2026-10-12, registrado na task da issue #9.
+- `actions_prohibited`: reabrir o escopo da issue #8, ampliar escopo, configurar serviço externo.
 - `rejection_rule`: o receptor recusa handoff ausente, incompatível, contraditório ou sem evidência material.
 - `logical_key`: `saldo-futuro + 001 + implementar_issue + issue-8(A0-A3) + 9bb4f8a`.
 - `check_before_mutation`: nenhuma task, branch ou PR existia para a chave lógica antes desta criação.
