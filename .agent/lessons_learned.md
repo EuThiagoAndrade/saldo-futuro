@@ -29,3 +29,19 @@ Origem: ciclo `000`, ressalva S1. O critério "confirmar que a fonte expõe `tnu
 ### 2026-10-12 — Testes não podem depender de maiúsculas e minúsculas no sistema de arquivos
 
 Origem: ciclo `000`, PR #4. Um teste renomeava `pull_request_template.md` para `PULL_REQUEST_TEMPLATE.md` e esperava o arquivo ausente. No Windows, o sistema de arquivos ignora maiúsculas e o arquivo continuava encontrado, enquanto no runner Linux o teste teria outro resultado. Fixtures devem distinguir caminhos por nome ou diretório, nunca só pela caixa das letras, para que o gate local e o CI concordem.
+
+### 2026-10-13 — A concessão de um gate não dispensa a verificação da sua precondição
+
+Origem: ciclo `001`, PR #16. O responsável concedeu o Gate M-C, mas a precondição do plano (Gate H-C, a configuração externa de produção, concluído) não estava satisfeita e o agente não conseguia confirmá-la. O agente avisou da dúvida e fez o merge assim mesmo, tratando a concessão como confirmação. Não houve dano, mas o merge é irreversível e a ordem de execução mudou. Quando a precondição de um gate não puder ser verificada pelo agente, ele pergunta antes de agir e só prossegue com a confirmação explícita de que a precondição foi cumprida, e não apenas com a frase de concessão. Avisar da dúvida e agir em seguida não substitui perguntar.
+
+### 2026-10-13 — Roteiros de serviço externo devem ser validados contra as exigências do próprio serviço
+
+Origem: ciclo `001`, KB-002. O roteiro mandava publicar a tela de consentimento do Google, mas o Google só publica um app externo com página inicial e política de privacidade, que o produto não tinha; o responsável precisou decidir manter o modo de teste. Outras divergências surgiram na execução: o rótulo "Project ID" do Supabase, o endereço `localhost` herdado nas URLs e a ordem das variáveis na Vercel. Ao escrever um roteiro para um painel externo, liste as exigências e os limites do serviço (campos obrigatórios, planos, rótulos) a partir da documentação oficial, marque o que não foi verificado no painel e leve a divergência ao responsável antes da execução, não durante ela.
+
+### 2026-10-13 — Conferir o comportamento da primeira execução de uma ferramenta de versionamento
+
+Origem: ciclo `001`, issue #14. O release-please, sem nenhum release anterior, usa `initial-version` (padrão `1.0.0`) e ignora a versão `0.0.0` do manifesto; o plano esperava `0.1.0`. Isso só apareceu na primeira PR de release. Para ferramentas cujo comportamento inicial dependa de estado ainda inexistente, declare a opção explícita na configuração, cubra-a com um teste de configuração e confira o resultado real na primeira execução, em vez de presumir o padrão.
+
+### 2026-10-13 — Em JavaScript, `String.replace` interpreta `$$` na substituição
+
+Origem: ciclo `001`, PR #12 e PR #16. Scripts que editavam arquivos SQL com `replace(texto, "...$$...")` produziram `$` onde havia `$$`, quebrando as funções e os testes pgTAP, e o erro só apareceu ao rodar `supabase test db`. Em edições programáticas de texto com `$`, use uma função como substituição (`replace(texto, () => novo)`) ou separe e junte (`split(...).join(...)`), e rode o teste do arquivo editado logo em seguida.
