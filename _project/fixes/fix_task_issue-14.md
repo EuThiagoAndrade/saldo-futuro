@@ -2,13 +2,13 @@
 
 > **Ciclo:** `—`
 > **Trilha:** `curta`
-> **Estado:** `Em andamento`
+> **Estado:** `Concluída`
 > **Tipo:** `fix`
 > **Issue:** `#14`
 > **Plano:** `—`
 > **Branch:** `fix/issue-14`
-> **PR:** —
-> **Integração:** `Pendente`
+> **PR:** [#15](https://github.com/EuThiagoAndrade/saldo-futuro/pull/15)
+> **Integração:** `Integrada por squash em 54f8db6 (2026-10-12)`
 > **Início:** 2026-10-12
 > **Última atualização:** 2026-10-12
 > **handoff_schema_version:** `1`
@@ -48,8 +48,8 @@ Fazer a primeira PR de release propor `0.1.0` (plano `001`, D3 e Item A3) e regi
 - [x] Teste que reproduz o defeito: `src/release-please.test.ts`.
 - [x] Correção em `release-please-config.json` e nomes reais em `_project/README.md`.
 - [x] Reconciliação da task da issue #9 e do plano.
-- [ ] PR publicada e checks.
-- [ ] Após o merge: conferir se a PR de release #13 passa a propor `0.1.0`. Se não passar, parar e pedir decisão.
+- [x] PR #15 publicada; checks remotos verdes. Gate M-F concedido pelo responsável em 2026-10-12; merge por squash.
+- [x] Após o merge, a PR de release #13 passou a propor `0.1.0` (título `chore(main): release 0.1.0`; manifesto, `package.json` e `package-lock.json` de `0.0.0` para `0.1.0`).
 
 ## Evidências
 
@@ -60,7 +60,8 @@ Fazer a primeira PR de release propor `0.1.0` (plano `001`, D3 e Item A3) e regi
 | Defeito original | PR de release #13: título `chore(main): release 1.0.0`, branch `release-please--branches--main--components--saldo-futuro` |
 | Validador | `node --test scripts/validate-governance.test.mjs`: 26 de 26; `node scripts/validate-governance.mjs`: 0 erro e 0 aviso; lint e typecheck passaram |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos (PR #15) | `app` 1 min 19 s, `database` 2 min 21 s e `Governance` 9 s, todos com sucesso |
+| Conferência da PR de release | PR #13 depois do merge: título `chore(main): release 0.1.0`, branch `release-please--branches--main--components--saldo-futuro`; changelog com a feature da issue #9 e a correção da issue #14 |
 
 ## Decisões incidentais e desvios
 
@@ -75,16 +76,16 @@ Fazer a primeira PR de release propor `0.1.0` (plano `001`, D3 e Item A3) e regi
 - `handoff_id`: `saldo-futuro:fix:corrigir_trilha_curta:issue-14:8d304b8`
 - `identity_source`: `repository + cycle + workflow + logical_target + source_revision`; timestamp e UUID não definem a identidade.
 - `effect_class`: `local_mutation -> remote_mutation`
-- `state_before` / `state_after`: antes, `main` @ `8d304b8` com a PR de release #13 propondo `1.0.0`; depois, a preencher.
+- `state_before` / `state_after`: antes, `main` @ `8d304b8` com a PR de release #13 propondo `1.0.0`; depois, PR #15 integrada em `54f8db6`, com a issue #14 fechada e a PR de release #13 propondo `0.1.0`.
 - `next_transition`: PR -> checks -> gate de integração -> conferência da PR #13.
 - `preconditions`: issue `[FIX]` elegível, autorização explícita e base atualizada.
 - `authority`: o responsável (Thiago Andrade).
-- `evidence`: teste vermelho e verde, issue #14, PR a abrir, checks.
+- `evidence`: teste vermelho e verde, issue #14, PR #15 (squash `54f8db6`), checks e a PR de release #13 em `0.1.0`.
 - `acceptance`: defeito corrigido, elegibilidade justificada, barreiras declaradas e escopo preservado.
-- `blockers`: nenhum até aqui.
-- `result`: `not_executed`
-- `next_workflow_recommended` / `next_workflow_authorized`: revisão da PR e integração após o gate / nenhum merge autorizado.
-- `actions_prohibited`: integrar a PR, integrar a PR de release #13, ampliar escopo, alterar migração existente.
+- `blockers`: nenhum.
+- `result`: `executed`
+- `next_workflow_recommended` / `next_workflow_authorized`: nenhum; a PR de release #13 só é integrada no Gate M-R / nenhuma ação autorizada.
+- `actions_prohibited`: integrar a PR de release #13 antes do Gate M-R, ampliar escopo, alterar migração existente.
 - `rejection_rule`: o receptor recusa handoff sem issue, sem elegibilidade justificada, sem barreiras declaradas ou sem teste de reprodução.
 - `logical_key`: `saldo-futuro + fix + corrigir_trilha_curta + 14 + 8d304b8`.
 - `check_before_mutation`: nenhuma task, branch ou PR existia para a issue #14.
