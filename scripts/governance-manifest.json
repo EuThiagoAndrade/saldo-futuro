@@ -106,7 +106,7 @@
       "node scripts/validate-governance.mjs",
       "supabase/migrations/"
     ],
-    ".github/workflows/ci.yml": ["contents: read", "package-manager-cache: false"]
+    ".github/workflows/ci.yml": ["contents: read", "package-manager-cache: false", "supabase test db"]
   },
   "adapters": {
     "files": ["AGENTS.md", "CLAUDE.md", "GEMINI.md"],

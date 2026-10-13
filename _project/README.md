@@ -180,7 +180,7 @@ Passo de CI em `.github/workflows/governance.yml`:
 | Barreira | Automatizado desde o ciclo `000` | Automatização prevista | Sempre manual |
 | :-- | :-- | :-- | :-- |
 | G1 | Seção obrigatória na task e checklist da PR | Testes de casos de referência (ciclo `002`) | Conferência dos valores esperados e da KB |
-| G2 | Verificação estática do validador | Teste de banco de isolamento (ciclo `001`) | Revisão de políticas RLS e funções `security definer` |
+| G2 | Verificação estática do validador e teste de banco de isolamento (`supabase test db`, ciclo `001`) | — | Revisão de políticas RLS e funções `security definer` |
 | G3 | Validador (arquivos de dados e `.gitignore`) | — | Revisão de textos, prints e fixtures |
 | G4 | Passo de CI e padrão de nome no validador | — | — |
 
@@ -227,8 +227,12 @@ npm run lint
 npm run typecheck
 npm test
 npm run build
+npx supabase start
+npx supabase test db
 npm run test:e2e
 ```
+
+Os comandos de Supabase valem para entregas que tocam o banco ou a autenticação; o `test:e2e` com backend exige as variáveis do Supabase local (ver `README.md`).
 
 Antes de publicar uma entrega, execute também os gates adicionais definidos no plano e confirme que o staging contém somente o escopo autorizado. Registre resultados reais na task. Checks críticos devem passar antes do merge, mesmo sem proteção técnica de branch no plano gratuito do GitHub. Falhas semânticas que a automação não cobre exigem revisão manual.
 

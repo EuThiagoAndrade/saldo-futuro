@@ -38,6 +38,25 @@ npm run build
 npm run test:e2e   # ponta a ponta (Playwright); executa o build antes
 ```
 
+### Supabase local (autenticação e banco)
+
+Exige Docker. O Supabase local usa dados fictícios (`supabase/seed.sql`) e nunca o projeto de produção.
+
+```sh
+npx supabase start        # sobe o banco e o Auth locais
+npx supabase db reset     # aplica as migrações e o seed
+npx supabase test db      # testes de banco (pgTAP), incluindo o isolamento por RLS
+npx supabase status -o env
+```
+
+Para rodar a aplicação e os testes ponta a ponta com o Supabase local, exporte as variáveis a partir de `API_URL`, `PUBLISHABLE_KEY` e `SECRET_KEY` da saída de `status -o env`:
+
+- `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, também em `.env.local`;
+- `NEXT_PUBLIC_ENABLE_PASSWORD_LOGIN=true`, que mostra o login por senha, só neste ambiente;
+- `SUPABASE_SECRET_KEY`, só no ambiente dos testes ponta a ponta (não vai para `.env.example`, `.env.local` nem para a Vercel).
+
+Sem essas variáveis, a aplicação mostra "Preview sem backend" e os testes de autenticação são ignorados.
+
 O Playwright usa o Chromium dele; `npx playwright install chromium` o instala. Para usar o Chrome já instalado, defina `PLAYWRIGHT_CHANNEL=chrome`. Copie `.env.example` para `.env.local` se precisar de variáveis de ambiente; sem elas, a aplicação roda sem backend.
 
 ## Governança

@@ -18,7 +18,7 @@ concurrency:
 
 jobs:
   app:
-    name: Lint, types, tests, build and e2e
+    name: Lint, types, tests, build and preview e2e
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -39,9 +39,51 @@ jobs:
         run: npm run typecheck
       - name: Unit tests
         run: npm test
-      - name: Build
+      # Sem as variáveis do Supabase, como nos previews: o build passa e as páginas mostram o aviso.
+      - name: Build without backend
         run: npm run build
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
-      - name: End-to-end tests
+      - name: End-to-end tests without backend
+        run: npm run test:e2e
+
+  database:
+    name: Supabase local, database tests and auth e2e
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        # actions/checkout v6.1.0
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - name: Setup Node.js 24
+        # actions/setup-node v6.5.0
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Install dependencies
+        run: npm ci
+      - name: Start Supabase
+        run: npx supabase start
+      - name: Database tests
+        run: npx supabase test db
+      - name: Export local Supabase environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx supabase status -o env > "$RUNNER_TEMP/supabase.env"
+          value() { grep "^$1=" "$RUNNER_TEMP/supabase.env" | cut -d= -f2- | tr -d '"'; }
+          SECRET_KEY="$(value SECRET_KEY)"
+          echo "::add-mask::$SECRET_KEY"
+          {
+            echo "NEXT_PUBLIC_SUPABASE_URL=$(value API_URL)"
+            echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$(value PUBLISHABLE_KEY)"
+            echo "SUPABASE_SECRET_KEY=$SECRET_KEY"
+            echo "NEXT_PUBLIC_ENABLE_PASSWORD_LOGIN=true"
+          } >> "$GITHUB_ENV"
+      - name: Build with backend
+        run: npm run build
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: End-to-end tests with backend
         run: npm run test:e2e
