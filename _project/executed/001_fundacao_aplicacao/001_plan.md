@@ -1,10 +1,10 @@
 # Plano de Implementação — Fundação da aplicação
 
 > **Ciclo:** `001`
-> **Status:** `Em Execução`
+> **Status:** `Concluído`
 > **Versão:** `v2`
 > **Data de criação:** 2026-10-12
-> **Última atualização:** 2026-10-12
+> **Última atualização:** 2026-10-13
 > **Autor:** Thiago Andrade e Claude
 > **Tipo:** `feature`
 > **Prioridade:** `P1`
@@ -482,7 +482,7 @@ As issues são sequenciais: B usa o CI e o scaffold de A; C usa o schema e a aut
 
 ## Dependências e blockers
 
-- **Bloqueador atual:** Gate X-A (autorização explícita para implementar a issue A), após a PR do plano integrada e as issues criadas. O Gate P foi concedido em 2026-10-12.
+- **Bloqueador atual:** nenhum. Ciclo encerrado em 2026-10-13; os Gates P, X-A, M-A, X-B, M-B, X-C, H-C, M-C, V-C, X-F, M-F, M-R e E foram concedidos e executados, conforme `001_task_closure.md`.
 - A ideação e a alteração de `cycles.md` ainda não estão versionadas; entram na PR do plano (Gate P).
 - Ações do responsável, sem as quais a cadeia para: permissão do Actions para abrir PRs (precondição do Gate M-A); contas e aceite de termos em Google Cloud, Supabase e Vercel; vaga de projeto no Supabase; acesso ao DNS no Cloudflare (Gate H-C).
 - Docker disponível localmente e no runner para o Supabase local.
@@ -547,10 +547,10 @@ As issues são sequenciais: B usa o CI e o scaffold de A; C usa o schema e a aut
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | A: [#8](https://github.com/EuThiagoAndrade/saldo-futuro/issues/8); B: [#9](https://github.com/EuThiagoAndrade/saldo-futuro/issues/9); C: [#10](https://github.com/EuThiagoAndrade/saldo-futuro/issues/10) |
-| PR(s) | A: [#11](https://github.com/EuThiagoAndrade/saldo-futuro/pull/11), integrada por squash em `52583ce`; B: [#12](https://github.com/EuThiagoAndrade/saldo-futuro/pull/12), integrada por squash em `8d304b8`; C: [#16](https://github.com/EuThiagoAndrade/saldo-futuro/pull/16), integrada por squash em `b078ab0`; correção (trilha curta, issue #14): [#15](https://github.com/EuThiagoAndrade/saldo-futuro/pull/15), integrada por squash em `54f8db6` |
-| Branch(es) | A: `chore/issue-8`; B: `feature/issue-9`; C: `feature/issue-10` |
+| PR(s) | Plano: [#7](https://github.com/EuThiagoAndrade/saldo-futuro/pull/7), integrada por squash em `9bb4f8a`; A: [#11](https://github.com/EuThiagoAndrade/saldo-futuro/pull/11), integrada por squash em `52583ce`; B: [#12](https://github.com/EuThiagoAndrade/saldo-futuro/pull/12), integrada por squash em `8d304b8`; C: [#16](https://github.com/EuThiagoAndrade/saldo-futuro/pull/16), integrada por squash em `b078ab0`; correção (trilha curta, issue #14): [#15](https://github.com/EuThiagoAndrade/saldo-futuro/pull/15), integrada por squash em `54f8db6`; documentação do Gate H-C: [#17](https://github.com/EuThiagoAndrade/saldo-futuro/pull/17), integrada por squash em `bfd9df4`; release: [#13](https://github.com/EuThiagoAndrade/saldo-futuro/pull/13), integrada por squash em `41989ee`, com a tag e o release `v0.1.0`; encerramento: `chore/cycle-001-closure`, verificável no GitHub |
+| Branch(es) | Plano: `chore/cycle-001-plan`; A: `chore/issue-8`; B: `feature/issue-9`; C: `feature/issue-10`; correção: `fix/issue-14`; documentação do Gate H-C: `chore/cycle-001-hc-kb`; release: `release-please--branches--main--components--saldo-futuro`; encerramento: `chore/cycle-001-closure` |
 | `handoff_schema_version` | `1` |
-| `handoff_id` | `saldo-futuro + 001 + revisar_plano + 001_plan + v2` (anteriores: `saldo-futuro + 001 + rascunhar_plano + 001_plan + aa5fa81`, `saldo-futuro + 001 + revisar_plano + 001_plan + v1` e `saldo-futuro + 001 + rascunhar_plano + 001_plan + v2`, aceitos) |
+| `handoff_id` | `saldo-futuro + 001 + encerramento + 001_plan + 41989ee` (anteriores: `saldo-futuro + 001 + revisar_plano + 001_plan + v2` e, antes dele, `saldo-futuro + 001 + rascunhar_plano + 001_plan + aa5fa81`, `saldo-futuro + 001 + revisar_plano + 001_plan + v1` e `saldo-futuro + 001 + rascunhar_plano + 001_plan + v2`, aceitos) |
 | Destino após conclusão | `_project/executed/001_fundacao_aplicacao/001_plan.md` |
 
 ## Handoff de saída
@@ -691,6 +691,14 @@ Nenhuma correção material. Na atualização para `Aprovado` foi aplicado o aju
 
 ## Pós-mortem
 
-- **Data de conclusão:** —
-- **Desvios:** —
-- **Lições comprovadas:** —
+- **Data de conclusão:** 2026-10-13. Encerramento documental concluído com a integração da PR `chore/cycle-001-closure`, verificável no GitHub. Duas conferências seguem abertas como acompanhamento, sem bloquear o encerramento: a primeira chamada automática do cron nos logs da Vercel e o projeto Supabase ativo por pelo menos 8 dias (ver `001_task_closure.md`).
+- **Desvios:**
+  - **A2:** tornar `package.json` obrigatório no manifesto quebrou uma asserção do teste do validador; o responsável autorizou removê-la, de modo que o tooling mudou além do manifesto.
+  - **A1:** a fonte foi servida por `@font-face` em `globals.css`, e não por `next/font/local`, porque o nome de família gerado não resolvia para "IBM Plex Sans". O plano deixava o mecanismo livre.
+  - **B2 e B3:** o CI ficou com dois jobs (`app` e `database`), porque o build sem variáveis do Supabase e o build com backend precisam de ambientes distintos; o hook foi testado em duas camadas no pgTAP, porque o papel de teste não pode assumir `supabase_auth_admin`.
+  - **A3:** a primeira PR de release propôs `1.0.0` em vez de `0.1.0` (o release-please usa `initial-version` sem release anterior). Corrigido pela trilha curta, na issue #14 e na PR #15.
+  - **Ordem dos gates:** o Gate M-C foi concedido e a PR #16 foi integrada antes do Gate H-C, que era a precondição do plano. Sem dano; o primeiro `db push` aplicou as duas migrações de uma vez.
+  - **H-C:** a tela de consentimento do Google ficou em modo **Testando**, porque a publicação exige página inicial e política de privacidade; decisão do responsável. A KB-002 foi corrigida em PR própria (#17).
+  - **Gate M-D:** nome dado pelo responsável à integração da PR documental #17, que o plano não previa.
+  - **Gates de produção:** o painel de logs da Vercel falhou nas consultas do cron; a prova direta foi o teste do keepalive com o segredo.
+- **Lições comprovadas:** cinco registros em `.agent/lessons_learned.md` (2026-10-13): a concessão de um gate não dispensa a verificação da precondição; roteiros de serviço externo devem ser validados contra as exigências do próprio serviço; conferir o comportamento da primeira execução de uma ferramenta de versionamento; `$$` em `String.replace`; e comparar a hora do primeiro deploy com a hora agendada antes de concluir que uma rotina falhou.

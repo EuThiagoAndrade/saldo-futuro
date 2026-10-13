@@ -45,3 +45,7 @@ Origem: ciclo `001`, issue #14. O release-please, sem nenhum release anterior, u
 ### 2026-10-13 — Em JavaScript, `String.replace` interpreta `$$` na substituição
 
 Origem: ciclo `001`, PR #12 e PR #16. Scripts que editavam arquivos SQL com `replace(texto, "...$$...")` produziram `$` onde havia `$$`, quebrando as funções e os testes pgTAP, e o erro só apareceu ao rodar `supabase test db`. Em edições programáticas de texto com `$`, use uma função como substituição (`replace(texto, () => novo)`) ou separe e junte (`split(...).join(...)`), e rode o teste do arquivo editado logo em seguida.
+
+### 2026-10-13 — Antes de concluir que uma rotina agendada falhou, compare a hora do primeiro deploy com a agenda
+
+Origem: ciclo `001`, Gate V-C. Nenhuma chamada do cron diário aparecia nos logs da Vercel no dia do deploy. A consulta dos deploys de produção no GitHub mostrou que o primeiro deploy saiu depois do horário agendado (15h47 UTC contra 08h17 UTC), então a primeira chamada ainda nem era esperada. Ao verificar uma rotina periódica, confronte primeiro o horário do primeiro deploy com a agenda e a janela de tolerância do plano, em vez de tratar a ausência de registro como falha; e registre a data e a janela da primeira execução esperada.

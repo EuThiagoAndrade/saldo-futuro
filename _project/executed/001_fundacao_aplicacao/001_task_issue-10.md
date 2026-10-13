@@ -5,7 +5,7 @@
 > **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#10`
-> **Plano:** `_project/drafts/001_fundacao_aplicacao/001_plan.md`
+> **Plano:** `_project/executed/001_fundacao_aplicacao/001_plan.md`
 > **Branch:** `feature/issue-10`
 > **PR:** [#16](https://github.com/EuThiagoAndrade/saldo-futuro/pull/16)
 > **Integração:** `Integrada por squash em b078ab0 (2026-10-12)`
@@ -50,7 +50,7 @@ Não se aplica.
 - [x] PR #16 publicada; checks remotos verdes.
 - [x] Gate M-C concedido pelo responsável em 2026-10-12; merge por squash (ver o desvio sobre a ordem dos gates).
 - [x] Gate H-C executado pelo responsável em 2026-10-13, com a orientação do agente; checklist na seção "Gate H-C".
-- [ ] Gate V-C: as evidências de produção vão para a task de closure; o que já foi conferido está em "Gate H-C".
+- [x] Gate V-C: as evidências de produção estão registradas na task de closure (`001_task_closure.md`).
 
 ## Evidências
 
