@@ -5,7 +5,7 @@
 > **Estado:** `Concluída`
 > **Tipo:** `chore`
 > **Issue:** `#8`
-> **Plano:** `_project/drafts/001_fundacao_aplicacao/001_plan.md`
+> **Plano:** `_project/executed/001_fundacao_aplicacao/001_plan.md`
 > **Branch:** `chore/issue-8`
 > **PR:** [#11](https://github.com/EuThiagoAndrade/saldo-futuro/pull/11)
 > **Integração:** `Integrada por squash em 52583ce (2026-10-12)`

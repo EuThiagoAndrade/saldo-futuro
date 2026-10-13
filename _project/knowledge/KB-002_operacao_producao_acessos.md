@@ -214,7 +214,7 @@ Consultadas em 2026-10-12 e conferidas na execução de 2026-10-13. São documen
 - Vercel, cron jobs: <https://vercel.com/docs/cron-jobs>. Função: o cron chama o deployment de produção.
 - Vercel, limites de cron: <https://vercel.com/docs/cron-jobs/usage-and-pricing>. Função: mínimo diário e precisão de ±59 min no Hobby.
 - Chrome, critérios de instalação do PWA: <https://web.dev/articles/install-criteria>. Função: instalação pelo menu sem service worker.
-- Plano `001`, `_project/drafts/001_fundacao_aplicacao/001_plan.md`, "Modelo de acesso", "Regra de papel adotada na v2" e decisões D1 a D3: origem dos procedimentos P1 a P4.
+- Plano `001`, `_project/executed/001_fundacao_aplicacao/001_plan.md`, "Modelo de acesso", "Regra de papel adotada na v2" e decisões D1 a D3: origem dos procedimentos P1 a P4.
 
 ## Histórico
 
