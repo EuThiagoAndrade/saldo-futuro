@@ -5,7 +5,7 @@
 > **Estado:** `Concluída`
 > **Tipo:** `chore`
 > **Issue:** `#26`
-> **Plano:** `_project/drafts/003_regras_financeiras/003_plan.md`
+> **Plano:** `_project/executed/003_regras_financeiras/003_plan.md`
 > **Branch:** `chore/issue-26`
 > **PR:** [#30](https://github.com/EuThiagoAndrade/saldo-futuro/pull/30)
 > **Integração:** `Integrada por squash em d8fcae4, em 2026-10-14`
@@ -26,7 +26,7 @@ Entregar o item A do plano: a KB-004 com a especificação canônica das regras 
 - `_project/knowledge/KB-004_regras_financeiras.md`.
 - `tests/fixtures/financeiro/casos_referencia.json`.
 - `src/lib/financeiro/casos-referencia.test.ts` (teste de concordância, D12).
-- `_project/drafts/003_regras_financeiras/003_validation_casos_referencia.md`.
+- `_project/drafts/003_regras_financeiras/003_validation_casos_referencia.md` (em `executed/` depois do encerramento).
 - `scripts/governance-manifest.json`: KB-004 em `requiredFiles`.
 - Esta task; transição do plano e do ciclo, rastreabilidade e o registro das decisões K no plano.
 
@@ -112,10 +112,10 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando autorização de implementação — ciclo 003 (completo)
-Quem: Responsável
-Conferir: Issue #27 (schema da carteira, lançamentos e fechamento) e o item B do plano
-Diga: "autorizo a implementação da issue #27"
+Situação: Concluído — ciclo 003 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída

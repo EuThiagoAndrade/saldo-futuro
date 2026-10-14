@@ -57,3 +57,19 @@ Origem: ciclo `002`, PR #22. O padrão `\bGates? …\b` foi gravado no manifesto
 ### 2026-10-13 — Revisar um plano com outra ferramenta encontra o que o autor não vê
 
 Origem: ciclo `002`, rodadas 1 a 3 do plano da reforma. O Codex, lendo só o repositório, encontrou 11 bloqueadores em duas rodadas num plano escrito pelo Claude. Entre eles: uma decisão que se apoiava em regras que a própria entrega apagaria, uma regra nova que reprovaria os históricos e uma retomada que esconderia bloqueios. Vários eram efeitos colaterais das correções da rodada anterior. Em mudança de regras ou de processo, prefira um revisor diferente do autor e trate cada rodada como capaz de criar problemas novos: o revisor confere as interações entre as correções, não só os achados antigos.
+
+### 2026-10-14 — O dblink do Supabase local precisa de senha e do endereço do próprio servidor
+
+Origem: ciclo `003`, issue #27. Os testes de concorrência abrem duas sessões pelo `dblink` dentro de `supabase test db`. A conexão para `127.0.0.1` falhou com "password or GSSAPI delegated credentials required": o `pg_hba` do contêiner dá `trust` ao loopback, e o `dblink` exige de quem não é superusuário uma credencial que seja de fato usada. Conectar ao endereço do próprio servidor (`host(inet_server_addr())`), que cai na regra `scram-sha-256`, com o usuário e a senha padrão do ambiente local, funcionou no local e no CI. Ao usar `dblink` em testes, derive o endereço da sessão corrente em vez de fixar nome de contêiner, e remova as fixtures que a outra sessão confirmou.
+
+### 2026-10-14 — Em pgTAP, só as asserções podem imprimir "ok"
+
+Origem: ciclo `003`, issue #27. Funções auxiliares que devolviam o texto `ok`, chamadas com `select` fora de uma asserção, imprimiram linhas que o `pg_prove` leu como resultados TAP: o teste acusou "Tests out of sequence" e um plano maior que o real. Passos de preparação devem devolver `void` e lançar erro na falha; textos de resultado só entram como argumento de `is()`, `throws_ok()` e afins.
+
+### 2026-10-14 — Chaves estrangeiras de dados por usuário precisam de cascata coerente até `auth.users`
+
+Origem: ciclo `003`, issue #27. A limpeza do teste de concorrência (`delete from auth.users`) falhou porque `posicoes_mensais` apontava para `ativos` sem cascata, enquanto as duas tabelas caíam em cascata a partir do usuário. O mesmo erro bloquearia a revogação de acesso da ADR-003 em produção. Ao criar tabelas de dados do usuário, confira que toda chave entre elas permite a exclusão do usuário, e teste essa exclusão com dados em todas as tabelas.
+
+### 2026-10-14 — O recálculo cego de casos de referência encontra entradas ambíguas, não só contas erradas
+
+Origem: ciclo `003`, issue #26. Outro modelo recebeu só as regras e as entradas dos casos, sem os valores esperados. Não achou nenhum erro de cálculo, mas expôs um caso sem saldo real informado, em que o componente de rendimento dependia de uma suposição, e um motivo de recusa diferente do que a KB nomeava. Ao validar casos de referência, entregue ao recalculador só as regras e as entradas, e trate cada divergência como possível lacuna da especificação antes de supor erro de quem recalculou.

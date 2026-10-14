@@ -1,7 +1,7 @@
 # Plano de Implementação — Regras financeiras
 
 > **Ciclo:** `003`
-> **Status:** `Em Execução`
+> **Status:** `Concluído`
 > **Versão:** `v3`
 > **Data de criação:** 2026-10-13
 > **Última atualização:** 2026-10-14
@@ -425,38 +425,34 @@ Uma PR por issue. A PR documental do plano, a PR de release e a PR de encerramen
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | A [#26](https://github.com/EuThiagoAndrade/saldo-futuro/issues/26), B [#27](https://github.com/EuThiagoAndrade/saldo-futuro/issues/27), C [#28](https://github.com/EuThiagoAndrade/saldo-futuro/issues/28) e D [#29](https://github.com/EuThiagoAndrade/saldo-futuro/issues/29), criadas em 2026-10-14 |
-| PR(s) | Plano: [#25](https://github.com/EuThiagoAndrade/saldo-futuro/pull/25), integrada por squash; A: [#30](https://github.com/EuThiagoAndrade/saldo-futuro/pull/30), integrada por squash; B: [#31](https://github.com/EuThiagoAndrade/saldo-futuro/pull/31), integrada por squash; C: [#33](https://github.com/EuThiagoAndrade/saldo-futuro/pull/33), integrada por squash; D: [#34](https://github.com/EuThiagoAndrade/saldo-futuro/pull/34) |
-| Branch(es) | Plano: `chore/cycle-003-plan`; A: `chore/issue-26`; B: `feature/issue-27`; C: `feature/issue-28`; D: `feature/issue-29` |
+| PR(s) | Plano: [#25](https://github.com/EuThiagoAndrade/saldo-futuro/pull/25), integrada por squash; A: [#30](https://github.com/EuThiagoAndrade/saldo-futuro/pull/30), integrada por squash; B: [#31](https://github.com/EuThiagoAndrade/saldo-futuro/pull/31), integrada por squash; C: [#33](https://github.com/EuThiagoAndrade/saldo-futuro/pull/33), integrada por squash; D: [#34](https://github.com/EuThiagoAndrade/saldo-futuro/pull/34), integrada por squash; release `0.2.0`: [#32](https://github.com/EuThiagoAndrade/saldo-futuro/pull/32); encerramento: PR `chore/cycle-003-closure`, verificável no GitHub |
+| Branch(es) | Plano: `chore/cycle-003-plan`; A: `chore/issue-26`; B: `feature/issue-27`; C: `feature/issue-28`; D: `feature/issue-29`; encerramento: `chore/cycle-003-closure` |
 | Destino após conclusão | `_project/executed/003_regras_financeiras/003_plan.md` |
 
 ## Próximo passo
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 003 (completo)
-Quem: Responsável
-Conferir: [PR #34](https://github.com/EuThiagoAndrade/saldo-futuro/pull/34): checks (inclusive supabase test db), diff, migração de benchmarks, função de carga e casos CR-40 a CR-48
-Diga: "aprovo o merge da PR #34"
+Situação: Concluído — ciclo 003 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
-As issues seguem a sequência A → B → C → D; cada uma tem autorização própria. As issues #26 a #28 foram integradas pelas PRs #30, #31 e #33. A implementação da issue #29 foi autorizada em 2026-10-14 e está na PR #34; o artefato ativo é a task `003_task_issue-29.md`. Depois do merge, a ação externa segue o roteiro dessa task.
+Encerramento prospectivo: este estado vale a partir do merge da PR de encerramento, que a task `003_task_closure.md` registra.
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `saldo-futuro + 003 + criar_issues + issues A-D/003_plan + v3`
+- `logical_key`: `saldo-futuro + 003 + atualizar_docs + encerramento + d2fb819`
 - `effect_class`: `remote_mutation`
 - `state_before` / `state_after`:
-  - antes: plano `v3` `Aprovado`, integrado pela PR #25; nenhuma issue do ciclo (busca por título sem duplicata);
-  - depois: issues #26 (A, `[CHORE]`), #27 (B, `[FEATURE]`), #28 (C, `[FEATURE]`) e #29 (D, `[FEATURE]`) abertas, com os campos dos Issue Forms e as dependências em sequência; bloco "Aguardando autorização de implementação".
+  - antes: ciclo `003` `Em execução` em `drafts/`, com as quatro issues integradas, a ação externa e a verificação em produção concluídas e a release `0.2.0` publicada;
+  - depois: ciclo `003` `Concluído` em `executed/`, com plano e tasks reconciliados e a documentação viva atualizada, válido a partir do merge da PR de encerramento.
 - `result`: `executed`
-- `evidence`:
-  - "aprovo o plano do ciclo 003" (2026-10-14), que cobre a PR documental, seu merge com checks verdes e a criação das issues;
-  - PR #25 integrada por squash em `main` (`3245a4d`), com os cinco checks verdes no commit `684ba99`;
-  - payload apresentado e confirmado pelo responsável no chat ("Criar as quatro"), em 2026-10-14;
-  - issues verificadas no GitHub depois da criação; Issue Forms lidos: `feature_request.yml` e `chore.yml`;
-  - aprovação anterior: `saldo-futuro + 003 + atualizar_docs + 003_plan/aprovacao + v3`.
-- `blockers`: nenhum. A implementação da issue #26 aguarda autorização.
+- `evidence`: pós-mortem abaixo e a task `003_task_closure.md`.
+- `blockers`: aprovação do merge da PR de encerramento.
+- Handoff anterior: `saldo-futuro + 003 + criar_issues + issues A-D/003_plan + v3` (criação das issues #26 a #29, depois do merge da PR #25).
 
 ## Revisão crítica
 
@@ -716,6 +712,21 @@ O veredito avalia o plano; a KB-004, as decisões K, os casos e sua conferência
 
 ## Pós-mortem
 
-- **Data de conclusão:** —
-- **Desvios:** —
-- **Lições comprovadas:** —
+- **Data de conclusão:** 2026-10-14.
+- **Entregas:**
+  - PR do plano #25 (`3245a4d`);
+  - A #30 (`d8fcae4`), B #31 (`532a683`), C #33 (`e4102a8`) e D #34 (`72fe937`), que fecharam as issues #26 a #29;
+  - release `0.2.0` pela PR #32 (`d2fb819`).
+
+  Todas tiveram checks verdes e merge aprovado pelo responsável. A ação externa (`db push` das migrações da carteira e dos benchmarks) e a verificação em produção foram concluídas antes da release.
+- **Revisão:** três rodadas pelo Codex desktop, a última com `APTO PARA APROVAÇÃO`.
+- **Escolhas de cálculo:** K1 a K7 do plano e K8 a K13, surgidas ao especificar, todas decididas pelo responsável em 2026-10-14 e registradas na KB-004.
+- **Validação dos casos:** recálculo cego por outro modelo (Claude Sonnet), com duas ambiguidades de entrada resolvidas e nenhuma divergência de cálculo; conferência em planilha executada pelo Codex por delegação do responsável (`003_validation_casos_referencia.md`).
+- **Desvios:**
+  - K8 a K13 não estavam no plano: seguiram o caminho previsto para novas escolhas `K`;
+  - a implementação do banco explicitou regras operacionais que a KB-004 não detalhava (escopo da pendência, datas mínimas de estorno e correção, trânsito sem lançamento comum, saldo atual na desativação), registradas na KB na PR #31;
+  - um mês aberto é o mês sem linha de consolidado, sem tabela de meses com estado;
+  - as chaves da carteira apagam em cascata a partir de `auth.users`, para a revogação de acesso funcionar;
+  - os logs da Vercel no plano gratuito não mostram a chamada diária do cron; a prova foi o teste direto do keepalive;
+  - uma atualização local não versionada do CLI do Supabase (`^2.121.0`) bloqueou o `git pull` depois da release e foi desfeita pelo responsável.
+- **Lições comprovadas:** registradas em `.agent/lessons_learned.md` (dblink no Supabase local, saída de funções auxiliares no pgTAP e recálculo cego de casos de referência).

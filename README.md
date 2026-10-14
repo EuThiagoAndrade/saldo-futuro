@@ -12,7 +12,7 @@ O Saldo Futuro substitui o [Meus-Investimentos](https://github.com/EuThiagoAndra
 
 ## Estado atual
 
-O ciclo `000` implantou a governança do projeto e o design system. O ciclo `001` entregou a fundação da aplicação, em produção em `investimentos.euthiagoandrade.com.br`: login com Google restrito a e-mails autorizados, perfis `admin` e `user`, isolamento por RLS provado por testes de banco, PWA instalável e versão `0.1.0`. A única tela autenticada é uma página "em construção". **Nenhuma funcionalidade de produto está disponível.** O ciclo `002` reformou a governança (níveis por risco, próximo passo predefinido, modo contínuo e documentação viva). O próximo ciclo é o `003`, de regras financeiras.
+O ciclo `000` implantou a governança do projeto e o design system. O ciclo `001` entregou a fundação da aplicação, em produção em `investimentos.euthiagoandrade.com.br`: login com Google restrito a e-mails autorizados, perfis `admin` e `user`, isolamento por RLS provado por testes de banco, PWA instalável e versão `0.1.0`. A única tela autenticada é uma página "em construção". **Nenhuma funcionalidade de produto está disponível.** O ciclo `002` reformou a governança (níveis por risco, próximo passo predefinido, modo contínuo e documentação viva). O ciclo `003` entregou as regras financeiras, ainda sem tela: carteira, lançamentos, fechamento mensal, Modified Dietz e benchmarks, especificados na [KB-004](_project/knowledge/KB-004_regras_financeiras.md) e testados contra casos de referência, na versão `0.2.0`. O próximo ciclo é o `004`, das telas.
 
 ## Mapa de ciclos
 
@@ -21,11 +21,11 @@ O ciclo `000` implantou a governança do projeto e o design system. O ciclo `001
 | `000` | Governança e design system | Concluído |
 | `001` | Fundação: aplicação Next.js, Supabase, autenticação, perfis, RLS, deploy e release-please | Concluído |
 | `002` | Reforma da governança: níveis por risco, próximo passo predefinido, modo contínuo e documentação viva | Concluído |
-| `003` | Regras financeiras: eventos, fechamento, consolidação, Modified Dietz e benchmarks, com casos de referência | Planejado |
+| `003` | Regras financeiras: eventos, fechamento, consolidação, Modified Dietz e benchmarks, com casos de referência | Concluído |
 | `004` | Telas pensadas primeiro para o celular | Planejado |
 | `005` | Migração única dos dados e virada | Planejado |
 
-O registro oficial dos ciclos é [`_project/cycles.md`](_project/cycles.md). Os ciclos `003` a `005` ainda não têm plano. Até o ciclo `001`, os documentos numeravam esses ciclos como `002` a `004`; o glossário de `_project/README.md` registra o mapeamento.
+O registro oficial dos ciclos é [`_project/cycles.md`](_project/cycles.md). Os ciclos `004` e `005` ainda não têm plano. Até o ciclo `001`, os documentos numeravam esses ciclos como `002` a `004`; o glossário de `_project/README.md` registra o mapeamento.
 
 ## Stack decidida
 

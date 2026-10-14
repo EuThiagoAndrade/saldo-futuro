@@ -2,13 +2,13 @@
 
 > **Ciclo:** `003`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#29`
-> **Plano:** `_project/drafts/003_regras_financeiras/003_plan.md`
+> **Plano:** `_project/executed/003_regras_financeiras/003_plan.md`
 > **Branch:** `feature/issue-29`
 > **PR:** [#34](https://github.com/EuThiagoAndrade/saldo-futuro/pull/34)
-> **Integração:** `Pendente`
+> **Integração:** `Integrada por squash em 72fe937, em 2026-10-14`
 > **Autorização inicial:** "autorizo a implementação da issue #29" em 2026-10-14
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-14
@@ -84,6 +84,22 @@ Depois do merge desta PR, pelo responsável, com o acesso de produção da KB-00
 
 Nada mais muda no painel do Supabase ou na Vercel. Nenhuma sincronização do SGS é feita em produção neste ciclo.
 
+## Verificação em produção
+
+Somente leitura, sem tocar linhas de carteira, pelos itens do plano. Resultados informados pelo responsável (editor SQL do Supabase, navegador e PowerShell) e conferidos pelo agente onde ele tinha acesso.
+
+| Item | Resultado |
+| :-- | :-- |
+| Migrações do ciclo aplicadas | Quatro migrações em `supabase_migrations.schema_migrations` (acesso, keepalive, carteira e benchmarks); o agente conferiu por `npx supabase migration list`, local e remoto alinhados |
+| RLS nas tabelas de `public` | Dez tabelas, todas com RLS ativo |
+| Catálogo | CDI (12, diária) e IPCA (433, mensal) |
+| `/entrar` | Abriu normalmente; o agente obteve HTTP 200 |
+| Keepalive | Com o segredo, `ok : True` (teste direto da KB-002); sem o segredo, o agente obteve HTTP 401 |
+
+**Limitação:** os logs da Vercel no plano gratuito só cobrem a última hora, então a chamada diária do cron não pôde ser vista nos logs. A prova direta é o teste do keepalive com o segredo.
+
+A release `v0.2.0` foi publicada pelo merge da PR #32, depois desta verificação, com os checks disparados por `workflow_dispatch` verdes no commit `2c51993`.
+
 ## Evidências
 
 | Validação | Resultado |
@@ -92,7 +108,9 @@ Nada mais muda no painel do Supabase ou na Vercel. Nenhuma sincronização do SG
 | Testes | `npm test`: 9 arquivos, 100 testes passaram (29 novos); `npm run lint` sem erro (os 3 avisos vêm de `local/`, ignorado pelo Git); `npm run typecheck` e `npm run build` sem erro |
 | Validador | `node scripts/validate-governance.mjs`: 0 erros, 0 avisos |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos | PR #34 no commit `7affbed`: Validate governance, os dois jobs de CI (inclusive `supabase test db`) e os dois da Vercel verdes; merge aprovado ("aprovo o merge da PR #34") e feito por squash |
+| Ação externa | "concluí a ação externa da issue #29" (2026-10-14): `db push` das duas migrações; o responsável viu as quatro migrações nas colunas local e remota do `migration list`, e o agente conferiu o mesmo resultado por leitura |
+| Verificação em produção | "autorizo a verificação em produção do ciclo 003" (2026-10-14); resultados na seção "Verificação em produção" |
 
 ## Revisão da correção
 
@@ -113,10 +131,10 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 003 (completo)
-Quem: Responsável
-Conferir: [PR #34](https://github.com/EuThiagoAndrade/saldo-futuro/pull/34): checks (inclusive supabase test db), diff, migração de benchmarks, função de carga e casos CR-40 a CR-48
-Diga: "aprovo o merge da PR #34"
+Situação: Concluído — ciclo 003 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
@@ -124,7 +142,7 @@ Diga: "aprovo o merge da PR #34"
 - `handoff_schema_version: 2`
 - `logical_key`: `saldo-futuro + 003 + implementar_issue + 29/D + e4102a8`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: antes, `main` @ `e4102a8`, com as issues A a C integradas e a issue #29 aberta; depois, branch `feature/issue-29` publicada com o item D e PR #34 aberta, aguardando checks e a aprovação do merge.
+- `state_before` / `state_after`: antes, `main` @ `e4102a8`, com as issues A a C integradas e a issue #29 aberta; depois, PR #34 integrada por squash em `72fe937`, com os checks verdes; issue #29 fechada; migrações aplicadas em produção pela ação externa e verificação em produção concluída; release `v0.2.0` publicada. Reconciliada na PR de encerramento do ciclo.
 - `result`: `executed`
 - `evidence`: tabela "Evidências" desta task.
-- `blockers`: "aprovo o merge da PR #34", com os checks verdes; depois do merge, a ação externa do responsável.
+- `blockers`: nenhum.
