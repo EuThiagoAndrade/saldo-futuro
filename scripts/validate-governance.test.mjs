@@ -40,12 +40,53 @@ function cycles(rows, next) {
   ].join('\n');
 }
 
-function plan(status) {
-  return `# Plano\n\n> **Ciclo:** \`000\`\n> **Status:** \`${status}\`\n`;
+// Situações usadas nas fixtures: [nome, alvo, conferir, diga].
+const DONE = ['Concluído', 'ciclo 000 (completo)', '—', '—'];
+const MERGE = ['Aguardando merge', 'ciclo 000 (completo)', 'Checks e diff da PR (#1)', '"aprovo o merge da PR #1"'];
+
+function situation(name) {
+  return manifest.nextStep.situations.find((item) => item.name === name.replace(/rodada \d+/, 'rodada N'));
 }
 
-function task(cycle, state) {
-  return `# Task\n\n> **Ciclo:** \`${cycle}\`\n> **Trilha:** \`normal\`\n> **Estado:** \`${state}\`\n`;
+function block([name, target, check, say], who = situation(name)?.who) {
+  return ['## Próximo passo', '', '```text', 'PRÓXIMO PASSO', `Situação: ${name} — ${target}`, `Quem: ${who}`, `Conferir: ${check}`, `Diga: ${say}`, '```', ''].join('\n');
+}
+
+function heading(fields) {
+  return Object.entries(fields)
+    .filter(([key]) => key !== 'barriers')
+    .map(([key, value]) => (key === 'Autorização inicial' ? `> **${key}:** ${value}` : `> **${key}:** \`${value}\``))
+    .join('\n');
+}
+
+function barriers(applies = {}) {
+  const rows = ['G1', 'G2', 'G3', 'G4'].map((barrier) => `| ${barrier} — barreira | ${applies[barrier] ? 'Sim' : 'Não'} | Justificativa |`);
+  return ['## Barreiras de domínio', '', '| Barreira | Aplica-se? | Evidência ou justificativa |', '| :-- | :-- | :-- |', ...rows, ''].join('\n');
+}
+
+function plan(status, fields = {}, next = status === 'Concluído' ? DONE : MERGE) {
+  const base = {
+    Ciclo: '000',
+    Status: status,
+    Nível: 'completo',
+    'Veredito da revisão': 'APTO PARA APROVAÇÃO',
+    'Aprovação humana pós-revisão': 'Aprovada em 2026-10-13',
+    handoff_schema_version: '2',
+    ...fields,
+  };
+  return `# Plano\n\n${heading(base)}\n\n${barriers(fields.barriers)}\n${block(next)}\n## Revisão crítica\n`;
+}
+
+function task(cycle, state, fields = {}, next = state === 'Concluída' ? DONE : MERGE) {
+  const base = { Ciclo: cycle, Trilha: 'normal', Estado: state, handoff_schema_version: '2', ...fields };
+  return `# Task\n\n${heading(base)}\n\n${barriers(fields.barriers)}\n${block(next)}`;
+}
+
+function situationsTable() {
+  const { situations, continuousSuffixes } = manifest.nextStep;
+  const rows = situations.map((item) => `| ${item.name} | ${item.who} | ${item.check} | ${item.say.map((say) => say.text).join('; ')} |`);
+  const suffixes = continuousSuffixes.map((item) => item.trim()).join('; ');
+  return ['| Situação | Quem age | Conferir | Frases |', '| :-- | :-- | :-- | :-- |', ...rows, '', `Sufixos: ${suffixes}.`, ''].join('\n');
 }
 
 function shortTask(issue, { eligibility = true, barriers = true } = {}) {
@@ -58,6 +99,7 @@ function shortTask(issue, { eligibility = true, barriers = true } = {}) {
     '> **Trilha:** `curta`',
     '> **Estado:** `Em andamento`',
     `> **Issue:** \`#${issue}\``,
+    '> **handoff_schema_version:** `2`',
     '',
     manifest.shortTrack.eligibilityHeading,
     '',
@@ -71,6 +113,7 @@ function shortTask(issue, { eligibility = true, barriers = true } = {}) {
     '',
     '## Execução',
     '',
+    block(['Aguardando merge', `correção da issue #${issue}`, 'Checks e diff da PR', '"aprovo o merge da PR #1"']),
   ].join('\n');
 }
 
@@ -86,10 +129,14 @@ async function fixture() {
     if (file.startsWith(`${manifest.workflows.dir}/`)) {
       const name = path.basename(file, '.md');
       const handoff = manifest.workflows.mutating.includes(name) ? manifest.workflows.mutatingText : manifest.workflows.readOnlyText;
-      content = `---\ndescription: "Workflow de teste."\n---\n\n${content}${handoff.join('\n')}\n`;
+      content = `---\ndescription: "Workflow de teste."\n---\n\n${content}${handoff.join('\n')}\n\n- Parado\n`;
     }
     if (file.startsWith(`${manifest.skills.dir}/`)) {
       content = `---\nname: ${path.basename(path.dirname(file))}\ndescription: "Skill de teste."\n---\n\n${content}`;
+    }
+    if (file === '_project/README.md') {
+      const { readmeSection } = manifest.nextStep;
+      content = content.replace(`${readmeSection}\n`, `${readmeSection}\n\n${situationsTable()}\n`);
     }
     if (file === '.gitignore') content = `${manifest.gitignoreRequired.join('\n')}\n`;
     if (file === manifest.designSystem.file) content = designDoc(manifest.designSystem.sectionKeywords);
@@ -345,6 +392,180 @@ test('19. template de PR fora do caminho padrão ou sem as barreiras', () =>
     await mkdir(path.join(root, '.github/PULL_REQUEST_TEMPLATE'));
     await rename(path.join(root, template), path.join(root, '.github/PULL_REQUEST_TEMPLATE/pull_request_template.md'));
     await expectError(root, /Arquivo obrigatório ausente: \.github\/pull_request_template\.md/);
+  }));
+
+const TASK = `${CYCLE_DIR}/000_task_issue-1.md`;
+const PLAN = `${CYCLE_DIR}/000_plan.md`;
+
+test('20. bloco do artefato ativo: ausente ou fora do formato', () =>
+  withFixture(async (root) => {
+    await put(root, TASK, (await read(root, TASK)).replace('## Próximo passo', '## Outro título'));
+    await expectError(root, /Artefato ativo sem a seção "## Próximo passo": .*000_task_issue-1\.md/);
+    const cases = [
+      [['Aguardando tudo', 'ciclo 000 (completo)', 'x', '"x"'], /situação fora da lista/],
+      [['Aguardando merge', 'ciclo 0 (completo)', 'Checks', '"aprovo o merge da PR #1"'], /alvo "ciclo 0 \(completo\)" fora do padrão/],
+      [['Aguardando merge', 'ciclo 000 (completo)', '—', '"aprovo o merge da PR #1"'], /"Conferir" incompatível/],
+      [['Aguardando merge', 'ciclo 000 (completo)', 'Checks', '"aprove o merge"'], /frase ""aprove o merge"" fora dos modelos/],
+      [['Aguardando merge', 'correção "[FIX] Título" (sem issue)', 'Checks', '"aprovo o merge da PR #1"'], /alvo .* fora do padrão/],
+    ];
+    for (const [next, pattern] of cases) {
+      await put(root, TASK, task('000', 'Em andamento', {}, next));
+      await expectError(root, pattern);
+    }
+    await put(root, TASK, task('000', 'Em andamento', {}, MERGE).replace('Quem: Responsável', 'Quem: Alguém'));
+    await expectError(root, /"Quem" diferente da tabela/);
+    await put(root, TASK, task('000', 'Em andamento', {}, MERGE).replace('PRÓXIMO PASSO\n', ''));
+    await expectError(root, /esperadas 5 linhas/);
+  }));
+
+test('20. blocos válidos, inclusive triagem sem issue, sufixo contínuo e Parado', () =>
+  withFixture(async (root) => {
+    const valid = [
+      ['Triagem proposta', 'correção "[FIX] Botão sem a cor do contrato" (sem issue)', 'Nível proposto e motivo', '"confirmo a trilha curta e autorizo abrir e corrigir a issue [FIX] Botão sem a cor do contrato em modo contínuo"'],
+      ['Triagem proposta', 'ciclo 004 (leve)', 'Nível e motivo', '"confirmo o nível leve e autorizo o plano do ciclo 004 em modo contínuo com revisão externa"'],
+      ['Aguardando revisão (rodada 2)', 'ciclo 000 (completo)', '—', '"revise o plano do ciclo 000"'],
+      ['Parado', 'ciclo 000 (completo)', 'A pergunta: seguir?', 'sua resposta à pergunta registrada'],
+      ['Pronto para continuar', 'correção da issue #7', '—', '"continue a correção da issue #7"'],
+    ];
+    for (const next of valid) {
+      await put(root, TASK, task('000', 'Em andamento', {}, next));
+      await expectValid(root);
+    }
+    await put(root, TASK, task('000', 'Em andamento', {}, ['Triagem proposta', 'ciclo 004 (completo)', 'Nível', '"confirmo o nível completo e autorizo a ideação do ciclo 004 em modo contínuo"']));
+    await expectError(root, /fora dos modelos de "Triagem proposta"/);
+  }));
+
+test('21. situações do manifesto e de _project/README.md dessincronizadas', () =>
+  withFixture(async (root) => {
+    const readme = await read(root, '_project/README.md');
+    await put(root, '_project/README.md', readme.replace('| Parado | Responsável |', '| Parado | Outra pessoa |'));
+    await expectError(root, /Situação "Parado" com "Quem age" ou "Conferir" divergente/);
+    await put(root, '_project/README.md', readme.replace('aprovo o merge da PR #N', 'aceito o merge'));
+    await expectError(root, /Frase "aprovo o merge da PR #N" do manifesto ausente/);
+    await put(root, '_project/README.md', readme.replace('| Concluído |', '| Encerrado |'));
+    await expectError(root, /Situação "Concluído" do manifesto ausente/);
+    await expectError(root, /Situação "Encerrado" de _project\/README\.md ausente do manifesto/);
+  }));
+
+test('22. plano ativo sem Nível válido', () =>
+  withFixture(async (root) => {
+    await put(root, PLAN, plan('Em Execução', { Nível: 'médio' }));
+    await expectError(root, /Plano sem Nível válido/);
+  }));
+
+test('23. promoção do plano: aprovação humana, modo contínuo e veredito', () =>
+  withFixture(async (root) => {
+    const continuous = { 'Autorização inicial': '"confirmo o nível leve e autorizo o plano do ciclo 000 em modo contínuo" em 2026-10-13', Nível: 'leve' };
+    await put(root, PLAN, plan('Aprovado', { 'Veredito da revisão': 'REQUER NOVA RODADA' }));
+    await expectError(root, /Plano Aprovado sem veredito apto/);
+    await put(root, PLAN, plan('Aprovado', { 'Aprovação humana pós-revisão': 'Pendente' }));
+    await expectError(root, /sem aprovação humana pós-revisão válida/);
+    await put(root, PLAN, plan('Aprovado', { ...continuous, 'Modo contínuo': 'ativo', 'Veredito da revisão': 'APTO COM RESSALVAS', 'Aprovação humana pós-revisão': 'Coberta pelo modo contínuo (autorização inicial de 2026-10-13)' }));
+    await expectError(root, /promovido pelo modo contínuo sem veredito "APTO PARA APROVAÇÃO"/);
+    await put(root, PLAN, plan('Aprovado', { Nível: 'leve', 'Aprovação humana pós-revisão': 'Coberta pelo modo contínuo (autorização inicial de 2026-10-13)' }));
+    await expectError(root, /coberto pelo modo contínuo sem modo contínuo declarado/);
+    await put(root, PLAN, plan('Aprovado', { ...continuous, 'Modo contínuo': 'ativo', 'Aprovação humana pós-revisão': 'Coberta pelo modo contínuo (autorização inicial de 2026-10-13)' }));
+    await expectValid(root);
+    await put(root, PLAN, plan('Aprovado', { 'Veredito da revisão': 'APTO COM RESSALVAS' }));
+    await expectValid(root);
+  }));
+
+test('24. mais de 5 rodadas de revisão', () =>
+  withFixture(async (root) => {
+    const rounds = [1, 2, 3, 4, 5, 6].map((round) => `### Rodada ${round}\n`).join('\n');
+    await put(root, PLAN, `${plan('Em Execução')}\n${rounds}`);
+    await expectError(root, /Mais de 5 rodadas de revisão: .*000_plan\.md/);
+    await put(root, PLAN, `${plan('Em Execução')}\n${rounds.replace('### Rodada 6\n', '')}`);
+    await expectValid(root);
+  }));
+
+test('25. código de gate com letras em plano ativo', () =>
+  withFixture(async (root) => {
+    await put(root, PLAN, `${plan('Em Execução')}\nMerge após o Gate M-A.\n`);
+    await expectError(root, /Plano ativo com código de gate com letras/);
+    await put(root, PLAN, `${plan('Em Execução')}\nM-A equivale a aprovar o merge.\n`);
+    await expectValid(root);
+  }));
+
+test('26. workflow sem situações de saída ou com situação fora da lista', () =>
+  withFixture(async (root) => {
+    const workflow = '.agent/workflows/idear.md';
+    const content = await read(root, workflow);
+    await put(root, workflow, content.replace('## Situações de saída', '## Saídas'));
+    await expectError(root, /idear\.md sem "## Situações de saída"/);
+    await put(root, workflow, content.replace('- Parado', '- Esperando'));
+    await expectError(root, /idear\.md com situação de saída fora da lista: "Esperando"/);
+    await put(root, workflow, content.replace('- Parado', '- Aguardando revisão (rodada N)'));
+    await expectValid(root);
+  }));
+
+test('27. modo contínuo ativo proibido em ciclo completo ou com G1/G2', () =>
+  withFixture(async (root) => {
+    const authorized = { 'Autorização inicial': '"frase" em 2026-10-13' };
+    await put(root, PLAN, plan('Em Execução', { ...authorized, 'Modo contínuo': 'ativo' }));
+    await put(root, TASK, task('000', 'Em andamento', { ...authorized, 'Modo contínuo': 'ativo' }));
+    await expectError(root, /Modo contínuo ativo em ciclo completo: .*000_plan\.md/);
+    await expectError(root, /Modo contínuo ativo em ciclo completo: .*000_task_issue-1\.md/);
+    await put(root, PLAN, plan('Em Execução', { ...authorized, Nível: 'leve' }));
+    await put(root, TASK, task('000', 'Em andamento', { ...authorized, 'Modo contínuo': 'ativo', barriers: { G2: true } }));
+    await expectError(root, /Modo contínuo ativo com G2 aplicável/);
+    await put(root, TASK, task('000', 'Em andamento', { ...authorized, 'Modo contínuo': 'suspenso', barriers: { G2: true } }));
+    await expectValid(root);
+    await put(root, PLAN, plan('Em Execução', { ...authorized, 'Modo contínuo': 'suspenso' }));
+    await expectValid(root);
+    await put(root, PLAN, plan('Em Execução', { 'Modo contínuo': '—' }));
+    await put(root, TASK, task('000', 'Em andamento'));
+    await expectValid(root);
+  }));
+
+test('28. artefato sujeito à versão 2 em executed/ sem o bloco Concluído', () =>
+  withFixture(async (root) => {
+    await mkdir(path.join(root, '_project/executed'), { recursive: true });
+    await rename(path.join(root, CYCLE_DIR), path.join(root, '_project/executed/000_exemplo'));
+    await put(root, '_project/cycles.md', cycles([['000', 'Concluído']], '001'));
+    await put(root, '_project/executed/000_exemplo/000_plan.md', plan('Concluído'));
+    await put(root, '_project/executed/000_exemplo/000_task_issue-1.md', task('000', 'Concluída', {}, MERGE));
+    await expectError(root, /executado com bloco diferente de "Concluído": .*000_task_issue-1\.md/);
+    await put(root, '_project/executed/000_exemplo/000_task_issue-1.md', task('000', 'Concluída').replace('## Próximo passo', '## Fim'));
+    await expectError(root, /Artefato executado sem a seção "## Próximo passo"/);
+    await put(root, '_project/executed/000_exemplo/000_task_issue-1.md', task('000', 'Concluída'));
+    await expectValid(root);
+  }));
+
+test('29. modo contínuo sem Autorização inicial', () =>
+  withFixture(async (root) => {
+    await put(root, TASK, task('000', 'Em andamento', { 'Modo contínuo': 'suspenso' }));
+    await expectError(root, /Modo contínuo sem Autorização inicial: .*000_task_issue-1\.md/);
+  }));
+
+test('30. artefato fora da lista de legados sem a versão 2', () =>
+  withFixture(async (root) => {
+    await put(root, TASK, task('000', 'Em andamento', { handoff_schema_version: '1' }));
+    await expectError(root, /sem handoff_schema_version `2` no cabeçalho e fora da lista de legados: .*000_task_issue-1\.md/);
+    // Um arquivo novo em diretório histórico não vira legado por estar ali.
+    await put(root, '_project/executed/001_antigo/001_plan.md', '# Plano\n\n> **Status:** `Concluído`\n');
+    await put(root, '_project/cycles.md', cycles([['000', 'Em execução'], ['001', 'Concluído']], '002'));
+    await expectError(root, /fora da lista de legados: _project\/executed\/001_antigo\/001_plan\.md/);
+  }));
+
+test('transição: históricos, ciclo em transição e ciclo novo', () =>
+  withFixture(async (root) => {
+    const legacy = ['_project/executed/001_antigo/001_plan.md', '_project/executed/001_antigo/001_task_closure.md', '_project/ideations/000_exemplo.md'];
+    const local = JSON.parse(await read(root, 'scripts/governance-manifest.json'));
+    local.artifacts.legacyV1 = [...legacy, `${CYCLE_DIR}/000_plan.md`];
+    await put(root, 'scripts/governance-manifest.json', JSON.stringify(local));
+    // Histórico na versão 1, sem bloco.
+    await put(root, legacy[0], '# Plano\n\n> **Status:** `Concluído`\n');
+    await put(root, legacy[1], '# Task\n\n> **Ciclo:** `001`\n> **Estado:** `Concluída`\n');
+    // Ciclo em transição: ideação e plano legados (plano com bloco e Nível), task concluída e task ativa na versão 2.
+    await put(root, legacy[2], '# Ideação\n');
+    await put(root, `${CYCLE_DIR}/000_plan.md`, plan('Em Execução', { handoff_schema_version: '1' }));
+    await put(root, `${CYCLE_DIR}/000_task_issue-2.md`, task('000', 'Concluída'));
+    await put(root, '_project/cycles.md', cycles([['000', 'Em execução'], ['001', 'Concluído']], '002'));
+    await expectValid(root);
+    // O bloco de um legado que o possui continua conferido.
+    await put(root, `${CYCLE_DIR}/000_plan.md`, plan('Em Execução', { handoff_schema_version: '1' }, ['Aguardando tudo', 'ciclo 000 (completo)', 'x', '"x"']));
+    await expectError(root, /Bloco "Próximo passo" inválido em .*000_plan\.md/);
   }));
 
 test('o validador não escreve no workspace auditado', () =>

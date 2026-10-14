@@ -12,6 +12,8 @@
     ".agent/lessons_learned.md",
     ".agent/task.md",
     ".agent/workflows/idear.md",
+    ".agent/workflows/triar.md",
+    ".agent/workflows/retomar.md",
     ".agent/workflows/rascunhar_plano.md",
     ".agent/workflows/revisar_plano.md",
     ".agent/workflows/criar_issues.md",
@@ -33,6 +35,7 @@
     "_project/decisions/ADR-001_governanca_agnostica_adapters.md",
     "_project/decisions/ADR-002_stack_infraestrutura.md",
     "_project/decisions/ADR-003_acesso_privacidade_publicacao.md",
+    "_project/decisions/ADR-004_governanca_proporcional_niveis.md",
     "_project/knowledge/KB-001_proveniencia_ecossistema.md",
     ".github/ISSUE_TEMPLATE/feature_request.yml",
     ".github/ISSUE_TEMPLATE/bug_report.yml",
@@ -55,12 +58,21 @@
   "requiredText": {
     ".agent/ai_behavior.md": [
       "## Matriz de autoridade",
-      "## Contrato canônico de handoff",
-      "handoff_schema_version: 1",
-      "## Autorizações e gates",
+      "## Princípios agnósticos",
+      "## Contrato de handoff (versão 2)",
+      "handoff_schema_version: 2",
+      "## Autorizações e pontos de aprovação",
       "## Privacidade de dados financeiros"
     ],
     "_project/README.md": [
+      "## Níveis e triagem",
+      "## Entrada",
+      "## Fluxo por nível",
+      "## Pontos de aprovação",
+      "## Situações e próximo passo",
+      "## Modo contínuo",
+      "## Revisão formal",
+      "## Encerramento prospectivo",
       "## Estados válidos",
       "## Trilha curta",
       "## Barreiras de domínio",
@@ -69,35 +81,60 @@
       "### G3",
       "### G4",
       "## Branches, commits e migrações",
-      "## Gates mínimos"
+      "## Gates mínimos",
+      "## Glossário"
     ],
     ".agent/templates/task.md": [
       "**Trilha:**",
+      "**Modo contínuo:**",
+      "**handoff_schema_version:** `2`",
       "## Elegibilidade da trilha curta",
       "## Barreiras de domínio",
       "G1 —",
       "G2 —",
       "G3 —",
-      "G4 —"
+      "G4 —",
+      "## Revisão da correção",
+      "## Encerramento",
+      "## Próximo passo"
     ],
     ".agent/templates/plano_implementacao.md": [
-      "### Gates humanos",
+      "**Nível:**",
+      "**Modo contínuo:**",
+      "**handoff_schema_version:** `2`",
+      "## Problema e contexto",
+      "### Pontos de aprovação",
       "## Barreiras de domínio",
+      "## Próximo passo",
       "## Revisão crítica"
     ],
-    ".agent/workflows/health_check.md": ["node scripts/validate-governance.mjs"],
+    ".agent/workflows/health_check.md": [
+      "node scripts/validate-governance.mjs"
+    ],
     ".github/pull_request_template.md": [
       "Closes #",
+      "Nível:",
+      "Modo contínuo:",
       "## Barreiras de domínio",
       "G1 —",
       "G2 —",
       "G3 —",
-      "G4 —"
+      "G4 —",
+      "Aprovar merge concedido"
     ],
-    ".github/ISSUE_TEMPLATE/feature_request.yml": ["[FEATURE]"],
-    ".github/ISSUE_TEMPLATE/bug_report.yml": ["[FIX]", "Curta (correção elegível)"],
-    ".github/ISSUE_TEMPLATE/chore.yml": ["[CHORE]"],
-    ".github/ISSUE_TEMPLATE/config.yml": ["blank_issues_enabled: false"],
+    ".github/ISSUE_TEMPLATE/feature_request.yml": [
+      "[FEATURE]"
+    ],
+    ".github/ISSUE_TEMPLATE/bug_report.yml": [
+      "[FIX]",
+      "Curta (correção elegível)"
+    ],
+    ".github/ISSUE_TEMPLATE/chore.yml": [
+      "[CHORE]"
+    ],
+    ".github/ISSUE_TEMPLATE/config.yml": [
+      "blank_issues_enabled: false"
+    ],
     ".github/workflows/governance.yml": [
       "contents: read",
       "fetch-depth: 0",
@@ -106,15 +143,29 @@
       "node scripts/validate-governance.mjs",
       "supabase/migrations/"
     ],
-    ".github/workflows/ci.yml": ["contents: read", "package-manager-cache: false", "supabase test db"]
+    ".github/workflows/ci.yml": [
+      "contents: read",
+      "package-manager-cache: false",
+      "supabase test db"
+    ],
+    ".agent/templates/ideacao.md": [
+      "**handoff_schema_version:** `2`",
+      "## Próximo passo"
+    ]
   },
   "adapters": {
-    "files": ["AGENTS.md", "CLAUDE.md", "GEMINI.md"],
+    "files": [
+      "AGENTS.md",
+      "CLAUDE.md",
+      "GEMINI.md"
+    ],
     "reference": ".agent/ai_behavior.md"
   },
   "workflows": {
     "dir": ".agent/workflows",
-    "frontmatter": ["description"],
+    "frontmatter": [
+      "description"
+    ],
     "mutating": [
       "idear",
       "rascunhar_plano",
@@ -125,20 +176,28 @@
       "corrigir_trilha_curta"
     ],
     "mutatingText": [
-      "handoff_schema_version",
-      "identity_source",
-      "rejection_rule",
+      "handoff_schema_version: 2",
       "logical_key",
-      "check_before_mutation",
-      "reconcile_existing",
-      "ambiguous_state"
+      "## Situações de saída"
     ],
-    "readOnly": ["listar_issues", "health_check"],
-    "readOnlyText": ["mutation"]
+    "readOnly": [
+      "listar_issues",
+      "health_check",
+      "triar",
+      "retomar"
+    ],
+    "readOnlyText": [
+      "mutation",
+      "## Situações de saída"
+    ],
+    "exitHeading": "## Situações de saída"
   },
   "skills": {
     "dir": ".agent/skills",
-    "frontmatter": ["name", "description"]
+    "frontmatter": [
+      "name",
+      "description"
+    ]
   },
   "cycles": {
     "file": "_project/cycles.md",
@@ -153,14 +212,231 @@
   },
   "plans": {
     "statesByLocation": {
-      "drafts": ["Rascunho", "Em Revisão", "Aprovado", "Em Execução"],
-      "executed": ["Concluído"],
-      "archived": ["Cancelado", "Substituído"]
+      "drafts": [
+        "Rascunho",
+        "Em Revisão",
+        "Aprovado",
+        "Em Execução"
+      ],
+      "executed": [
+        "Concluído"
+      ],
+      "archived": [
+        "Cancelado",
+        "Substituído"
+      ]
     }
   },
   "tasks": {
-    "states": ["Em andamento", "Aguardando integração", "Concluída", "Bloqueada"],
+    "states": [
+      "Em andamento",
+      "Aguardando integração",
+      "Concluída",
+      "Bloqueada"
+    ],
     "doneState": "Concluída"
+  },
+  "artifacts": {
+    "$comment": "Ideações, planos e tasks seguem o handoff versão 2 (cabeçalho handoff_schema_version e bloco Próximo passo). A lista legacyV1 é fechada e só diminui: enumera os artefatos anteriores à versão 2, aceitos sem bloco (R3-1 do plano do ciclo 002).",
+    "versionField": "handoff_schema_version",
+    "version": "2",
+    "legacyV1": [
+      "_project/executed/000_bootstrap_governanca_design_system/000_plan.md",
+      "_project/executed/000_bootstrap_governanca_design_system/000_task_closure.md",
+      "_project/executed/000_bootstrap_governanca_design_system/000_task_issue-2.md",
+      "_project/executed/000_bootstrap_governanca_design_system/000_task_issue-3.md",
+      "_project/executed/001_fundacao_aplicacao/001_plan.md",
+      "_project/executed/001_fundacao_aplicacao/001_task_closure.md",
+      "_project/executed/001_fundacao_aplicacao/001_task_issue-8.md",
+      "_project/executed/001_fundacao_aplicacao/001_task_issue-9.md",
+      "_project/executed/001_fundacao_aplicacao/001_task_issue-10.md",
+      "_project/ideations/001_fundacao_aplicacao.md",
+      "_project/ideations/002_reforma_governanca.md",
+      "_project/drafts/002_reforma_governanca/002_plan.md",
+      "_project/executed/002_reforma_governanca/002_plan.md",
+      "_project/fixes/fix_task_issue-14.md"
+    ],
+    "levels": [
+      "leve",
+      "completo"
+    ],
+    "continuousStates": [
+      "—",
+      "ativo",
+      "suspenso"
+    ],
+    "approvalPrefixes": {
+      "human": "Aprovada em",
+      "continuous": "Coberta pelo modo contínuo"
+    },
+    "approvalVerdicts": [
+      "APTO PARA APROVAÇÃO",
+      "APTO COM RESSALVAS"
+    ],
+    "continuousVerdict": "APTO PARA APROVAÇÃO",
+    "maxReviewRounds": 5,
+    "gateCodePattern": "\\bGates? [A-Z](?:-[A-Z])?\\b"
+  },
+  "nextStep": {
+    "heading": "## Próximo passo",
+    "readmeSection": "## Situações e próximo passo",
+    "title": "PRÓXIMO PASSO",
+    "targets": [
+      "ciclo NNN (leve)",
+      "ciclo NNN (completo)",
+      "correção da issue #N"
+    ],
+    "triageTarget": "correção \"[FIX] <título>\" (sem issue)",
+    "continuousSuffixes": [
+      " em modo contínuo com revisão externa",
+      " em modo contínuo"
+    ],
+    "doneSituation": "Concluído",
+    "situations": [
+      {
+        "name": "Triagem proposta",
+        "who": "Responsável",
+        "check": "Nível proposto e motivo",
+        "say": [
+          {
+            "text": "confirmo o nível completo e autorizo a ideação do ciclo NNN"
+          },
+          {
+            "text": "confirmo o nível leve e autorizo o plano do ciclo NNN",
+            "continuous": true
+          },
+          {
+            "text": "confirmo a trilha curta e autorizo a correção da issue #N",
+            "continuous": true
+          },
+          {
+            "text": "confirmo a trilha curta e autorizo abrir e corrigir a issue [FIX] <título>",
+            "continuous": true
+          }
+        ]
+      },
+      {
+        "name": "Ideação registrada",
+        "who": "Responsável",
+        "check": "Perguntas e decisões da ideação",
+        "say": [
+          {
+            "text": "autorizo o rascunho do plano do ciclo NNN"
+          }
+        ]
+      },
+      {
+        "name": "Aguardando revisão (rodada N)",
+        "who": "O responsável leva a vez a um revisor, que pode ser outra ferramenta",
+        "check": "—",
+        "say": [
+          {
+            "text": "revise o plano do ciclo NNN"
+          },
+          {
+            "text": "revise a correção da issue #N"
+          }
+        ]
+      },
+      {
+        "name": "Aguardando correções (rodada N)",
+        "who": "O responsável leva a vez ao autor",
+        "check": "Achados da rodada",
+        "say": [
+          {
+            "text": "corrija o plano do ciclo NNN"
+          },
+          {
+            "text": "ajuste a correção da issue #N"
+          }
+        ]
+      },
+      {
+        "name": "Aguardando aprovação do plano",
+        "who": "Responsável",
+        "check": "Veredito e ressalvas na seção de revisão",
+        "say": [
+          {
+            "text": "aprovo o plano do ciclo NNN"
+          }
+        ]
+      },
+      {
+        "name": "Aguardando autorização de implementação",
+        "who": "Responsável",
+        "check": "Issue e escopo",
+        "say": [
+          {
+            "text": "autorizo a implementação da issue #N"
+          }
+        ]
+      },
+      {
+        "name": "Aguardando merge",
+        "who": "Responsável",
+        "check": "Checks e diff da PR",
+        "say": [
+          {
+            "text": "aprovo o merge da PR #N"
+          }
+        ]
+      },
+      {
+        "name": "Aguardando ação externa",
+        "who": "Responsável",
+        "check": "Roteiro indicado no plano",
+        "say": [
+          {
+            "text": "concluí a ação externa da issue #N"
+          }
+        ]
+      },
+      {
+        "name": "Aguardando verificação em produção",
+        "who": "Responsável",
+        "check": "Itens de verificação do plano",
+        "say": [
+          {
+            "text": "autorizo a verificação em produção do ciclo NNN"
+          }
+        ]
+      },
+      {
+        "name": "Pronto para continuar",
+        "who": "Qualquer ferramenta, a pedido do responsável",
+        "check": "—",
+        "say": [
+          {
+            "text": "continue o ciclo NNN"
+          },
+          {
+            "text": "continue a correção da issue #N"
+          }
+        ]
+      },
+      {
+        "name": "Parado",
+        "who": "Responsável",
+        "check": "A pergunta registrada",
+        "say": [
+          {
+            "text": "sua resposta à pergunta registrada",
+            "quoted": false
+          }
+        ]
+      },
+      {
+        "name": "Concluído",
+        "who": "—",
+        "check": "—",
+        "say": [
+          {
+            "text": "—",
+            "quoted": false
+          }
+        ]
+      }
+    ]
   },
   "naming": {
     "cycleDir": "^\\d{3}_[a-z0-9_]+$",
@@ -179,11 +455,29 @@
       "Sem mudança de schema que altere semântica",
       "Sem mudança de contrato visual"
     ],
-    "barriers": ["G1", "G2", "G3", "G4"]
+    "barriers": [
+      "G1",
+      "G2",
+      "G3",
+      "G4"
+    ]
   },
   "siblingCheck": {
-    "roots": ["AGENTS.md", "CLAUDE.md", "GEMINI.md", ".agent", ".github", "scripts"],
-    "extensions": [".md", ".yml", ".yaml", ".json", ".mjs"],
+    "roots": [
+      "AGENTS.md",
+      "CLAUDE.md",
+      "GEMINI.md",
+      ".agent",
+      ".github",
+      "scripts"
+    ],
+    "extensions": [
+      ".md",
+      ".yml",
+      ".yaml",
+      ".json",
+      ".mjs"
+    ],
     "repositories": [
       "Meus-Investimentos",
       "mae-no-controle",
@@ -192,12 +486,34 @@
       "euthiagoandrade-admin"
     ]
   },
-  "gitignoreRequired": [".env", ".env.*", "!.env.example", "*.sqlite", "*.db", "local/", "supabase/.temp/"],
+  "gitignoreRequired": [
+    ".env",
+    ".env.*",
+    "!.env.example",
+    "*.sqlite",
+    "*.db",
+    "local/",
+    "supabase/.temp/"
+  ],
   "dataFiles": {
-    "extensions": [".sqlite", ".sqlite3", ".db", ".csv", ".xlsx"],
-    "allowedDirs": ["tests/fixtures/"],
-    "sqlAllowedDirs": ["supabase/migrations/", "supabase/tests/", "tests/fixtures/"],
-    "sqlAllowedFiles": ["supabase/seed.sql"]
+    "extensions": [
+      ".sqlite",
+      ".sqlite3",
+      ".db",
+      ".csv",
+      ".xlsx"
+    ],
+    "allowedDirs": [
+      "tests/fixtures/"
+    ],
+    "sqlAllowedDirs": [
+      "supabase/migrations/",
+      "supabase/tests/",
+      "tests/fixtures/"
+    ],
+    "sqlAllowedFiles": [
+      "supabase/seed.sql"
+    ]
   },
   "scanExclusions": [
     ".git/",
@@ -230,6 +546,7 @@
   "manualChecks": [
     "Referências documentais em _project/ (fora do escopo do cenário 12) citam fontes por URL e commit, sem caminho local.",
     "Textos, fixtures e prints não contêm dados do usuário (G3).",
-    "Semântica das barreiras declaradas nas tasks e PRs."
+    "Semântica das barreiras declaradas nas tasks e PRs.",
+    "Frases de autorização registradas nos artefatos foram de fato ditas pelo responsável."
   ]
 }
