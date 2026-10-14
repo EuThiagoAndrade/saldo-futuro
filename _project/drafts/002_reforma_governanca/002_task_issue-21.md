@@ -7,7 +7,7 @@
 > **Issue:** `#21`
 > **Plano:** `_project/drafts/002_reforma_governanca/002_plan.md`
 > **Branch:** `chore/issue-21`
-> **PR:** —
+> **PR:** [#23](https://github.com/EuThiagoAndrade/saldo-futuro/pull/23)
 > **Integração:** `Pendente`
 > **Autorização inicial:** "autorizo a implementação da issue #21" em 2026-10-13
 > **Modo contínuo:** `—`
@@ -86,8 +86,8 @@ Não se aplica: o ciclo `002` é completo e tem PR de encerramento própria.
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 002 (completo)
 Quem: Responsável
-Conferir: checks e diff da PR desta issue, a KB-003 e a ausência de dados do usuário
-Diga: "aprovo o merge da PR #N"
+Conferir: checks e diff da PR #23, a KB-003 e a ausência de dados do usuário
+Diga: "aprovo o merge da PR #23"
 ```
 
 ## Handoff de saída
