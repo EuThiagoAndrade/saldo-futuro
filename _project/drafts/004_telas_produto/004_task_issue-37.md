@@ -7,7 +7,7 @@
 > **Issue:** `#37`
 > **Plano:** `_project/drafts/004_telas_produto/004_plan.md`
 > **Branch:** `feature/issue-37`
-> **PR:** —
+> **PR:** [#43](https://github.com/EuThiagoAndrade/saldo-futuro/pull/43)
 > **Integração:** `Pendente`
 > **Autorização inicial:** "autorizo a implementação da issue #37" em 2026-10-14
 > **Modo contínuo:** `—`
@@ -99,13 +99,11 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 004 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 004"
+Situação: Aguardando merge — ciclo 004 (completo)
+Quem: Responsável
+Conferir: [PR #43](https://github.com/EuThiagoAndrade/saldo-futuro/pull/43): checks, diff e as decisões incidentais desta task
+Diga: "aprovo o merge da PR #43"
 ```
-
-A implementação está concluída nesta branch; o passo seguinte, coberto pela autorização da issue #37, é abrir a PR e registrar o número nesta task.
 
 ## Handoff de saída
 
