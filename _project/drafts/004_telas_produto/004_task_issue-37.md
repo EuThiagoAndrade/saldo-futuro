@@ -2,13 +2,13 @@
 
 > **Ciclo:** `004`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#37`
 > **Plano:** `_project/drafts/004_telas_produto/004_plan.md`
 > **Branch:** `feature/issue-37`
 > **PR:** [#43](https://github.com/EuThiagoAndrade/saldo-futuro/pull/43)
-> **Integração:** `Pendente`
+> **Integração:** `Integrada por squash em e23f31b, em 2026-10-14`
 > **Autorização inicial:** "autorizo a implementação da issue #37" em 2026-10-14
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-14
@@ -74,7 +74,7 @@ Não se aplica.
 | Testes da governança | `node --test scripts/validate-governance.test.mjs`: 39 passaram |
 | Validador | 0 erros, 0 avisos |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos | PR #43: CI (aplicação e banco), governança e Vercel verdes |
 
 
 ## Revisão da correção
@@ -99,18 +99,20 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 004 (completo)
+Situação: Aguardando autorização de implementação — ciclo 004 (completo)
 Quem: Responsável
-Conferir: [PR #43](https://github.com/EuThiagoAndrade/saldo-futuro/pull/43): checks, diff e as decisões incidentais desta task
-Diga: "aprovo o merge da PR #43"
+Conferir: Issue #38 e escopo (item B)
+Diga: "autorizo a implementação da issue #38"
 ```
+
+Integrada; o artefato ativo passa a ser a task da issue #38.
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `saldo-futuro + 004 + implementar_issue + 37 + 0bf2b2e`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: antes, issue #37 aberta, sem branch nem task; depois, branch `feature/issue-37` publicada, PR aberta e esta task `Aguardando integração`.
+- `state_before` / `state_after`: antes, PR #43 aberta com checks verdes; depois, PR #43 integrada por squash em `e23f31b` e issue #37 fechada, depois de "aprovo o merge da PR #43" em 2026-10-14. Reconciliado no início da issue #38.
 - `result`: `executed`
-- `evidence`: autorização de 2026-10-14; base `main` @ `0bf2b2e`; a tabela "Evidências" acima.
-- `blockers`: aprovação do merge e checks remotos.
+- `evidence`: a tabela "Evidências" acima; a PR #43 e a issue #37 no GitHub.
+- `blockers`: nenhum.
