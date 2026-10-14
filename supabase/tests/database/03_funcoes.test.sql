@@ -33,7 +33,8 @@ select is_empty(
            'transferir(uuid,uuid,date,bigint)',
            'corrigir_transferencia(uuid,date)',
            'fechar_mes(date,jsonb)',
-           'reabrir_mes(date)']))) $$,
+           'reabrir_mes(date)',
+           'carregar_benchmark(uuid,date,date,jsonb)']))) $$,
   'anon e authenticated só executam as funções previstas (lista explícita de assinaturas)');
 
 -- A lista é fechada: uma função nova executável por authenticated reprova a asserção acima.
@@ -48,7 +49,7 @@ select isnt_empty(
        and p.oid::regprocedure::text <> all (array[
          'criar_ativo(text,tipo_ajuste)', 'desativar_ativo(uuid)', 'lancar_evento(uuid,date,tipo_evento,bigint)',
          'estornar_evento(uuid,date)', 'transferir(uuid,uuid,date,bigint)', 'corrigir_transferencia(uuid,date)',
-         'fechar_mes(date,jsonb)', 'reabrir_mes(date)']) $$,
+         'fechar_mes(date,jsonb)', 'reabrir_mes(date)', 'carregar_benchmark(uuid,date,date,jsonb)']) $$,
   'uma função fora da lista executável por authenticated é detectada');
 drop function public.funcao_nao_listada();
 
@@ -60,15 +61,15 @@ select is_empty(
        'public.lancar_evento(uuid,date,public.tipo_evento,bigint)'::regprocedure,
        'public.estornar_evento(uuid,date)'::regprocedure, 'public.transferir(uuid,uuid,date,bigint)'::regprocedure,
        'public.corrigir_transferencia(uuid,date)'::regprocedure, 'public.fechar_mes(date,jsonb)'::regprocedure,
-       'public.reabrir_mes(date)'::regprocedure)
+       'public.reabrir_mes(date)'::regprocedure, 'public.carregar_benchmark(uuid,date,date,jsonb)'::regprocedure)
        and (not p.prosecdef or has_function_privilege('anon', p.oid, 'EXECUTE')) $$,
-  'as funções da carteira são security definer e anon não as executa');
+  'as funções da carteira e a carga de benchmark são security definer e anon não as executa');
 select is_empty(
   $$ select p.oid::regprocedure from pg_proc p join pg_namespace n on n.oid = p.pronamespace
      where n.nspname = 'private' and p.proname in ('travar_carteira', 'hoje', 'ultimo_mes_fechado',
-       'conferir_data_lancamento', 'saldo_atual', 'apurar_mes', 'na_faixa')
+       'conferir_data_lancamento', 'saldo_atual', 'apurar_mes', 'na_faixa', 'benchmark_imutavel')
        and (has_function_privilege('authenticated', p.oid, 'EXECUTE') or has_function_privilege('anon', p.oid, 'EXECUTE')) $$,
-  'os auxiliares da carteira em private não são executáveis pela Data API');
+  'os auxiliares da carteira e dos benchmarks em private não são executáveis pela Data API');
 
 select function_privs_are('private', 'is_admin', array[]::name[], 'authenticated', array['EXECUTE'],
   'authenticated executa is_admin');

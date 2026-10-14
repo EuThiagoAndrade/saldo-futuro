@@ -425,8 +425,8 @@ Uma PR por issue. A PR documental do plano, a PR de release e a PR de encerramen
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | A [#26](https://github.com/EuThiagoAndrade/saldo-futuro/issues/26), B [#27](https://github.com/EuThiagoAndrade/saldo-futuro/issues/27), C [#28](https://github.com/EuThiagoAndrade/saldo-futuro/issues/28) e D [#29](https://github.com/EuThiagoAndrade/saldo-futuro/issues/29), criadas em 2026-10-14 |
-| PR(s) | Plano: [#25](https://github.com/EuThiagoAndrade/saldo-futuro/pull/25), integrada por squash; A: [#30](https://github.com/EuThiagoAndrade/saldo-futuro/pull/30), integrada por squash; B: [#31](https://github.com/EuThiagoAndrade/saldo-futuro/pull/31), integrada por squash; C: [#33](https://github.com/EuThiagoAndrade/saldo-futuro/pull/33) |
-| Branch(es) | Plano: `chore/cycle-003-plan`; A: `chore/issue-26`; B: `feature/issue-27`; C: `feature/issue-28` |
+| PR(s) | Plano: [#25](https://github.com/EuThiagoAndrade/saldo-futuro/pull/25), integrada por squash; A: [#30](https://github.com/EuThiagoAndrade/saldo-futuro/pull/30), integrada por squash; B: [#31](https://github.com/EuThiagoAndrade/saldo-futuro/pull/31), integrada por squash; C: [#33](https://github.com/EuThiagoAndrade/saldo-futuro/pull/33), integrada por squash; D: [#34](https://github.com/EuThiagoAndrade/saldo-futuro/pull/34) |
+| Branch(es) | Plano: `chore/cycle-003-plan`; A: `chore/issue-26`; B: `feature/issue-27`; C: `feature/issue-28`; D: `feature/issue-29` |
 | Destino após conclusão | `_project/executed/003_regras_financeiras/003_plan.md` |
 
 ## Próximo passo
@@ -435,11 +435,11 @@ Uma PR por issue. A PR documental do plano, a PR de release e a PR de encerramen
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 003 (completo)
 Quem: Responsável
-Conferir: [PR #33](https://github.com/EuThiagoAndrade/saldo-futuro/pull/33): checks, diff e casos CR-20 a CR-38
-Diga: "aprovo o merge da PR #33"
+Conferir: [PR #34](https://github.com/EuThiagoAndrade/saldo-futuro/pull/34): checks (inclusive supabase test db), diff, migração de benchmarks, função de carga e casos CR-40 a CR-48
+Diga: "aprovo o merge da PR #34"
 ```
 
-As issues seguem a sequência A → B → C → D; cada uma tem autorização própria. As issues #26 e #27 foram integradas pelas PRs #30 e #31. A implementação da issue #28 foi autorizada em 2026-10-14 e está na PR #33; o artefato ativo é a task `003_task_issue-28.md`.
+As issues seguem a sequência A → B → C → D; cada uma tem autorização própria. As issues #26 a #28 foram integradas pelas PRs #30, #31 e #33. A implementação da issue #29 foi autorizada em 2026-10-14 e está na PR #34; o artefato ativo é a task `003_task_issue-29.md`. Depois do merge, a ação externa segue o roteiro dessa task.
 
 ## Handoff de saída
 

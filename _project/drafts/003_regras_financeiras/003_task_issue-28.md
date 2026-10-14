@@ -2,13 +2,13 @@
 
 > **Ciclo:** `003`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#28`
 > **Plano:** `_project/drafts/003_regras_financeiras/003_plan.md`
 > **Branch:** `feature/issue-28`
 > **PR:** [#33](https://github.com/EuThiagoAndrade/saldo-futuro/pull/33)
-> **Integração:** `Pendente`
+> **Integração:** `Integrada por squash em e4102a8, em 2026-10-14`
 > **Autorização inicial:** "autorizo a implementação da issue #28" em 2026-10-14
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-14
@@ -62,7 +62,7 @@ Não se aplica.
 | Testes | `npm test`: 7 arquivos, 71 testes passaram (23 novos); `npm run lint` sem erro (os 3 avisos vêm de `local/`, ignorado pelo Git); `npm run typecheck` e `npm run build` sem erro; `node --test scripts/validate-governance.test.mjs`: 39 passaram. Sem mudança de banco, `supabase test db` fica para o CI |
 | Validador | `node scripts/validate-governance.mjs`: 0 erros, 0 avisos |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos | PR #33 no commit `dc6e6d9`: Validate governance, os dois jobs de CI e os dois da Vercel verdes; merge aprovado ("aprovo o merge da PR #33") e feito por squash |
 
 ## Revisão da correção
 
@@ -82,10 +82,10 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 003 (completo)
+Situação: Aguardando autorização de implementação — ciclo 003 (completo)
 Quem: Responsável
-Conferir: [PR #33](https://github.com/EuThiagoAndrade/saldo-futuro/pull/33): checks, diff e casos CR-20 a CR-38
-Diga: "aprovo o merge da PR #33"
+Conferir: Issue #29 (benchmarks, sincronização com o SGS e comparação) e o item D do plano
+Diga: "autorizo a implementação da issue #29"
 ```
 
 ## Handoff de saída
@@ -93,7 +93,7 @@ Diga: "aprovo o merge da PR #33"
 - `handoff_schema_version: 2`
 - `logical_key`: `saldo-futuro + 003 + implementar_issue + 28/C + 532a683`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: antes, `main` @ `532a683`, com as issues A e B integradas e a issue #28 aberta; depois, branch `feature/issue-28` publicada com o item C e PR #33 aberta, aguardando checks e a aprovação do merge.
+- `state_before` / `state_after`: antes, `main` @ `532a683`, com as issues A e B integradas e a issue #28 aberta; depois, PR #33 aprovada pelo responsável e integrada por squash em `e4102a8`, com os checks verdes; issue #28 fechada. Reconciliada na PR da issue #29, cuja implementação foi autorizada em 2026-10-14.
 - `result`: `executed`
 - `evidence`: tabela "Evidências" desta task.
-- `blockers`: "aprovo o merge da PR #33", com os checks verdes.
+- `blockers`: nenhum.
