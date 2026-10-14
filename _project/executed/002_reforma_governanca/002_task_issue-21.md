@@ -2,13 +2,13 @@
 
 > **Ciclo:** `002`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `chore`
 > **Issue:** `#21`
 > **Plano:** `_project/drafts/002_reforma_governanca/002_plan.md`
 > **Branch:** `chore/issue-21`
 > **PR:** [#23](https://github.com/EuThiagoAndrade/saldo-futuro/pull/23)
-> **Integração:** `Pendente`
+> **Integração:** `Integrada por squash em 6898094, em 2026-10-13`
 > **Autorização inicial:** "autorizo a implementação da issue #21" em 2026-10-13
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-13
@@ -62,9 +62,9 @@ Não se aplica.
 | Testes | `node --test scripts/validate-governance.test.mjs`: 39 passaram, 0 falharam |
 | Validador | `node scripts/validate-governance.mjs`: 0 erros e 0 avisos, depois do número da PR no bloco |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos | PR #23 no commit `f0c800f`: Validate governance, CI (os dois jobs) e Vercel verdes; em `main` @ `6898094`: Governance, CI e Release Please verdes |
 | Artefatos históricos | `git diff` sem nenhum arquivo em `_project/executed/` nem `_project/ideations/001_*` |
-| Leitura agnóstica (recomendada) | Pendente: o responsável pode abrir outra ferramenta no repositório e pedir "continue o ciclo 002" antes de aprovar o merge. O resultado esperado é o bloco "Aguardando merge" desta PR. Se não for feito, o encerramento registra "não executado" |
+| Leitura agnóstica (recomendada) | Não executado: o responsável aprovou o merge sem registrar o teste. Evidência parcial: as três rodadas de revisão formal foram executadas pelo Codex a partir só do repositório |
 
 ## Revisão da correção
 
@@ -84,10 +84,10 @@ Não se aplica: o ciclo `002` é completo e tem PR de encerramento própria.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 002 (completo)
-Quem: Responsável
-Conferir: checks e diff da PR #23, a KB-003 e a ausência de dados do usuário
-Diga: "aprovo o merge da PR #23"
+Situação: Concluído — ciclo 002 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
@@ -97,7 +97,7 @@ Diga: "aprovo o merge da PR #23"
 - `effect_class`: `remote_mutation`
 - `state_before` / `state_after`:
   - antes: `main` @ `70f592c` com a governança reformada, a task da issue #20 ainda em `Aguardando integração` e a issue #21 aberta;
-  - depois: branch `chore/issue-21` com B1 a B3 e a task #20 reconciliada, PR aberta aguardando a aprovação do merge.
+  - depois: branch `chore/issue-21` com B1 a B3 e a task #20 reconciliada, PR #23 aprovada pelo responsável ("aprovo o merge da PR #23") e integrada por squash em `6898094`; issue #21 fechada. Reconciliada no encerramento.
 - `result`: `executed`
 - `evidence`: "Execução" e "Evidências" desta task; checks da PR.
-- `blockers`: aprovação do merge.
+- `blockers`: nenhum.

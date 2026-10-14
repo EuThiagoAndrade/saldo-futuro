@@ -120,10 +120,10 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando autorização de implementação — ciclo 002 (completo)
-Quem: Responsável
-Conferir: issue #21 e o escopo dos itens B1 a B3 do plano
-Diga: "autorizo a implementação da issue #21"
+Situação: Concluído — ciclo 002 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída

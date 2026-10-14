@@ -1,7 +1,7 @@
 # Plano de Implementação — Reforma da governança
 
 > **Ciclo:** `002`
-> **Status:** `Em Execução`
+> **Status:** `Concluído`
 > **Versão:** `v3`
 > **Data de criação:** 2026-10-13
 > **Última atualização:** 2026-10-13
@@ -724,8 +724,8 @@ B depende de A: o glossário e a estrutura do `README.md` da raiz remetem às se
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | A: [#20](https://github.com/EuThiagoAndrade/saldo-futuro/issues/20); B: [#21](https://github.com/EuThiagoAndrade/saldo-futuro/issues/21) |
-| PR(s) | Plano: [#19](https://github.com/EuThiagoAndrade/saldo-futuro/pull/19), integrada por squash em `227344b`; A: [#22](https://github.com/EuThiagoAndrade/saldo-futuro/pull/22), integrada por squash em `70f592c`; B: [#23](https://github.com/EuThiagoAndrade/saldo-futuro/pull/23) |
-| Branch(es) | Plano: `chore/cycle-002-plan`; A: `chore/issue-20`; B: `chore/issue-21` |
+| PR(s) | Plano: [#19](https://github.com/EuThiagoAndrade/saldo-futuro/pull/19), integrada por squash em `227344b`; A: [#22](https://github.com/EuThiagoAndrade/saldo-futuro/pull/22), integrada por squash em `70f592c`; B: [#23](https://github.com/EuThiagoAndrade/saldo-futuro/pull/23), integrada por squash em `6898094`; encerramento: `chore/cycle-002-closure`, verificável no GitHub |
+| Branch(es) | Plano: `chore/cycle-002-plan`; A: `chore/issue-20`; B: `chore/issue-21`; encerramento: `chore/cycle-002-closure` |
 | `handoff_schema_version` | `1` |
 | `handoff_id` | `saldo-futuro + 002 + atualizar_docs + 002_plan + v3-aprovado` (anteriores, aceitos: `saldo-futuro + 002 + revisar_plano + 002_plan/rodada-3 + v3`, `saldo-futuro + 002 + rascunhar_plano + 002_plan + v3`, `saldo-futuro + 002 + revisar_plano + 002_plan/rodada-2 + v2`, `saldo-futuro + 002 + rascunhar_plano + 002_plan + v2`, `saldo-futuro + 002 + revisar_plano + 002_plan/rodada-1 + v1` e `saldo-futuro + 002 + rascunhar_plano + 002_plan + 9cf7fce`) |
 | Destino após conclusão | `_project/executed/002_reforma_governanca/002_plan.md` |
@@ -734,13 +734,13 @@ B depende de A: o glossário e a estrutura do `README.md` da raiz remetem às se
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 002 (completo)
-Quem: Responsável
-Conferir: checks e diff da PR #23, a KB-003 e a ausência de dados do usuário
-Diga: "aprovo o merge da PR #23"
+Situação: Concluído — ciclo 002 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
-O artefato ativo é a task da issue em curso; este bloco a acompanha. Depois do merge da PR #23, a retomada indica o encerramento, já coberto pela aprovação do plano.
+Bloco prospectivo do encerramento: vale a partir do merge da PR de encerramento (ver "Encerramento prospectivo" em `_project/README.md`).
 
 ## Handoff de saída
 
@@ -1165,6 +1165,13 @@ A frase de aprovação deve vir acompanhada das escolhas pendentes, ou confirmar
 
 ## Pós-mortem
 
-- **Data de conclusão:** —
-- **Desvios:** —
-- **Lições comprovadas:** —
+- **Data de conclusão:** 2026-10-13.
+- **Entregas:** PR do plano #19 (`227344b`), PR A #22 (`70f592c`) e PR B #23 (`6898094`), todas com checks verdes e merge aprovado pelo responsável; issues #20 e #21 fechadas. Sem PR de release (commits `chore` e `docs`).
+- **Revisão:** três rodadas pelo Codex desktop, com 7, 4 e 0 bloqueadores; uma contestação do autor (R1-2) acolhida pelo revisor.
+- **Desvios:**
+  - a retomada ganhou uma regra para a janela entre o merge e a reconciliação da task (task da issue #20);
+  - a KB-003 entrou na ordem de leitura só na PR B, e não na PR A, como previa a tabela de destino (task da issue #21);
+  - o padrão de código de gate foi gravado com `\b` simples no JSON e corrigido antes do merge, pego pelo próprio teste;
+  - o teste recomendado de leitura agnóstica da retomada não foi executado; a revisão formal pelo Codex conta como evidência parcial de leitura por outra ferramenta;
+  - o plano ficou com mais de mil linhas, por conter a especificação da governança e o histórico das rodadas; os planos no template novo devem ser menores.
+- **Lições comprovadas:** registradas em `.agent/lessons_learned.md` (escape de expressão regular em JSON e revisão por outra ferramenta).

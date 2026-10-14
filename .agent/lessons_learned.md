@@ -49,3 +49,11 @@ Origem: ciclo `001`, PR #12 e PR #16. Scripts que editavam arquivos SQL com `rep
 ### 2026-10-13 — Antes de concluir que uma rotina agendada falhou, compare a hora do primeiro deploy com a agenda
 
 Origem: ciclo `001`, Gate V-C. Nenhuma chamada do cron diário aparecia nos logs da Vercel no dia do deploy. A consulta dos deploys de produção no GitHub mostrou que o primeiro deploy saiu depois do horário agendado (15h47 UTC contra 08h17 UTC), então a primeira chamada ainda nem era esperada. Ao verificar uma rotina periódica, confronte primeiro o horário do primeiro deploy com a agenda e a janela de tolerância do plano, em vez de tratar a ausência de registro como falha; e registre a data e a janela da primeira execução esperada.
+
+### 2026-10-13 — Expressões regulares guardadas em JSON precisam de barra invertida dupla
+
+Origem: ciclo `002`, PR #22. O padrão `\bGates? …\b` foi gravado no manifesto do validador com uma barra só. Em JSON, `\b` é o caractere de backspace, e não a fronteira de palavra, então a regra nunca casava e deixava passar o que devia reprovar. O teste negativo do cenário revelou o erro. Ao guardar uma expressão regular em JSON, escreva cada barra invertida em dobro (`\\b`, `\\d`), confira o valor lido com `JSON.parse`, e tenha sempre um caso que precisa reprovar.
+
+### 2026-10-13 — Revisar um plano com outra ferramenta encontra o que o autor não vê
+
+Origem: ciclo `002`, rodadas 1 a 3 do plano da reforma. O Codex, lendo só o repositório, encontrou 11 bloqueadores em duas rodadas num plano escrito pelo Claude. Entre eles: uma decisão que se apoiava em regras que a própria entrega apagaria, uma regra nova que reprovaria os históricos e uma retomada que esconderia bloqueios. Vários eram efeitos colaterais das correções da rodada anterior. Em mudança de regras ou de processo, prefira um revisor diferente do autor e trate cada rodada como capaz de criar problemas novos: o revisor confere as interações entre as correções, não só os achados antigos.
