@@ -1,57 +1,48 @@
 ---
-description: "Transformar uma ideia em plano rastreável, ainda sem revisão ou aprovação automática."
+description: "Transformar uma ideia em plano rastreável (documento único no ciclo leve), ainda sem revisão ou aprovação."
 ---
 
 # Workflow: Rascunhar plano
 
 ## Entradas
 
-- Handoff de `idear` ou contexto equivalente identificado.
-- Regras canônicas em `.agent/ai_behavior.md`, `_project/README.md` e `_project/cycles.md`.
-- Ideação do ciclo e template local `.agent/templates/plano_implementacao.md`.
-- Escopo, critérios de aceite, riscos, dependências e decisões pendentes.
+- **Completo:** ideação registrada e "autorizo o rascunho do plano do ciclo NNN".
+- **Leve:** a frase de entrada "confirmo o nível leve e autorizo o plano do ciclo NNN", com o sufixo de modo contínuo opcional.
+- **Correção depois de um veredito:** "corrija o plano do ciclo NNN", ou o modo contínuo ativo.
+- Autoridades `.agent/ai_behavior.md`, `_project/README.md` e `_project/cycles.md`.
+- Template `.agent/templates/plano_implementacao.md`.
 
 ## Barreira
 
-- Confirmar identidade do repositório, ciclo, alvo lógico e revisão de origem.
-- Ler o template local e recusar a mutação quando ele estiver ausente ou incompatível com as autoridades.
+- Confirmar repositório, ciclo, alvo lógico e revisão de origem.
+- Ler o template; ausente ou incompatível bloqueia a mutação.
 - Não tratar o rascunho como revisão, aprovação ou autorização de implementação.
-- Se o handoff anterior estiver ausente, incompatível ou contraditório, recusar e registrar o bloqueio.
+- Nunca escrever `Aprovado` neste workflow.
 
 ## Execução
 
-1. Ler `.agent/templates/plano_implementacao.md` e instanciar integralmente suas seções no rascunho do diretório de ciclo definido por `_project/README.md`.
-2. Reconciliar a ideação e `_project/cycles.md` com o mesmo número e alvo lógico, sem criar um segundo plano canônico.
-3. Descrever objetivo, não-objetivos, entregáveis, sequência, gates humanos (o que cada um autoriza e não autoriza), riscos e evidências nos campos do template, e declarar como cada barreira G1 a G4 de `_project/README.md` se aplica ao ciclo.
-4. Manter `Status: Rascunho` até a revisão formal; nunca escrever `Aprovado` neste workflow; não marque o plano como `Aprovado`. Na correção após veredito `REQUER NOVA RODADA`, o plano permanece `Em Revisão`, a versão é incrementada e os pareceres anteriores são preservados.
-5. Encaminhar explicitamente o artefato para `.agent/workflows/revisar_plano.md`, sem executar a revisão automaticamente; não inicie a revisão automaticamente.
+1. Instanciar integralmente o template em `_project/drafts/NNN_assunto/NNN_plan.md`, com `Nível`, `Autorização inicial`, `Modo contínuo` e `handoff_schema_version: 2`.
+   - **Leve:** preencher "Problema e contexto" no lugar da ideação e reservar o ciclo em `cycles.md` como `Planejamento`, gravando a frase de entrada.
+   - **Completo:** reconciliar com a ideação e com `cycles.md`, sem criar um segundo plano.
+2. Descrever objetivo, não-objetivos, entregáveis, sequência, pontos de aprovação (cobre e não cobre), riscos, evidências e a aplicação de G1 a G4.
+3. **Correção:** responder a cada achado como corrigido ou contestado, incrementar a versão, preservar as rodadas e manter `Em Revisão`.
+4. Gravar o bloco: "Aguardando revisão (rodada N)". No modo contínuo sem revisão externa, gravar "Pronto para continuar", e a revisão segue como etapa separada.
 
 ## Saída
 
-- Mutação prevista: `local_mutation` no rascunho do plano.
-- Resultado permitido: `executed`, `already_executed_and_reconciled`, `ambiguous_human_intervention_required` ou `not_executed`.
-- A recomendação para revisão não é autorização para criar issue ou implementar.
+- Mutação: `local_mutation` no plano e, no leve, em `cycles.md`.
+- A recomendação de revisão não autoriza issue nem implementação.
+
+## Situações de saída
+
+- Aguardando revisão (rodada N)
+- Pronto para continuar
+- Parado
 
 ## Handoff
 
-- `handoff_schema_version`: `1`
-- `handoff_id`: `repository + cycle + workflow + logical_target + source_revision`
-- `identity_source`: repositório, ciclo, workflow, alvo lógico e revisão de origem; identidade estável, sem timestamp/UUID.
+Contrato versão 2 de `.agent/ai_behavior.md`.
+
+- `handoff_schema_version: 2`
+- `logical_key`: `repository + cycle + rascunhar_plano + NNN_plan + versão do plano`
 - `effect_class`: `local_mutation`
-- `state_before`: ideia ou contexto documental recebido.
-- `state_after`: plano rastreável em estado `Rascunho`.
-- `next_transition`: `rascunho -> revisão formal`.
-- `preconditions`: ciclo identificado, objetivo delimitado e autoridade para rascunhar.
-- `authority`: solicitação explícita para produzir ou atualizar o rascunho.
-- `evidence`: arquivos, decisões, links e revisões consultados.
-- `acceptance`: plano completo, estado correto, não-objetivos e gates explícitos.
-- `blockers`: decisões, evidências ou dependências ainda ausentes.
-- `result`: `executed` | `already_executed_and_reconciled` | `ambiguous_human_intervention_required` | `not_executed`.
-- `next_workflow_recommended`: `revisar_plano`.
-- `next_workflow_authorized`: somente revisão explicitamente autorizada; não inclui aprovação ou implementação.
-- `actions_prohibited`: escrever `Aprovado`, criar issue, implementar, publicar PR ou integrar PR.
-- `rejection_rule`: o receptor recusa handoff ausente, incompatível, sem revisão ou com status promovido indevidamente.
-- `logical_key`: `repository + cycle + workflow + logical_target + source_revision`.
-- `check_before_mutation`: verificar se já existe rascunho para o mesmo ciclo, alvo e revisão.
-- `reconcile_existing`: atualizar o rascunho existente preservando histórico e evitando duplicidade.
-- `ambiguous_state`: parar quando houver mais de um rascunho canônico ou conflito de revisão.

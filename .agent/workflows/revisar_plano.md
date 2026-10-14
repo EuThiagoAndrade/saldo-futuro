@@ -1,61 +1,58 @@
 ---
-description: "Revisar formalmente um plano e emitir parecer, sem aprová-lo ou implementá-lo automaticamente."
+description: "Revisar formalmente um plano ou uma correção da trilha curta e emitir veredito, sem aprovar, promover ou implementar."
 ---
 
 # Workflow: Revisar plano
 
 ## Entradas
 
-- Plano em estado `Rascunho` ou `Em Revisão`.
-- Handoff de `rascunhar_plano` ou evidência equivalente.
-- Autoridades `.agent/ai_behavior.md`, `_project/README.md` e `_project/cycles.md`.
-- Estrutura canônica em `.agent/templates/plano_implementacao.md`.
+- Plano em `Rascunho` ou `Em Revisão`, com "revise o plano do ciclo NNN" ou o modo contínuo ativo.
+- Ou correção da trilha curta pronta para PR, com "revise a correção da issue #N" ou o modo contínuo ativo.
+- Autoridades `.agent/ai_behavior.md`, `_project/README.md` (seção "Revisão formal") e `_project/cycles.md`.
+- Template `.agent/templates/plano_implementacao.md` ou `.agent/templates/task.md`.
 
 ## Barreira
 
-- Confirmar que o plano existe, está no ciclo correto, encontra-se em `Rascunho` ou `Em Revisão` e ainda não foi aprovado.
-- Ler o template local; plano incompatível ou template ausente é achado bloqueador, não uma estrutura a ser improvisada.
-- Separar parecer técnico de aprovação humana; `APTO PARA APROVAÇÃO` não equivale a `Aprovado`.
-- Manter `Aprovação humana pós-revisão: Pendente`; aprovação anterior do rascunho não satisfaz este gate.
-- Recusar handoff anterior ausente, incompatível ou contraditório.
+- Confirmar que o alvo existe, está no ciclo ou na issue correta e ainda não foi aprovado.
+- Template ausente ou alvo incompatível é achado bloqueador, não estrutura a improvisar.
+- **Limites do revisor:** escrever somente na seção de revisão e nos campos de status e veredito. Não aprovar, não promover e não reescrever o plano ou a correção.
+- Separar veredito de aprovação: `APTO PARA APROVAÇÃO` não equivale a `Aprovado`.
 
 ## Execução
 
-1. Comparar o plano com todas as seções e estados exigidos por `.agent/templates/plano_implementacao.md`.
-2. Ao iniciar a revisão de um `Rascunho`, alterar o status para `Em Revisão` antes de emitir qualquer parecer; em reexecução, reconciliar o parecer da mesma revisão sem duplicá-lo.
-3. Verificar objetivo, escopo, não-escopo, sequência, dependências, riscos, gates e critérios de aceite. Cada gate humano deve dizer o que autoriza e o que não autoriza, e cada merge deve ter gate próprio.
-4. Verificar compatibilidade com `.agent/ai_behavior.md`, `_project/README.md` e `_project/cycles.md`, inclusive a declaração das barreiras G1 a G4 e a ausência de dados do usuário no texto do plano.
-5. Verificar fatos citados pelo plano (arquivos, commits, versões, comportamento de ferramentas) por inspeção somente leitura antes de aceitá-los.
-6. Registrar achados classificados como bloqueadores, ressalvas ou itens atendidos, numa seção por rodada, preservando as rodadas anteriores.
-7. Emitir um dos vereditos canônicos: `APTO PARA APROVAÇÃO`, `APTO COM RESSALVAS` ou `REQUER NOVA RODADA`.
-8. Manter `Aprovação humana pós-revisão: Pendente`, apresentar o parecer e parar; somente uma manifestação humana posterior pode autorizar o registro de `Aprovado`.
+1. **Plano:** ao revisar um `Rascunho`, mudar o status para `Em Revisão` antes do parecer.
+2. **Escopo da revisão:**
+   - plano: objetivo, escopo, não-escopo, sequência, dependências, riscos, pontos de aprovação (cobre e não cobre), critérios de aceite e G1 a G4;
+   - correção: diff, teste de reprodução, elegibilidade e barreiras.
+3. Verificar compatibilidade com as autoridades e a ausência de dados do usuário.
+4. Verificar por inspeção somente leitura os fatos citados (arquivos, commits, versões, comportamento de ferramentas).
+5. Registrar a rodada como `### Rodada N`, em "Revisão crítica" do plano ou em `## Revisão da correção` da task:
+   - `Autor:` e `Revisor:` (ferramenta e modelo);
+   - achados `RN-k`, classificados como bloqueador ou ressalva;
+   - itens atendidos e veredito.
+6. Aplicar a regra de progresso de `_project/README.md`. Sem progresso, com oscilação ou com discordância persistente, a situação é "Parado". O teto é de 5 rodadas.
+7. Gravar o bloco e parar.
+   - `REQUER NOVA RODADA` → "Aguardando correções (rodada N)", ou "Pronto para continuar" no modo contínuo ativo.
+   - **Plano apto** → "Aguardando aprovação do plano". No modo contínuo ativo com `APTO PARA APROVAÇÃO`, "Pronto para continuar"; a promoção é feita por `criar_issues`.
+   - **Plano com `APTO COM RESSALVAS` no modo contínuo** → "Parado", e o modo passa a `suspenso`.
+   - **Correção apta** → "Pronto para continuar", e a PR é aberta por `corrigir_trilha_curta`.
 
 ## Saída
 
-- Mutação prevista: `local_mutation` no parecer e na rastreabilidade do plano.
-- Resultado permitido: `executed`, `already_executed_and_reconciled`, `ambiguous_human_intervention_required` ou `not_executed`.
-- Nenhuma issue, implementação, PR ou integração é criada por este workflow.
+- Mutação: `local_mutation` na seção de revisão e nos campos de veredito.
+- Nenhuma issue, implementação, PR ou integração.
+
+## Situações de saída
+
+- Aguardando correções (rodada N)
+- Aguardando aprovação do plano
+- Pronto para continuar
+- Parado
 
 ## Handoff
 
-- `handoff_schema_version`: `1`
-- `handoff_id`: `repository + cycle + workflow + logical_target + source_revision`
-- `identity_source`: repositório, ciclo, workflow, alvo lógico e revisão de origem; identidade estável, sem timestamp/UUID.
+Contrato versão 2 de `.agent/ai_behavior.md`.
+
+- `handoff_schema_version: 2`
+- `logical_key`: `repository + cycle + revisar_plano + alvo/rodada-N + versão revisada`
 - `effect_class`: `local_mutation`
-- `state_before`: plano em `Rascunho` ou `Em Revisão`, com decisão humana pendente.
-- `state_after`: plano em `Em Revisão`, parecer canônico registrado e aprovação humana ainda `Pendente`.
-- `next_transition`: `parecer -> aprovação humana`.
-- `preconditions`: plano completo e revisão formal autorizada.
-- `authority`: solicitação explícita para revisar; não inclui aprovação.
-- `evidence`: checklist, arquivos, comandos, revisão e achados.
-- `acceptance`: parecer explícito, ressalvas classificadas e decisão humana não inferida.
-- `blockers`: falhas de completude, incoerências ou evidências insuficientes.
-- `result`: `executed` | `already_executed_and_reconciled` | `ambiguous_human_intervention_required` | `not_executed`.
-- `next_workflow_recommended`: `criar_issues` apenas após parecer apto e aprovação humana registrada.
-- `next_workflow_authorized`: somente o próximo workflow explicitamente autorizado.
-- `actions_prohibited`: marcar `Aprovado`, criar issue, implementar, publicar PR ou integrar PR sem gates próprios.
-- `rejection_rule`: o receptor recusa handoff ausente, incompatível, sem parecer formal ou que trate aptidão como aprovação.
-- `logical_key`: `repository + cycle + workflow + logical_target + source_revision`.
-- `check_before_mutation`: verificar se já existe parecer para a mesma revisão do plano.
-- `reconcile_existing`: atualizar o parecer apenas com nova evidência/revisão, preservando o parecer anterior.
-- `ambiguous_state`: parar quando o plano mudar durante a revisão ou houver decisões conflitantes.
