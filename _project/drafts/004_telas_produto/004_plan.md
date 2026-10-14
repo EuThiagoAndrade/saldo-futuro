@@ -1,7 +1,7 @@
 # Plano de Implementação — Telas do produto
 
 > **Ciclo:** `004`
-> **Status:** `Aprovado`
+> **Status:** `Em Execução`
 > **Versão:** `v4`
 > **Data de criação:** 2026-10-14
 > **Última atualização:** 2026-10-14
@@ -426,39 +426,38 @@ Uma PR por issue. A PR documental do plano, a PR de release e a PR de encerramen
 
 | Campo | Valor |
 | :-- | :-- |
-| Issue(s) | — |
-| PR(s) | — |
-| Branch(es) | — |
+| Issue(s) | A [#37](https://github.com/EuThiagoAndrade/saldo-futuro/issues/37), B [#38](https://github.com/EuThiagoAndrade/saldo-futuro/issues/38), C [#39](https://github.com/EuThiagoAndrade/saldo-futuro/issues/39), D [#40](https://github.com/EuThiagoAndrade/saldo-futuro/issues/40), E [#41](https://github.com/EuThiagoAndrade/saldo-futuro/issues/41) e F [#42](https://github.com/EuThiagoAndrade/saldo-futuro/issues/42), criadas em 2026-10-14 |
+| PR(s) | Plano: [#36](https://github.com/EuThiagoAndrade/saldo-futuro/pull/36), integrada por squash; A: [#43](https://github.com/EuThiagoAndrade/saldo-futuro/pull/43) |
+| Branch(es) | Plano: `chore/cycle-004-plan`; A: `feature/issue-37` |
 | Destino após conclusão | `_project/executed/004_telas_produto/004_plan.md` |
 
 ## Próximo passo
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 004 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 004"
+Situação: Aguardando autorização de implementação — ciclo 004 (completo)
+Quem: Responsável
+Conferir: Issue #37 e escopo (item A)
+Diga: "autorizo a implementação da issue #37"
 ```
 
-A aprovação de 2026-10-14 cobre o próximo passo: a ADR-005 (D14), a PR documental `chore/cycle-004-plan` (ideação, plano, ADR-005 e `cycles.md`), seu merge com checks verdes e, depois dele, a criação das issues A a F, com o payload apresentado ao responsável antes da criação. Ela não cobre a implementação de nenhuma issue.
+As issues seguem a sequência A → F; cada uma tem autorização própria. A implementação da issue #37 foi autorizada em 2026-10-14; a partir dela, o artefato ativo é a task `004_task_issue-37.md`.
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `saldo-futuro + 004 + atualizar_docs + 004_plan/aprovacao + v4`
-- `effect_class`: `local_mutation` (a PR documental que se segue é `remote_mutation`, coberta pela aprovação)
+- `logical_key`: `saldo-futuro + 004 + criar_issues + issues A-F/004_plan + v4`
+- `effect_class`: `remote_mutation`
 - `state_before` / `state_after`:
-  - antes: ciclo `004` em `Planejamento`; plano `v4` em `Em Revisão`, revisão `Concluída`, veredito `APTO PARA APROVAÇÃO` (rodada 4), aprovação `Pendente`, bloco "Aguardando aprovação do plano";
-  - depois: plano `v4` `Aprovado` (`Aprovada em 2026-10-14`), D1 a D14 confirmadas, ADR-005 criada, bloco "Pronto para continuar"; ciclo continua em `Planejamento` até a primeira entrega.
+  - antes: plano `v4` `Aprovado`, integrado pela PR #36; nenhuma issue do ciclo (busca por título sem duplicata);
+  - depois: issues #37 (A), #38 (B), #39 (C), #40 (D), #41 (E) e #42 (F) abertas como `[FEATURE]`, com os campos do Issue Form e as dependências em sequência; bloco "Aguardando autorização de implementação".
 - `result`: `executed`
 - `evidence`:
-  - manifestação humana "aprovo o plano do ciclo 004", em 2026-10-14, posterior ao veredito da rodada 4;
-  - `_project/decisions/ADR-005_graficos_svg_proprio.md`, criada por `.agent/templates/adr.md`;
-  - autoridades lidas: `.agent/workflows/criar_issues.md`, `_project/README.md` ("Pontos de aprovação", "Fluxo por nível") e a PR documental do ciclo `003` como precedente;
-  - histórico: `rascunhar_plano` produziu `v1` a `v4`; `revisar_plano` registrou as rodadas 1 a 4, preservadas abaixo;
-  - validador de governança executado depois da gravação.
-- `blockers`: nenhum. A criação das issues espera o merge da PR documental e a apresentação do payload.
+  - payload apresentado e confirmado pelo responsável em 2026-10-14 ("Confirmo o payload; crie as issues A a F do ciclo 004");
+  - `gh issue list` conferido depois da criação: seis issues abertas com os títulos do plano;
+  - template lido: `.github/ISSUE_TEMPLATE/feature_request.yml`;
+  - handoff anterior: `saldo-futuro + 004 + atualizar_docs + 004_plan/aprovacao + v4` (aprovação do plano e PR documental #36).
+- `blockers`: nenhum.
 
 ## Revisão crítica
 
