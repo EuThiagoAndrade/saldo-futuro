@@ -3,6 +3,8 @@
 ## Ciclo, plano e issue
 
 - Ciclo (ou `trilha curta`):
+- Nível: `trilha curta | leve | completo`
+- Modo contínuo: `— | ativo | suspenso`
 - Plano (ou `—` na trilha curta):
 - Issue associada: `Closes #N`
 - Encerramento documental sem issue: `Não se aplica — closure do ciclo NNN`
@@ -35,4 +37,4 @@ Marque cada barreira. "Não se aplica" exige justificativa na linha.
 ## Gates pendentes
 
 - [ ] Checks remotos concluídos.
-- [ ] Gate humano de integração concedido.
+- [ ] Aprovar merge concedido ("aprovo o merge da PR #N").
