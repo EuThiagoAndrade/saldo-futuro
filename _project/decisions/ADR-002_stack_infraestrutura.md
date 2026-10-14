@@ -6,7 +6,7 @@ tags:
   - dados
 author: "Thiago Andrade e Claude"
 module: "Arquitetura"
-last_updated: "2026-10-12"
+last_updated: "2026-10-13"
 origin_cycle: "000"
 ---
 
@@ -36,7 +36,7 @@ As decisões abaixo foram aprovadas pelo responsável em 2026-10-11 e 2026-10-12
 - Next.js com App Router, sobre React (no `mae-no-controle`, React 19), TypeScript, Tailwind CSS 4, `@supabase/ssr`, Zod, Vitest e Playwright, na mesma linha do `mae-no-controle`. As versões exatas são fixadas no ciclo `001`; a referência observada é o `package.json` do `mae-no-controle` @ `2f4a304`.
 - Hospedagem na Vercel, integrada ao GitHub, e banco Supabase (PostgreSQL).
 - Dados em tabelas relacionais, não no agregado JSONB usado pelo `mae-no-controle`.
-- A biblioteca de gráficos **não** faz parte desta decisão. O design system define a paleta em tokens agnósticos, e a escolha fica para o ciclo `003`, registrada em ADR.
+- A biblioteca de gráficos **não** faz parte desta decisão. O design system define a paleta em tokens agnósticos, e a escolha fica para o ciclo `004`, registrada em ADR.
 
 ### Infraestrutura (decisão 3)
 
@@ -55,9 +55,9 @@ As decisões abaixo foram aprovadas pelo responsável em 2026-10-11 e 2026-10-12
 
 ### Dados (decisão 6)
 
-- Migração única a partir do SQLite de origem (ciclo `004`). A tabela `investimentos_legacy` e o migrador histórico de CSV ficam de fora.
+- Migração única a partir do SQLite de origem (ciclo `005`). A tabela `investimentos_legacy` e o migrador histórico de CSV ficam de fora.
 - Quantias monetárias (saldos, lançamentos, aportes, resgates, rendimentos e totais consolidados) são representadas em **centavos inteiros**.
-- Valores de índices, taxas e percentuais não são dinheiro. Na origem eles usam `Numeric(15,6)` (valor de benchmark) e `Numeric(5,2)` (percentual consolidado). Sua precisão é definida no ciclo `002`, na KB de regras financeiras.
+- Valores de índices, taxas e percentuais não são dinheiro. Na origem eles usam `Numeric(15,6)` (valor de benchmark) e `Numeric(5,2)` (percentual consolidado). Sua precisão é definida no ciclo `003`, na KB de regras financeiras.
 
 ## Consequências
 
@@ -70,7 +70,7 @@ As decisões abaixo foram aprovadas pelo responsável em 2026-10-11 e 2026-10-12
 
 ### Trade-offs
 
-- As regras financeiras escritas em Python precisam ser reescritas e validadas contra casos de referência (barreira G1, ciclo `002`).
+- As regras financeiras escritas em Python precisam ser reescritas e validadas contra casos de referência (barreira G1, ciclo `003`).
 - O plano gratuito do Supabase pausa projetos inativos e tem limites de armazenamento e conexões.
 - Sem modo offline, o uso exige conexão.
 - Duas precisões numéricas distintas (centavos e índices) exigem disciplina de tipos.
