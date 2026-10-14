@@ -6,7 +6,7 @@ tags:
   - referência
 author: "Thiago Andrade e Claude"
 module: "Produto"
-last_updated: "2026-10-13"
+last_updated: "2026-10-14"
 origin_cycle: "002"
 ---
 
@@ -24,18 +24,25 @@ Conhecimento de referência. As decisões estão nas ADRs, o contrato visual no 
 
 ### O produto hoje
 
-O Saldo Futuro é um sistema web de gestão de investimentos pessoais, multiusuário e pensado primeiro para o celular (`README.md`). Na versão `0.1.0` (`package.json`, ciclo `001`), ele tem só a fundação, em produção em `investimentos.euthiagoandrade.com.br` (KB-002):
+O Saldo Futuro é um sistema web de gestão de investimentos pessoais, multiusuário e pensado primeiro para o celular (`README.md`). Na versão `0.2.0` (`package.json`), em produção em `investimentos.euthiagoandrade.com.br` (KB-002), ele tem:
 
-- login com Google restrito a e-mails autorizados;
-- perfis `admin` e `user`;
-- isolamento por RLS provado por testes de banco;
-- PWA instalável;
-- uma única tela autenticada, "Em construção", que mostra o e-mail e o perfil do próprio usuário e permite sair (`src/app/page.tsx`).
+- a fundação (ciclo `001`):
+  - login com Google restrito a e-mails autorizados;
+  - perfis `admin` e `user`;
+  - isolamento por RLS provado por testes de banco;
+  - PWA instalável;
+  - uma única tela autenticada, "Em construção", que mostra o e-mail e o perfil do próprio usuário e permite sair (`src/app/page.tsx`);
+- as regras financeiras, sem tela (ciclo `003`):
+  - o schema da carteira, com escrita só por funções do banco;
+  - lançamentos, estorno, transferência e fechamento mensal;
+  - consolidação, Modified Dietz, acumulado e drawdown;
+  - benchmarks (CDI e IPCA) com a sincronização com o SGS e a comparação com a carteira;
+  - tudo especificado na KB-004 e testado contra os mesmos casos de referência.
 
 Ainda não existe:
 
-- nenhuma tabela de carteira e nenhuma regra de cálculo (ciclo `003`);
-- nenhuma tela de produto (ciclo `004`);
+- nenhuma tela de produto, nem rota ou botão de sincronização do SGS (ciclo `004`);
+- nenhum dado de carteira em produção: as tabelas existem vazias, e nenhum benchmark foi sincronizado;
 - nenhum dado migrado do `Meus-Investimentos` (ciclo `005`).
 
 ### Onde está cada coisa
@@ -45,6 +52,9 @@ Ainda não existe:
 | Decisões duradouras (stack, acesso, governança) | `_project/decisions/` (ADR-001 a ADR-004) |
 | Operação de produção e de acessos | `_project/knowledge/KB-002_operacao_producao_acessos.md` |
 | Origem das regras e inventário funcional | `_project/knowledge/KB-001_proveniencia_ecossistema.md` |
+| Regras financeiras e casos de referência | `_project/knowledge/KB-004_regras_financeiras.md` e `tests/fixtures/financeiro/casos_referencia.json` |
+| Regras de cálculo em TypeScript | `src/lib/financeiro/` |
+| Sincronização com o SGS | `src/lib/benchmarks/` |
 | Processo (níveis, situações, barreiras, glossário) | `_project/README.md` e `.agent/ai_behavior.md` |
 | Contrato visual | `design-system/DESIGN.md` |
 | Páginas e rotas | `src/app/` |
@@ -86,7 +96,7 @@ A decisão está na ADR-003: só entra quem está numa lista de e-mails no banco
 
 ### Modelo de dados e isolamento (G2)
 
-Definido em `supabase/migrations/20261013005133_acesso_autorizacao_perfis.sql`.
+Acesso e perfis em `supabase/migrations/20261013005133_acesso_autorizacao_perfis.sql`; carteira e benchmarks nas seções seguintes.
 
 | Objeto | Função | Acesso |
 | :-- | :-- | :-- |
@@ -102,7 +112,36 @@ Regras que valem para toda mudança futura (barreira G2, `_project/README.md`):
 - toda função tem `search_path` fixo e `execute` revogado de `public`;
 - o `admin` gerencia acessos, mas não tem bypass sobre dados de outros usuários.
 
-Os testes pgTAP em `supabase/tests/database/` provam isso com dois usuários fictícios e um administrador, em 68 asserções: isolamento (36), hook e gatilho (20) e funções (12).
+Os testes pgTAP em `supabase/tests/database/` provam isso com usuários fictícios e um administrador, em 239 asserções:
+
+- isolamento do acesso (36), hook e gatilho (20) e funções (15, com a lista explícita do que `authenticated` executa);
+- carteira (112), concorrência com duas sessões (13) e benchmarks (43).
+
+### Carteira (ciclo `003`, G1 e G2)
+
+Definida em `supabase/migrations/20261014185205_carteira.sql`; as regras estão na KB-004.
+
+| Objeto | Função |
+| :-- | :-- |
+| `public.ativos` | Ativos do usuário, com o tipo de ajuste (`rendimento` ou `marcacao`) e o ativo de sistema "Em trânsito", único por usuário |
+| `public.eventos` | Fatos imutáveis em centavos com sinal: aporte, resgate, rendimento, marcação, câmbio, migração, pernas de transferência e estornos |
+| `public.transferencias` | Agrupa as duas pernas de cada transferência e de sua correção |
+| `public.consolidados_mensais` | Uma linha por mês fechado: Vi, Vf e os componentes da identidade contábil |
+| `public.posicoes_mensais` | Saldo inicial, saldo final e ajuste de cada ativo no mês fechado |
+
+- O usuário só lê as próprias linhas. Toda escrita passa por funções `security definer` que tomam primeiro a mesma trava por usuário: `criar_ativo`, `desativar_ativo`, `lancar_evento`, `estornar_evento`, `transferir`, `corrigir_transferencia`, `fechar_mes` e `reabrir_mes`.
+- Quantias são `bigint` com faixa ±(2⁵³ − 1); as somas no banco são feitas em `numeric`.
+- Nenhum percentual é gravado: rentabilidade, acumulado e comparações são calculados na leitura, em `src/lib/financeiro/`.
+
+### Benchmarks (ciclo `003`)
+
+Definidos em `supabase/migrations/20261014193630_benchmarks.sql`.
+
+- `public.benchmarks`: catálogo global, semeado com CDI (SGS 12, diária) e IPCA (SGS 433, mensal).
+- `public.valores_benchmark`: valores como publicados.
+- `public.coberturas_benchmark`: a cobertura de cada carga.
+- Qualquer usuário autenticado lê. Só a função `carregar_benchmark`, executada pelo admin, grava.
+- A sincronização (`src/lib/benchmarks/sgs.ts`) busca o SGS em janelas de até 10 anos e grava numa única chamada. Ela ainda não tem rota nem tela (ciclo `004`).
 
 ### Operação
 
@@ -128,7 +167,7 @@ Os testes pgTAP em `supabase/tests/database/` provam isso com dois usuários fic
 Todas as fontes são internas e estão neste repositório, em `main`:
 
 - ADR-002 e ADR-003;
-- KB-002;
+- KB-002 e KB-004;
 - `README.md` e `design-system/DESIGN.md`;
 - os arquivos de código, configuração e teste citados em cada seção.
 
@@ -139,3 +178,4 @@ O plano executado do ciclo `001` (`_project/executed/001_fundacao_aplicacao/001_
 | Data | Ciclo | Alteração |
 | :-- | :-- | :-- |
 | 2026-10-13 | `002` | Criação, a partir do estado entregue no ciclo `001` |
+| 2026-10-14 | `003` | Regras financeiras: carteira, benchmarks, KB-004, módulos em `src/lib/` e versão `0.2.0` |

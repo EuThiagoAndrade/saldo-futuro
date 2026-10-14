@@ -5,7 +5,7 @@
 > **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#27`
-> **Plano:** `_project/drafts/003_regras_financeiras/003_plan.md`
+> **Plano:** `_project/executed/003_regras_financeiras/003_plan.md`
 > **Branch:** `feature/issue-27`
 > **PR:** [#31](https://github.com/EuThiagoAndrade/saldo-futuro/pull/31)
 > **Integração:** `Integrada por squash em 532a683, em 2026-10-14`
@@ -87,10 +87,10 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando autorização de implementação — ciclo 003 (completo)
-Quem: Responsável
-Conferir: Issue #28 (consolidação e rentabilidade) e o item C do plano
-Diga: "autorizo a implementação da issue #28"
+Situação: Concluído — ciclo 003 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída

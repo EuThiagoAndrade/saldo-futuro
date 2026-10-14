@@ -310,7 +310,7 @@ Os casos usam só dados fictícios. Cada caso tem o mesmo identificador `CR-NN` 
 - `recusado_<motivo>` indica recusa sem gravação; `aceito`, uma operação aceita;
 - a coluna "Entrega" indica a issue cujos testes executam o caso (B, C, D ou o ciclo `004`).
 
-A conferência independente está em `_project/drafts/003_regras_financeiras/003_validation_casos_referencia.md`.
+A conferência independente está em `_project/executed/003_regras_financeiras/003_validation_casos_referencia.md`.
 
 #### Eventos e saldos
 
@@ -939,7 +939,7 @@ Nos casos de série diária, os valores são fictícios, de 0,04% ao dia, em dia
 | :-- | :-- | :-- | :-- |
 | `Meus-Investimentos` | Regras de origem, lidas na ideação do ciclo `003` | Commit `1b13b033ce4335c09df80237c8c31b96b37e3797`, fixado na KB-001 | Evidência histórica; nenhum valor, teste ou fixture copiado |
 | SGS do Banco Central, <https://api.bcb.gov.br/dados/serie/bcdata.sgs.{codigo}/dados> | Formato, janelas e séries 12 e 433 | Verificação de 2026-10-13, registrada no plano do ciclo `003` (V1 a V5) | Serviço externo; a disponibilidade não foi medida |
-| Plano do ciclo `003` | Decisões P1 a P18 e D1 a D14 | `_project/drafts/003_regras_financeiras/003_plan.md`, `v3` aprovada em 2026-10-14 | Autoridade das decisões; esta KB as especifica |
+| Plano do ciclo `003` | Decisões P1 a P18 e D1 a D14 | `_project/executed/003_regras_financeiras/003_plan.md`, `v3` aprovada em 2026-10-14 | Autoridade das decisões; esta KB as especifica |
 | `design-system/DESIGN.md`, seções 6.3 a 6.5 | Formato brasileiro, sinal e `N/D` | Versão vigente em `main` | Contrato visual |
 
 ## Histórico
