@@ -2,12 +2,12 @@
 
 > **Ciclo:** `003`
 > **Trilha:** `normal`
-> **Estado:** `Em andamento`
+> **Estado:** `Aguardando integração`
 > **Tipo:** `feature`
 > **Issue:** `#27`
 > **Plano:** `_project/drafts/003_regras_financeiras/003_plan.md`
 > **Branch:** `feature/issue-27`
-> **PR:** —
+> **PR:** [#31](https://github.com/EuThiagoAndrade/saldo-futuro/pull/31)
 > **Integração:** `Pendente`
 > **Autorização inicial:** "autorizo a implementação da issue #27" em 2026-10-14
 > **Modo contínuo:** `—`
@@ -89,8 +89,8 @@ Não se aplica.
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 003 (completo)
 Quem: Responsável
-Conferir: PR (a definir): checks, diff, migração, testes de banco e casos CR-01 a CR-18
-Diga: "aprovo o merge da PR #N"
+Conferir: [PR #31](https://github.com/EuThiagoAndrade/saldo-futuro/pull/31): checks (inclusive supabase test db), diff, migração da carteira, funções security definer e casos CR-01 a CR-18
+Diga: "aprovo o merge da PR #31"
 ```
 
 ## Handoff de saída
@@ -98,7 +98,7 @@ Diga: "aprovo o merge da PR #N"
 - `handoff_schema_version: 2`
 - `logical_key`: `saldo-futuro + 003 + implementar_issue + 27/B + d8fcae4`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: antes, `main` @ `d8fcae4`, com a issue A integrada, plano `Em Execução` e issue #27 aberta; depois, a definir na publicação.
+- `state_before` / `state_after`: antes, `main` @ `d8fcae4`, com a issue A integrada, plano `Em Execução` e issue #27 aberta; depois, branch `feature/issue-27` publicada com o item B e PR #31 aberta, aguardando checks e a aprovação do merge.
 - `result`: `executed`
 - `evidence`: tabela "Evidências" desta task.
-- `blockers`: pendente.
+- `blockers`: "aprovo o merge da PR #31", com os checks verdes.

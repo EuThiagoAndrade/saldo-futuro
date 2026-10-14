@@ -425,8 +425,8 @@ Uma PR por issue. A PR documental do plano, a PR de release e a PR de encerramen
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | A [#26](https://github.com/EuThiagoAndrade/saldo-futuro/issues/26), B [#27](https://github.com/EuThiagoAndrade/saldo-futuro/issues/27), C [#28](https://github.com/EuThiagoAndrade/saldo-futuro/issues/28) e D [#29](https://github.com/EuThiagoAndrade/saldo-futuro/issues/29), criadas em 2026-10-14 |
-| PR(s) | Plano: [#25](https://github.com/EuThiagoAndrade/saldo-futuro/pull/25), integrada por squash; A: [#30](https://github.com/EuThiagoAndrade/saldo-futuro/pull/30) |
-| Branch(es) | Plano: `chore/cycle-003-plan`; A: `chore/issue-26` |
+| PR(s) | Plano: [#25](https://github.com/EuThiagoAndrade/saldo-futuro/pull/25), integrada por squash; A: [#30](https://github.com/EuThiagoAndrade/saldo-futuro/pull/30), integrada por squash; B: [#31](https://github.com/EuThiagoAndrade/saldo-futuro/pull/31) |
+| Branch(es) | Plano: `chore/cycle-003-plan`; A: `chore/issue-26`; B: `feature/issue-27` |
 | Destino após conclusão | `_project/executed/003_regras_financeiras/003_plan.md` |
 
 ## Próximo passo
@@ -435,11 +435,11 @@ Uma PR por issue. A PR documental do plano, a PR de release e a PR de encerramen
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 003 (completo)
 Quem: Responsável
-Conferir: [PR #30](https://github.com/EuThiagoAndrade/saldo-futuro/pull/30): checks, diff, KB-004 (decisões K1 a K13 e casos) e a conferência na planilha a registrar em 003_validation_casos_referencia.md
-Diga: "aprovo o merge da PR #30"
+Conferir: [PR #31](https://github.com/EuThiagoAndrade/saldo-futuro/pull/31): checks (inclusive supabase test db), diff, migração da carteira, funções security definer e casos CR-01 a CR-18
+Diga: "aprovo o merge da PR #31"
 ```
 
-As issues seguem a sequência A → B → C → D; cada uma tem autorização própria. A implementação da issue #26 foi autorizada em 2026-10-14 e está na PR #30; o artefato ativo é a task `003_task_issue-26.md`.
+As issues seguem a sequência A → B → C → D; cada uma tem autorização própria. A issue #26 foi integrada pela PR #30. A implementação da issue #27 foi autorizada em 2026-10-14 e está na PR #31; o artefato ativo é a task `003_task_issue-27.md`.
 
 ## Handoff de saída
 
