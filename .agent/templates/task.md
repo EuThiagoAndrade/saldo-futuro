@@ -9,10 +9,11 @@
 > **Branch:** `tipo/issue-N`
 > **PR:** —
 > **Integração:** `Pendente`
+> **Autorização inicial:** "<frase>" em AAAA-MM-DD
+> **Modo contínuo:** `— | ativo | suspenso`
 > **Início:** AAAA-MM-DD
 > **Última atualização:** AAAA-MM-DD
-> **handoff_schema_version:** `1`
-> **handoff_id:** repository + cycle + workflow + logical_target + source_revision
+> **handoff_schema_version:** `2`
 
 ## Objetivo
 
@@ -29,7 +30,7 @@ Preencha somente na trilha curta; na trilha normal, escreva `Não se aplica`. Ju
 
 ## Barreiras de domínio
 
-Toda linha é obrigatória. "Não se aplica" exige justificativa.
+Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 marcados com "Sim", o modo contínuo não pode estar `ativo`.
 
 | Barreira | Aplica-se? | Evidência ou justificativa |
 | :-- | :-- | :-- |
@@ -44,35 +45,39 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa.
 
 ## Evidências
 
-| Gate | Resultado |
+| Validação | Resultado |
 | :-- | :-- |
 | Testes | Pendente |
-| Validação | Pendente |
+| Validador | Pendente |
 | `git diff --check` | Pendente |
 | Checks remotos | Pendente |
 
+## Revisão da correção
+
+Somente na trilha curta; na trilha normal, escreva `Não se aplica`. Uma subseção `### Rodada N` por rodada, no formato de "Revisão formal" de `_project/README.md`, antes da abertura da PR.
+
 ## Decisões incidentais e desvios
 
-## Resultado
+## Encerramento
 
-### Handoff de execução
+Somente na última issue do ciclo leve; nos demais casos, escreva `Não se aplica`. Checklist do encerramento prospectivo: documentação viva atualizada, plano `Concluído`, tasks `Concluída`, `cycles.md` e movimentação para `executed/`.
 
-- `handoff_schema_version`: `1`
-- `handoff_id`: derivado de repositório, ciclo, workflow, alvo lógico e revisão de origem.
-- `identity_source`: `repository + cycle + workflow + logical_target + source_revision`; timestamp e UUID não definem a identidade.
+## Próximo passo
+
+```text
+PRÓXIMO PASSO
+Situação: <situação> — <ciclo NNN (nível) | correção da issue #N>
+Quem: <coluna "Quem age">
+Conferir: <o que conferir>
+Diga: "<frase>"
+```
+
+## Handoff de saída
+
+- `handoff_schema_version: 2`
+- `logical_key`: `repository + NNN + <workflow> + issue_number + revisão da base`
 - `effect_class`: `local_mutation | remote_mutation`
-- `state_before` / `state_after`: estados observados e produzidos.
-- `next_transition`: próxima transição recomendada.
-- `preconditions`: precondições obrigatórias.
-- `authority`: autoridade capaz de satisfazê-las.
-- `evidence`: evidências esperadas.
-- `acceptance`: critério de aceite do receptor.
-- `blockers`: bloqueios atuais.
+- `state_before` / `state_after`:
 - `result`: `executed | already_executed_and_reconciled | ambiguous_human_intervention_required | not_executed`
-- `next_workflow_recommended` / `next_workflow_authorized`: recomendação separada de autorização.
-- `actions_prohibited`: ações não automáticas enquanto o aceite estiver pendente.
-- `rejection_rule`: o receptor recusa handoff ausente, incompatível, contraditório ou sem evidência material.
-- `logical_key`: `repository + cycle + workflow + logical_target + source_revision`.
-- `check_before_mutation`: verificar task, branch e PR existentes antes de criar ou publicar.
-- `reconcile_existing`: atualizar a unidade compatível sem duplicar task, branch ou PR.
-- `ambiguous_state`: parar quando issue, task, branch, PR ou revisão estiverem em conflito.
+- `evidence`:
+- `blockers`:

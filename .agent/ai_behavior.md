@@ -2,97 +2,95 @@
 
 ## Finalidade
 
-Este arquivo é a autoridade para comportamento, limites, autorizações, segurança e privacidade de agentes no `saldo-futuro`. Organização documental, ciclo de vida, trilha curta e barreiras de domínio pertencem a `_project/README.md`; estado e numeração correntes pertencem a `_project/cycles.md`; o escopo executável pertence ao plano aprovado e à issue correspondente.
+Este arquivo é a autoridade para comportamento, limites, autorizações, segurança e privacidade de agentes no `saldo-futuro`. Organização documental, ciclo de vida, níveis, situações e próximo passo, modo contínuo, trilha curta e barreiras de domínio pertencem a `_project/README.md`. Estado e numeração correntes pertencem a `_project/cycles.md`. O escopo executável pertence ao plano aprovado e à issue correspondente.
 
-O Saldo Futuro é um sistema web de gestão de investimentos pessoais. Ele trata dados financeiros privados de vários usuários, e um erro de cálculo ou de isolamento é o pior defeito possível. Este contexto orienta toda decisão de dúvida: na incerteza, prefira exatidão, isolamento e privacidade a conveniência.
+O Saldo Futuro é um sistema web de gestão de investimentos pessoais. Ele trata dados financeiros privados de vários usuários, e um erro de cálculo ou de isolamento é o pior defeito possível. Este contexto orienta toda decisão em caso de dúvida: na incerteza, prefira exatidão, isolamento e privacidade a conveniência.
 
 ## Ordem de leitura
 
 1. Este arquivo por inteiro.
 2. `_project/README.md` e `_project/cycles.md`.
-3. O plano, a issue e a task persistente relacionados ao trabalho.
+3. O artefato ativo do trabalho (ideação, plano ou task), a issue relacionada e o bloco "Próximo passo" dele.
 4. ADRs, KBs, `design-system/DESIGN.md`, workflows, templates e skills relevantes.
 
-Em conflito, preserve a instrução humana mais recente e explícita, não amplie escopo e registre a divergência antes de prosseguir.
+Em conflito, preserve a instrução humana mais recente e explícita, não amplie o escopo e registre a divergência antes de prosseguir.
 
 ## Matriz de autoridade
 
 | Fonte | Responsabilidade canônica | Limite |
 | :-- | :-- | :-- |
 | Instrução explícita do responsável | Autorizar e limitar o trabalho corrente | Não pode ser ampliada por inferência |
-| `.agent/ai_behavior.md` | Comportamento, precedência, autorizações, segurança e privacidade | Não substitui a organização de `_project/` |
-| `_project/README.md` | Ciclo de vida, estados, transições, nomenclatura, trilha curta e barreiras de domínio | Não autoriza implementação por si só |
+| `.agent/ai_behavior.md` | Comportamento, precedência, autorizações, handoff, segurança e privacidade | Não substitui a organização de `_project/` |
+| `_project/README.md` | Ciclo de vida, níveis, situações, modo contínuo, nomenclatura, trilha curta, barreiras e glossário | Não autoriza implementação por si só |
 | `_project/cycles.md` | Numeração e estado corrente dos ciclos | Não redefine regras |
 | ADR local aceito (`_project/decisions/`) | Decisão duradoura | Não substitui plano executável |
 | KB local (`_project/knowledge/`) | Conhecimento reutilizável e especificações de referência | Não autoriza mudança |
 | `design-system/DESIGN.md` | Contrato visual e de interação | Não define regra de negócio |
-| Plano aprovado | Escopo, entregas, riscos, sequência e validações | Não amplia autorização humana |
+| Plano aprovado | Escopo, entregas, riscos, sequência, pontos de aprovação e validações | Não amplia a autorização humana |
 | Issue | Unidade planejada de entrega | Não amplia o plano |
-| Task persistente | Registro local de execução de uma unidade | Não coordena branches concorrentes |
+| Task persistente | Registro local de execução e do próximo passo de uma unidade | Não coordena branches concorrentes |
 | Workflows, skills e templates | Sequência operacional, auditoria especializada e estrutura | Não criam política concorrente |
 | Validador e CI | Enforcement determinístico e somente leitura | Não são fonte normativa |
 | Adapters (`AGENTS.md`, `CLAUDE.md`, `GEMINI.md`) | Descoberta do núcleo canônico | Não replicam política |
 | GitHub | Issues, PRs, checks e estado externo | Não substitui plano ou autorização |
+| Memória privada de ferramenta | Nenhuma | Não é fonte de regra nem de estado |
 
-## Contrato canônico de handoff
+## Princípios agnósticos
 
-Todo workflow que produza uma transição ou mutação deve terminar com um handoff completo, salvo os workflows somente leitura explicitamente classificados como saída reduzida. O contrato normativo vive neste arquivo; workflows, templates, skills e validadores apenas o instanciam.
+- O estado do projeto e as regras vivem no repositório e no GitHub. Nenhuma regra depende de recurso de uma ferramenta específica.
+- A instrução humana atual continua no topo da matriz. Se ela precisar valer além da sessão (autorização, restrição ou revogação), registre-a no artefato ativo antes de encerrar a saída.
+- Se a ferramenta não tiver a capacidade que um passo exige (shell, `gh`, rede), a situação passa a "Parado". Não improvise.
 
-Um handoff completo deve declarar, nesta ordem:
+## Contrato de handoff (versão 2)
 
-1. `handoff_schema_version: 1` — versão local do contrato, sem consulta a `latest` ou a estado remoto.
-2. `handoff_id` — identidade derivada de repositório, ciclo, workflow, alvo lógico e revisão de origem quando aplicável.
-3. `identity_source` — deve explicitar `repository + cycle + workflow + logical_target + source_revision`; timestamp e UUID eventual são metadados, nunca a identidade lógica.
-4. `effect_class` — `read_only`, `local_mutation` ou `remote_mutation`.
-5. `state_before` e `state_after` — estados observados e produzidos, sem inferir transições ausentes.
-6. `next_transition` — próxima transição recomendada, separada de sua autorização.
-7. `preconditions` — condições obrigatórias antes do próximo efeito.
-8. `authority` — pessoa, artefato ou sistema autorizado a satisfazer cada precondição.
-9. `evidence` — evidência verificável esperada para cada precondição e para o resultado.
-10. `acceptance` — critério explícito de aceite pelo receptor.
-11. `blockers` — bloqueios atuais, inclusive `nenhum` quando verificado.
-12. `result` — `executed`, `already_executed_and_reconciled`, `ambiguous_human_intervention_required` ou `not_executed`.
-13. `next_workflow_recommended` e `next_workflow_authorized` — recomendação não concede autorização.
-14. `actions_prohibited` — efeitos que o receptor ou o agente não podem executar enquanto o aceite estiver pendente.
-15. `rejection_rule` — o receptor recusa handoff ausente, incompatível, contraditório ou sem evidência material suficiente.
+Toda saída de workflow termina com o bloco "Próximo passo", copiado da tabela de situações de `_project/README.md`. Só workflows mutantes gravam o bloco, na seção `## Próximo passo` do artefato ativo; os somente leitura apenas o mostram. Workflows mutantes declaram também:
 
-Workflows mutantes devem declarar ainda `logical_key`, `check_before_mutation`, `reconcile_existing` e `ambiguous_state`. A chave lógica deve permanecer estável quando o contexto material não mudar; reexecução compatível deve ser reconciliada, e conflito, concorrência ou execução parcial sem estado comprovável devem produzir `ambiguous_human_intervention_required` e parar sem mutação destrutiva.
+1. `handoff_schema_version: 2`.
+2. `logical_key`: repositório + ciclo + workflow + alvo lógico + revisão de origem. Timestamp e UUID são metadados, nunca identidade.
+3. `effect_class`: `read_only`, `local_mutation` ou `remote_mutation`.
+4. `state_before` e `state_after`: estados observados e produzidos, sem inferir transições ausentes.
+5. `result`: `executed`, `already_executed_and_reconciled`, `ambiguous_human_intervention_required` ou `not_executed`.
+6. `evidence`: evidência verificável do resultado.
+7. `blockers`: bloqueios atuais, inclusive `nenhum` quando verificado.
 
-O handoff nunca aciona automaticamente o workflow seguinte. O receptor deve executar seu preflight, aceitar ou recusar explicitamente a transição e preservar a parada quando faltar autorização material.
+Regras universais, que nenhum artefato precisa repetir:
 
-Workflows somente leitura podem usar saída estruturada reduzida com `context`, `findings`, `blockers`, `next_step_likely` e `mutation: none`; eles não devem simular autorização, aceite remoto ou mutação inexistente.
+- **Recusa:** o receptor recusa handoff ausente, incompatível, contraditório ou sem evidência material.
+- **Conferência antes de mutar:** localize pela `logical_key` o resultado existente antes de criar ou publicar.
+- **Reconciliação:** uma reexecução compatível reutiliza o que existe e registra `already_executed_and_reconciled`; nunca duplica.
+- **Estado ambíguo:** conflito, concorrência ou execução parcial sem estado comprovável produzem `ambiguous_human_intervention_required` e a situação "Parado", sem mutação destrutiva.
+- **Ação limitada à situação:** o receptor executa somente o que a situação corrente e a autorização registrada permitem.
+- **Sem encadeamento automático:** o handoff nunca aciona o workflow seguinte. A única exceção é o modo contínuo, dentro do escopo registrado e após o preflight de `_project/README.md`.
 
-## Autorizações e gates
+Workflows somente leitura usam saída reduzida (`context`, `findings`, `blockers`, `mutation: none`) e terminam com o bloco. Artefatos anteriores à versão 2 permanecem na versão 1 e estão listados no manifesto do validador.
 
-- Inspeção, análise ou diagnóstico autorizam somente ações de leitura e registros pedidos explicitamente.
-- Redigir ou revisar plano não autoriza implementação.
-- `Rascunho` é a primeira passagem e deve terminar com handoff explícito para `.agent/workflows/revisar_plano.md`; aprovação do rascunho autoriza a revisão, não permite saltá-la.
-- Todo plano deve passar por `Em Revisão`, receber veredito formal sem bloqueios e somente depois obter aprovação humana específica para mudar para `Aprovado`.
-- Uma manifestação humana anterior ao veredito não vale como aprovação pós-revisão. O agente deve apresentar o resultado da revisão e aguardar a decisão subsequente.
-- Implementação exige plano aprovado, issue vinculada e autorização humana explícita para execução. Na trilha curta, exige issue `[FIX]` elegível e autorização explícita; não exige plano.
-- Publicar branch ou PR exige que o escopo solicitado esteja validado e rastreável.
-- Integrar uma PR exige checks verdes e aprovação humana do gate de integração definido no plano ou na task. Concedido o gate, o agente pode fazer o merge sem nova confirmação.
-- Encerramento documental ocorre depois da integração verificada e não cria issue recursiva.
+## Autorizações e pontos de aprovação
 
-Quando faltar uma autorização material, pare no gate e peça decisão; não trate silêncio como aprovação.
+- Inspeção, análise ou diagnóstico autorizam somente leitura e os registros pedidos explicitamente.
+- Toda demanda começa pela triagem (`.agent/workflows/triar.md`). O agente propõe o nível e o responsável o confirma com uma frase de entrada de `_project/README.md`.
+- Redigir ou revisar plano não autoriza implementação. Todo plano passa pela revisão formal, e a correção da trilha curta passa pela revisão da correção.
+- A aprovação do plano é uma manifestação humana posterior a um veredito apto. Uma manifestação anterior ao veredito não vale como aprovação.
+- **Exceção delimitada:** no ciclo leve em modo contínuo, a autorização inicial cobre a promoção do plano, somente com veredito `APTO PARA APROVAÇÃO`. A promoção é registrada como `Coberta pelo modo contínuo`, nunca como `Aprovada em`.
+- Implementação exige plano aprovado (ou issue `[FIX]` elegível, na trilha curta), issue e autorização explícita, ou o modo contínuo ativo dentro do escopo registrado.
+- Cada merge exige checks verdes e "aprovo o merge da PR #N", sem exceção, inclusive no modo contínuo. Concedida a aprovação, o agente pode fazer o merge sem nova confirmação, depois de verificar as precondições.
+- Ação humana externa, verificação em produção e decisões de regra financeira nunca são cobertas pelo modo contínuo.
+- O encerramento é autorizado pela aprovação do plano e ocorre depois da integração das entregas, sem issue recursiva.
+- **Concessão não é verificação:** uma concessão não dispensa a conferência da precondição. Quando faltar autorização material ou a precondição não puder ser verificada, pare na situação "Parado" com uma pergunta. Silêncio não é aprovação.
 
 ## Conduta de execução
 
-- Inspecione o estado real antes de alterar arquivos.
-- Todo workflow que crie ou atualize um artefato estruturado deve nomear e ler, no ponto de uso, o template e as autoridades locais aplicáveis; template ausente ou incompatível bloqueia a execução.
-- A nomenclatura de branch, commit, task e migração deve ser consumida de `_project/README.md` no momento da criação, sem ser reinventada pelo workflow.
-- Preserve mudanças alheias e mantenha cada entrega dentro do plano aprovado.
-- Crie a task persistente no início da implementação e atualize evidências reais durante o trabalho, incluindo a declaração das barreiras de domínio.
-- Use uma branch por issue; mantenha commits intencionais e PR revisável.
-- Use o GitHub CLI (`gh`) para issues, PRs e checks; use Git local para branch, diff, stage, commit e push.
+- Inspecione o estado real antes de alterar arquivos, preserve mudanças alheias e mantenha cada entrega dentro do plano aprovado.
+- Todo workflow que crie ou atualize um artefato estruturado nomeia e lê, no ponto de uso, o template e as autoridades aplicáveis. Template ausente ou incompatível bloqueia a execução.
+- A nomenclatura de branch, commit, task e migração vem de `_project/README.md` no momento da criação.
+- Crie a task persistente no início da implementação e atualize as evidências reais, as barreiras de domínio e o bloco "Próximo passo" durante o trabalho.
+- Use uma branch por issue, commits intencionais e PR revisável; use o GitHub CLI (`gh`) para issues, PRs e checks e o Git local para branch, diff, stage, commit e push.
 - Execute os gates locais definidos no plano antes de publicar.
-- Não publique PR documental de plano antes da revisão formal e da aprovação humana pós-revisão.
 - Nunca falsifique ideação, resultados, checks, aprovação ou conclusão.
-- Não mova um ciclo para `executed/` antes da integração de sua entrega e do encerramento autorizado.
+- Não mova um ciclo para `executed/` fora do encerramento prospectivo de `_project/README.md`.
 
 ### Simplicidade primeiro
 
-- Implemente a menor solução que atenda integralmente ao escopo, aos critérios de aceite e aos gates aprovados.
+- Implemente a menor solução que atenda integralmente ao escopo, aos critérios de aceite e aos pontos de aprovação.
 - Não adicione funcionalidade, abstração, flexibilidade, dependência ou arquitetura especulativa.
 - Simplicidade não autoriza reduzir evidência, rastreabilidade, validação, barreiras de domínio ou governança obrigatória.
 - Preserve as convenções e a estrutura existentes quando não conflitarem com as autoridades locais ou com o resultado aprovado.
@@ -101,8 +99,8 @@ Quando faltar uma autorização material, pare no gate e peça decisão; não tr
 
 - Altere somente arquivos e comportamentos rastreáveis à tarefa autorizada.
 - Não refatore, reformate ou corrija elementos adjacentes sem autorização; relate problemas fora do escopo em vez de corrigi-los silenciosamente.
-- Preserve mudanças preexistentes, revise o diff e use staging seletivo para que o commit contenha somente o escopo pretendido.
-- Ao alterar uma regra de governança, consolide-a na autoridade semanticamente adequada e atualize somente os consumidores e controles necessários para mantê-la efetiva.
+- Preserve mudanças preexistentes, revise o diff e use staging seletivo.
+- Ao alterar uma regra de governança, consolide-a na autoridade semanticamente adequada e atualize somente os consumidores e controles necessários.
 
 ### Gestão de incertezas
 

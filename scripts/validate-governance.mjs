@@ -76,6 +76,15 @@ export async function validate(root) {
     for (const snippet of expected) {
       if (!content.includes(snippet)) errors.push(`Workflow ${rel(file)} sem "${snippet}" no handoff.`);
     }
+    // Cenário 26: situações de saída pertencentes à lista fechada.
+    if (manifest.nextStep && workflows.exitHeading) {
+      const exits = headedSection(content, workflows.exitHeading);
+      const items = (exits ?? '').split(/\r?\n/).filter((line) => /^- /.test(line)).map((line) => line.slice(2).trim());
+      if (exits !== null && !items.length) errors.push(`Workflow ${rel(file)} sem situações em "${workflows.exitHeading}".`);
+      for (const item of items) {
+        if (!situationOf(manifest.nextStep, item)) errors.push(`Workflow ${rel(file)} com situação de saída fora da lista: "${item}".`);
+      }
+    }
   }
   for (const dir of await listDirs(path.join(root, skills.dir))) {
     const name = path.basename(dir);
@@ -96,7 +105,14 @@ export async function validate(root) {
   }
 
   // Cenários 5 a 11: ciclos, planos e tasks.
-  await validateCycles(root, manifest, errors);
+  const rows = await validateCycles(root, manifest, errors);
+
+  // Cenários 20 a 25 e 27 a 30: artefatos, próximo passo e modo contínuo.
+  if (manifest.artifacts && manifest.nextStep) {
+    await validateArtifacts(root, manifest, rows, errors);
+    // Cenário 21: tabela de situações sincronizada com o manifesto.
+    await validateSituationsSync(root, manifest, errors);
+  }
 
   // Cenário 12: dependência operacional de checkout irmão.
   const sibling = siblingPattern(manifest.siblingCheck.repositories);
@@ -273,6 +289,201 @@ async function validateCycles(root, manifest, errors) {
       if (!pattern.test(path.basename(file))) errors.push(`Artefato fora da convenção: _project/${dir}/${path.basename(file)}.`);
     }
   }
+  return rows;
+}
+
+async function validateArtifacts(root, manifest, rows, errors) {
+  const config = manifest.artifacts;
+  const project = path.join(root, '_project');
+  const legacy = new Set(config.legacyV1);
+  const doneTask = manifest.tasks.doneState;
+  const artifacts = [];
+
+  // Ideações, planos e tasks de ciclo, e tasks da trilha curta.
+  for (const file of await listFiles(path.join(project, 'ideations'))) {
+    if (path.extname(file) !== '.md') continue;
+    const cycle = path.basename(file).slice(0, 3);
+    const state = rows.find((row) => row.cycle === cycle)?.state;
+    artifacts.push({ file, kind: 'ideation', location: 'ideations', active: state === 'Ideação' });
+  }
+  for (const location of ['drafts', 'executed', 'archived']) {
+    for (const dir of await listDirs(path.join(project, location))) {
+      for (const file of await listFiles(dir)) {
+        const name = path.basename(file);
+        const kind = name.endsWith('_plan.md') ? 'plan' : name.includes('_task_') ? 'task' : null;
+        if (kind) artifacts.push({ file, kind, location, dir });
+      }
+    }
+  }
+  for (const file of await listFiles(path.join(root, manifest.shortTrack.dir))) {
+    artifacts.push({ file, kind: 'task', location: 'fixes' });
+  }
+
+  const plans = new Map();
+  for (const item of artifacts) {
+    item.rel = path.relative(root, item.file).replaceAll('\\', '/');
+    item.content = await text(item.file);
+    item.legacy = legacy.has(item.rel);
+    if (item.kind === 'plan') plans.set(item.dir, item);
+  }
+
+  for (const item of artifacts) {
+    const { rel, content, kind, location } = item;
+    if (item.active === undefined) {
+      item.active =
+        (kind === 'plan' && location === 'drafts') ||
+        (kind === 'task' && (location === 'drafts' || location === 'fixes') && header(content, 'Estado') !== doneTask);
+    }
+
+    // Cenário 30: versão do contrato fora da lista de legados.
+    if (!item.legacy && header(content, config.versionField) !== config.version) {
+      errors.push(`Artefato sem ${config.versionField} \`${config.version}\` no cabeçalho e fora da lista de legados: ${rel}.`);
+    }
+
+    // Cenários 20 e 28: bloco "Próximo passo".
+    const block = nextStepLines(content, manifest.nextStep.heading);
+    if (item.active) {
+      if (block) checkBlock(block, manifest.nextStep, rel, errors);
+      else if (!item.legacy) errors.push(`Artefato ativo sem a seção "${manifest.nextStep.heading}": ${rel}.`);
+    } else if (location === 'executed' && !item.legacy) {
+      if (!block) errors.push(`Artefato executado sem a seção "${manifest.nextStep.heading}": ${rel}.`);
+      else if (checkBlock(block, manifest.nextStep, rel, errors) && !block[1].startsWith(`Situação: ${manifest.nextStep.doneSituation} — `)) {
+        errors.push(`Artefato executado com bloco diferente de "${manifest.nextStep.doneSituation}": ${rel}.`);
+      }
+    }
+
+    // Cenários 22 a 25: planos ativos.
+    if (kind === 'plan' && location === 'drafts') {
+      const level = header(content, 'Nível');
+      if (!config.levels.includes(level)) errors.push(`Plano sem Nível válido (${config.levels.join(' ou ')}): ${rel}.`);
+      const status = header(content, 'Status');
+      if (status === 'Aprovado' || status === 'Em Execução') {
+        const approval = header(content, 'Aprovação humana pós-revisão') ?? '';
+        const verdict = header(content, 'Veredito da revisão');
+        const continuous = header(content, 'Modo contínuo');
+        if (approval.startsWith(config.approvalPrefixes.human)) {
+          if (!config.approvalVerdicts.includes(verdict)) errors.push(`Plano ${status} sem veredito apto: ${rel}.`);
+        } else if (approval.startsWith(config.approvalPrefixes.continuous)) {
+          if (continuous !== 'ativo' && continuous !== 'suspenso') errors.push(`Plano coberto pelo modo contínuo sem modo contínuo declarado: ${rel}.`);
+          if (verdict !== config.continuousVerdict) errors.push(`Plano promovido pelo modo contínuo sem veredito "${config.continuousVerdict}": ${rel}.`);
+        } else {
+          errors.push(`Plano ${status} sem aprovação humana pós-revisão válida: ${rel}.`);
+        }
+      }
+      if (new RegExp(config.gateCodePattern).test(content)) errors.push(`Plano ativo com código de gate com letras: ${rel}.`);
+    }
+
+    // Cenário 24: teto de rodadas de revisão.
+    const review = kind === 'plan' ? headedSection(content, '## Revisão crítica') : headedSection(content, '## Revisão da correção');
+    const rounds = (review ?? '').split(/\r?\n/).filter((line) => /^### Rodada \d+/.test(line)).length;
+    if (rounds > config.maxReviewRounds) errors.push(`Mais de ${config.maxReviewRounds} rodadas de revisão: ${rel}.`);
+
+    // Cenários 27 e 29: modo contínuo.
+    const continuous = header(content, 'Modo contínuo');
+    if (continuous && !config.continuousStates.includes(continuous)) errors.push(`Modo contínuo inválido "${continuous}": ${rel}.`);
+    if ((continuous === 'ativo' || continuous === 'suspenso') && !/^>\s*\*\*Autorização inicial:\*\*\s*\S/m.test(content)) {
+      errors.push(`Modo contínuo sem Autorização inicial: ${rel}.`);
+    }
+    if (continuous === 'ativo') {
+      const level = kind === 'plan' ? header(content, 'Nível') : header(plans.get(item.dir)?.content ?? '', 'Nível');
+      if (level === 'completo') errors.push(`Modo contínuo ativo em ciclo completo: ${rel}.`);
+      for (const barrier of ['G1', 'G2']) {
+        if (barrierApplies(content, barrier)) errors.push(`Modo contínuo ativo com ${barrier} aplicável: ${rel}.`);
+      }
+    }
+  }
+}
+
+async function validateSituationsSync(root, manifest, errors) {
+  const readme = path.join(root, '_project', 'README.md');
+  if (!(await exists(readme))) return;
+  const content = await text(readme);
+  const table = headedSection(content, manifest.nextStep.readmeSection);
+  if (table === null) return;
+  const cells = (line) => line.split('|').slice(1, -1).map((cell) => cell.trim());
+  const tableRows = table.split(/\r?\n/).filter((line) => line.startsWith('|')).map(cells);
+  for (const situation of manifest.nextStep.situations) {
+    const row = tableRows.find((item) => item[0] === situation.name);
+    if (!row) {
+      errors.push(`Situação "${situation.name}" do manifesto ausente da tabela de _project/README.md.`);
+      continue;
+    }
+    if (row[1] !== situation.who || row[2] !== situation.check) {
+      errors.push(`Situação "${situation.name}" com "Quem age" ou "Conferir" divergente entre o manifesto e _project/README.md.`);
+    }
+    for (const say of situation.say) {
+      if (!content.includes(say.text)) errors.push(`Frase "${say.text}" do manifesto ausente de _project/README.md.`);
+    }
+  }
+  const names = new Set(manifest.nextStep.situations.map((item) => item.name));
+  for (const row of tableRows.slice(2)) {
+    if (row.length >= 4 && !names.has(row[0])) errors.push(`Situação "${row[0]}" de _project/README.md ausente do manifesto.`);
+  }
+  for (const suffix of manifest.nextStep.continuousSuffixes) {
+    if (!content.includes(suffix.trim())) errors.push(`Sufixo "${suffix.trim()}" do manifesto ausente de _project/README.md.`);
+  }
+}
+
+// Confere as cinco linhas do bloco; retorna true se o formato for válido.
+function checkBlock(lines, config, where, errors) {
+  const before = errors.length;
+  const fail = (reason) => errors.push(`Bloco "Próximo passo" inválido em ${where}: ${reason}.`);
+  if (lines.length !== 5 || lines[0] !== config.title) {
+    fail(`esperadas 5 linhas iniciadas por "${config.title}"`);
+    return false;
+  }
+  const match = lines[1].match(/^Situação: (.+?) — (.+)$/);
+  const situation = match && situationOf(config, match[1]);
+  if (!situation) {
+    fail(`situação fora da lista em "${lines[1]}"`);
+    return false;
+  }
+  const targets = config.targets.map(template);
+  if (situation.name === config.situations[0].name) targets.push(template(config.triageTarget));
+  if (!targets.some((pattern) => new RegExp(`^${pattern}$`).test(match[2]))) fail(`alvo "${match[2]}" fora do padrão`);
+  if (lines[2] !== `Quem: ${situation.who}`) fail(`"Quem" diferente da tabela para "${situation.name}"`);
+  const check = lines[3].startsWith('Conferir: ') ? lines[3].slice(10).trim() : null;
+  if (check === null || !check) fail('"Conferir" ausente');
+  else if (situation.check === '—' ? check !== '—' : check === '—') fail(`"Conferir" incompatível com "${situation.name}"`);
+  const say = lines[4].startsWith('Diga: ') ? lines[4].slice(6).trim() : '';
+  const suffixes = `(?:${config.continuousSuffixes.map(escape).join('|')})?`;
+  const accepted = situation.say.some((item) => {
+    const body = template(item.text) + (item.continuous ? suffixes : '');
+    return new RegExp(item.quoted === false ? `^${body}$` : `^"${body}"$`).test(say);
+  });
+  if (!accepted) fail(`frase "${say}" fora dos modelos de "${situation.name}"`);
+  return errors.length === before;
+}
+
+function situationOf(config, name) {
+  return config.situations.find((item) => new RegExp(`^${template(item.name)}$`).test(name.trim()) || item.name === name.trim());
+}
+
+// Converte um modelo com NNN, #N, <título> e "rodada N" em expressão regular.
+function template(value) {
+  return escape(value)
+    .replaceAll('NNN', '\\d{3}')
+    .replaceAll('#N', '#\\d+')
+    .replaceAll('rodada N', 'rodada \\d+')
+    .replaceAll('<título>', '.+');
+}
+
+function escape(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function nextStepLines(content, heading) {
+  const body = headedSection(content, heading);
+  if (body === null) return null;
+  const fence = body.match(/```text\r?\n([\s\S]*?)\r?\n```/);
+  return fence ? fence[1].split(/\r?\n/).map((line) => line.trim()).filter(Boolean) : [];
+}
+
+function barrierApplies(content, barrier) {
+  const table = headedSection(content, '## Barreiras de domínio') ?? '';
+  const row = table.split(/\r?\n/).find((line) => line.startsWith(`| ${barrier}`));
+  const cells = row?.split('|').slice(1, -1).map((cell) => cell.trim()) ?? [];
+  return /^sim\b/i.test(cells[1] ?? '');
 }
 
 async function validateMigrations(root, migrations, errors) {
@@ -373,6 +584,16 @@ function section(content, heading) {
   const rest = content.slice(start + heading.length);
   const end = rest.search(/\r?\n## /);
   return end < 0 ? rest : rest.slice(0, end);
+}
+
+// Seção iniciada por um título no início de linha, até o próximo título de nível igual ou superior.
+function headedSection(content, heading) {
+  const lines = content.split(/\r?\n/);
+  const start = lines.findIndex((line) => line.trimEnd() === heading);
+  if (start < 0) return null;
+  const level = heading.match(/^#+/)[0].length;
+  const end = lines.findIndex((line, index) => index > start && /^#+\s/.test(line) && line.match(/^#+/)[0].length <= level);
+  return lines.slice(start + 1, end < 0 ? undefined : end).join('\n');
 }
 
 function qualify(identifier) {

@@ -2,8 +2,11 @@
 
 > **Ciclo:** `NNN`
 > **Estado:** `Ideação`
+> **Nível:** `completo`
+> **Autorização inicial:** "confirmo o nível completo e autorizo a ideação do ciclo NNN" em AAAA-MM-DD
 > **Criado em:** AAAA-MM-DD
 > **Última atualização:** AAAA-MM-DD
+> **handoff_schema_version:** `2`
 
 ## Problema
 
@@ -23,24 +26,22 @@
 
 ## Critérios para iniciar o planejamento
 
+## Próximo passo
+
+```text
+PRÓXIMO PASSO
+Situação: Ideação registrada — ciclo NNN (completo)
+Quem: Responsável
+Conferir: <perguntas e decisões desta ideação>
+Diga: "autorizo o rascunho do plano do ciclo NNN"
+```
+
 ## Handoff de saída
 
-- `handoff_schema_version`: `1`
-- `handoff_id`: derivado de repositório, ciclo, workflow, alvo lógico e revisão de origem.
-- `identity_source`: `repository + cycle + workflow + logical_target + source_revision`; timestamp e UUID não definem a identidade.
+- `handoff_schema_version: 2`
+- `logical_key`: `repository + NNN + idear + assunto + revisão de origem`
 - `effect_class`: `local_mutation`
-- `state_before` / `state_after`: estados observados e produzidos.
-- `next_transition`: próxima transição recomendada.
-- `preconditions`: precondições obrigatórias.
-- `authority`: autoridade capaz de satisfazê-las.
-- `evidence`: evidências esperadas.
-- `acceptance`: critério de aceite do receptor.
-- `blockers`: bloqueios atuais.
+- `state_before` / `state_after`:
 - `result`: `executed | already_executed_and_reconciled | ambiguous_human_intervention_required | not_executed`
-- `next_workflow_recommended` / `next_workflow_authorized`: recomendação separada de autorização.
-- `actions_prohibited`: ações não automáticas enquanto o aceite estiver pendente.
-- `rejection_rule`: o receptor recusa handoff ausente, incompatível, contraditório ou sem evidência material.
-- `logical_key`: `repository + cycle + workflow + logical_target + source_revision`.
-- `check_before_mutation`: verificar artefato e reserva de ciclo existentes antes de criar.
-- `reconcile_existing`: atualizar a ideação compatível sem duplicar ciclo ou arquivo.
-- `ambiguous_state`: parar quando identidade, ciclo ou revisão estiverem em conflito.
+- `evidence`:
+- `blockers`:

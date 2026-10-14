@@ -6,7 +6,7 @@ tags:
   - arquitetura
 author: "Thiago Andrade e Claude"
 module: "Governança"
-last_updated: "2026-10-12"
+last_updated: "2026-10-13"
 origin_cycle: "000"
 ---
 
@@ -30,9 +30,12 @@ Manter `.agent/` e `_project/` como núcleo canônico independente de ferramenta
 | :-- | :-- | :-- |
 | Codex | `AGENTS.md` | Instrução textual para leitura integral de `.agent/ai_behavior.md` |
 | Claude Code | `CLAUDE.md` | Import `@./.agent/ai_behavior.md`, resolvido relativo ao próprio arquivo |
-| Gemini CLI | `GEMINI.md` | Import `@./.agent/ai_behavior.md`, resolvido relativo ao próprio arquivo |
+| Gemini CLI | `GEMINI.md` | Import `@./.agent/ai_behavior.md`, resolvido relativo ao próprio arquivo, e instrução textual de leitura integral |
+| Antigravity | `AGENTS.md` (e `GEMINI.md`, quando lido) | Instrução textual de leitura integral; o import `@arquivo` não insere conteúdo nessa ferramenta |
 
-O Claude Code também pode ler `AGENTS.md` além do `CLAUDE.md`. Como o `AGENTS.md` só contém a instrução de descoberta, a leitura dupla não cria política concorrente.
+Com `CLAUDE.md` presente, o Claude Code não lê `AGENTS.md` por padrão; ele só o leria por import ou por configuração do usuário. Como o `AGENTS.md` só contém a instrução de descoberta, uma eventual leitura dupla não cria política concorrente.
+
+O Antigravity mantém compatibilidade com os diretórios legados `.agent/skills/` e `<dir>/.agent/rules/*.md`. Para não colidir com o núcleo canônico, o repositório não cria `.agent/rules/` nem arquivos `SKILL.md`. Os workflows de `.agent/workflows/` são lidos como texto, e não como recurso nativo da ferramenta.
 
 A matriz de autoridade está em `.agent/ai_behavior.md`. O validador e o CI verificam regras canônicas, nunca criam política nova; suas regras estruturais ficam em `scripts/governance-manifest.json`, para que um novo arquivo obrigatório exija editar só o manifesto. Ao alterar um adapter, a sintaxe deve ser revalidada na documentação oficial da ferramenta. Node.js 24 é adotado somente como runtime, sem dependências, do tooling de governança.
 
@@ -63,3 +66,5 @@ A matriz de autoridade está em `.agent/ai_behavior.md`. O validador e o CI veri
 - Claude Code: <https://code.claude.com/docs/en/memory> (revalidado em 2026-10-12: imports `@caminho` relativos ao arquivo, leitura de `AGENTS.md`).
 - Gemini CLI: <https://google-gemini.github.io/gemini-cli/docs/cli/gemini-md.html> (revalidado em 2026-10-12: imports `@./caminho`).
 - Codex: <https://learn.chatgpt.com/docs/agent-configuration/agents-md.md>.
+- Antigravity: <https://antigravity.google/docs/rules> e <https://antigravity.google/docs/skills> (verificados em 2026-10-13, ciclo `002`: leitura nativa de `AGENTS.md` ou `GEMINI.md`; import `@[rótulo](caminho)`; compatibilidade com `.agent/skills/` e `.agent/rules/`).
+- Revalidação de 2026-10-13 (ciclo `002`): Claude Code, sem leitura padrão de `AGENTS.md` quando há `CLAUDE.md`; Gemini CLI e Codex sem mudança material.

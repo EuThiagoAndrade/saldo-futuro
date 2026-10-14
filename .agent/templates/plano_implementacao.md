@@ -7,9 +7,17 @@
 > **Última atualização:** AAAA-MM-DD
 > **Tipo:** `feature | fix | chore`
 > **Prioridade:** `P0 | P1 | P2 | P3`
+> **Nível:** `leve | completo`
+> **Autorização inicial:** "<frase de entrada>" em AAAA-MM-DD
+> **Modo contínuo:** `— | ativo | suspenso`
 > **Revisão formal:** `Pendente | Em andamento | Concluída`
 > **Veredito da revisão:** `Pendente | APTO PARA APROVAÇÃO | APTO COM RESSALVAS | REQUER NOVA RODADA`
-> **Aprovação humana pós-revisão:** `Pendente | Aprovada em AAAA-MM-DD`
+> **Aprovação humana pós-revisão:** `Pendente | Aprovada em AAAA-MM-DD | Coberta pelo modo contínuo (autorização inicial de AAAA-MM-DD)`
+> **handoff_schema_version:** `2`
+
+## Problema e contexto
+
+No ciclo leve, esta seção substitui a ideação: problema, evidências, decisões do responsável e alternativas. No completo, escreva apenas `Ideação: _project/ideations/NNN_assunto.md`.
 
 ## Objetivo
 
@@ -23,12 +31,12 @@
 
 ## Decisões e autoridades
 
-### Gates humanos
+### Pontos de aprovação
 
-| Gate | Precondição | Autoriza | Não autoriza | Evidência |
+| Ponto | Precondição | Cobre | Não cobre | Conferir |
 | :-- | :-- | :-- | :-- | :-- |
 
-Cada merge tem gate próprio. Declare as condições em que toda cadeia autorizada para.
+Cada merge tem aprovação própria. Use os tipos e as frases de `_project/README.md`, sem códigos. Declare as condições em que toda cadeia autorizada para.
 
 ## Barreiras de domínio
 
@@ -72,41 +80,31 @@ Cada merge tem gate próprio. Declare as condições em que toda cadeia autoriza
 | Issue(s) | — |
 | PR(s) | — |
 | Branch(es) | — |
-| `handoff_schema_version` | `1` |
-| `handoff_id` | repository + cycle + workflow + logical_target + source_revision |
 | Destino após conclusão | `_project/executed/NNN_assunto/NNN_plan.md` |
+
+## Próximo passo
+
+```text
+PRÓXIMO PASSO
+Situação: Aguardando revisão (rodada 1) — ciclo NNN (<nível>)
+Quem: O responsável leva a vez a um revisor, que pode ser outra ferramenta
+Conferir: —
+Diga: "revise o plano do ciclo NNN"
+```
 
 ## Handoff de saída
 
-- `handoff_schema_version`: `1`
-- `handoff_id`: derivado de repositório, ciclo, workflow, alvo lógico e revisão de origem.
-- `identity_source`: `repository + cycle + workflow + logical_target + source_revision`; timestamp e UUID não definem a identidade.
-- `effect_class`: `read_only | local_mutation | remote_mutation`
-- `state_before` / `state_after`: estados observados e produzidos.
-- `next_transition`: próxima transição recomendada.
-- `preconditions`: precondições obrigatórias.
-- `authority`: autoridade capaz de satisfazê-las.
-- `evidence`: evidências esperadas.
-- `acceptance`: critério de aceite do receptor.
-- `blockers`: bloqueios atuais.
+- `handoff_schema_version: 2`
+- `logical_key`: `repository + NNN + <workflow> + NNN_plan + versão`
+- `effect_class`: `local_mutation`
+- `state_before` / `state_after`:
 - `result`: `executed | already_executed_and_reconciled | ambiguous_human_intervention_required | not_executed`
-- `next_workflow_recommended` / `next_workflow_authorized`: recomendação separada de autorização.
-- `actions_prohibited`: ações não automáticas enquanto o aceite estiver pendente.
-- `rejection_rule`: o receptor recusa handoff ausente, incompatível, contraditório ou sem evidência material.
-- `logical_key`: `repository + cycle + workflow + logical_target + source_revision`.
-- `check_before_mutation`: verificar plano e revisão existentes antes de criar ou atualizar.
-- `reconcile_existing`: atualizar o plano compatível sem duplicar o artefato ou o parecer.
-- `ambiguous_state`: parar quando ciclo, alvo, status ou revisão estiverem em conflito.
+- `evidence`:
+- `blockers`:
 
 ## Revisão crítica
 
-- **Data:** —
-- **Versão revisada:** —
-- **Veredito:** `Pendente`
-- **Bloqueios remanescentes:** —
-- **Aprovação humana pós-revisão:** `Pendente`
-- **Correções materiais:** —
-- **Ressalvas:** —
+Uma subseção `### Rodada N` por rodada, com `Autor:`, `Revisor:` (ferramenta e modelo), achados `RN-k` (bloqueador ou ressalva), itens atendidos e veredito. O autor responde a cada achado numa subseção própria. Teto de 5 rodadas.
 
 ## Pós-mortem
 
