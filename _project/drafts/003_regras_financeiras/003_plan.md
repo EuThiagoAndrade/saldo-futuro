@@ -1,7 +1,7 @@
 # Plano de Implementação — Regras financeiras
 
 > **Ciclo:** `003`
-> **Status:** `Aprovado`
+> **Status:** `Em Execução`
 > **Versão:** `v3`
 > **Data de criação:** 2026-10-13
 > **Última atualização:** 2026-10-14
@@ -162,6 +162,8 @@ Pontos conhecidos que nem a ideação nem P1 a P18 decidem. A KB-004 apresenta c
 | K7 | Início da carteira e lançamentos anteriores ao primeiro fechamento (R1-7) | Aporte fictício de 10.000 centavos datado de fevereiro, e o primeiro fechamento pedido para março. (a) o primeiro fechamento só é aceito no mês do evento mais antigo: o usuário começa por fevereiro; (b) os eventos anteriores ao mês do primeiro fechamento formam o saldo inicial de março (**R$ 100,00**), e março tem rentabilidade `N/D` por ser o primeiro mês (P8). Nas duas opções, depois do primeiro fechamento, todo lançamento com data anterior ao primeiro mês aberto é recusado, e reabrir o primeiro mês volta ao estado sem mês fechado | (a): todo evento pertence a um mês fechado, e nada fica escondido num saldo inicial |
 
 Se a especificação revelar outra escolha de cálculo, ela recebe o próximo número `K`, segue o mesmo caminho e é registrada na KB-004. O agente nunca escolhe sozinho entre interpretações de cálculo (`.agent/ai_behavior.md`).
+
+> **Decisão do responsável (2026-10-14):** na implementação da issue #26, o responsável decidiu K1 a K7 e as novas K8 a K13 (período antes do início da carteira, empate na taxa de acerto, arredondamento de negativos, parser de quantias, trânsito no fechamento e datas futuras), escolhendo a recomendação em todas. O registro, com alternativas e exemplos, está na seção 13 da KB-004.
 
 ### Destino dos defeitos da origem
 
@@ -422,39 +424,39 @@ Uma PR por issue. A PR documental do plano, a PR de release e a PR de encerramen
 
 | Campo | Valor |
 | :-- | :-- |
-| Issue(s) | — |
-| PR(s) | Plano: `chore/cycle-003-plan`, verificável no GitHub |
-| Branch(es) | Plano: `chore/cycle-003-plan` |
+| Issue(s) | A [#26](https://github.com/EuThiagoAndrade/saldo-futuro/issues/26), B [#27](https://github.com/EuThiagoAndrade/saldo-futuro/issues/27), C [#28](https://github.com/EuThiagoAndrade/saldo-futuro/issues/28) e D [#29](https://github.com/EuThiagoAndrade/saldo-futuro/issues/29), criadas em 2026-10-14 |
+| PR(s) | Plano: [#25](https://github.com/EuThiagoAndrade/saldo-futuro/pull/25), integrada por squash |
+| Branch(es) | Plano: `chore/cycle-003-plan`; A: `chore/issue-26` |
 | Destino após conclusão | `_project/executed/003_regras_financeiras/003_plan.md` |
 
 ## Próximo passo
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 003 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 003"
+Situação: Aguardando autorização de implementação — ciclo 003 (completo)
+Quem: Responsável
+Conferir: Issue #26 (KB-004 e casos de referência) e o item A deste plano
+Diga: "autorizo a implementação da issue #26"
 ```
 
-A aprovação de 2026-10-14 cobre o próximo passo: a PR documental `chore/cycle-003-plan` (ideação, plano e `cycles.md`), seu merge com checks verdes e, depois dele, a criação das issues A a D, com o payload apresentado ao responsável antes da criação. Ela não cobre a implementação de nenhuma issue.
+As issues seguem a sequência A → B → C → D; cada uma tem autorização própria. A PR #25 integrou o plano por squash, e as issues #26 a #29 foram criadas com o payload confirmado pelo responsável. Este registro e a mudança do ciclo para `Em execução` entram na PR da issue #26.
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `saldo-futuro + 003 + atualizar_docs + 003_plan/aprovacao + v3`
-- `effect_class`: `local_mutation` (a PR documental que se segue é `remote_mutation`, coberta pela aprovação)
+- `logical_key`: `saldo-futuro + 003 + criar_issues + issues A-D/003_plan + v3`
+- `effect_class`: `remote_mutation`
 - `state_before` / `state_after`:
-  - antes: ciclo `003` em `Planejamento`; plano `v3` em `Em Revisão`, revisão `Concluída`, veredito `APTO PARA APROVAÇÃO` (rodada 3), aprovação `Pendente`, bloco "Aguardando aprovação do plano";
-  - depois: plano `v3` `Aprovado` (`Aprovada em 2026-10-14`), D1 a D14 confirmadas, bloco "Pronto para continuar"; ciclo continua em `Planejamento` até a primeira entrega.
+  - antes: plano `v3` `Aprovado`, integrado pela PR #25; nenhuma issue do ciclo (busca por título sem duplicata);
+  - depois: issues #26 (A, `[CHORE]`), #27 (B, `[FEATURE]`), #28 (C, `[FEATURE]`) e #29 (D, `[FEATURE]`) abertas, com os campos dos Issue Forms e as dependências em sequência; bloco "Aguardando autorização de implementação".
 - `result`: `executed`
 - `evidence`:
-  - manifestação humana "aprovo o plano do ciclo 003", em 2026-10-14, posterior ao veredito da rodada 3;
-  - confirmação explícita das recomendações de D1 a D14 e da tolerância, dada no chat em 2026-10-14 e registrada em "Decisões propostas ao responsável";
-  - autoridades lidas: `.agent/workflows/atualizar_docs.md`, `.agent/skills/doc-updater/doc-updater.md`, `_project/README.md` ("Pontos de aprovação", "Fluxo por nível") e a PR documental do ciclo `002` como precedente;
-  - histórico: `rascunhar_plano` produziu `v1`, `v2` e `v3`; `revisar_plano` registrou as rodadas 1 a 3, preservadas abaixo;
-  - validador de governança executado depois da gravação.
-- `blockers`: nenhum.
+  - "aprovo o plano do ciclo 003" (2026-10-14), que cobre a PR documental, seu merge com checks verdes e a criação das issues;
+  - PR #25 integrada por squash em `main` (`3245a4d`), com os cinco checks verdes no commit `684ba99`;
+  - payload apresentado e confirmado pelo responsável no chat ("Criar as quatro"), em 2026-10-14;
+  - issues verificadas no GitHub depois da criação; Issue Forms lidos: `feature_request.yml` e `chore.yml`;
+  - aprovação anterior: `saldo-futuro + 003 + atualizar_docs + 003_plan/aprovacao + v3`.
+- `blockers`: nenhum. A implementação da issue #26 aguarda autorização.
 
 ## Revisão crítica
 

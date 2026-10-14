@@ -1,0 +1,2380 @@
+{
+  "$comment": "Casos de referência da KB-004 (_project/knowledge/KB-004_regras_financeiras.md). Dados fictícios. Centavos são inteiros; razões são frações (0.01 = 1%), comparadas com erro de até 1e-9 x max(1, |esperado|). O teste de concordância exige o mesmo valor esperado na KB e aqui.",
+  "versao": 1,
+  "casos": [
+    {
+      "id": "CR-01",
+      "titulo": "Sinais por tipo de evento",
+      "entrega": "B",
+      "regras": [
+        "D4"
+      ],
+      "entrada": {
+        "tentativas": [
+          {
+            "chave": "aporte_positivo",
+            "tipo": "aporte",
+            "valor": 10000
+          },
+          {
+            "chave": "aporte_negativo",
+            "tipo": "aporte",
+            "valor": -10000
+          },
+          {
+            "chave": "resgate_negativo",
+            "tipo": "resgate",
+            "valor": -10000
+          },
+          {
+            "chave": "resgate_positivo",
+            "tipo": "resgate",
+            "valor": 10000
+          },
+          {
+            "chave": "rendimento_negativo",
+            "tipo": "rendimento",
+            "valor": -500
+          },
+          {
+            "chave": "rendimento_positivo",
+            "tipo": "rendimento",
+            "valor": 500
+          },
+          {
+            "chave": "marcacao_negativa",
+            "tipo": "marcacao",
+            "valor": -300
+          },
+          {
+            "chave": "cambio_positivo",
+            "tipo": "cambio",
+            "valor": 200
+          },
+          {
+            "chave": "migracao_negativa",
+            "tipo": "migracao",
+            "valor": -100
+          },
+          {
+            "chave": "valor_zero",
+            "tipo": "rendimento",
+            "valor": 0
+          }
+        ]
+      },
+      "esperado": {
+        "aporte_positivo": "aceito",
+        "aporte_negativo": "recusado",
+        "resgate_negativo": "aceito",
+        "resgate_positivo": "recusado",
+        "rendimento_negativo": "aceito",
+        "rendimento_positivo": "aceito",
+        "marcacao_negativa": "aceito",
+        "cambio_positivo": "aceito",
+        "migracao_negativa": "aceito",
+        "valor_zero": "recusado"
+      }
+    },
+    {
+      "id": "CR-02",
+      "titulo": "Saldo calculado com todos os tipos",
+      "entrega": "B",
+      "regras": [
+        "D4",
+        "P10"
+      ],
+      "entrada": {
+        "mes": "2026-03",
+        "ativos": [
+          {
+            "id": "A",
+            "tipo_ajuste": "rendimento"
+          }
+        ],
+        "saldos_iniciais": {
+          "A": 0
+        },
+        "eventos": [
+          {
+            "id": "e1",
+            "ativo": "A",
+            "data": "2026-03-02",
+            "tipo": "aporte",
+            "valor": 1000000
+          },
+          {
+            "id": "e2",
+            "ativo": "A",
+            "data": "2026-03-10",
+            "tipo": "rendimento",
+            "valor": 12345
+          },
+          {
+            "id": "e3",
+            "ativo": "A",
+            "data": "2026-03-15",
+            "tipo": "marcacao",
+            "valor": -2345
+          },
+          {
+            "id": "e4",
+            "ativo": "A",
+            "data": "2026-03-20",
+            "tipo": "cambio",
+            "valor": 500
+          },
+          {
+            "id": "e5",
+            "ativo": "A",
+            "data": "2026-03-25",
+            "tipo": "resgate",
+            "valor": -200000
+          }
+        ],
+        "saldos_reais": {
+          "A": 810500
+        }
+      },
+      "esperado": {
+        "saldo_calculado_A": 810500,
+        "aportes": 1000000,
+        "resgates": -200000,
+        "rendimento": 12345,
+        "marcacao": -2345,
+        "cambio": 500,
+        "migracao": 0
+      }
+    },
+    {
+      "id": "CR-03",
+      "titulo": "Estorno total e suas recusas",
+      "entrega": "B",
+      "regras": [
+        "P5"
+      ],
+      "entrada": {
+        "mes": "2026-03",
+        "ativos": [
+          {
+            "id": "A",
+            "tipo_ajuste": "rendimento"
+          }
+        ],
+        "saldos_iniciais": {
+          "A": 0
+        },
+        "eventos": [
+          {
+            "id": "e1",
+            "ativo": "A",
+            "data": "2026-03-02",
+            "tipo": "aporte",
+            "valor": 500000
+          },
+          {
+            "id": "e2",
+            "ativo": "A",
+            "data": "2026-03-10",
+            "tipo": "aporte",
+            "valor": 100000
+          },
+          {
+            "id": "e3",
+            "tipo": "estorno",
+            "referencia": "e2",
+            "data": "2026-03-12"
+          }
+        ],
+        "tentativas": [
+          {
+            "chave": "estorno_parcial",
+            "tipo": "estorno",
+            "referencia": "e2",
+            "data": "2026-03-13",
+            "valor": -40000
+          },
+          {
+            "chave": "segundo_estorno",
+            "tipo": "estorno",
+            "referencia": "e2",
+            "data": "2026-03-13"
+          },
+          {
+            "chave": "estorno_de_estorno",
+            "tipo": "estorno",
+            "referencia": "e3",
+            "data": "2026-03-13"
+          }
+        ]
+      },
+      "esperado": {
+        "valor_e3": -100000,
+        "saldo_calculado_A": 500000,
+        "aportes": 500000,
+        "estorno_parcial": "recusado",
+        "segundo_estorno": "recusado",
+        "estorno_de_estorno": "recusado"
+      }
+    },
+    {
+      "id": "CR-04",
+      "titulo": "Transferência pelo trânsito",
+      "entrega": "B",
+      "regras": [
+        "P6",
+        "D3"
+      ],
+      "entrada": {
+        "mes": "2026-04",
+        "ativos": [
+          {
+            "id": "A",
+            "tipo_ajuste": "rendimento"
+          },
+          {
+            "id": "B",
+            "tipo_ajuste": "rendimento"
+          },
+          {
+            "id": "T",
+            "sistema": "transito"
+          }
+        ],
+        "saldos_iniciais": {
+          "A": 1000000,
+          "B": 0,
+          "T": 0
+        },
+        "eventos": [
+          {
+            "id": "t1",
+            "tipo": "transferencia",
+            "data": "2026-04-10",
+            "origem": "A",
+            "destino": "T",
+            "valor": 200000
+          },
+          {
+            "id": "t2",
+            "tipo": "transferencia",
+            "data": "2026-04-20",
+            "origem": "T",
+            "destino": "B",
+            "valor": 200000
+          }
+        ],
+        "tentativas": [
+          {
+            "chave": "estorno_perna_isolada",
+            "tipo": "estorno",
+            "referencia": "t1:origem",
+            "data": "2026-04-21"
+          },
+          {
+            "chave": "transferencia_valor_zero",
+            "tipo": "transferencia",
+            "data": "2026-04-21",
+            "origem": "A",
+            "destino": "B",
+            "valor": 0
+          },
+          {
+            "chave": "transferencia_mesmo_ativo",
+            "tipo": "transferencia",
+            "data": "2026-04-21",
+            "origem": "A",
+            "destino": "A",
+            "valor": 100
+          }
+        ]
+      },
+      "esperado": {
+        "saldo_calculado_A": 800000,
+        "saldo_calculado_T": 0,
+        "saldo_calculado_B": 200000,
+        "patrimonio_calculado": 1000000,
+        "soma_pernas_t1": 0,
+        "soma_pernas_t2": 0,
+        "estorno_perna_isolada": "recusado",
+        "transferencia_valor_zero": "recusado",
+        "transferencia_mesmo_ativo": "recusado"
+      }
+    },
+    {
+      "id": "CR-05",
+      "titulo": "Correção de transferência como um todo (K6)",
+      "entrega": "B",
+      "regras": [
+        "K6"
+      ],
+      "entrada": {
+        "mes": "2026-04",
+        "ativos": [
+          {
+            "id": "A",
+            "tipo_ajuste": "rendimento"
+          },
+          {
+            "id": "T",
+            "sistema": "transito"
+          }
+        ],
+        "saldos_iniciais": {
+          "A": 1000000,
+          "T": 0
+        },
+        "eventos": [
+          {
+            "id": "t1",
+            "tipo": "transferencia",
+            "data": "2026-04-05",
+            "origem": "A",
+            "destino": "T",
+            "valor": 10000
+          },
+          {
+            "id": "c1",
+            "tipo": "estorno_transferencia",
+            "referencia": "t1",
+            "data": "2026-04-08"
+          }
+        ],
+        "tentativas": [
+          {
+            "chave": "segunda_correcao",
+            "tipo": "estorno_transferencia",
+            "referencia": "t1",
+            "data": "2026-04-09"
+          }
+        ]
+      },
+      "esperado": {
+        "estorno_perna_origem": 10000,
+        "estorno_perna_destino": -10000,
+        "saldo_calculado_A": 1000000,
+        "saldo_calculado_T": 0,
+        "soma_pernas_c1": 0,
+        "segunda_correcao": "recusado"
+      }
+    },
+    {
+      "id": "CR-06",
+      "titulo": "Datas de lançamento e início da carteira (K7, K13)",
+      "entrega": "B",
+      "regras": [
+        "P8",
+        "K7",
+        "K13"
+      ],
+      "entrada": {
+        "hoje": "2026-10-14",
+        "ativos": [
+          {
+            "id": "A",
+            "tipo_ajuste": "rendimento"
+          }
+        ],
+        "passos": [
+          {
+            "chave": "s01",
+            "acao": "fechar",
+            "mes": "2026-01",
+            "saldos_reais": {
+              "A": 0
+            },
+            "nota": "carteira sem eventos"
+          },
+          {
+            "chave": "s02",
+            "acao": "lancar",
+            "tipo": "aporte",
+            "ativo": "A",
+            "data": "2026-02-10",
+            "valor": 10000
+          },
+          {
+            "chave": "s03",
+            "acao": "fechar",
+            "mes": "2026-03",
+            "saldos_reais": {
+              "A": 10000
+            }
+          },
+          {
+            "chave": "s04",
+            "acao": "fechar",
+            "mes": "2026-02",
+            "saldos_reais": {
+              "A": 10000
+            }
+          },
+          {
+            "chave": "s05",
+            "acao": "lancar",
+            "tipo": "aporte",
+            "ativo": "A",
+            "data": "2026-01-15",
+            "valor": 5000
+          },
+          {
+            "chave": "s06",
+            "acao": "lancar",
+            "tipo": "aporte",
+            "ativo": "A",
+            "data": "2026-02-20",
+            "valor": 5000
+          },
+          {
+            "chave": "s07",
+            "acao": "lancar",
+            "tipo": "aporte",
+            "ativo": "A",
+            "data": "2026-03-05",
+            "valor": 5000
+          },
+          {
+            "chave": "s08",
+            "acao": "lancar",
+            "tipo": "aporte",
+            "ativo": "A",
+            "data": "2026-10-15",
+            "valor": 5000
+          },
+          {
+            "chave": "s09",
+            "acao": "lancar",
+            "tipo": "aporte",
+            "ativo": "A",
+            "data": "2026-10-14",
+            "valor": 5000
+          },
+          {
+            "chave": "s10",
+            "acao": "reabrir",
+            "mes": "2026-02"
+          },
+          {
+            "chave": "s11",
+            "acao": "lancar",
+            "tipo": "aporte",
+            "ativo": "A",
+            "data": "2026-01-15",
+            "valor": 5000
+          },
+          {
+            "chave": "s12",
+            "acao": "fechar",
+            "mes": "2026-02",
+            "saldos_reais": {
+              "A": 15000
+            }
+          },
+          {
+            "chave": "s13",
+            "acao": "fechar",
+            "mes": "2026-01",
+            "saldos_reais": {
+              "A": 5000
+            }
+          }
+        ]
+      },
+      "esperado": {
+        "s01": "recusado",
+        "s02": "aceito",
+        "s03": "recusado",
+        "s04": "aceito",
+        "s05": "recusado",
+        "s06": "recusado",
+        "s07": "aceito",
+        "s08": "recusado",
+        "s09": "aceito",
+        "s10": "aceito",
+        "s11": "aceito",
+        "s12": "recusado",
+        "s13": "aceito"
+      }
+    },
+    {
+      "id": "CR-07",
+      "titulo": "Soma exata acima de 2^53 em intermediário",
+      "entrega": "B",
+      "regras": [
+        "D11"
+      ],
+      "entrada": {
+        "mes": "2026-03",
+        "ativos": [
+          {
+            "id": "A",
+            "tipo_ajuste": "rendimento"
+          }
+        ],
+        "saldos_iniciais": {
+          "A": 0
+        },
+        "eventos": [
+          {
+            "id": "e1",
+            "ativo": "A",
+            "data": "2026-03-02",
+            "tipo": "aporte",
+            "valor": 9007199254740991
+          },
+          {
+            "id": "e2",
+            "ativo": "A",
+            "data": "2026-03-03",
+            "tipo": "rendimento",
+            "valor": 2
+          },
+          {
+            "id": "e3",
+            "ativo": "A",
+            "data": "2026-03-04",
+            "tipo": "rendimento",
+            "valor": -2
+          }
+        ]
+      },
+      "esperado": {
+        "saldo_calculado_A": 9007199254740991
+      }
+    },
+    {
+      "id": "CR-08",
+      "titulo": "Cancelamento com subtotal acima de 64 bits",
+      "entrega": "B",
+      "regras": [
+        "D11"
+      ],
+      "entrada": {
+        "mes": "2026-03",
+        "ativos": [
+          {
+            "id": "A",
+            "tipo_ajuste": "rendimento"
+          }
+        ],
+        "saldos_iniciais": {
+          "A": 0
+        },
+        "eventos": [
+          {
+            "ativo": "A",
+            "data": "2026-03-02",
+            "tipo": "rendimento",
+            "valor": 9007199254740991,
+            "repeticoes": 1025
+          },
+          {
+            "ativo": "A",
+            "data": "2026-03-03",
+            "tipo": "rendimento",
+            "valor": -9007199254740991,
+            "repeticoes": 1025
+          }
+        ],
+        "saldos_reais": {
+          "A": 100
+        }
+      },
+      "esperado": {
+        "saldo_calculado_A": 0,
+        "ajuste_A": 100,
+        "saldo_final_A": 100,
+        "rendimento": 100,
+        "vi": 0,
+        "vf": 100
+      }
+    },
+    {
+      "id": "CR-09",
+      "titulo": "Saldo calculado fora da faixa",
+      "entrega": "B",
+      "regras": [
+        "D11"
+      ],
+      "entrada": {
+        "mes": "2026-03",
+        "ativos": [
+          {
+            "id": "A",
+            "tipo_ajuste": "rendimento"
+          }
+        ],
+        "saldos_iniciais": {
+          "A": 9007199254740991
+        },
+        "eventos": [
+          {
+            "id": "e1",
+            "ativo": "A",
+            "data": "2026-03-02",
+            "tipo": "aporte",
+            "valor": 1
+          }
+        ],
+        "saldos_reais": {
+          "A": 9007199254740991
+        }
+      },
+      "esperado": {
+        "previa": "recusado_faixa",
+        "fechamento": "recusado_faixa"
+      }
+    },
+    {
+      "id": "CR-10",
+      "titulo": "Ajuste entre saldos de sinais opostos fora da faixa",
+      "entrega": "B",
+      "regras": [
+        "D11"
+      ],
+      "entrada": {
+        "mes": "2026-03",
+        "ativos": [
+          {
+            "id": "A",
+            "tipo_ajuste": "rendimento"
+          }
+        ],
+        "saldos_iniciais": {
+          "A": 0
+        },
+        "eventos": [
+          {
+            "id": "e1",
+            "ativo": "A",
+            "data": "2026-03-02",
+            "tipo": "resgate",
+            "valor": -9007199254740991
+          }
+        ],
+        "saldos_reais": {
+          "A": 9007199254740991
+        }
+      },
+      "esperado": {
+        "saldo_calculado_A": -9007199254740991,
+        "previa": "recusado_faixa",
+        "fechamento": "recusado_faixa"
+      }
+    },
+    {
+      "id": "CR-11",
+      "titulo": "Consolidado fora da faixa",
+      "entrega": "B",
+      "regras": [
+        "D11"
+      ],
+      "entrada": {
+        "mes": "2026-03",
+        "ativos": [
+          {
+            "id": "A",
+            "tipo_ajuste": "rendimento"
+          },
+          {
+            "id": "B",
+            "tipo_ajuste": "rendimento"
+          }
+        ],
+        "saldos_iniciais": {
+          "A": 0,
+          "B": 0
+        },
+        "eventos": [
+          {
+            "id": "e1",
+            "ativo": "A",
+            "data": "2026-03-02",
+            "tipo": "aporte",
+            "valor": 9007199254740991
+          },
+          {
+            "id": "e2",
+            "ativo": "B",
+            "data": "2026-03-02",
+            "tipo": "aporte",
+            "valor": 9007199254740991
+          }
+        ],
+        "saldos_reais": {
+          "A": 9007199254740991,
+          "B": 9007199254740991
+        }
+      },
+      "esperado": {
+        "saldo_calculado_A": 9007199254740991,
+        "saldo_calculado_B": 9007199254740991,
+        "previa": "recusado_faixa",
+        "fechamento": "recusado_faixa"
+      }
+    },
+    {
+      "id": "CR-12",
+      "titulo": "Fechamento com ajuste positivo e negativo",
+      "entrega": "B",
+      "regras": [
+        "P7",
+        "P9",
+        "P10",
+        "D6"
+      ],
+      "entrada": {
+        "mes": "2026-03",
+        "ativos": [
+          {
+            "id": "A",
+            "tipo_ajuste": "rendimento"
+          },
+          {
+            "id": "B",
+            "tipo_ajuste": "marcacao"
+          }
+        ],
+        "saldos_iniciais": {
+          "A": 1000000,
+          "B": 500000
+        },
+        "eventos": [
+          {
+            "id": "e1",
+            "ativo": "A",
+            "data": "2026-03-10",
+            "tipo": "aporte",
+            "valor": 10000
+          }
+        ],
+        "saldos_reais": {
+          "A": 1015000,
+          "B": 480000
+        }
+      },
+      "esperado": {
+        "saldo_calculado_A": 1010000,
+        "saldo_calculado_B": 500000,
+        "ajuste_A": 5000,
+        "tipo_ajuste_A": "rendimento",
+        "ajuste_B": -20000,
+        "tipo_ajuste_B": "marcacao",
+        "vi": 1500000,
+        "vf": 1495000,
+        "aportes": 10000,
+        "resgates": 0,
+        "rendimento": 5000,
+        "marcacao": -20000,
+        "cambio": 0,
+        "migracao": 0,
+        "identidade": "ok"
+      }
+    },
+    {
+      "id": "CR-13",
+      "titulo": "Fechamento recusado por pendência",
+      "entrega": "B",
+      "regras": [
+        "P7",
+        "K12"
+      ],
+      "entrada": {
+        "mes": "2026-03",
+        "ativos": [
+          {
+            "id": "A",
+            "tipo_ajuste": "rendimento"
+          },
+          {
+            "id": "B",
+            "tipo_ajuste": "rendimento"
+          },
+          {
+            "id": "T",
+            "sistema": "transito"
+          }
+        ],
+        "saldos_iniciais": {
+          "A": 100000,
+          "B": 50000,
+          "T": 0
+        },
+        "eventos": [],
+        "saldos_reais": {
+          "A": 100000
+        }
+      },
+      "esperado": {
+        "fechamento": "recusado_pendencia",
+        "pendentes": [
+          "B"
+        ]
+      }
+    },
+    {
+      "id": "CR-14",
+      "titulo": "Conferência da identidade contábil",
+      "entrega": "B",
+      "regras": [
+        "P10"
+      ],
+      "entrada": {
+        "conferencias": [
+          {
+            "chave": "identidade_a",
+            "vi": 1000000,
+            "vf": 1110000,
+            "componentes": {
+              "aportes": 100000,
+              "resgates": 0,
+              "rendimento": 10000,
+              "marcacao": 0,
+              "cambio": 0,
+              "migracao": 0
+            }
+          },
+          {
+            "chave": "identidade_b",
+            "vi": 1000000,
+            "vf": 1110000,
+            "componentes": {
+              "aportes": 100000,
+              "resgates": 0,
+              "rendimento": 9999,
+              "marcacao": 0,
+              "cambio": 0,
+              "migracao": 0
+            }
+          }
+        ]
+      },
+      "esperado": {
+        "identidade_a": "ok",
+        "identidade_b": "recusado_identidade"
+      }
+    },
+    {
+      "id": "CR-15",
+      "titulo": "Sequência de fechamento e reabertura só do último mês",
+      "entrega": "B",
+      "regras": [
+        "P8"
+      ],
+      "entrada": {
+        "hoje": "2026-10-14",
+        "meses_fechados": [
+          "2026-01",
+          "2026-02"
+        ],
+        "passos": [
+          {
+            "chave": "s1",
+            "acao": "fechar",
+            "mes": "2026-04"
+          },
+          {
+            "chave": "s2",
+            "acao": "reabrir",
+            "mes": "2026-01"
+          },
+          {
+            "chave": "s3",
+            "acao": "fechar",
+            "mes": "2026-03"
+          },
+          {
+            "chave": "s4",
+            "acao": "reabrir",
+            "mes": "2026-02"
+          },
+          {
+            "chave": "s5",
+            "acao": "reabrir",
+            "mes": "2026-03"
+          }
+        ]
+      },
+      "esperado": {
+        "s1": "recusado_sequencia",
+        "s2": "recusado_reabertura",
+        "s3": "aceito",
+        "s4": "recusado_reabertura",
+        "s5": "aceito"
+      }
+    },
+    {
+      "id": "CR-16",
+      "titulo": "Reabertura volta ao estado anterior ao fechamento",
+      "entrega": "B",
+      "regras": [
+        "P8",
+        "D6"
+      ],
+      "entrada": {
+        "base": "CR-12",
+        "passos": [
+          {
+            "chave": "reabrir",
+            "acao": "reabrir",
+            "mes": "2026-03"
+          },
+          {
+            "chave": "fechar_de_novo",
+            "acao": "fechar",
+            "mes": "2026-03",
+            "saldos_reais": {
+              "A": 1015000,
+              "B": 480000
+            }
+          }
+        ]
+      },
+      "esperado": {
+        "estado_apos_reabrir": "aberto",
+        "posicoes_apos_reabrir": 0,
+        "consolidado_apos_reabrir": "inexistente",
+        "saldo_calculado_A_apos_reabrir": 1010000,
+        "saldo_calculado_B_apos_reabrir": 500000,
+        "retorno_apos_reabrir": "N/D",
+        "vf_apos_fechar_de_novo": 1495000
+      }
+    },
+    {
+      "id": "CR-17",
+      "titulo": "Trânsito no fechamento e no patrimônio (K12)",
+      "entrega": "B",
+      "regras": [
+        "D3",
+        "K12",
+        "P7"
+      ],
+      "entrada": {
+        "mes": "2026-04",
+        "ativos": [
+          {
+            "id": "A",
+            "tipo_ajuste": "rendimento"
+          },
+          {
+            "id": "T",
+            "sistema": "transito"
+          }
+        ],
+        "saldos_iniciais": {
+          "A": 1000000,
+          "T": 0
+        },
+        "eventos": [
+          {
+            "id": "t1",
+            "tipo": "transferencia",
+            "data": "2026-04-10",
+            "origem": "A",
+            "destino": "T",
+            "valor": 200000
+          }
+        ],
+        "saldos_reais": {
+          "A": 805000
+        }
+      },
+      "esperado": {
+        "pendentes": [],
+        "ajuste_A": 5000,
+        "saldo_final_T": 200000,
+        "ajuste_T": 0,
+        "vi": 1000000,
+        "vf": 1005000,
+        "rendimento": 5000,
+        "aportes": 0,
+        "resgates": 0,
+        "identidade": "ok"
+      }
+    },
+    {
+      "id": "CR-18",
+      "titulo": "Mês só fecha depois de terminar (K13)",
+      "entrega": "B",
+      "regras": [
+        "K13"
+      ],
+      "entrada": {
+        "meses_fechados": [
+          "2026-09"
+        ],
+        "passos": [
+          {
+            "chave": "s1",
+            "acao": "fechar",
+            "mes": "2026-10",
+            "hoje": "2026-10-14"
+          },
+          {
+            "chave": "s2",
+            "acao": "fechar",
+            "mes": "2026-10",
+            "hoje": "2026-10-31"
+          },
+          {
+            "chave": "s3",
+            "acao": "fechar",
+            "mes": "2026-10",
+            "hoje": "2026-11-01"
+          }
+        ]
+      },
+      "esperado": {
+        "s1": "recusado_mes_nao_terminado",
+        "s2": "recusado_mes_nao_terminado",
+        "s3": "aceito"
+      }
+    },
+    {
+      "id": "CR-20",
+      "titulo": "Modified Dietz com aporte no meio do mês (P11, P14)",
+      "entrega": "C",
+      "regras": [
+        "P11",
+        "P14"
+      ],
+      "entrada": {
+        "mes": "2026-04",
+        "estado": "fechado",
+        "primeiro_mes": false,
+        "vi": 1000000,
+        "vf": 1110000,
+        "eventos": [
+          {
+            "id": "e1",
+            "data": "2026-04-15",
+            "tipo": "aporte",
+            "valor": 100000
+          }
+        ]
+      },
+      "esperado": {
+        "dias": 30,
+        "numerador": 300000,
+        "denominador": 31500000,
+        "retorno": 0.009523809523809525,
+        "variacao": 0.11
+      }
+    },
+    {
+      "id": "CR-21",
+      "titulo": "Fevereiro de ano bissexto",
+      "entrega": "C",
+      "regras": [
+        "P11"
+      ],
+      "entrada": {
+        "mes": "2028-02",
+        "estado": "fechado",
+        "primeiro_mes": false,
+        "vi": 1000000,
+        "vf": 1120000,
+        "eventos": [
+          {
+            "id": "e1",
+            "data": "2028-02-10",
+            "tipo": "aporte",
+            "valor": 100000
+          }
+        ]
+      },
+      "esperado": {
+        "dias": 29,
+        "numerador": 580000,
+        "denominador": 30900000,
+        "retorno": 0.018770226537216828
+      }
+    },
+    {
+      "id": "CR-22",
+      "titulo": "Aporte no primeiro dia e resgate no último",
+      "entrega": "C",
+      "regras": [
+        "P11"
+      ],
+      "entrada": {
+        "mes": "2026-06",
+        "estado": "fechado",
+        "primeiro_mes": false,
+        "vi": 1000000,
+        "vf": 860000,
+        "eventos": [
+          {
+            "id": "e1",
+            "data": "2026-06-01",
+            "tipo": "aporte",
+            "valor": 50000
+          },
+          {
+            "id": "e2",
+            "data": "2026-06-30",
+            "tipo": "resgate",
+            "valor": -200000
+          }
+        ]
+      },
+      "esperado": {
+        "dias": 30,
+        "numerador": 300000,
+        "denominador": 31450000,
+        "retorno": 0.009538950715421303
+      }
+    },
+    {
+      "id": "CR-23",
+      "titulo": "Estorno de aporte no mesmo mês",
+      "entrega": "C",
+      "regras": [
+        "P5",
+        "P11"
+      ],
+      "entrada": {
+        "mes": "2026-06",
+        "estado": "fechado",
+        "primeiro_mes": false,
+        "vi": 1000000,
+        "vf": 1010000,
+        "eventos": [
+          {
+            "id": "e1",
+            "data": "2026-06-05",
+            "tipo": "aporte",
+            "valor": 100000
+          },
+          {
+            "id": "e2",
+            "data": "2026-06-25",
+            "tipo": "estorno",
+            "referencia": "e1"
+          }
+        ]
+      },
+      "esperado": {
+        "numerador": 300000,
+        "denominador": 32000000,
+        "retorno": 0.009375
+      }
+    },
+    {
+      "id": "CR-24",
+      "titulo": "Estorno de aporte de mês já fechado (K2)",
+      "entrega": "C",
+      "regras": [
+        "K2"
+      ],
+      "entrada": {
+        "mes": "2026-02",
+        "estado": "fechado",
+        "primeiro_mes": false,
+        "vi": 1100000,
+        "vf": 1005000,
+        "eventos": [
+          {
+            "id": "e2",
+            "data": "2026-02-05",
+            "tipo": "estorno",
+            "referencia": "e0"
+          }
+        ],
+        "eventos_anteriores": [
+          {
+            "id": "e0",
+            "data": "2026-01-20",
+            "tipo": "aporte",
+            "valor": 100000
+          }
+        ]
+      },
+      "esperado": {
+        "dias": 28,
+        "numerador": 140000,
+        "denominador": 28500000,
+        "retorno": 0.004912280701754386
+      }
+    },
+    {
+      "id": "CR-25",
+      "titulo": "Mês com Vi = 0 e aporte (K5)",
+      "entrega": "C",
+      "regras": [
+        "K5"
+      ],
+      "entrada": {
+        "mes": "2026-06",
+        "estado": "fechado",
+        "primeiro_mes": false,
+        "vi": 0,
+        "vf": 101000,
+        "eventos": [
+          {
+            "id": "e1",
+            "data": "2026-06-10",
+            "tipo": "aporte",
+            "valor": 100000
+          }
+        ]
+      },
+      "esperado": {
+        "numerador": 30000,
+        "denominador": 2000000,
+        "retorno": 0.015,
+        "variacao": "N/D"
+      }
+    },
+    {
+      "id": "CR-26",
+      "titulo": "Denominador menor ou igual a zero",
+      "entrega": "C",
+      "regras": [
+        "P11"
+      ],
+      "entrada": {
+        "meses": [
+          {
+            "chave": "a",
+            "mes": "2026-06",
+            "estado": "fechado",
+            "primeiro_mes": false,
+            "vi": 100000,
+            "vf": 0,
+            "eventos": [
+              {
+                "id": "e1",
+                "data": "2026-06-01",
+                "tipo": "rendimento",
+                "valor": 20000
+              },
+              {
+                "id": "e2",
+                "data": "2026-06-01",
+                "tipo": "resgate",
+                "valor": -120000
+              }
+            ]
+          },
+          {
+            "chave": "b",
+            "mes": "2026-06",
+            "estado": "fechado",
+            "primeiro_mes": false,
+            "vi": 0,
+            "vf": 0,
+            "eventos": []
+          }
+        ]
+      },
+      "esperado": {
+        "denominador_a": -480000,
+        "retorno_a": "N/D",
+        "variacao_a": -1,
+        "denominador_b": 0,
+        "retorno_b": "N/D",
+        "variacao_b": "N/D"
+      }
+    },
+    {
+      "id": "CR-27",
+      "titulo": "Denominador pequeno com cancelamento",
+      "entrega": "C",
+      "regras": [
+        "P11",
+        "D11"
+      ],
+      "entrada": {
+        "mes": "2026-06",
+        "estado": "fechado",
+        "primeiro_mes": false,
+        "vi": 999979,
+        "vf": 1,
+        "eventos": [
+          {
+            "id": "e1",
+            "data": "2026-06-01",
+            "tipo": "resgate",
+            "valor": -1034461
+          },
+          {
+            "id": "e2",
+            "data": "2026-06-30",
+            "tipo": "aporte",
+            "valor": 34482
+          },
+          {
+            "id": "e3",
+            "data": "2026-06-30",
+            "tipo": "rendimento",
+            "valor": 1
+          }
+        ]
+      },
+      "esperado": {
+        "numerador": 30,
+        "denominador": 1,
+        "retorno": 30
+      }
+    },
+    {
+      "id": "CR-28",
+      "titulo": "Transferência não altera a rentabilidade (P6)",
+      "entrega": "C",
+      "regras": [
+        "P6",
+        "D3"
+      ],
+      "entrada": {
+        "mes": "2026-04",
+        "estado": "fechado",
+        "primeiro_mes": false,
+        "vi": 1000000,
+        "vf": 1005000,
+        "eventos": [
+          {
+            "id": "t1",
+            "data": "2026-04-10",
+            "tipo": "transferencia",
+            "origem": "A",
+            "destino": "T",
+            "valor": 200000
+          }
+        ]
+      },
+      "esperado": {
+        "numerador": 150000,
+        "denominador": 30000000,
+        "retorno": 0.005,
+        "variacao": 0.005
+      }
+    },
+    {
+      "id": "CR-29",
+      "titulo": "Mês com migração histórica (P15)",
+      "entrega": "C",
+      "regras": [
+        "P15"
+      ],
+      "entrada": {
+        "mes": "2026-06",
+        "estado": "fechado",
+        "primeiro_mes": false,
+        "vi": 1000000,
+        "vf": 1110000,
+        "eventos": [
+          {
+            "id": "e1",
+            "data": "2026-06-01",
+            "tipo": "migracao",
+            "valor": 110000
+          }
+        ]
+      },
+      "esperado": {
+        "retorno": "N/D",
+        "variacao": 0.11
+      }
+    },
+    {
+      "id": "CR-30",
+      "titulo": "Primeiro mês e mês aberto",
+      "entrega": "C",
+      "regras": [
+        "P8"
+      ],
+      "entrada": {
+        "meses": [
+          {
+            "chave": "primeiro",
+            "mes": "2026-01",
+            "estado": "fechado",
+            "primeiro_mes": true,
+            "vi": 0,
+            "vf": 100000,
+            "eventos": [
+              {
+                "id": "e1",
+                "data": "2026-01-02",
+                "tipo": "aporte",
+                "valor": 100000
+              }
+            ]
+          },
+          {
+            "chave": "aberto",
+            "mes": "2026-02",
+            "estado": "aberto",
+            "primeiro_mes": false,
+            "vi": 100000,
+            "vf": 101000,
+            "eventos": []
+          }
+        ]
+      },
+      "esperado": {
+        "retorno_primeiro": "N/D",
+        "variacao_primeiro": "N/D",
+        "retorno_aberto": "N/D",
+        "variacao_aberto": "N/D"
+      }
+    },
+    {
+      "id": "CR-31",
+      "titulo": "Rentabilidade negativa com ajustes (mês do CR-12)",
+      "entrega": "C",
+      "regras": [
+        "P11",
+        "P14"
+      ],
+      "entrada": {
+        "mes": "2026-03",
+        "estado": "fechado",
+        "primeiro_mes": false,
+        "vi": 1500000,
+        "vf": 1495000,
+        "eventos": [
+          {
+            "id": "e1",
+            "data": "2026-03-10",
+            "tipo": "aporte",
+            "valor": 10000
+          }
+        ]
+      },
+      "esperado": {
+        "dias": 31,
+        "numerador": -465000,
+        "denominador": 46710000,
+        "retorno": -0.00995504174694926,
+        "variacao": -0.0033333333333333335
+      }
+    },
+    {
+      "id": "CR-32",
+      "titulo": "Acumulado e ano até a data (P12, P13)",
+      "entrega": "C",
+      "regras": [
+        "P12",
+        "P13"
+      ],
+      "entrada": {
+        "inicio": "2025-12",
+        "retornos": {
+          "2026-01": 0.01,
+          "2026-02": 0.02,
+          "2026-03": -0.005
+        },
+        "consultas": [
+          {
+            "chave": "acumulado_desde_inicio_ate_2026_03",
+            "de": "2025-12",
+            "ate": "2026-03"
+          },
+          {
+            "chave": "ano_ate_2026_03",
+            "de": "2026-01",
+            "ate": "2026-03"
+          },
+          {
+            "chave": "ano_ate_2026_01",
+            "de": "2026-01",
+            "ate": "2026-01"
+          }
+        ]
+      },
+      "esperado": {
+        "acumulado_desde_inicio_ate_2026_03": 0.025049,
+        "ano_ate_2026_03": 0.025049,
+        "ano_ate_2026_01": 0.01
+      }
+    },
+    {
+      "id": "CR-33",
+      "titulo": "Mês N/D no período (K1)",
+      "entrega": "C",
+      "regras": [
+        "K1"
+      ],
+      "entrada": {
+        "inicio": "2025-12",
+        "retornos": {
+          "2026-01": 0.01,
+          "2026-02": "N/D",
+          "2026-03": 0.02,
+          "2026-04": -0.005
+        },
+        "consultas": [
+          {
+            "chave": "acumulado_ate_2026_04",
+            "de": "2025-12",
+            "ate": "2026-04"
+          },
+          {
+            "chave": "ano_ate_2026_04",
+            "de": "2026-01",
+            "ate": "2026-04"
+          },
+          {
+            "chave": "ano_ate_2026_01",
+            "de": "2026-01",
+            "ate": "2026-01"
+          },
+          {
+            "chave": "periodo_2026_03_a_2026_04",
+            "de": "2026-03",
+            "ate": "2026-04"
+          }
+        ]
+      },
+      "esperado": {
+        "acumulado_ate_2026_04": "N/D",
+        "ano_ate_2026_04": "N/D",
+        "ano_ate_2026_01": 0.01,
+        "periodo_2026_03_a_2026_04": 0.0149
+      }
+    },
+    {
+      "id": "CR-34",
+      "titulo": "Período que começa antes do início da carteira (K8)",
+      "entrega": "C",
+      "regras": [
+        "K8"
+      ],
+      "entrada": {
+        "inicio": "2026-02",
+        "retornos": {
+          "2026-02": "N/D",
+          "2026-03": 0.01,
+          "2026-04": 0.02
+        },
+        "consultas": [
+          {
+            "chave": "ano_ate_2026_04",
+            "de": "2026-01",
+            "ate": "2026-04"
+          },
+          {
+            "chave": "desde_inicio_ate_2026_04",
+            "de": "2026-02",
+            "ate": "2026-04"
+          },
+          {
+            "chave": "ano_ate_2026_02",
+            "de": "2026-01",
+            "ate": "2026-02"
+          }
+        ]
+      },
+      "esperado": {
+        "ano_ate_2026_04": 0.0302,
+        "desde_inicio_ate_2026_04": 0.0302,
+        "ano_ate_2026_02": "N/D"
+      }
+    },
+    {
+      "id": "CR-35",
+      "titulo": "Mês N/D logo depois do início (K8 e K1)",
+      "entrega": "C",
+      "regras": [
+        "K8",
+        "K1"
+      ],
+      "entrada": {
+        "inicio": "2026-01",
+        "retornos": {
+          "2026-01": "N/D",
+          "2026-02": "N/D",
+          "2026-03": 0.01
+        },
+        "consultas": [
+          {
+            "chave": "ano_ate_2026_03",
+            "de": "2026-01",
+            "ate": "2026-03"
+          },
+          {
+            "chave": "periodo_2026_03",
+            "de": "2026-03",
+            "ate": "2026-03"
+          }
+        ]
+      },
+      "esperado": {
+        "ano_ate_2026_03": "N/D",
+        "periodo_2026_03": 0.01
+      }
+    },
+    {
+      "id": "CR-36",
+      "titulo": "Série base 100 e drawdown",
+      "entrega": "C",
+      "regras": [
+        "P12"
+      ],
+      "entrada": {
+        "inicio": "2025-12",
+        "retornos": {
+          "2026-01": 0.1,
+          "2026-02": -0.2,
+          "2026-03": 0.05,
+          "2026-04": -0.1
+        },
+        "consultas": [
+          {
+            "chave": "periodo",
+            "de": "2026-01",
+            "ate": "2026-04"
+          }
+        ]
+      },
+      "esperado": {
+        "base100_2026_01": 110,
+        "base100_2026_02": 88,
+        "base100_2026_03": 92.4,
+        "base100_2026_04": 83.16,
+        "acumulado": -0.1684,
+        "drawdown_maximo": -0.244
+      }
+    },
+    {
+      "id": "CR-37",
+      "titulo": "Drawdown com o primeiro mês negativo e com N/D",
+      "entrega": "C",
+      "regras": [
+        "P12",
+        "K1"
+      ],
+      "entrada": {
+        "series": [
+          {
+            "chave": "a",
+            "inicio": "2025-12",
+            "retornos": {
+              "2026-01": -0.05,
+              "2026-02": 0.02
+            },
+            "de": "2026-01",
+            "ate": "2026-02"
+          },
+          {
+            "chave": "b",
+            "inicio": "2025-12",
+            "retornos": {
+              "2026-01": -0.05,
+              "2026-02": "N/D"
+            },
+            "de": "2026-01",
+            "ate": "2026-02"
+          }
+        ]
+      },
+      "esperado": {
+        "base100_a_2026_02": 96.9,
+        "drawdown_maximo_a": -0.05,
+        "drawdown_maximo_b": "N/D"
+      }
+    },
+    {
+      "id": "CR-38",
+      "titulo": "Arredondamento de apresentação (P4, K10)",
+      "entrega": "C",
+      "regras": [
+        "P4",
+        "K10"
+      ],
+      "entrada": {
+        "percentuais": {
+          "p01": 0.00125,
+          "p02": 0.01005,
+          "p03": -0.00125,
+          "p04": 0.009523809523809525,
+          "p05": 0.025049,
+          "p06": -4e-05,
+          "p07": 5e-05,
+          "p08": 1e-07,
+          "p09": 30,
+          "p10": 1.125,
+          "p11": 0.0009999999999999992
+        },
+        "indices": {
+          "i01": 92.4,
+          "i02": 100.005,
+          "i03": 83.16
+        }
+      },
+      "esperado": {
+        "p01": "0,13",
+        "p02": "1,01",
+        "p03": "−0,13",
+        "p04": "0,95",
+        "p05": "2,50",
+        "p06": "0,00",
+        "p07": "0,01",
+        "p08": "0,00",
+        "p09": "3.000,00",
+        "p10": "112,50",
+        "p11": "0,10",
+        "i01": "92,40",
+        "i02": "100,01",
+        "i03": "83,16"
+      }
+    },
+    {
+      "id": "CR-40",
+      "titulo": "Composição de série diária em mês completo (P16, K4)",
+      "entrega": "D",
+      "regras": [
+        "P16",
+        "K4"
+      ],
+      "entrada": {
+        "periodicidade": "diaria",
+        "cobertura": {
+          "inicio": "2025-12-01",
+          "fim": "2026-02-02"
+        },
+        "valores": [
+          {
+            "data": "2026-01-02",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-05",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-06",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-07",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-08",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-09",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-12",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-13",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-14",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-15",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-16",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-19",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-20",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-21",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-22",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-23",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-26",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-27",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-28",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-29",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-30",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-02-02",
+            "valor": "0.04"
+          }
+        ],
+        "mes": "2026-01"
+      },
+      "esperado": {
+        "dias_com_valor": 21,
+        "completo": true,
+        "retorno": 0.008433685273424597
+      }
+    },
+    {
+      "id": "CR-41",
+      "titulo": "Carga iniciada no meio do mês (K4)",
+      "entrega": "D",
+      "regras": [
+        "K4"
+      ],
+      "entrada": {
+        "periodicidade": "diaria",
+        "cobertura": {
+          "inicio": "2026-01-19",
+          "fim": "2026-03-02"
+        },
+        "valores": [
+          {
+            "data": "2026-01-19",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-20",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-21",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-22",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-23",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-26",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-27",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-28",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-29",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-30",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-02-02",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-02-03",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-02-04",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-02-05",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-02-06",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-02-09",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-02-10",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-02-11",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-02-12",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-02-13",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-02-16",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-02-17",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-02-18",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-02-19",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-02-20",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-02-23",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-02-24",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-02-25",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-02-26",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-02-27",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-03-02",
+            "valor": "0.04"
+          }
+        ],
+        "meses": [
+          "2025-12",
+          "2026-01",
+          "2026-02"
+        ]
+      },
+      "esperado": {
+        "completo_2025_12": false,
+        "retorno_2025_12": "N/D",
+        "completo_2026_01": false,
+        "retorno_2026_01": "N/D",
+        "completo_2026_02": true,
+        "retorno_2026_02": 0.00803047308419092
+      }
+    },
+    {
+      "id": "CR-42",
+      "titulo": "Último dia do mês ainda não publicado (K4)",
+      "entrega": "D",
+      "regras": [
+        "K4"
+      ],
+      "entrada": {
+        "periodicidade": "diaria",
+        "cobertura": {
+          "inicio": "2025-12-01",
+          "fim": "2026-01-29"
+        },
+        "valores": [
+          {
+            "data": "2026-01-02",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-05",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-06",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-07",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-08",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-09",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-12",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-13",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-14",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-15",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-16",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-19",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-20",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-21",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-22",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-23",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-26",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-27",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-28",
+            "valor": "0.04"
+          },
+          {
+            "data": "2026-01-29",
+            "valor": "0.04"
+          }
+        ],
+        "mes": "2026-01"
+      },
+      "esperado": {
+        "dias_com_valor": 20,
+        "completo": false,
+        "retorno": "N/D"
+      }
+    },
+    {
+      "id": "CR-43",
+      "titulo": "Série mensal e acumulado do benchmark",
+      "entrega": "D",
+      "regras": [
+        "D8",
+        "P16"
+      ],
+      "entrada": {
+        "periodicidade": "mensal",
+        "valores": [
+          {
+            "data": "2026-01-01",
+            "valor": "0.33"
+          },
+          {
+            "data": "2026-02-01",
+            "valor": "-0.10"
+          }
+        ],
+        "consultas": [
+          {
+            "chave": "acumulado_2026_01_a_2026_02",
+            "de": "2026-01",
+            "ate": "2026-02"
+          },
+          {
+            "chave": "acumulado_2026_01_a_2026_03",
+            "de": "2026-01",
+            "ate": "2026-03"
+          }
+        ]
+      },
+      "esperado": {
+        "retorno_2026_01": 0.0033,
+        "retorno_2026_02": -0.001,
+        "retorno_2026_03": "N/D",
+        "acumulado_2026_01_a_2026_02": 0.0022967,
+        "acumulado_2026_01_a_2026_03": "N/D"
+      }
+    },
+    {
+      "id": "CR-44",
+      "titulo": "Comparação em p.p. e em % do benchmark (P16)",
+      "entrega": "D",
+      "regras": [
+        "P16"
+      ],
+      "entrada": {
+        "comparacoes": [
+          {
+            "chave": "a",
+            "carteira": {
+              "2026-01": 0.009
+            },
+            "benchmark": {
+              "2026-01": 0.008
+            }
+          },
+          {
+            "chave": "b",
+            "carteira": {
+              "2026-01": 0.01,
+              "2026-02": 0.02
+            },
+            "benchmark": {
+              "2026-01": 0.008,
+              "2026-02": 0.008
+            }
+          }
+        ]
+      },
+      "esperado": {
+        "diferenca_a": 0.001,
+        "percentual_a": 1.125,
+        "carteira_acumulada_b": 0.0302,
+        "benchmark_acumulado_b": 0.016064,
+        "diferenca_b": 0.014136,
+        "percentual_b": 1.879980079681275
+      }
+    },
+    {
+      "id": "CR-45",
+      "titulo": "Benchmark acumulado menor ou igual a zero (K3)",
+      "entrega": "D",
+      "regras": [
+        "K3"
+      ],
+      "entrada": {
+        "comparacoes": [
+          {
+            "chave": "a",
+            "carteira": {
+              "2026-01": 0.012
+            },
+            "benchmark": {
+              "2026-01": -0.0032
+            }
+          },
+          {
+            "chave": "b",
+            "carteira": {
+              "2026-01": 0.012
+            },
+            "benchmark": {
+              "2026-01": 0
+            }
+          }
+        ]
+      },
+      "esperado": {
+        "diferenca_a": 0.0152,
+        "percentual_a": "N/D",
+        "diferenca_b": 0.012,
+        "percentual_b": "N/D"
+      }
+    },
+    {
+      "id": "CR-46",
+      "titulo": "Taxa de acerto (K9)",
+      "entrega": "D",
+      "regras": [
+        "K9",
+        "K1"
+      ],
+      "entrada": {
+        "comparacoes": [
+          {
+            "chave": "a",
+            "carteira": {
+              "2026-01": 0.009,
+              "2026-02": 0.007,
+              "2026-03": 0.008
+            },
+            "benchmark": {
+              "2026-01": 0.008,
+              "2026-02": 0.008,
+              "2026-03": 0.008
+            }
+          },
+          {
+            "chave": "b",
+            "carteira": {
+              "2026-01": 0.009,
+              "2026-02": "N/D"
+            },
+            "benchmark": {
+              "2026-01": 0.008,
+              "2026-02": 0.008
+            }
+          }
+        ]
+      },
+      "esperado": {
+        "acertos_a": 1,
+        "meses_a": 3,
+        "taxa_a": 0.3333333333333333,
+        "taxa_b": "N/D"
+      }
+    },
+    {
+      "id": "CR-47",
+      "titulo": "Comparação com mês parcial do benchmark",
+      "entrega": "D",
+      "regras": [
+        "P16",
+        "K4",
+        "K1"
+      ],
+      "entrada": {
+        "comparacoes": [
+          {
+            "chave": "a",
+            "carteira": {
+              "2026-01": 0.01,
+              "2026-02": 0.02
+            },
+            "benchmark": {
+              "2026-01": 0.008,
+              "2026-02": "parcial"
+            }
+          }
+        ]
+      },
+      "esperado": {
+        "diferenca_a": "N/D",
+        "percentual_a": "N/D",
+        "taxa_a": "N/D"
+      }
+    },
+    {
+      "id": "CR-48",
+      "titulo": "Cobertura da carga (K4, D10)",
+      "entrega": "D",
+      "regras": [
+        "K4",
+        "D10"
+      ],
+      "entrada": {
+        "cobertura_inicial": {
+          "inicio": "2025-12-01",
+          "fim": "2026-01-30"
+        },
+        "passos": [
+          {
+            "chave": "s1",
+            "data_inicial": "2026-03-01",
+            "data_final": "2026-03-31",
+            "ultimo_valor": "2026-03-31"
+          },
+          {
+            "chave": "s2",
+            "data_inicial": "2026-01-31",
+            "data_final": "2026-02-28",
+            "ultimo_valor": "2026-02-27"
+          },
+          {
+            "chave": "s3",
+            "data_inicial": "2025-11-01",
+            "data_final": "2025-11-30",
+            "ultimo_valor": "2025-11-28"
+          },
+          {
+            "chave": "s4",
+            "data_inicial": "2026-02-28",
+            "data_final": "2026-03-31",
+            "ultimo_valor": null
+          }
+        ]
+      },
+      "esperado": {
+        "s1": "recusado_buraco",
+        "s2": "aceito",
+        "cobertura_apos_s2": "2025-12-01/2026-02-27",
+        "s3": "aceito",
+        "cobertura_apos_s3": "2025-11-01/2026-02-27",
+        "s4": "recusado_sem_valores"
+      }
+    },
+    {
+      "id": "CR-50",
+      "titulo": "Parser de quantias (O13, K11)",
+      "entrega": "004",
+      "regras": [
+        "K11",
+        "D11"
+      ],
+      "entrada": {
+        "textos": {
+          "q01": "1.234,56",
+          "q02": "1234,56",
+          "q03": "1.234",
+          "q04": "0,5",
+          "q05": "-10,00",
+          "q06": "−10,00",
+          "q07": "1.234.567,89",
+          "q08": "1234.56",
+          "q09": "12,345",
+          "q10": "1.23,45",
+          "q11": "12.34",
+          "q12": "",
+          "q13": "1,2,3",
+          "q14": "90.071.992.547.409,91",
+          "q15": "90.071.992.547.409,92",
+          "q16": " 7,1 "
+        }
+      },
+      "esperado": {
+        "q01": 123456,
+        "q02": 123456,
+        "q03": 123400,
+        "q04": 50,
+        "q05": -1000,
+        "q06": -1000,
+        "q07": 123456789,
+        "q08": "recusado",
+        "q09": "recusado",
+        "q10": "recusado",
+        "q11": "recusado",
+        "q12": "recusado",
+        "q13": "recusado",
+        "q14": 9007199254740991,
+        "q15": "recusado_faixa",
+        "q16": 710
+      }
+    }
+  ]
+}
