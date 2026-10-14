@@ -7,7 +7,7 @@
 > **Issue:** `#29`
 > **Plano:** `_project/drafts/003_regras_financeiras/003_plan.md`
 > **Branch:** `feature/issue-29`
-> **PR:** —
+> **PR:** [#34](https://github.com/EuThiagoAndrade/saldo-futuro/pull/34)
 > **Integração:** `Pendente`
 > **Autorização inicial:** "autorizo a implementação da issue #29" em 2026-10-14
 > **Modo contínuo:** `—`
@@ -90,7 +90,7 @@ Nada mais muda no painel do Supabase ou na Vercel. Nenhuma sincronização do SG
 | :-- | :-- |
 | `npx supabase test db` | 6 arquivos, 239 asserções, todas passaram (43 novas em `06_benchmarks`) |
 | Testes | `npm test`: 9 arquivos, 100 testes passaram (29 novos); `npm run lint` sem erro (os 3 avisos vêm de `local/`, ignorado pelo Git); `npm run typecheck` e `npm run build` sem erro |
-| Validador | Pendente |
+| Validador | `node scripts/validate-governance.mjs`: 0 erros, 0 avisos |
 | `git diff --check` | Passou |
 | Checks remotos | Pendente |
 
@@ -115,8 +115,8 @@ Não se aplica.
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 003 (completo)
 Quem: Responsável
-Conferir: PR (a definir): checks, diff, migração de benchmarks, função de carga e casos CR-40 a CR-48
-Diga: "aprovo o merge da PR #N"
+Conferir: [PR #34](https://github.com/EuThiagoAndrade/saldo-futuro/pull/34): checks (inclusive supabase test db), diff, migração de benchmarks, função de carga e casos CR-40 a CR-48
+Diga: "aprovo o merge da PR #34"
 ```
 
 ## Handoff de saída
@@ -124,7 +124,7 @@ Diga: "aprovo o merge da PR #N"
 - `handoff_schema_version: 2`
 - `logical_key`: `saldo-futuro + 003 + implementar_issue + 29/D + e4102a8`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: antes, `main` @ `e4102a8`, com as issues A a C integradas e a issue #29 aberta; depois, a definir na publicação.
+- `state_before` / `state_after`: antes, `main` @ `e4102a8`, com as issues A a C integradas e a issue #29 aberta; depois, branch `feature/issue-29` publicada com o item D e PR #34 aberta, aguardando checks e a aprovação do merge.
 - `result`: `executed`
 - `evidence`: tabela "Evidências" desta task.
-- `blockers`: pendente.
+- `blockers`: "aprovo o merge da PR #34", com os checks verdes; depois do merge, a ação externa do responsável.
