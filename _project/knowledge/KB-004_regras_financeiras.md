@@ -68,7 +68,7 @@ Ela deliberadamente não decide:
 
 - Cada ativo pertence a um usuário e tem um atributo explícito de tipo de ajuste: `rendimento` ou `marcacao` (P9).
 - Cada usuário tem exatamente um ativo de sistema "Em trânsito", criado só pelas funções do banco (D3). Ele não tem tipo de ajuste.
-- Um ativo é desativado logicamente; nunca é apagado. Ativo desativado não recebe lançamentos novos nem entra nas pendências do fechamento. A desativação só é aceita com saldo calculado zero no último mês e sem eventos posteriores, para que nenhum patrimônio fique fora da carteira.
+- Um ativo é desativado logicamente; nunca é apagado. Ativo desativado não recebe lançamentos novos nem entra nas pendências do fechamento. A desativação só é aceita com saldo calculado atual zero (o saldo final do último mês fechado mais os eventos posteriores), para que nenhum patrimônio fique fora da carteira.
 
 #### 4.2 Tipos de evento e sinais (D4)
 
@@ -91,7 +91,7 @@ Valor zero e sinal contrário ao do tipo são recusados.
 
 - O estorno é sempre total: vale exatamente o oposto do evento referenciado. Ele não recebe valor; uma tentativa de informar outro valor é recusada.
 - Cada evento tem no máximo um estorno. Estorno de estorno é recusado.
-- O estorno tem data própria e entra no mês dessa data, com o tipo do evento referenciado: o estorno de um aporte é um fluxo negativo no dia do estorno; o de um rendimento reduz o rendimento.
+- O estorno tem data própria, igual ou posterior à do evento referenciado, e entra no mês dessa data, com o tipo do evento referenciado: o estorno de um aporte é um fluxo negativo no dia do estorno; o de um rendimento reduz o rendimento.
 - O estorno de um evento de mês já fechado é aceito, datado num mês aberto, e o mês fechado continua intacto (K2).
 - A perna de uma transferência não é estornada sozinha (K6).
 
@@ -100,7 +100,8 @@ Valor zero e sinal contrário ao do tipo são recusados.
 - Uma transferência move dinheiro entre dois ativos do mesmo usuário, sem sair da carteira: não é aporte, resgate nem fluxo.
 - É criada numa só operação, com um valor positivo, um ativo de origem e um de destino diferentes, e gera exatamente duas pernas na mesma data: o oposto do valor na origem e o valor no destino. A soma das pernas é zero.
 - O destino pode ser o ativo "Em trânsito", que guarda o dinheiro entre a saída de uma instituição e a chegada em outra. Depois, outra transferência leva o valor do trânsito ao destino final. Uma diferença na chegada (por exemplo, uma tarifa) é lançada como evento no ativo de destino (K12).
-- A correção é sempre da transferência inteira (K6): uma operação estorna as duas pernas juntas, na mesma data, mantendo a soma zero. Uma segunda correção da mesma transferência é recusada.
+- A correção é sempre da transferência inteira (K6): uma operação estorna as duas pernas juntas, na mesma data (igual ou posterior à da transferência), mantendo a soma zero. Uma segunda correção da mesma transferência é recusada.
+- O trânsito só recebe pernas de transferência: nenhum lançamento comum é feito nele (K12).
 - O patrimônio é a soma dos saldos de todos os ativos, trânsito incluído (O10).
 
 #### 4.5 Migração histórica (P15)
@@ -119,7 +120,7 @@ Eventos do tipo `migracao` representam variações de meses importados da origem
 
 O fechamento de um mês tem três etapas.
 
-1. **Pendências (P7, K12).** Cada ativo ativo que não seja o trânsito precisa de um saldo real informado para o fim do mês, mesmo que igual ao calculado. Faltando algum, o fechamento é recusado com a lista de pendentes. O trânsito nunca é pendência.
+1. **Pendências (P7, K12).** Cada ativo ativo que não seja o trânsito e que tenha histórico no mês (posição no mês fechado anterior ou evento no mês) precisa de um saldo real informado para o fim do mês, mesmo que igual ao calculado. Faltando algum, o fechamento é recusado com a lista de pendentes. O trânsito nunca é pendência, e um saldo real informado para ativo sem histórico no mês, para o trânsito ou para ativo de outro usuário é recusado. Um ativo sem histórico até o mês não tem saldo e fica fora da apuração.
 2. **Ajuste (P9, D6, K12).** Para cada ativo:
    - saldo calculado = saldo inicial + soma dos eventos do ativo com data no mês (estornos incluídos);
    - ajuste = saldo real − saldo calculado, com o tipo do atributo do ativo (`rendimento` ou `marcacao`);
@@ -946,3 +947,4 @@ Nos casos de série diária, os valores são fictícios, de 0,04% ao dia, em dia
 | Data | Ciclo | Alteração |
 | :-- | :-- | :-- |
 | 2026-10-14 | `003` | Criação (issue #26), com as decisões K1 a K13 e os casos CR-01 a CR-50 |
+| 2026-10-14 | `003` | Issue #27: datas mínimas do estorno e da correção, trânsito sem lançamento comum e escopo da pendência (ativo com histórico no mês) e saldo atual na desativação, explicitados na implementação do banco |
