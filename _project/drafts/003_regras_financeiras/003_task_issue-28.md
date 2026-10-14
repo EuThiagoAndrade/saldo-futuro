@@ -7,7 +7,7 @@
 > **Issue:** `#28`
 > **Plano:** `_project/drafts/003_regras_financeiras/003_plan.md`
 > **Branch:** `feature/issue-28`
-> **PR:** —
+> **PR:** [#33](https://github.com/EuThiagoAndrade/saldo-futuro/pull/33)
 > **Integração:** `Pendente`
 > **Autorização inicial:** "autorizo a implementação da issue #28" em 2026-10-14
 > **Modo contínuo:** `—`
@@ -60,7 +60,7 @@ Não se aplica.
 | Validação | Resultado |
 | :-- | :-- |
 | Testes | `npm test`: 7 arquivos, 71 testes passaram (23 novos); `npm run lint` sem erro (os 3 avisos vêm de `local/`, ignorado pelo Git); `npm run typecheck` e `npm run build` sem erro; `node --test scripts/validate-governance.test.mjs`: 39 passaram. Sem mudança de banco, `supabase test db` fica para o CI |
-| Validador | Pendente |
+| Validador | `node scripts/validate-governance.mjs`: 0 erros, 0 avisos |
 | `git diff --check` | Passou |
 | Checks remotos | Pendente |
 
@@ -84,8 +84,8 @@ Não se aplica.
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 003 (completo)
 Quem: Responsável
-Conferir: PR (a definir): checks, diff e casos CR-20 a CR-38
-Diga: "aprovo o merge da PR #N"
+Conferir: [PR #33](https://github.com/EuThiagoAndrade/saldo-futuro/pull/33): checks, diff e casos CR-20 a CR-38
+Diga: "aprovo o merge da PR #33"
 ```
 
 ## Handoff de saída
@@ -93,7 +93,7 @@ Diga: "aprovo o merge da PR #N"
 - `handoff_schema_version: 2`
 - `logical_key`: `saldo-futuro + 003 + implementar_issue + 28/C + 532a683`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: antes, `main` @ `532a683`, com as issues A e B integradas e a issue #28 aberta; depois, a definir na publicação.
+- `state_before` / `state_after`: antes, `main` @ `532a683`, com as issues A e B integradas e a issue #28 aberta; depois, branch `feature/issue-28` publicada com o item C e PR #33 aberta, aguardando checks e a aprovação do merge.
 - `result`: `executed`
 - `evidence`: tabela "Evidências" desta task.
-- `blockers`: pendente.
+- `blockers`: "aprovo o merge da PR #33", com os checks verdes.
