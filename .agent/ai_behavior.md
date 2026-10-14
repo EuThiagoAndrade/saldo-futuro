@@ -11,7 +11,7 @@ O Saldo Futuro é um sistema web de gestão de investimentos pessoais. Ele trata
 1. Este arquivo por inteiro.
 2. `_project/README.md` e `_project/cycles.md`.
 3. O artefato ativo do trabalho (ideação, plano ou task), a issue relacionada e o bloco "Próximo passo" dele.
-4. ADRs, KBs, `design-system/DESIGN.md`, workflows, templates e skills relevantes.
+4. ADRs, KBs (a KB-003 é a primeira leitura sobre o produto), `design-system/DESIGN.md`, workflows, templates e skills relevantes.
 
 Em conflito, preserve a instrução humana mais recente e explícita, não amplie o escopo e registre a divergência antes de prosseguir.
 

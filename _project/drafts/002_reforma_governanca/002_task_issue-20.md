@@ -2,13 +2,13 @@
 
 > **Ciclo:** `002`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `chore`
 > **Issue:** `#20`
 > **Plano:** `_project/drafts/002_reforma_governanca/002_plan.md`
 > **Branch:** `chore/issue-20`
 > **PR:** [#22](https://github.com/EuThiagoAndrade/saldo-futuro/pull/22)
-> **Integração:** `Pendente`
+> **Integração:** `Integrada por squash em 70f592c, em 2026-10-13`
 > **Autorização inicial:** "autorizo a implementação da issue #20" em 2026-10-13
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-13
@@ -65,7 +65,7 @@ Não se aplica.
 | Testes | `node --test scripts/validate-governance.test.mjs`: 39 passaram (26 anteriores, ajustados à fixture na versão 2, e 13 novos), 0 falharam |
 | Validador | `node scripts/validate-governance.mjs`: 0 erros, 0 avisos, 4 itens manuais, com os ciclos `000` e `001` intactos |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos | PR #22 no commit `68eda85`: Validate governance, CI (os dois jobs) e Vercel verdes; em `main` @ `70f592c`: Governance, CI e Release Please verdes |
 | Diretório `.agent/rules/` | Inexistente, como exige A5 |
 
 ## Destino dos controles
@@ -120,10 +120,10 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 002 (completo)
+Situação: Aguardando autorização de implementação — ciclo 002 (completo)
 Quem: Responsável
-Conferir: checks e diff da PR #22 e a tabela de destino dos controles
-Diga: "aprovo o merge da PR #22"
+Conferir: issue #21 e o escopo dos itens B1 a B3 do plano
+Diga: "autorizo a implementação da issue #21"
 ```
 
 ## Handoff de saída
@@ -131,7 +131,7 @@ Diga: "aprovo o merge da PR #22"
 - `handoff_schema_version: 2`
 - `logical_key`: `saldo-futuro + 002 + implementar_issue + 20/A1-A7 + 227344b`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: antes, plano `Aprovado` e ciclo `Planejamento` em `main` @ `227344b`, issues #20 e #21 abertas; depois, branch `chore/issue-20` publicada com A1 a A7, plano `Em Execução` e ciclo `Em execução`, PR aberta e aguardando a aprovação do merge.
+- `state_before` / `state_after`: antes, plano `Aprovado` e ciclo `Planejamento` em `main` @ `227344b`, issues #20 e #21 abertas; depois, branch `chore/issue-20` publicada com A1 a A7, plano `Em Execução` e ciclo `Em execução`, PR #22 aprovada pelo responsável ("aprovo o merge da PR #22") e integrada por squash em `70f592c`; issue #20 fechada. Reconciliada na PR da issue #21, como prevê a regra 5 da retomada.
 - `result`: `executed`
 - `evidence`: tabela "Evidências" e "Destino dos controles" desta task; checks da PR.
-- `blockers`: aprovação do merge.
+- `blockers`: nenhum.

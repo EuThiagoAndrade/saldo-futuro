@@ -4,9 +4,15 @@ Sistema web de gestão de investimentos pessoais: registro de lançamentos por a
 
 O Saldo Futuro substitui o [Meus-Investimentos](https://github.com/EuThiagoAndrade/Meus-Investimentos), uma aplicação local, como especificação funcional e fonte dos dados.
 
+## Comece por aqui
+
+- **Entender o produto:** [KB-003, visão do produto e da arquitetura](_project/knowledge/KB-003_visao_produto_arquitetura.md). Diz o que existe, onde está e por quê, sem exigir a leitura dos planos antigos.
+- **Entender o processo:** [`_project/README.md`](_project/README.md), com os níveis, os pontos de aprovação, as situações e o glossário.
+- **Saber em que pé está:** [`_project/cycles.md`](_project/cycles.md) e o bloco "Próximo passo" do ciclo ativo. Em qualquer ferramenta de IA, peça "continue o ciclo NNN".
+
 ## Estado atual
 
-O ciclo `000` implantou a governança do projeto e o design system. O ciclo `001` entregou a fundação da aplicação, em produção em `investimentos.euthiagoandrade.com.br`: login com Google restrito a e-mails autorizados, perfis `admin` e `user`, isolamento por RLS provado por testes de banco, PWA instalável e versão `0.1.0`. A única tela autenticada é uma página "em construção". **Nenhuma funcionalidade de produto está disponível.** O próximo ciclo é o `002`.
+O ciclo `000` implantou a governança do projeto e o design system. O ciclo `001` entregou a fundação da aplicação, em produção em `investimentos.euthiagoandrade.com.br`: login com Google restrito a e-mails autorizados, perfis `admin` e `user`, isolamento por RLS provado por testes de banco, PWA instalável e versão `0.1.0`. A única tela autenticada é uma página "em construção". **Nenhuma funcionalidade de produto está disponível.** O ciclo `002` reforma a governança; as regras financeiras vêm no `003`.
 
 ## Mapa de ciclos
 
@@ -14,11 +20,12 @@ O ciclo `000` implantou a governança do projeto e o design system. O ciclo `001
 | :-- | :-- | :-- |
 | `000` | Governança e design system | Concluído |
 | `001` | Fundação: aplicação Next.js, Supabase, autenticação, perfis, RLS, deploy e release-please | Concluído |
-| `002` | Regras financeiras: eventos, fechamento, consolidação, Modified Dietz e benchmarks, com casos de referência | Planejado |
-| `003` | Telas pensadas primeiro para o celular | Planejado |
-| `004` | Migração única dos dados e virada | Planejado |
+| `002` | Reforma da governança: níveis por risco, próximo passo predefinido, modo contínuo e documentação viva | Em execução |
+| `003` | Regras financeiras: eventos, fechamento, consolidação, Modified Dietz e benchmarks, com casos de referência | Planejado |
+| `004` | Telas pensadas primeiro para o celular | Planejado |
+| `005` | Migração única dos dados e virada | Planejado |
 
-O registro oficial dos ciclos é [`_project/cycles.md`](_project/cycles.md). Os ciclos `002` a `004` ainda não têm plano.
+O registro oficial dos ciclos é [`_project/cycles.md`](_project/cycles.md). Os ciclos `003` a `005` ainda não têm plano. Até o ciclo `001`, os documentos numeravam esses ciclos como `002` a `004`; o glossário de `_project/README.md` registra o mapeamento.
 
 ## Stack decidida
 
@@ -62,10 +69,18 @@ O Playwright usa o Chromium dele; `npx playwright install chromium` o instala. P
 
 ## Governança
 
-O processo é agnóstico de ferramenta de IA. Os adapters [`AGENTS.md`](AGENTS.md), [`CLAUDE.md`](CLAUDE.md) e [`GEMINI.md`](GEMINI.md) apontam para o mesmo núcleo.
+O processo é agnóstico de ferramenta de IA (Claude Code, Codex, Gemini CLI, Antigravity). Os adapters [`AGENTS.md`](AGENTS.md), [`CLAUDE.md`](CLAUDE.md) e [`GEMINI.md`](GEMINI.md) apontam para o mesmo núcleo, e o repositório é a única memória do projeto.
 
-- [`.agent/ai_behavior.md`](.agent/ai_behavior.md): comportamento, autorizações, segurança e privacidade.
-- [`_project/README.md`](_project/README.md): ciclo de vida, trilha curta para correções e barreiras de domínio (exatidão financeira, isolamento por RLS, privacidade e migrações só aditivas).
+O rigor é proporcional ao risco (ADR-004):
+
+- **Trilha curta:** corrige um defeito de algo já especificado.
+- **Ciclo leve:** novidade sem risco financeiro, de isolamento ou de processo, num documento só.
+- **Ciclo completo:** tudo o que toca cálculo financeiro, RLS ou autenticação, o significado do schema ou a própria governança.
+
+Cada aprovação é dada com uma frase fixa, e toda saída de agente termina com um bloco "Próximo passo" que diz o que conferir e o que dizer. Na trilha curta e no ciclo leve, o modo contínuo permite autorizar o trabalho até a PR de uma vez; cada merge continua com o responsável.
+
+- [`.agent/ai_behavior.md`](.agent/ai_behavior.md): comportamento, autorizações, handoff, segurança e privacidade.
+- [`_project/README.md`](_project/README.md): níveis, pontos de aprovação, situações e próximo passo, modo contínuo, trilha curta, barreiras de domínio (exatidão financeira, isolamento por RLS, privacidade e migrações só aditivas) e glossário.
 - [`_project/decisions/`](_project/decisions/): decisões duradouras (ADRs).
 - [`_project/knowledge/`](_project/knowledge/): conhecimento de referência (KBs).
 - [`design-system/DESIGN.md`](design-system/DESIGN.md): identidade visual e contrato de interface. A [página de referência](design-system/referencia.html) mostra o contrato com dados fictícios e abre localmente, sem rede.

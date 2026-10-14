@@ -2,10 +2,10 @@
 
 > **Status:** Canônico
 > **Versão:** v1
-> **Última atualização:** 2026-10-12
+> **Última atualização:** 2026-10-13
 > **Ciclo de origem:** `000` (issue #3)
 > **Escopo:** interface web do Saldo Futuro
-> **Fonte normativa:** este documento é a autoridade do contrato visual e de interação. A partir do ciclo `001`, a aplicação implementa seus tokens em Tailwind CSS 4. A página `design-system/referencia.html` demonstra o contrato com dados fictícios e não define layout final de telas (ciclo `003`).
+> **Fonte normativa:** este documento é a autoridade do contrato visual e de interação. A partir do ciclo `001`, a aplicação implementa seus tokens em Tailwind CSS 4. A página `design-system/referencia.html` demonstra o contrato com dados fictícios e não define layout final de telas (ciclo `004`).
 
 ## 1. Princípios
 
@@ -93,7 +93,7 @@ Razões calculadas pela fórmula de luminância relativa da WCAG 2.2. Mínimos: 
 
 ### 2.3 Paleta de gráficos
 
-A paleta é independente de biblioteca; a biblioteca de gráficos é escolhida no ciclo `003`.
+A paleta é independente de biblioteca; a biblioteca de gráficos é escolhida no ciclo `004`.
 
 | Token | Valor | Uso preferencial |
 | :-- | :-- | :-- |
@@ -263,7 +263,7 @@ A partir do ciclo `001`, a aplicação implementa os tokens em configuração CS
 
 - Cada item tem ícone de 24 px e rótulo `caption`; o rótulo nunca é omitido.
 - O item ativo usa ícone e rótulo em `primary` e um indicador `primary-subtle` atrás do ícone, além de `aria-current="page"`.
-- "Mais" abre uma folha inferior com os demais destinos. O conteúdo exato é definido no ciclo `003`; o destino de administração só aparece para o perfil `admin`.
+- "Mais" abre uma folha inferior com os demais destinos. O conteúdo exato é definido no ciclo `004`; o destino de administração só aparece para o perfil `admin`.
 - A área de toque de cada item cobre toda a sua posição na barra (no mínimo 44 × 44 px).
 
 ### 6.2 Valor monetário

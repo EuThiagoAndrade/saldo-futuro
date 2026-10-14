@@ -6,7 +6,7 @@ tags:
   - acesso
 author: "Thiago Andrade e Claude"
 module: "Segurança"
-last_updated: "2026-10-12"
+last_updated: "2026-10-13"
 origin_cycle: "000"
 ---
 
@@ -69,7 +69,7 @@ Enforcement: barreira G3 em `_project/README.md`.
 - **Cadastro aberto com confirmação de e-mail:** desnecessário para um grupo pequeno e conhecido, e amplia a superfície de abuso.
 - **Administrador com acesso total para suporte:** contradiz a privacidade das carteiras decidida no Gate A.
 - **Isolamento só na camada de aplicação:** um erro de consulta exporia dados de outro usuário; a RLS é defesa no próprio banco.
-- **Repositório público desde o início:** aumenta o risco de expor dados reais durante a migração (ciclo `004`).
+- **Repositório público desde o início:** aumenta o risco de expor dados reais durante a migração (ciclo `005`).
 
 ## Referências
 

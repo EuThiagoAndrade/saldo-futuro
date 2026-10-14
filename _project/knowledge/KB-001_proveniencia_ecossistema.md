@@ -6,7 +6,7 @@ tags:
   - ecossistema
 author: "Thiago Andrade e Claude"
 module: "Governança"
-last_updated: "2026-10-12"
+last_updated: "2026-10-13"
 origin_cycle: "000"
 ---
 
@@ -14,7 +14,7 @@ origin_cycle: "000"
 
 ## Finalidade
 
-Registrar as fontes externas usadas no bootstrap do Saldo Futuro, a posição do produto no ecossistema de domínios do responsável e o inventário funcional que define a paridade com o `Meus-Investimentos`. É consultada ao planejar os ciclos `001` a `004` e ao auditar de onde veio cada regra da governança.
+Registrar as fontes externas usadas no bootstrap do Saldo Futuro, a posição do produto no ecossistema de domínios do responsável e o inventário funcional que define a paridade com o `Meus-Investimentos`. É consultada ao planejar os ciclos `001` a `005` e ao auditar de onde veio cada regra da governança.
 
 ## Limite de autoridade
 
@@ -68,7 +68,7 @@ Conhecimento de referência. Nenhuma fonte externa é plano executável nem auto
 ### `Meus-Investimentos` @ `1b13b033ce4335c09df80237c8c31b96b37e3797`
 
 - Função: especificação funcional e fonte dos dados do Saldo Futuro.
-- Limite: não é base de código; código, layout, design system e governança `.agent` não são reaproveitados. Regras de cálculo são portadas no ciclo `002`, com casos de referência.
+- Limite: não é base de código; código, layout, design system e governança `.agent` não são reaproveitados. Regras de cálculo são portadas no ciclo `003`, com casos de referência.
 - `main`: <https://github.com/EuThiagoAndrade/Meus-Investimentos>
 - Versão fixada: <https://github.com/EuThiagoAndrade/Meus-Investimentos/tree/1b13b033ce4335c09df80237c8c31b96b37e3797>
 
@@ -111,7 +111,7 @@ O DNS do domínio é gerenciado no Cloudflare. O Saldo Futuro é o único servi�
 
 ## Inventário funcional do Meus-Investimentos
 
-Inventário de alto nível no commit fixado, que define o escopo de paridade. O detalhamento das regras é do ciclo `002`, e o das telas, do ciclo `003`.
+Inventário de alto nível no commit fixado, que define o escopo de paridade. O detalhamento das regras é do ciclo `003`, e o das telas, do ciclo `004`.
 
 ### Modelo de dados
 
@@ -142,3 +142,4 @@ Painel, transações (lançamentos), ativos, benchmark, comparação e ajuda.
 | :-- | :-- | :-- |
 | 2026-10-12 | `000` | Criação (issue #2) |
 | 2026-10-12 | `000` | Proveniência da IBM Plex Sans 1.1.0 (issue #3) |
+| 2026-10-13 | `002` | Renumeração dos ciclos futuros: regras financeiras `003`, telas `004` e migração `005` (issue #21) |
