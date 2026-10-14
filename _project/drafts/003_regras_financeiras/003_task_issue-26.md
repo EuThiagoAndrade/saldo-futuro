@@ -53,7 +53,7 @@ Não se aplica.
 - [x] KB-004 pelo template de KB: convenções, apresentação, faixa, eventos, estorno, transferência e trânsito, migração, datas e início, fechamento, consolidação, variação e Dietz, acumulado, ano, base 100 e drawdown, benchmarks, cobertura, comparação, taxa de acerto, benchmark de valor absoluto (não implementado), parser (não implementado), rastreabilidade da origem e destino de O1 a O13.
 - [x] JSON com os 47 casos e o teste de concordância, com o caso negativo (valor divergente, chave ausente e caso ausente) e o de formato inválido.
 - [x] Recálculo cego por outro modelo (Claude Sonnet, sem acesso ao repositório nem aos esperados), comparação e registro em `003_validation_casos_referencia.md`: duas divergências de entrada ou motivo resolvidas (CR-02 e CR-50), duas de notação (CR-16), nenhuma de cálculo.
-- [ ] Conferência do responsável numa planilha, registrada no mesmo arquivo (precondição do merge).
+- [x] Conferência numa planilha, registrada na seção 2 de `003_validation_casos_referencia.md`: executada pelo Codex desktop (GPT-6) por delegação expressa do responsável, 47 casos e 250 resultados, nenhuma divergência. O responsável aprovou o merge depois desse registro ("aprovo o merge da PR #30", 2026-10-14).
 - [x] Plano em `Em Execução`, ciclo em `Em execução`, issues na rastreabilidade e KB-004 no manifesto.
 
 ### Cobertura mínima dos casos (plano, "Estratégia de testes")
@@ -89,6 +89,7 @@ Não se aplica.
 | Validador | Pendente |
 | `git diff --check` | Passou |
 | Recálculo independente | 250 valores; rodada 2 com 248 iguais e 2 diferenças só de notação; nenhuma divergência aberta |
+| Conferência na planilha | 47 casos, 250 resultados, nenhuma divergência (execução delegada ao Codex, seção 2 do registro de validação) |
 | Checks remotos | Pendente |
 
 ## Revisão da correção
@@ -125,4 +126,4 @@ Diga: "aprovo o merge da PR #30"
 - `state_before` / `state_after`: antes, plano `Aprovado` e ciclo `Planejamento` em `main` @ `3245a4d`, issues #26 a #29 abertas e nenhuma branch da issue #26; depois, branch `chore/issue-26` publicada com o item A, plano `Em Execução`, ciclo `Em execução` e PR #30 aberta, aguardando checks, a conferência do responsável e a aprovação do merge.
 - `result`: `executed`
 - `evidence`: tabela "Evidências" desta task.
-- `blockers`: conferência dos valores esperados pelo responsável numa planilha, registrada em `003_validation_casos_referencia.md` (precondição do merge); "aprovo o merge da PR #30".
+- `blockers`: nenhum; merge aprovado pelo responsável ("aprovo o merge da PR #30", 2026-10-14), sujeito aos checks verdes.
