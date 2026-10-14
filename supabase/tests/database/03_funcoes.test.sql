@@ -1,7 +1,7 @@
 -- Regras de função (G2): search_path fixo e EXECUTE só para os papéis previstos.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(12);
+select plan(15);
 
 select is_empty(
   $$ select p.oid::regprocedure
@@ -23,9 +23,52 @@ select is_empty(
   $$ select p.oid::regprocedure
      from pg_proc p join pg_namespace n on n.oid = p.pronamespace
      where n.nspname in ('public', 'private') and p.prokind = 'f'
-       and ((has_function_privilege('anon', p.oid, 'EXECUTE') and p.proname <> 'keepalive')
-         or (has_function_privilege('authenticated', p.oid, 'EXECUTE') and p.proname <> 'is_admin')) $$,
-  'anon e authenticated só executam as funções previstas');
+       and ((has_function_privilege('anon', p.oid, 'EXECUTE') and p.oid <> 'public.keepalive()'::regprocedure)
+         or (has_function_privilege('authenticated', p.oid, 'EXECUTE') and p.oid::regprocedure::text <> all (array[
+           'private.is_admin()',
+           'criar_ativo(text,tipo_ajuste)',
+           'desativar_ativo(uuid)',
+           'lancar_evento(uuid,date,tipo_evento,bigint)',
+           'estornar_evento(uuid,date)',
+           'transferir(uuid,uuid,date,bigint)',
+           'corrigir_transferencia(uuid,date)',
+           'fechar_mes(date,jsonb)',
+           'reabrir_mes(date)']))) $$,
+  'anon e authenticated só executam as funções previstas (lista explícita de assinaturas)');
+
+-- A lista é fechada: uma função nova executável por authenticated reprova a asserção acima.
+create function public.funcao_nao_listada() returns integer language sql set search_path = '' as $$ select 1 $$;
+revoke execute on function public.funcao_nao_listada() from public, anon;
+grant execute on function public.funcao_nao_listada() to authenticated;
+select isnt_empty(
+  $$ select p.oid::regprocedure
+     from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+     where n.nspname = 'public' and p.prokind = 'f'
+       and has_function_privilege('authenticated', p.oid, 'EXECUTE')
+       and p.oid::regprocedure::text <> all (array[
+         'criar_ativo(text,tipo_ajuste)', 'desativar_ativo(uuid)', 'lancar_evento(uuid,date,tipo_evento,bigint)',
+         'estornar_evento(uuid,date)', 'transferir(uuid,uuid,date,bigint)', 'corrigir_transferencia(uuid,date)',
+         'fechar_mes(date,jsonb)', 'reabrir_mes(date)']) $$,
+  'uma função fora da lista executável por authenticated é detectada');
+drop function public.funcao_nao_listada();
+
+-- Funções de escrita da carteira (D13): security definer e fora do alcance de anon.
+select is_empty(
+  $$ select p.oid::regprocedure from pg_proc p
+     where p.oid in ('public.criar_ativo(text,public.tipo_ajuste)'::regprocedure,
+       'public.desativar_ativo(uuid)'::regprocedure,
+       'public.lancar_evento(uuid,date,public.tipo_evento,bigint)'::regprocedure,
+       'public.estornar_evento(uuid,date)'::regprocedure, 'public.transferir(uuid,uuid,date,bigint)'::regprocedure,
+       'public.corrigir_transferencia(uuid,date)'::regprocedure, 'public.fechar_mes(date,jsonb)'::regprocedure,
+       'public.reabrir_mes(date)'::regprocedure)
+       and (not p.prosecdef or has_function_privilege('anon', p.oid, 'EXECUTE')) $$,
+  'as funções da carteira são security definer e anon não as executa');
+select is_empty(
+  $$ select p.oid::regprocedure from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+     where n.nspname = 'private' and p.proname in ('travar_carteira', 'hoje', 'ultimo_mes_fechado',
+       'conferir_data_lancamento', 'saldo_atual', 'apurar_mes', 'na_faixa')
+       and (has_function_privilege('authenticated', p.oid, 'EXECUTE') or has_function_privilege('anon', p.oid, 'EXECUTE')) $$,
+  'os auxiliares da carteira em private não são executáveis pela Data API');
 
 select function_privs_are('private', 'is_admin', array[]::name[], 'authenticated', array['EXECUTE'],
   'authenticated executa is_admin');

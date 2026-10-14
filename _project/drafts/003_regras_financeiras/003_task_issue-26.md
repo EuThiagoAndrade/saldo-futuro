@@ -2,13 +2,13 @@
 
 > **Ciclo:** `003`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `chore`
 > **Issue:** `#26`
 > **Plano:** `_project/drafts/003_regras_financeiras/003_plan.md`
 > **Branch:** `chore/issue-26`
 > **PR:** [#30](https://github.com/EuThiagoAndrade/saldo-futuro/pull/30)
-> **Integração:** `Pendente`
+> **Integração:** `Integrada por squash em d8fcae4, em 2026-10-14`
 > **Autorização inicial:** "autorizo a implementação da issue #26" em 2026-10-14
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-14
@@ -90,7 +90,7 @@ Não se aplica.
 | `git diff --check` | Passou |
 | Recálculo independente | 250 valores; rodada 2 com 248 iguais e 2 diferenças só de notação; nenhuma divergência aberta |
 | Conferência na planilha | 47 casos, 250 resultados, nenhuma divergência (execução delegada ao Codex, seção 2 do registro de validação) |
-| Checks remotos | Pendente |
+| Checks remotos | PR #30 no commit `3db6962`: Validate governance, os dois jobs de CI (inclusive `supabase test db`) e os dois da Vercel verdes; merge aprovado ("aprovo o merge da PR #30") e feito por squash |
 
 ## Revisão da correção
 
@@ -112,10 +112,10 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 003 (completo)
+Situação: Aguardando autorização de implementação — ciclo 003 (completo)
 Quem: Responsável
-Conferir: [PR #30](https://github.com/EuThiagoAndrade/saldo-futuro/pull/30): checks, diff, KB-004 (decisões K1 a K13 e casos) e a conferência na planilha a registrar em 003_validation_casos_referencia.md
-Diga: "aprovo o merge da PR #30"
+Conferir: Issue #27 (schema da carteira, lançamentos e fechamento) e o item B do plano
+Diga: "autorizo a implementação da issue #27"
 ```
 
 ## Handoff de saída
@@ -123,7 +123,7 @@ Diga: "aprovo o merge da PR #30"
 - `handoff_schema_version: 2`
 - `logical_key`: `saldo-futuro + 003 + implementar_issue + 26/A + 3245a4d`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: antes, plano `Aprovado` e ciclo `Planejamento` em `main` @ `3245a4d`, issues #26 a #29 abertas e nenhuma branch da issue #26; depois, branch `chore/issue-26` publicada com o item A, plano `Em Execução`, ciclo `Em execução` e PR #30 aberta, aguardando checks, a conferência do responsável e a aprovação do merge.
+- `state_before` / `state_after`: antes, plano `Aprovado` e ciclo `Planejamento` em `main` @ `3245a4d`, issues #26 a #29 abertas e nenhuma branch da issue #26; depois, PR #30 aprovada pelo responsável e integrada por squash em `d8fcae4`, com os checks verdes; issue #26 fechada. Reconciliada na PR da issue #27, cuja implementação foi autorizada em 2026-10-14, como prevê a regra 5 da retomada.
 - `result`: `executed`
 - `evidence`: tabela "Evidências" desta task.
-- `blockers`: nenhum; merge aprovado pelo responsável ("aprovo o merge da PR #30", 2026-10-14), sujeito aos checks verdes.
+- `blockers`: nenhum.
