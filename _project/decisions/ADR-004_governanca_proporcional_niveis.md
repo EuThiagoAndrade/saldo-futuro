@@ -59,5 +59,5 @@ O detalhamento normativo está em `_project/README.md` e `.agent/ai_behavior.md`
 
 ## Referências
 
-- Plano `_project/drafts/002_reforma_governanca/002_plan.md` (rodadas 1 a 3 da revisão) e ideação `_project/ideations/002_reforma_governanca.md`.
+- Plano `_project/executed/002_reforma_governanca/002_plan.md` (rodadas 1 a 3 da revisão) e ideação `_project/ideations/002_reforma_governanca.md`.
 - ADR-001 (governança agnóstica) e `.agent/lessons_learned.md`.
