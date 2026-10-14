@@ -73,7 +73,9 @@ test.describe("autenticação com o Supabase local", () => {
     await createUser(USER_EMAIL);
     await signInWithPassword(page, USER_EMAIL);
     await expect(page).toHaveURL(/\/$/);
-    await expect(page.getByRole("heading", { level: 1, name: "Em construção" })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1, name: "Início" })).toBeVisible();
+    // E-mail, perfil e Sair ficam em /conta desde o ciclo 004 (D1).
+    await page.goto("/conta");
     await expect(page.getByText(USER_EMAIL)).toBeVisible();
     await expect(page.getByText("Usuário", { exact: true })).toBeVisible();
 
@@ -86,6 +88,8 @@ test.describe("autenticação com o Supabase local", () => {
   test("administrador autorizado vê o papel de administrador", async ({ page }) => {
     await createUser(ADMIN_EMAIL);
     await signInWithPassword(page, ADMIN_EMAIL);
+    await expect(page).toHaveURL(/\/$/);
+    await page.goto("/conta");
     await expect(page.getByText("Administrador", { exact: true })).toBeVisible();
   });
 
