@@ -7,7 +7,7 @@
 > **Issue:** `#20`
 > **Plano:** `_project/drafts/002_reforma_governanca/002_plan.md`
 > **Branch:** `chore/issue-20`
-> **PR:** —
+> **PR:** [#22](https://github.com/EuThiagoAndrade/saldo-futuro/pull/22)
 > **Integração:** `Pendente`
 > **Autorização inicial:** "autorizo a implementação da issue #20" em 2026-10-13
 > **Modo contínuo:** `—`
@@ -122,8 +122,8 @@ Não se aplica.
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 002 (completo)
 Quem: Responsável
-Conferir: checks e diff da PR desta issue e a tabela de destino dos controles
-Diga: "aprovo o merge da PR #N"
+Conferir: checks e diff da PR #22 e a tabela de destino dos controles
+Diga: "aprovo o merge da PR #22"
 ```
 
 ## Handoff de saída

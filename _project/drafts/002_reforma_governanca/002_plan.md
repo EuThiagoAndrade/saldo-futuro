@@ -724,7 +724,7 @@ B depende de A: o glossário e a estrutura do `README.md` da raiz remetem às se
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | A: [#20](https://github.com/EuThiagoAndrade/saldo-futuro/issues/20); B: [#21](https://github.com/EuThiagoAndrade/saldo-futuro/issues/21) |
-| PR(s) | Plano: [#19](https://github.com/EuThiagoAndrade/saldo-futuro/pull/19), integrada por squash em `227344b`; A: `chore/issue-20`, verificável no GitHub |
+| PR(s) | Plano: [#19](https://github.com/EuThiagoAndrade/saldo-futuro/pull/19), integrada por squash em `227344b`; A: [#22](https://github.com/EuThiagoAndrade/saldo-futuro/pull/22) |
 | Branch(es) | Plano: `chore/cycle-002-plan`; A: `chore/issue-20` |
 | `handoff_schema_version` | `1` |
 | `handoff_id` | `saldo-futuro + 002 + atualizar_docs + 002_plan + v3-aprovado` (anteriores, aceitos: `saldo-futuro + 002 + revisar_plano + 002_plan/rodada-3 + v3`, `saldo-futuro + 002 + rascunhar_plano + 002_plan + v3`, `saldo-futuro + 002 + revisar_plano + 002_plan/rodada-2 + v2`, `saldo-futuro + 002 + rascunhar_plano + 002_plan + v2`, `saldo-futuro + 002 + revisar_plano + 002_plan/rodada-1 + v1` e `saldo-futuro + 002 + rascunhar_plano + 002_plan + 9cf7fce`) |
@@ -734,13 +734,13 @@ B depende de A: o glossário e a estrutura do `README.md` da raiz remetem às se
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 002 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 002"
+Situação: Aguardando merge — ciclo 002 (completo)
+Quem: Responsável
+Conferir: checks e diff da PR #22 e a tabela de destino dos controles na task da issue #20
+Diga: "aprovo o merge da PR #22"
 ```
 
-A aprovação do plano já cobre o passo seguinte: criar as issues A e B pelo `criar_issues`, depois de apresentar o payload. Em seguida, a situação passa a "Aguardando autorização de implementação" da issue A.
+O artefato ativo é a task da issue #20; este bloco a acompanha. Depois do merge, a retomada indica a autorização de implementação da issue #21.
 
 ## Handoff de saída
 
