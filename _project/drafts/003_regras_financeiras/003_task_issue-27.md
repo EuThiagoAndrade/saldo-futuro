@@ -2,13 +2,13 @@
 
 > **Ciclo:** `003`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#27`
 > **Plano:** `_project/drafts/003_regras_financeiras/003_plan.md`
 > **Branch:** `feature/issue-27`
 > **PR:** [#31](https://github.com/EuThiagoAndrade/saldo-futuro/pull/31)
-> **Integração:** `Pendente`
+> **Integração:** `Integrada por squash em 532a683, em 2026-10-14`
 > **Autorização inicial:** "autorizo a implementação da issue #27" em 2026-10-14
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-14
@@ -61,9 +61,9 @@ Não se aplica.
 | :-- | :-- |
 | `npx supabase test db` | 5 arquivos, 196 asserções, todas passaram (68 anteriores, 3 novas em `03_funcoes`, 112 em `04_carteira` e 13 em `05_concorrencia`) |
 | Testes | `npm test`: 6 arquivos, 48 testes passaram; `npm run lint` sem erro (os 3 avisos vêm de `local/`, ignorado pelo Git); `npm run typecheck` e `npm run build` sem erro; `node --test scripts/validate-governance.test.mjs`: 39 passaram. A ponta a ponta com backend fica para o CI |
-| Validador | Pendente |
+| Validador | `node scripts/validate-governance.mjs`: 0 erros, 0 avisos |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos | PR #31 no commit `9d244d7`: Validate governance, os dois jobs de CI (inclusive `supabase test db` com os testes de concorrência) e os dois da Vercel verdes; merge aprovado ("aprovo o merge da PR #31") e feito por squash |
 
 ## Revisão da correção
 
@@ -87,10 +87,10 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 003 (completo)
+Situação: Aguardando autorização de implementação — ciclo 003 (completo)
 Quem: Responsável
-Conferir: [PR #31](https://github.com/EuThiagoAndrade/saldo-futuro/pull/31): checks (inclusive supabase test db), diff, migração da carteira, funções security definer e casos CR-01 a CR-18
-Diga: "aprovo o merge da PR #31"
+Conferir: Issue #28 (consolidação e rentabilidade) e o item C do plano
+Diga: "autorizo a implementação da issue #28"
 ```
 
 ## Handoff de saída
@@ -98,7 +98,7 @@ Diga: "aprovo o merge da PR #31"
 - `handoff_schema_version: 2`
 - `logical_key`: `saldo-futuro + 003 + implementar_issue + 27/B + d8fcae4`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: antes, `main` @ `d8fcae4`, com a issue A integrada, plano `Em Execução` e issue #27 aberta; depois, branch `feature/issue-27` publicada com o item B e PR #31 aberta, aguardando checks e a aprovação do merge.
+- `state_before` / `state_after`: antes, `main` @ `d8fcae4`, com a issue A integrada, plano `Em Execução` e issue #27 aberta; depois, PR #31 aprovada pelo responsável e integrada por squash em `532a683`, com os checks verdes; issue #27 fechada. Reconciliada na PR da issue #28, cuja implementação foi autorizada em 2026-10-14.
 - `result`: `executed`
 - `evidence`: tabela "Evidências" desta task.
-- `blockers`: "aprovo o merge da PR #31", com os checks verdes.
+- `blockers`: nenhum.
