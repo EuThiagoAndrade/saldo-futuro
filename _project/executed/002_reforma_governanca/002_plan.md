@@ -1171,7 +1171,7 @@ A frase de aprovação deve vir acompanhada das escolhas pendentes, ou confirmar
 - **Desvios:**
   - a retomada ganhou uma regra para a janela entre o merge e a reconciliação da task (task da issue #20);
   - a KB-003 entrou na ordem de leitura só na PR B, e não na PR A, como previa a tabela de destino (task da issue #21);
-  - o padrão de código de gate foi gravado com `` simples no JSON e corrigido antes do merge, pego pelo próprio teste;
+  - o padrão de código de gate foi gravado com `\b` simples no JSON e corrigido antes do merge, pego pelo próprio teste;
   - o teste recomendado de leitura agnóstica da retomada não foi executado; a revisão formal pelo Codex conta como evidência parcial de leitura por outra ferramenta;
   - o plano ficou com mais de mil linhas, por conter a especificação da governança e o histórico das rodadas; os planos no template novo devem ser menores.
 - **Lições comprovadas:** registradas em `.agent/lessons_learned.md` (escape de expressão regular em JSON e revisão por outra ferramenta).

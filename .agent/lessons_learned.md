@@ -52,7 +52,7 @@ Origem: ciclo `001`, Gate V-C. Nenhuma chamada do cron diário aparecia nos logs
 
 ### 2026-10-13 — Expressões regulares guardadas em JSON precisam de barra invertida dupla
 
-Origem: ciclo `002`, PR #22. O padrão `Gates? …` foi gravado no manifesto do validador com uma barra só. Em JSON, `` é o caractere de backspace, e não a fronteira de palavra, então a regra nunca casava e deixava passar o que devia reprovar. O teste negativo do cenário revelou o erro. Ao guardar uma expressão regular em JSON, escreva cada barra invertida em dobro (`\b`, `\d`), confira o valor lido com `JSON.parse`, e tenha sempre um caso que precisa reprovar.
+Origem: ciclo `002`, PR #22. O padrão `\bGates? …\b` foi gravado no manifesto do validador com uma barra só. Em JSON, `\b` é o caractere de backspace, e não a fronteira de palavra, então a regra nunca casava e deixava passar o que devia reprovar. O teste negativo do cenário revelou o erro. Ao guardar uma expressão regular em JSON, escreva cada barra invertida em dobro (`\\b`, `\\d`), confira o valor lido com `JSON.parse`, e tenha sempre um caso que precisa reprovar.
 
 ### 2026-10-13 — Revisar um plano com outra ferramenta encontra o que o autor não vê
 
