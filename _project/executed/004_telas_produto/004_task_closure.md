@@ -7,7 +7,7 @@
 > **Issue:** — (encerramento documental sem issue recursiva)
 > **Plano:** `_project/executed/004_telas_produto/004_plan.md`
 > **Branch:** `chore/cycle-004-closure`
-> **PR:** —
+> **PR:** [#50](https://github.com/EuThiagoAndrade/saldo-futuro/pull/50), rascunho dependente da release #44
 > **Integração:** prospectiva; válida somente depois do merge desta PR, conferido no GitHub
 > **Autorização inicial:** "aprovo o plano do ciclo 004" em 2026-10-14; encerramento também solicitado expressamente em 2026-10-15
 > **Modo contínuo:** `—`
@@ -50,7 +50,7 @@ Não se aplica.
 - [x] Revisar a PR de release #44: seis entregas nas notas; mudança só de versões em manifestos/lockfile e changelog, sem dependência nova.
 - [x] Preparar plano/tasks concluídos, documentação viva e caminhos em `executed/`, como estado prospectivo.
 - [x] Conferir gates documentais e diff final; alterações restritas aos registros e referências do ciclo.
-- [ ] Publicar a PR documental de encerramento para revisão, dependente da release.
+- [x] Publicar a PR documental [#50](https://github.com/EuThiagoAndrade/saldo-futuro/pull/50) em rascunho para revisão, dependente da release.
 
 ## Evidências
 
@@ -60,10 +60,10 @@ Não se aplica.
 | Última implementação | PR #49: 201 unitários, 239 asserções de banco, 78 E2E com backend e 13 sem backend; seis E2E finais de acessos; axe sem violações em 360/1280 px; evidências na task #42 |
 | Produção sem sessão | 22/22 verificações públicas passaram; resultado e limites na task #42 |
 | Produção autenticada | Relato parcial: logo ausente no celular e lentidão em cada troca de tela. Os demais grupos não foram declarados conferidos |
-| Release | PR #44 aberta; CI e governança disparados por `workflow_dispatch` na revisão `6330364`; integração e publicação pendentes |
+| Release | PR #44 aberta; [CI](https://github.com/EuThiagoAndrade/saldo-futuro/actions/runs/38787225505) e [governança](https://github.com/EuThiagoAndrade/saldo-futuro/actions/runs/38787230121) aprovados por `workflow_dispatch` na revisão `6330364`; Vercel aprovado; integração e publicação pendentes |
 | Testes e validador de governança | 39/39 testes passaram; validador com 0 erros e 0 avisos; referências, privacidade, barreiras e frases humanas conferidas manualmente |
 | `git diff --check` | Passou |
-| Checks remotos do encerramento | Pendente até a publicação da PR |
+| Checks remotos do encerramento | PR #50 publicada; resultados da revisão corrente no GitHub, exigidos verdes antes do merge |
 
 ## Revisão da correção
 
@@ -95,9 +95,9 @@ Diga: —
 
 - `handoff_schema_version: 2`
 - `logical_key`: `saldo-futuro + 004 + atualizar_docs + encerramento + 0a99ac7`
-- `effect_class`: `local_mutation`
+- `effect_class`: `remote_mutation`
 - `state_before`: ciclo 004 em execução; seis entregas integradas; verificação pública aprovada, conferência autenticada parcial e dois pontos relatados; decisão humana de encerrar antes do próximo ciclo; release #44 aberta.
-- `state_after`: encerramento documental preparado como estado prospectivo em `executed/`, com pendências e limites registrados; o estado corrente segue ciclo em execução até a release e o merge da PR documental.
+- `state_after`: encerramento documental publicado na PR #50 como estado prospectivo em `executed/`, com pendências e limites registrados; o estado corrente segue ciclo em execução até a release e o merge da PR documental.
 - `result`: `executed`
-- `evidence`: instrução humana de 2026-10-15; conferências GitHub; tasks e tabela acima; templates e autoridades lidos; nenhum SHA do próprio merge registrado.
+- `evidence`: instrução humana de 2026-10-15; conferências GitHub; tasks e tabela acima; templates e autoridades lidos; `gh pr list --head chore/cycle-004-closure --state all` vazio antes da criação e `gh pr create --draft` devolveu #50; nenhum SHA do próprio merge registrado.
 - `blockers`: release #44 integrada e `v0.3.0` publicada; checks verdes e aprovação individual do merge da PR documental. O próximo ciclo não foi iniciado.
