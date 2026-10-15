@@ -2,13 +2,13 @@
 
 > **Ciclo:** `004`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#41`
 > **Plano:** `_project/drafts/004_telas_produto/004_plan.md`
 > **Branch:** `feature/issue-41`
 > **PR:** [#48](https://github.com/EuThiagoAndrade/saldo-futuro/pull/48)
-> **Integração:** `Pendente`
+> **Integração:** PR #48 integrada por squash, conferida no GitHub
 > **Autorização inicial:** "Autorizado a implementação da issue #41" em 2026-10-14
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-14
@@ -84,6 +84,8 @@ Não se aplica.
 
 Depois do merge desta entrega, o responsável entra com a própria conta admin em `/admin/benchmarks`, escolhe CDI e a data inicial desejada, confere o período e confirma a sincronização; repete com IPCA. Confere a cobertura em `/benchmarks` e eventuais meses parciais na comparação. Registra somente conclusão ou motivo de falha, sem valores da carteira, nomes de ativos ou capturas. Frase: "concluí a ação externa da issue #41". Nenhuma escrita em produção pelo agente está autorizada.
 
+**Conclusão informada pelo responsável em 2026-10-14:** "concluí a ação externa da issue #41". A sincronização e a conferência autenticadas foram realizadas pelo responsável; o agente não acessou dados de carteira nem verificou a cobertura autenticada. PR #48 integrada confirmada no GitHub. A verificação em produção do ciclo permanece separada e depende da entrega F integrada e de autorização própria.
+
 ## Encerramento
 
 Não se aplica.
@@ -92,10 +94,10 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 004 (completo)
+Situação: Aguardando autorização de implementação — ciclo 004 (completo)
 Quem: Responsável
-Conferir: [PR #48](https://github.com/EuThiagoAndrade/saldo-futuro/pull/48): checks e diff
-Diga: "aprovo o merge da PR #48"
+Conferir: [Issue #42](https://github.com/EuThiagoAndrade/saldo-futuro/issues/42): administração da lista de acessos e escopo do item F do plano
+Diga: "autorizo a implementação da issue #42"
 ```
 
 ## Handoff de saída
@@ -107,3 +109,14 @@ Diga: "aprovo o merge da PR #48"
 - `result`: `executed`
 - `evidence`: autorização humana de 2026-10-14; issue #41 e merge #47 conferidos com `gh`; tabela de validações acima; `gh pr list --head feature/issue-41 --state all` vazio antes da publicação e `gh pr create` devolveu #48; nenhuma duplicação.
 - `blockers`: aprovação própria do merge, condicionada aos checks verdes da revisão corrente no GitHub; ação externa somente depois da integração. O alerta preexistente está registrado fora do escopo.
+
+### Reconciliação após integração e ação externa
+
+- `handoff_schema_version: 2`
+- `logical_key`: `saldo-futuro + 004 + implementar_issue + 41 + 1cccf9e`; reconciliação do resultado existente.
+- `effect_class`: `local_mutation`
+- `state_before`: task aguardando integração; PR #48 já integrada; conclusão da ação externa informada pelo responsável.
+- `state_after`: task concluída; ação externa registrada; aguardando autorização de implementação da issue #42.
+- `result`: `already_executed_and_reconciled`
+- `evidence`: PR #48 em `MERGED` e issue #42 aberta conferidas por `gh`; aprovação do merge e declaração literal da conclusão nesta conversa, em 2026-10-14.
+- `blockers`: nenhum para a reconciliação; implementação da issue #42 depende de autorização própria.
