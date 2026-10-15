@@ -63,7 +63,7 @@ Não se aplica.
 | Preview sem backend | Build de produção e 12 E2E passaram; 64 pulados por exigirem backend ou medição opcional |
 | Governança | 39/39 testes; validador com 0 erros/avisos e 4 itens manuais conferidos |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos | [PR #48](https://github.com/EuThiagoAndrade/saldo-futuro/pull/48): acompanhados com `gh pr checks --watch`; os resultados e logs correntes permanecem no GitHub e precisam estar verdes antes do merge |
 
 ## Revisão da correção
 
@@ -78,6 +78,7 @@ Não se aplica.
 - O Next reconstruiu a URL interna com hostname diferente do acessado pelo navegador local. A origem do POST é conferida pelo protocolo e pelo `Host` recebido; o E2E prova tanto o pedido válido quanto a recusa de origem diferente.
 - A primeira tentativa de `npm ci` não tinha DNS no sandbox, e o build do Next precisava criar processos locais. Os gates concluíram com a execução liberada; nenhum contorno foi adicionado ao código do produto.
 - Conferência manual: referências internas existentes, autorização humana literal, barreiras aplicáveis, ausência de dados reais/segredos, migrações intactas e diff restrito ao item E e à reconciliação de #40.
+- Fora do escopo: no push, o GitHub sinalizou o [alerta Dependabot #1](https://github.com/EuThiagoAndrade/saldo-futuro/security/dependabot/1), de severidade alta em `braces` (esgotamento de pilha por padrões profundamente aninhados), aberto na branch principal e confirmado por leitura da API. Nenhuma dependência foi alterada nesta entrega; a correção desse alerta exige trabalho próprio.
 
 ## Ação externa — primeira sincronização em produção
 
@@ -105,4 +106,4 @@ Diga: "aprovo o merge da PR #48"
 - `state_before` / `state_after`: issue #41 aberta e autorizada sobre `main` @ `1cccf9e`, sem branch/task/PR; branch `feature/issue-41` publicada, PR #48 aberta, task `Aguardando integração`.
 - `result`: `executed`
 - `evidence`: autorização humana de 2026-10-14; issue #41 e merge #47 conferidos com `gh`; tabela de validações acima; `gh pr list --head feature/issue-41 --state all` vazio antes da publicação e `gh pr create` devolveu #48; nenhuma duplicação.
-- `blockers`: checks remotos e aprovação própria do merge; ação externa somente depois da integração.
+- `blockers`: aprovação própria do merge, condicionada aos checks verdes da revisão corrente no GitHub; ação externa somente depois da integração. O alerta preexistente está registrado fora do escopo.
