@@ -2,12 +2,12 @@
 
 > **Ciclo:** `004`
 > **Trilha:** `normal`
-> **Estado:** `Em andamento`
+> **Estado:** `Aguardando integração`
 > **Tipo:** `feature`
 > **Issue:** `#41`
 > **Plano:** `_project/drafts/004_telas_produto/004_plan.md`
 > **Branch:** `feature/issue-41`
-> **PR:** —
+> **PR:** [#48](https://github.com/EuThiagoAndrade/saldo-futuro/pull/48)
 > **Integração:** `Pendente`
 > **Autorização inicial:** "Autorizado a implementação da issue #41" em 2026-10-14
 > **Modo contínuo:** `—`
@@ -48,7 +48,7 @@ Não se aplica.
 - [x] Fonte SGS falsa local por preload exclusivo do servidor Playwright; nenhuma opção de trocar a fonte na aplicação. Falha na segunda janela, JSON inválido, sem valores, buraco, prazo real e resposta perdida depois de gravar provados no E2E. Repetição conserva valores e limites da cobertura.
 - [x] 201 testes unitários, 239 asserções de banco, suíte completa com 72 E2E passando; axe em 360/1280 px e conferência visual com dados fictícios.
 - [x] Build e preview sem backend: 12 E2E passaram; 64 pulados por exigirem backend/medição opcional. Teste de confirmação repetido após o acabamento do diálogo: passou, incluindo Esc antes da busca.
-- [ ] PR revisável publicada.
+- [x] PR revisável [#48](https://github.com/EuThiagoAndrade/saldo-futuro/pull/48) publicada; staging restrito aos 19 arquivos autorizados, sem segredo ou dado real.
 
 ## Evidências
 
@@ -91,18 +91,18 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 004 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 004"
+Situação: Aguardando merge — ciclo 004 (completo)
+Quem: Responsável
+Conferir: [PR #48](https://github.com/EuThiagoAndrade/saldo-futuro/pull/48): checks e diff
+Diga: "aprovo o merge da PR #48"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `saldo-futuro + 004 + implementar_issue + 41 + 1cccf9e`
-- `effect_class`: `local_mutation`
-- `state_before` / `state_after`: issue #41 aberta e autorizada, sem branch/task; branch `feature/issue-41` e task `Em andamento` criadas.
+- `effect_class`: `remote_mutation`
+- `state_before` / `state_after`: issue #41 aberta e autorizada sobre `main` @ `1cccf9e`, sem branch/task/PR; branch `feature/issue-41` publicada, PR #48 aberta, task `Aguardando integração`.
 - `result`: `executed`
-- `evidence`: autorização humana de 2026-10-14; issue #41 e merge #47 conferidos com `gh`; base local e remota iguais.
-- `blockers`: nenhum para implementação; merge exige aprovação própria.
+- `evidence`: autorização humana de 2026-10-14; issue #41 e merge #47 conferidos com `gh`; tabela de validações acima; `gh pr list --head feature/issue-41 --state all` vazio antes da publicação e `gh pr create` devolveu #48; nenhuma duplicação.
+- `blockers`: checks remotos e aprovação própria do merge; ação externa somente depois da integração.
