@@ -1,7 +1,7 @@
 # Registro de ciclos
 
 > **Próximo ciclo:** `005`
-> **Última atualização:** 2026-10-14
+> **Última atualização:** 2026-10-15
 
 | Ciclo | Assunto | Estado | Ideação | Plano | Issues | Encerramento |
 | :-- | :-- | :-- | :-- | :-- | :-- | :-- |
@@ -9,6 +9,6 @@
 | `001` | Fundação da aplicação | `Concluído` | `_project/ideations/001_fundacao_aplicacao.md` | `_project/executed/001_fundacao_aplicacao/001_plan.md` | [#8](https://github.com/EuThiagoAndrade/saldo-futuro/issues/8), [#9](https://github.com/EuThiagoAndrade/saldo-futuro/issues/9) e [#10](https://github.com/EuThiagoAndrade/saldo-futuro/issues/10) — fechadas como concluídas; correção pela trilha curta: [#14](https://github.com/EuThiagoAndrade/saldo-futuro/issues/14) | PR de encerramento documental (`chore/cycle-001-closure`); release `v0.1.0` |
 | `002` | Reforma da governança | `Concluído` | `_project/ideations/002_reforma_governanca.md` | `_project/executed/002_reforma_governanca/002_plan.md` | [#20](https://github.com/EuThiagoAndrade/saldo-futuro/issues/20) e [#21](https://github.com/EuThiagoAndrade/saldo-futuro/issues/21) — fechadas como concluídas | PR de encerramento documental (`chore/cycle-002-closure`) |
 | `003` | Regras financeiras | `Concluído` | `_project/ideations/003_regras_financeiras.md` | `_project/executed/003_regras_financeiras/003_plan.md` | [#26](https://github.com/EuThiagoAndrade/saldo-futuro/issues/26), [#27](https://github.com/EuThiagoAndrade/saldo-futuro/issues/27), [#28](https://github.com/EuThiagoAndrade/saldo-futuro/issues/28) e [#29](https://github.com/EuThiagoAndrade/saldo-futuro/issues/29) — fechadas como concluídas | PR de encerramento documental (`chore/cycle-003-closure`); release `v0.2.0` |
-| `004` | Telas do produto | `Em execução` | `_project/ideations/004_telas_produto.md` | `_project/drafts/004_telas_produto/004_plan.md` | [#37](https://github.com/EuThiagoAndrade/saldo-futuro/issues/37), [#38](https://github.com/EuThiagoAndrade/saldo-futuro/issues/38), [#39](https://github.com/EuThiagoAndrade/saldo-futuro/issues/39), [#40](https://github.com/EuThiagoAndrade/saldo-futuro/issues/40), [#41](https://github.com/EuThiagoAndrade/saldo-futuro/issues/41) e [#42](https://github.com/EuThiagoAndrade/saldo-futuro/issues/42) | — |
+| `004` | Telas do produto | `Concluído` | `_project/ideations/004_telas_produto.md` | `_project/executed/004_telas_produto/004_plan.md` | [#37](https://github.com/EuThiagoAndrade/saldo-futuro/issues/37), [#38](https://github.com/EuThiagoAndrade/saldo-futuro/issues/38), [#39](https://github.com/EuThiagoAndrade/saldo-futuro/issues/39), [#40](https://github.com/EuThiagoAndrade/saldo-futuro/issues/40), [#41](https://github.com/EuThiagoAndrade/saldo-futuro/issues/41) e [#42](https://github.com/EuThiagoAndrade/saldo-futuro/issues/42) | PR documental `chore/cycle-004-closure`, condicionada à release `0.3.0` pela PR #44; pendências preservadas na task de encerramento |
 
 O ciclo `000` não tem ideação retroativa. Sua origem e as aprovações anteriores à implantação da governança estão registradas no próprio plano.

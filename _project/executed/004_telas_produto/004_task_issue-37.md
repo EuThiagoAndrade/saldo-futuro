@@ -5,14 +5,14 @@
 > **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#37`
-> **Plano:** `_project/drafts/004_telas_produto/004_plan.md`
+> **Plano:** `_project/executed/004_telas_produto/004_plan.md`
 > **Branch:** `feature/issue-37`
 > **PR:** [#43](https://github.com/EuThiagoAndrade/saldo-futuro/pull/43)
 > **Integração:** `Integrada por squash em e23f31b, em 2026-10-14`
 > **Autorização inicial:** "autorizo a implementação da issue #37" em 2026-10-14
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-14
-> **Última atualização:** 2026-10-14
+> **Última atualização:** 2026-10-15
 > **handoff_schema_version:** `2`
 
 Instanciada a partir de `.agent/templates/task.md`. Ponto de aprovação "Autorizar implementação" da issue A concedido pelo responsável em 2026-10-14, depois do merge da PR documental #36 e da criação das issues #37 a #42.
@@ -99,10 +99,10 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando autorização de implementação — ciclo 004 (completo)
-Quem: Responsável
-Conferir: Issue #38 e escopo (item B)
-Diga: "autorizo a implementação da issue #38"
+Situação: Concluído — ciclo 004 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 Integrada; o artefato ativo passa a ser a task da issue #38.

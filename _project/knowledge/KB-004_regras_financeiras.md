@@ -1006,7 +1006,7 @@ Todo período passa pelo período efetivo (K8) e pela regra do `N/D` (K1) da se�
 | `Meus-Investimentos` | Regras de origem, lidas na ideação do ciclo `003` | Commit `1b13b033ce4335c09df80237c8c31b96b37e3797`, fixado na KB-001 | Evidência histórica; nenhum valor, teste ou fixture copiado |
 | SGS do Banco Central, <https://api.bcb.gov.br/dados/serie/bcdata.sgs.{codigo}/dados> | Formato, janelas e séries 12 e 433 | Verificação de 2026-10-13, registrada no plano do ciclo `003` (V1 a V5) | Serviço externo; a disponibilidade não foi medida |
 | Plano do ciclo `003` | Decisões P1 a P18 e D1 a D14 | `_project/executed/003_regras_financeiras/003_plan.md`, `v3` aprovada em 2026-10-14 | Autoridade das decisões; esta KB as especifica |
-| Plano do ciclo `004` | Decisões P17 a P19 (apresentação do Início) | `_project/drafts/004_telas_produto/004_plan.md`, `v4` aprovada em 2026-10-14 | Autoridade das decisões; a seção 15 as especifica |
+| Plano do ciclo `004` | Decisões P17 a P19 (apresentação do Início) | `_project/executed/004_telas_produto/004_plan.md`, `v4` aprovada em 2026-10-14 | Autoridade das decisões; a seção 15 as especifica |
 | `design-system/DESIGN.md`, seções 6.3 a 6.5 | Formato brasileiro, sinal e `N/D` | Versão vigente em `main` | Contrato visual |
 
 ## Histórico

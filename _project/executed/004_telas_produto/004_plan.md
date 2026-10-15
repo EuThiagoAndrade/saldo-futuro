@@ -1,10 +1,10 @@
 # Plano de Implementação — Telas do produto
 
 > **Ciclo:** `004`
-> **Status:** `Em Execução`
+> **Status:** `Concluído`
 > **Versão:** `v4`
 > **Data de criação:** 2026-10-14
-> **Última atualização:** 2026-10-14
+> **Última atualização:** 2026-10-15
 > **Autor:** Thiago Andrade e Claude (Claude Code, Opus 5.5)
 > **Tipo:** `feature`
 > **Prioridade:** `P1`
@@ -16,6 +16,8 @@
 > **Veredito da revisão:** `APTO PARA APROVAÇÃO`
 > **Aprovação humana pós-revisão:** `Aprovada em 2026-10-14`
 > **handoff_schema_version:** `2`
+
+**Encerramento prospectivo:** o estado concluído desta branch só vale depois da release `0.3.0` pela PR #44 e do merge da PR documental de encerramento. A decisão humana de 2026-10-15 autoriza encaminhar o encerramento com as pendências conhecidas e a conferência autenticada parcial registradas na task #42 e em `004_task_closure.md`; não declara esses pontos corrigidos nem os demais itens de produção conferidos. A revisão e a aprovação originais da v4 permanecem históricas.
 
 ## Problema e contexto
 
@@ -300,7 +302,7 @@ Toda cadeia autorizada para (situação "Parado", com a pergunta registrada) qua
 
 **Ação técnica:**
 
-- nova seção da KB-004, "Apresentação do Início", com P17 a P19 e os casos CR-51 (limites dos períodos) e CR-52 (aportes líquidos), só com datas fixas no passado, sem depender do "hoje", calculados à mão, e o registro `_project/drafts/004_telas_produto/004_validation_casos_inicio.md` do recálculo por outra ferramenta sem ver os esperados e da conferência do responsável, como no ciclo `003` (D12 daquele plano);
+- nova seção da KB-004, "Apresentação do Início", com P17 a P19 e os casos CR-51 (limites dos períodos) e CR-52 (aportes líquidos), só com datas fixas no passado, sem depender do "hoje", calculados à mão, e o registro `_project/executed/004_telas_produto/004_validation_casos_inicio.md` do recálculo por outra ferramenta sem ver os esperados e da conferência do responsável, como no ciclo `003` (D12 daquele plano);
 - limites, sempre em meses completos e inclusivos, com M o último mês fechado (P17):
   - mês: [M, M]; ano: [janeiro do ano de M, M] (P18); 12 meses: [M − 11, M]; desde o início: [início da carteira, M]; intervalo escolhido: [a, b] com a ≤ b ≤ M, sem meses depois de M no seletor;
   - todos passam pelo período efetivo (K8) e pelo `N/D` (K1) da KB-004, seção 8;
@@ -355,11 +357,11 @@ Toda cadeia autorizada para (situação "Parado", com a pergunta registrada) qua
 
 | Entrega | Arquivos |
 | :-- | :-- |
-| PR documental do plano | `_project/ideations/004_telas_produto.md`, `_project/drafts/004_telas_produto/004_plan.md`, `_project/decisions/ADR-005_graficos_svg_proprio.md`, `_project/cycles.md` |
+| PR documental do plano | `_project/ideations/004_telas_produto.md`, `_project/executed/004_telas_produto/004_plan.md`, `_project/decisions/ADR-005_graficos_svg_proprio.md`, `_project/cycles.md` |
 | A | `src/app/(app)/` (layout e `/conta`), `src/app/page.tsx` (substituída), `src/components/`, `src/lib/financeiro/quantias.ts` e teste, `src/lib/sessao.ts`, `lerTudo` e teste, `tests/e2e/apoio/`, `eslint.config.mjs`, `tests/e2e/`, task da issue A |
 | B | Páginas e ações em `src/app/(app)/ativos/`, `lancamentos/` e `transferencias/`, `src/lib/telas/`, `tests/e2e/`, task da issue B |
 | C | `src/app/(app)/lancamentos/fechamento/`, `src/lib/telas/`, `tests/e2e/`, task da issue C |
-| D | `src/app/(app)/page.tsx`, componentes de gráfico, `src/lib/telas/`, `_project/knowledge/KB-004_regras_financeiras.md`, `tests/fixtures/financeiro/casos_referencia.json`, `_project/drafts/004_telas_produto/004_validation_casos_inicio.md`, `tests/e2e/`, task da issue D |
+| D | `src/app/(app)/page.tsx`, componentes de gráfico, `src/lib/telas/`, `_project/knowledge/KB-004_regras_financeiras.md`, `tests/fixtures/financeiro/casos_referencia.json`, `_project/executed/004_telas_produto/004_validation_casos_inicio.md`, `tests/e2e/`, task da issue D |
 | E | `src/app/(app)/benchmarks/`, `src/app/(app)/admin/benchmarks/`, `src/app/api/benchmarks/sincronizar/route.ts`, `src/lib/telas/`, `tests/e2e/`, task da issue E |
 | F | `src/app/(app)/admin/acessos/`, `tests/e2e/`, task da issue F |
 | Encerramento | `_project/knowledge/KB-003_visao_produto_arquitetura.md`, `README.md` se necessário, `_project/cycles.md`, mudança para `_project/executed/004_telas_produto/` |
@@ -427,23 +429,25 @@ Uma PR por issue. A PR documental do plano, a PR de release e a PR de encerramen
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | A [#37](https://github.com/EuThiagoAndrade/saldo-futuro/issues/37), B [#38](https://github.com/EuThiagoAndrade/saldo-futuro/issues/38), C [#39](https://github.com/EuThiagoAndrade/saldo-futuro/issues/39), D [#40](https://github.com/EuThiagoAndrade/saldo-futuro/issues/40), E [#41](https://github.com/EuThiagoAndrade/saldo-futuro/issues/41) e F [#42](https://github.com/EuThiagoAndrade/saldo-futuro/issues/42), criadas em 2026-10-14 |
-| PR(s) | Plano: [#36](https://github.com/EuThiagoAndrade/saldo-futuro/pull/36), integrada por squash; A: [#43](https://github.com/EuThiagoAndrade/saldo-futuro/pull/43), integrada por squash; B: [#45](https://github.com/EuThiagoAndrade/saldo-futuro/pull/45), integrada por squash; C: [#46](https://github.com/EuThiagoAndrade/saldo-futuro/pull/46), integrada por squash; D: [#47](https://github.com/EuThiagoAndrade/saldo-futuro/pull/47), integrada por squash; E: [#48](https://github.com/EuThiagoAndrade/saldo-futuro/pull/48) |
-| Branch(es) | Plano: `chore/cycle-004-plan`; A: `feature/issue-37`; B: `feature/issue-38`; C: `feature/issue-39`; D: `feature/issue-40`; E: `feature/issue-41` |
+| PR(s) | Plano: [#36](https://github.com/EuThiagoAndrade/saldo-futuro/pull/36); entregas A–F: [#43](https://github.com/EuThiagoAndrade/saldo-futuro/pull/43), [#45](https://github.com/EuThiagoAndrade/saldo-futuro/pull/45), [#46](https://github.com/EuThiagoAndrade/saldo-futuro/pull/46), [#47](https://github.com/EuThiagoAndrade/saldo-futuro/pull/47), [#48](https://github.com/EuThiagoAndrade/saldo-futuro/pull/48) e [#49](https://github.com/EuThiagoAndrade/saldo-futuro/pull/49), todas integradas por squash. Release `0.3.0`: [#44](https://github.com/EuThiagoAndrade/saldo-futuro/pull/44); encerramento: PR de `chore/cycle-004-closure`, integração condicionada à release |
+| Branch(es) | Plano: `chore/cycle-004-plan`; A–F: `feature/issue-37` a `feature/issue-42`; release: `release-please--branches--main--components--saldo-futuro`; encerramento: `chore/cycle-004-closure` |
 | Destino após conclusão | `_project/executed/004_telas_produto/004_plan.md` |
 
 ## Próximo passo
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando autorização de implementação — ciclo 004 (completo)
-Quem: Responsável
-Conferir: Issue #37 e escopo (item A)
-Diga: "autorizo a implementação da issue #37"
+Situação: Concluído — ciclo 004 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 As issues seguem a sequência A → F; cada uma tem autorização própria. A implementação da issue #37 foi autorizada em 2026-10-14; a partir dela, o artefato ativo é a task `004_task_issue-37.md`.
 
 Em 2026-10-14, depois da PR #47 integrada e da issue #40 fechada, o responsável autorizou a implementação da issue #41. O artefato ativo corrente é `004_task_issue-41.md`; a task #40 foi reconciliada com o estado do GitHub.
+
+Esses registros descrevem as transições anteriores. Em 2026-10-15, as seis entregas já estavam integradas; a verificação pública passou e o responsável relatou dois pontos na área autenticada. Sua instrução posterior foi encaminhar o encerramento do `004` antes do próximo ciclo. O artefato de preparação do encerramento é `004_task_closure.md`; em `main`, o ciclo só será concluído depois da release e do merge documental.
 
 ## Handoff de saída
 
@@ -752,6 +756,19 @@ Nenhum achado foi contestado.
 
 ## Pós-mortem
 
-- **Data de conclusão:** —
-- **Desvios:** —
-- **Lições comprovadas:** —
+- **Data de conclusão:** prospectiva; a data efetiva é a do merge da PR de encerramento, verificável no GitHub. Preparação em 2026-10-15.
+- **Entregas:** A–F integradas, com 201 testes unitários, 239 asserções pgTAP, 78 E2E com backend e 13 sem backend na última entrega. Os registros por item estão nas tasks. Os critérios detalhados deste plano são o histórico da versão aprovada; a matriz de conclusão é dada pelas tasks e PRs integradas.
+- **Verificação e decisão do responsável:** 22 verificações públicas passaram. O relato autenticado foi parcial e apontou ausência de logo mobile e lentidão em toda troca de tela. Em 2026-10-15, o responsável determinou encerrar o ciclo antes do próximo; fica registrado o aceite administrativo com essas pendências, sem inferir aprovação dos demais grupos. Essa instrução posterior permite encaminhar a release com limitações documentadas, em lugar da verificação integral originalmente prevista; não altera a regra geral nem dispensa os merges próprios.
+- **Pendências encaminhadas:** logo à esquerda no header mobile; medição e otimização da navegação com dados fictícios e preservação de autenticação, RLS e coerência D13. O próximo ciclo `005` foi somente proposto, sem reserva ou ideação. A migração da origem segue futura, a replanejar.
+- **Lições comprovadas:** o teste de 175 ms com banco local não mede latência Vercel–Supabase; o caminho simples do Início acumula 14 consultas de carteira em série, além de autenticação/perfil; a simulação de atraso comprova a sensibilidade a latência, sem identificar por si só a causa de produção. A verificação deve distinguir testes locais, respostas públicas e relato autenticado.
+
+### Handoff do encerramento prospectivo
+
+- `handoff_schema_version: 2`
+- `logical_key`: `saldo-futuro + 004 + atualizar_docs + encerramento + 0a99ac7`
+- `effect_class`: `local_mutation`
+- `state_before`: plano em execução, seis entregas integradas, produção com relato parcial e pontos conhecidos; instrução humana de encaminhar o encerramento antes do próximo ciclo.
+- `state_after`: plano e tasks reconciliados e documentação viva atualizada como estado prospectivo; ciclo em `executed/` só passa a valer em `main` pelo merge documental depois da release.
+- `result`: `executed`
+- `evidence`: tasks das entregas, PRs integradas, verificação pública, relato do responsável e decisão posterior de 2026-10-15; task de encerramento.
+- `blockers`: release #44 integrada com `v0.3.0` publicada; checks verdes e aprovação própria da PR de encerramento.

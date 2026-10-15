@@ -5,14 +5,14 @@
 > **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#40`
-> **Plano:** `_project/drafts/004_telas_produto/004_plan.md`
+> **Plano:** `_project/executed/004_telas_produto/004_plan.md`
 > **Branch:** `feature/issue-40`
 > **PR:** [#47](https://github.com/EuThiagoAndrade/saldo-futuro/pull/47)
 > **Integração:** `Integrada por squash; conferida no GitHub em 2026-10-14`
 > **Autorização inicial:** "autorizo a implementação da issue #40" em 2026-10-14
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-14
-> **Última atualização:** 2026-10-14
+> **Última atualização:** 2026-10-15
 > **handoff_schema_version:** `2`
 
 Instanciada a partir de `.agent/templates/task.md`. Ponto de aprovação "Autorizar implementação" da issue D concedido pelo responsável em 2026-10-14, depois da integração da issue C (PR #46, `7420ae5`).
@@ -95,10 +95,10 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando autorização de implementação — ciclo 004 (completo)
-Quem: Responsável
-Conferir: [Issue #41](https://github.com/EuThiagoAndrade/saldo-futuro/issues/41) e item E do plano
-Diga: "autorizo a implementação da issue #41"
+Situação: Concluído — ciclo 004 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
