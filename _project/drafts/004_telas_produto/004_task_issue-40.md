@@ -40,7 +40,7 @@ Não se aplica.
 
 | Barreira | Aplica-se? | Evidência ou justificativa |
 | :-- | :-- | :-- |
-| G1 — exatidão financeira | Sim | P17 a P19 na KB-004 (seção 15) com CR-51 e CR-52, calculados à mão e recalculados por outro modelo sem ver os esperados (17 de 17 iguais; `004_validation_casos_inicio.md`); conferência do responsável pendente antes do merge. Composição pura testada contra CR-17, CR-20, CR-24, CR-32 a CR-37, CR-51 e CR-52; os cenários reproduzem os casos pelas funções do banco e a tela mostra os esperados; insumos lidos como composição coerente (D13), com o cenário "volume" (1.200 eventos no mês aberto); `N/D` é lacuna nos gráficos, nunca zero; nenhuma conta nova além de P17 a P19 |
+| G1 — exatidão financeira | Sim | P17 a P19 na KB-004 (seção 15) com CR-51 e CR-52, calculados à mão e recalculados por outro modelo sem ver os esperados (17 de 17 iguais) e conferidos pelo responsável (`004_validation_casos_inicio.md`). Composição pura testada contra CR-17, CR-20, CR-24, CR-32 a CR-37, CR-51 e CR-52; os cenários reproduzem os casos pelas funções do banco e a tela mostra os esperados; insumos lidos como composição coerente (D13), com o cenário "volume" (1.200 eventos no mês aberto); `N/D` é lacuna nos gráficos, nunca zero; nenhuma conta nova além de P17 a P19 |
 | G2 — isolamento por RLS | Sim | Sem tabela, política ou função nova; leitura só com a sessão do usuário (a RLS restringe às próprias linhas); sessão conferida na página; cenários com usuários exclusivos |
 | G3 — privacidade de dados | Sim | Testes e capturas só com dados fictícios; com "Ocultar valores", nenhuma quantia nos cartões, nos eixos e nas tabelas dos gráficos; percentuais continuam visíveis (D8) |
 | G4 — migrações só acrescentam | Não | Nenhuma migração criada ou alterada |
@@ -57,7 +57,7 @@ Não se aplica.
 - [x] `tests/e2e/inicio.spec.ts` (10 testes): CR-17, CR-20, CR-24, CR-32, CR-33 com CR-35, CR-36 com CR-37, CR-51, CR-52, volume, ocultação e axe em 360 px e 1280 px.
 - [x] `tests/e2e/desempenho.spec.ts` (D9, opcional com `MEDIR_DESEMPENHO=1`): 30 ativos e 60 meses fechados; mediana de 175 ms no servidor local (167 a 187 ms), abaixo do limite de 1 s.
 - [x] Conferência visual em 360 px e 1280 px com dados fictícios; capturas fora do repositório.
-- [ ] Conferência do responsável dos valores do CR-51 e do CR-52, antes do merge.
+- [x] Conferência do responsável dos valores do CR-51 e do CR-52, em 2026-10-14, registrada em `004_validation_casos_inicio.md`.
 
 ## Evidências
 
@@ -97,7 +97,7 @@ Não se aplica.
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 004 (completo)
 Quem: Responsável
-Conferir: [PR #47](https://github.com/EuThiagoAndrade/saldo-futuro/pull/47): checks, diff e a conferência dos valores do CR-51 e do CR-52 (`004_validation_casos_inicio.md`), que precede o merge
+Conferir: [PR #47](https://github.com/EuThiagoAndrade/saldo-futuro/pull/47): checks e diff; a conferência do CR-51 e do CR-52 está registrada em `004_validation_casos_inicio.md`
 Diga: "aprovo o merge da PR #47"
 ```
 
@@ -109,4 +109,4 @@ Diga: "aprovo o merge da PR #47"
 - `state_before` / `state_after`: antes, issue #40 aberta, sem branch nem task; depois, branch `feature/issue-40` publicada, PR #47 aberta e esta task `Aguardando integração`.
 - `result`: `executed`
 - `evidence`: autorização de 2026-10-14; base `main` @ `7420ae5`; a tabela "Evidências" acima e `004_validation_casos_inicio.md`.
-- `blockers`: conferência do responsável dos valores do CR-51 e do CR-52, checks remotos e aprovação do merge.
+- `blockers`: checks remotos e aprovação do merge.

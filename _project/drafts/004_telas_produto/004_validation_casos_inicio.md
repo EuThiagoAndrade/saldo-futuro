@@ -38,8 +38,8 @@ Nenhuma suposição revelou lacuna na especificação.
 
 ## 2. Conferência do responsável
 
-Pendente: o responsável confere os valores esperados do CR-51 e do CR-52 (por exemplo, numa planilha) antes da aprovação do merge da PR da issue #40, e o resultado é registrado aqui.
+Em 2026-10-14, os valores esperados dos dois casos foram apresentados ao responsável no chat, com as entradas e o passo a passo (limites, retornos, sugestão, recusa e somas dos aportes líquidos). A resposta foi: "Conferi os valores esperados do CR-51 e do CR-52 e estão corretos." Nenhuma divergência.
 
 ## 3. Conclusão
 
-O recálculo independente concordou em todos os valores. Falta a conferência do responsável.
+O recálculo independente concordou em todos os valores, e o responsável conferiu os esperados. Não há divergência aberta: a precondição do merge da PR da issue #40 está cumprida.
