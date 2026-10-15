@@ -53,3 +53,22 @@ export function textoPontosPercentuais(fracao: number): string {
   const texto = `${percentual(fracao)} p.p.`;
   return direcaoPercentual(fracao) === "alta" ? `+${texto}` : texto;
 }
+
+/**
+ * Rótulo de eixo de gráfico em dinheiro, abreviado (DESIGN.md 6.2: a forma abreviada só é
+ * permitida em eixos): "R$ 500", "R$ 12 mil", "R$ 1,5 mi". O valor vem em reais, só para desenho.
+ */
+export function textoEixoDinheiro(reais: number): string {
+  const sinal = reais < 0 ? MENOS : "";
+  const absoluto = Math.abs(reais);
+  const curto = (v: number) => v.toLocaleString("pt-BR", { maximumFractionDigits: 1 });
+  if (absoluto >= 1_000_000) return `${sinal}R$${ESPACO_FIXO}${curto(absoluto / 1_000_000)} mi`;
+  if (absoluto >= 1_000) return `${sinal}R$${ESPACO_FIXO}${curto(absoluto / 1_000)} mil`;
+  return `${sinal}R$${ESPACO_FIXO}${curto(absoluto)}`;
+}
+
+/** "2026-04" → "abr/26", para rótulos curtos de eixo. */
+export function mesCurto(mes: string): string {
+  const nomes = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+  return `${nomes[Number(mes.slice(5, 7)) - 1]}/${mes.slice(2, 4)}`;
+}

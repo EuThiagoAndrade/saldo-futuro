@@ -9,6 +9,8 @@ import {
   textoPercentual,
   textoPercentualComSinal,
   textoPontosPercentuais,
+  textoEixoDinheiro,
+  mesCurto,
 } from "./valores";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -64,5 +66,18 @@ describe("CR-38 — percentuais exibidos (DESIGN.md 6.3)", () => {
     expect(textoPontosPercentuais(0.001)).toBe("+0,10 p.p.");
     expect(textoPontosPercentuais(-0.001)).toBe("−0,10 p.p.");
     expect(textoPontosPercentuais(0)).toBe("0,00 p.p.");
+  });
+});
+
+describe("rótulos de eixo", () => {
+  it("dinheiro abreviado só para eixos (6.2)", () => {
+    expect(textoEixoDinheiro(500)).toBe(`R$${NBSP}500`);
+    expect(textoEixoDinheiro(12000)).toBe(`R$${NBSP}12 mil`);
+    expect(textoEixoDinheiro(1500000)).toBe(`R$${NBSP}1,5 mi`);
+    expect(textoEixoDinheiro(-2500)).toBe(`−R$${NBSP}2,5 mil`);
+  });
+
+  it("mês curto", () => {
+    expect(mesCurto("2026-04")).toBe("abr/26");
   });
 });
