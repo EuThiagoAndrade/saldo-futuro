@@ -47,6 +47,27 @@ describe("janelas do SGS", () => {
 });
 
 describe("sincronizarBenchmark", () => {
+  it("prazo esgotado entre janelas não grava a primeira nem inicia a segunda", async () => {
+    const controller = new AbortController();
+    const cliente = clienteFalso();
+    const buscar = vi.fn<Buscar>(async () => {
+      controller.abort();
+      return resposta([{ data: "31/12/2015", valor: "0.04" }]);
+    });
+    await expect(sincronizarBenchmark(CDI, "2006-01-01", "2016-01-31", { buscar, cliente, signal: controller.signal })).rejects.toMatchObject({ motivo: "tempo" });
+    expect(buscar).toHaveBeenCalledTimes(1);
+    expect(cliente.rpc).not.toHaveBeenCalled();
+  });
+  it("prazo esgotado no corpo da última resposta não grava", async () => {
+    const controller = new AbortController();
+    const cliente = clienteFalso();
+    const buscar: Buscar = async () => ({ ok: true, status: 200, text: async () => {
+      controller.abort();
+      return JSON.stringify([{ data: "01/01/2026", valor: "0.3" }]);
+    } });
+    await expect(sincronizarBenchmark(IPCA, "2026-01-01", "2026-01-31", { buscar, cliente, signal: controller.signal })).rejects.toMatchObject({ motivo: "tempo" });
+    expect(cliente.rpc).not.toHaveBeenCalled();
+  });
   it("busca todas as janelas e grava tudo numa única chamada, com os valores em texto", async () => {
     const buscar = buscarFalso([
       resposta([{ data: "31/12/2015", valor: "0.051660" }]),

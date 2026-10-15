@@ -221,6 +221,8 @@ Vi = 0 com M > 0 não é `N/D`: a fórmula vale normalmente (K5).
 
 A comparação usa o período efetivo da carteira [a', b] (seção 8) para os dois lados.
 
+Na interface (ciclo `004`, issue #41), `/benchmarks/comparacao` compõe essas regras sem nova fórmula: carteira e benchmark usam os mesmos meses efetivos e a base 100 da seção 8. Mês diário parcial é rotulado e sua série base 100 permanece `N/D` se o período o incluir. A leitura confere as marcas da carteira e da cobertura antes e depois de todos os insumos; cobertura e valores aceitos pertencem à mesma versão (D13). `/admin/benchmarks` confirma a sincronização e a rota limita a busca total a 45 s, gravando só depois da validação completa e relendo a cobertura, inclusive após uma recusa. A tela também relê a cobertura quando perde a resposta.
+
 - **Diferença em pontos percentuais:** Rc − Rb, sobre os acumulados do período (apresentada em p.p.: a fração 0,001 é 0,10 p.p.).
 - **% do benchmark:** Rc / Rb, sobre os acumulados. É `N/D` se Rb ≤ 0 (K3).
 - **Taxa de acerto:** número de meses em que o retorno da carteira é estritamente maior que o do benchmark, dividido pelo número de meses do período. Empate não é acerto (K9).

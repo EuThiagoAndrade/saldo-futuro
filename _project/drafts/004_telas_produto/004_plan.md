@@ -428,7 +428,7 @@ Uma PR por issue. A PR documental do plano, a PR de release e a PR de encerramen
 | :-- | :-- |
 | Issue(s) | A [#37](https://github.com/EuThiagoAndrade/saldo-futuro/issues/37), B [#38](https://github.com/EuThiagoAndrade/saldo-futuro/issues/38), C [#39](https://github.com/EuThiagoAndrade/saldo-futuro/issues/39), D [#40](https://github.com/EuThiagoAndrade/saldo-futuro/issues/40), E [#41](https://github.com/EuThiagoAndrade/saldo-futuro/issues/41) e F [#42](https://github.com/EuThiagoAndrade/saldo-futuro/issues/42), criadas em 2026-10-14 |
 | PR(s) | Plano: [#36](https://github.com/EuThiagoAndrade/saldo-futuro/pull/36), integrada por squash; A: [#43](https://github.com/EuThiagoAndrade/saldo-futuro/pull/43), integrada por squash; B: [#45](https://github.com/EuThiagoAndrade/saldo-futuro/pull/45), integrada por squash; C: [#46](https://github.com/EuThiagoAndrade/saldo-futuro/pull/46), integrada por squash; D: [#47](https://github.com/EuThiagoAndrade/saldo-futuro/pull/47) |
-| Branch(es) | Plano: `chore/cycle-004-plan`; A: `feature/issue-37`; B: `feature/issue-38`; C: `feature/issue-39`; D: `feature/issue-40` |
+| Branch(es) | Plano: `chore/cycle-004-plan`; A: `feature/issue-37`; B: `feature/issue-38`; C: `feature/issue-39`; D: `feature/issue-40`; E: `feature/issue-41` |
 | Destino após conclusão | `_project/executed/004_telas_produto/004_plan.md` |
 
 ## Próximo passo
@@ -442,6 +442,8 @@ Diga: "autorizo a implementação da issue #37"
 ```
 
 As issues seguem a sequência A → F; cada uma tem autorização própria. A implementação da issue #37 foi autorizada em 2026-10-14; a partir dela, o artefato ativo é a task `004_task_issue-37.md`.
+
+Em 2026-10-14, depois da PR #47 integrada e da issue #40 fechada, o responsável autorizou a implementação da issue #41. O artefato ativo corrente é `004_task_issue-41.md`; a task #40 foi reconciliada com o estado do GitHub.
 
 ## Handoff de saída
 

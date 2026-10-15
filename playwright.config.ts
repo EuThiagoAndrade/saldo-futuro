@@ -19,6 +19,7 @@ export default defineConfig({
     },
   ],
   webServer: {
+    env: { NODE_OPTIONS: `${process.env.NODE_OPTIONS ?? ""} --import=./tests/e2e/apoio/sgs-fetch.mjs`.trim() },
     // No CI, o build é um passo anterior do workflow.
     command: process.env.CI
       ? `npm run start -- -H 127.0.0.1 -p ${port}`
