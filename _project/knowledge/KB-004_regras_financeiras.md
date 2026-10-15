@@ -24,7 +24,7 @@ Quem a consulta:
 
 ## Limite de autoridade
 
-Conhecimento de referência. Esta KB não autoriza mudança, não substitui o plano aprovado do ciclo `003` nem as ADRs. Em divergência com uma decisão registrada no plano (P1 a P18, D1 a D14) ou nas ADRs, vale a decisão, e esta KB deve ser corrigida. As escolhas K1 a K13 foram decididas pelo responsável e estão registradas aqui (seção 13).
+Conhecimento de referência. Esta KB não autoriza mudança, não substitui os planos aprovados dos ciclos `003` e `004` nem as ADRs. Em divergência com uma decisão registrada num plano (P1 a P18 e D1 a D14 do ciclo `003`; P17 a P19 do ciclo `004`) ou nas ADRs, vale a decisão, e esta KB deve ser corrigida. As escolhas K1 a K13 foram decididas pelo responsável e estão registradas aqui (seção 13).
 
 Ela deliberadamente não decide:
 
@@ -933,6 +933,70 @@ Nos casos de série diária, os valores são fictícios, de 0,04% ao dia, em dia
   - `q15`: `recusado_faixa`
   - `q16`: `710`
 
+#### Apresentação do Início
+
+#### CR-51 — Limites dos períodos do Início (P17, P18, K1, K8)
+
+- **Entrega:** ciclo `004`. **Regras:** 15 (P17, P18), 8 (K1, K8).
+- **Entrada:** início da carteira em novembro de 2025; meses fechados de novembro de 2025 a abril de 2026, então M = abril de 2026; maio de 2026 aberto; hoje 10/05/2026. Retornos: dez/2025 1,00%, jan/2026 2,00%, fev `N/D` (mês com migração histórica), mar 1,00%, abr −0,50%. Consultas: os cinco períodos; o intervalo de dezembro de 2025 a janeiro de 2026; o intervalo de março a maio de 2026; M sem nenhum mês fechado; M depois de reabrir abril; o ano em 10/01/2027 com dezembro de 2026 fechado e janeiro de 2027 aberto.
+- **Passo a passo:**
+  - mês: [abril, abril] → −0,50%;
+  - ano: [janeiro de 2026, abril], o ano de M; o período efetivo (K8) começa em janeiro e inclui fevereiro `N/D`, então o resultado é `N/D` (K1). O último mês `N/D` do período é fevereiro; a sugestão é [março, abril]: 1,01 × 0,995 − 1 = 1,00495 − 1 = 0,495%;
+  - 12 meses: [maio de 2025, abril de 2026]; o período efetivo começa em dezembro de 2025, o mês seguinte ao início, e inclui fevereiro: `N/D`;
+  - desde o início: [novembro de 2025, abril de 2026]; mesmo período efetivo: `N/D`;
+  - intervalo de dezembro de 2025 a janeiro de 2026: 1,01 × 1,02 − 1 = 3,02%;
+  - intervalo de março a maio de 2026: maio é posterior a M e não pode ser escolhido: recusado;
+  - sem mês fechado não há M;
+  - reabrir abril o devolve ao estado aberto, e M passa a ser março;
+  - na virada do ano, o ano é o de M (P18): janeiro a dezembro de 2026.
+- **Esperado:**
+  - `limites_mes`: `2026-04/2026-04`
+  - `limites_ano`: `2026-01/2026-04`
+  - `limites_12_meses`: `2025-05/2026-04`
+  - `limites_desde_inicio`: `2025-11/2026-04`
+  - `mes`: `-0.005`
+  - `ano`: `N/D`
+  - `sugestao_ano_limites`: `2026-03/2026-04`
+  - `sugestao_ano`: `0.00495`
+  - `doze_meses`: `N/D`
+  - `desde_inicio`: `N/D`
+  - `intervalo_2025_12_a_2026_01`: `0.0302`
+  - `intervalo_2026_03_a_2026_05`: `recusado_periodo`
+  - `mes_referencia_sem_fechamento`: `N/D`
+  - `mes_referencia_apos_reabrir_2026_04`: `2026-03`
+  - `limites_ano_na_virada`: `2026-01/2026-12`
+
+#### CR-52 — Aportes líquidos do mês aberto (P19, K2)
+
+- **Entrega:** ciclo `004`. **Regras:** 15 (P19), 4.2, 4.3 (K2).
+- **Entrada:** (a) M = abril de 2026. Eventos: e0 aporte de 30.000 em 20/04 (abril, fechado); e1 aporte de 8.000 em 25/04; e2 aporte de 50.000 em 03/05; e3 rendimento de 2.000 em 04/05; transferência de 10.000 do ativo A para o B em 06/05 (pernas −10.000 e +10.000); e4 resgate de −15.000 em 08/05; e5 estorno de e0 em 10/05 (−30.000); e6 marcação de −700 em 12/05. (b) Nenhum mês fechado. Eventos: aporte de 100.000 em 05/01/2026, resgate de −20.000 em 10/01/2026 e rendimento de 500 em 31/01/2026.
+- **Passo a passo:** (a) entram os eventos com data depois de 30/04/2026 cujo tipo efetivo é aporte ou resgate: e2 (+50.000), e4 (−15.000) e e5, estorno de um aporte, que conta pelo tipo referenciado (−30.000). e0 e e1 são de abril; rendimento, transferência e marcação não entram. 50.000 − 15.000 − 30.000 = 5.000. (b) sem M, entram todos os eventos: 100.000 − 20.000 = 80.000; o rendimento não entra.
+- **Esperado:**
+  - `aportes_liquidos`: `5000`
+  - `aportes_liquidos_sem_fechamento`: `80000`
+
+### 15. Apresentação do Início (P17 a P19 do ciclo `004`)
+
+Regras de apresentação decididas pelo responsável em 2026-10-14, na correção da rodada 1 do plano do ciclo `004`. Elas só escolhem os limites e o que somar; os cálculos são os das seções 7 e 8.
+
+**Mês de referência (P17).** M é o último mês fechado. Todos os períodos do Início terminam em M, que aparece no rótulo. Sem nenhum mês fechado, não há M, e patrimônio, variação, rentabilidades, base 100, drawdown e distribuição não são apresentados. Reabrir M o devolve ao estado aberto, e o mês fechado anterior passa a ser M.
+
+**Períodos (P17, P18).** Meses completos, com limites inclusivos:
+
+- mês: [M, M];
+- ano: [janeiro do ano de M, M]. Na virada do ano, o ano é o de M, não o do calendário (P18);
+- 12 meses: [M − 11 meses, M];
+- desde o início: [início da carteira, M];
+- intervalo escolhido: [a, b], com a ≤ b ≤ M. Um mês posterior a M não pode ser escolhido: o pedido é recusado com o motivo `periodo`.
+
+Todo período passa pelo período efetivo (K8) e pela regra do `N/D` (K1) da seção 8.
+
+**Sugestão (K1).** Quando o resultado de um período é `N/D` porque algum mês do período efetivo é `N/D`, seja n o último desses meses. Se n for anterior ao fim do período, apresenta-se também, à parte e com os limites no rótulo, o resultado de [mês seguinte a n, fim do período]. O resultado do período pedido continua `N/D`.
+
+**Patrimônio (P6 do ciclo `004`).** É o Vf de M, com a data do último dia de M.
+
+**Aportes líquidos (P19).** Soma, em centavos, dos eventos com data posterior ao último dia de M cujo tipo efetivo é aporte ou resgate. O estorno conta pelo tipo do evento referenciado (K2). Transferências, rendimento, marcação, câmbio e migração não entram. Sem M, entram todos os eventos da carteira.
+
 ## Fontes
 
 | Fonte | Função | Versão fixada | Limite de autoridade |
@@ -940,6 +1004,7 @@ Nos casos de série diária, os valores são fictícios, de 0,04% ao dia, em dia
 | `Meus-Investimentos` | Regras de origem, lidas na ideação do ciclo `003` | Commit `1b13b033ce4335c09df80237c8c31b96b37e3797`, fixado na KB-001 | Evidência histórica; nenhum valor, teste ou fixture copiado |
 | SGS do Banco Central, <https://api.bcb.gov.br/dados/serie/bcdata.sgs.{codigo}/dados> | Formato, janelas e séries 12 e 433 | Verificação de 2026-10-13, registrada no plano do ciclo `003` (V1 a V5) | Serviço externo; a disponibilidade não foi medida |
 | Plano do ciclo `003` | Decisões P1 a P18 e D1 a D14 | `_project/executed/003_regras_financeiras/003_plan.md`, `v3` aprovada em 2026-10-14 | Autoridade das decisões; esta KB as especifica |
+| Plano do ciclo `004` | Decisões P17 a P19 (apresentação do Início) | `_project/drafts/004_telas_produto/004_plan.md`, `v4` aprovada em 2026-10-14 | Autoridade das decisões; a seção 15 as especifica |
 | `design-system/DESIGN.md`, seções 6.3 a 6.5 | Formato brasileiro, sinal e `N/D` | Versão vigente em `main` | Contrato visual |
 
 ## Histórico
@@ -948,3 +1013,4 @@ Nos casos de série diária, os valores são fictícios, de 0,04% ao dia, em dia
 | :-- | :-- | :-- |
 | 2026-10-14 | `003` | Criação (issue #26), com as decisões K1 a K13 e os casos CR-01 a CR-50 |
 | 2026-10-14 | `003` | Issue #27: datas mínimas do estorno e da correção, trânsito sem lançamento comum e escopo da pendência (ativo com histórico no mês) e saldo atual na desativação, explicitados na implementação do banco |
+| 2026-10-14 | `004` | Issue #40: seção 15, apresentação do Início (P17 a P19), e os casos CR-51 e CR-52 |

@@ -2375,6 +2375,211 @@
         "q15": "recusado_faixa",
         "q16": 710
       }
+    },
+    {
+      "id": "CR-51",
+      "titulo": "Limites dos períodos do Início (P17, P18, K1, K8)",
+      "entrega": "004",
+      "regras": [
+        "P17",
+        "P18",
+        "K1",
+        "K8"
+      ],
+      "entrada": {
+        "inicio": "2025-11",
+        "meses_fechados": [
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03",
+          "2026-04"
+        ],
+        "hoje": "2026-05-10",
+        "retornos": {
+          "2025-12": 0.01,
+          "2026-01": 0.02,
+          "2026-02": "N/D",
+          "2026-03": 0.01,
+          "2026-04": -0.005
+        },
+        "consultas": [
+          {
+            "chave": "mes",
+            "periodo": "mes"
+          },
+          {
+            "chave": "ano",
+            "periodo": "ano"
+          },
+          {
+            "chave": "doze_meses",
+            "periodo": "12_meses"
+          },
+          {
+            "chave": "desde_inicio",
+            "periodo": "desde_inicio"
+          },
+          {
+            "chave": "intervalo_2025_12_a_2026_01",
+            "periodo": "intervalo",
+            "de": "2025-12",
+            "ate": "2026-01"
+          },
+          {
+            "chave": "intervalo_2026_03_a_2026_05",
+            "periodo": "intervalo",
+            "de": "2026-03",
+            "ate": "2026-05"
+          }
+        ],
+        "sem_fechamento": {
+          "meses_fechados": []
+        },
+        "apos_reabrir": {
+          "meses_fechados": [
+            "2025-11",
+            "2025-12",
+            "2026-01",
+            "2026-02",
+            "2026-03"
+          ]
+        },
+        "virada": {
+          "hoje": "2027-01-10",
+          "meses_fechados_ate": "2026-12"
+        }
+      },
+      "esperado": {
+        "limites_mes": "2026-04/2026-04",
+        "limites_ano": "2026-01/2026-04",
+        "limites_12_meses": "2025-05/2026-04",
+        "limites_desde_inicio": "2025-11/2026-04",
+        "mes": -0.005,
+        "ano": "N/D",
+        "sugestao_ano_limites": "2026-03/2026-04",
+        "sugestao_ano": 0.00495,
+        "doze_meses": "N/D",
+        "desde_inicio": "N/D",
+        "intervalo_2025_12_a_2026_01": 0.0302,
+        "intervalo_2026_03_a_2026_05": "recusado_periodo",
+        "mes_referencia_sem_fechamento": "N/D",
+        "mes_referencia_apos_reabrir_2026_04": "2026-03",
+        "limites_ano_na_virada": "2026-01/2026-12"
+      }
+    },
+    {
+      "id": "CR-52",
+      "titulo": "Aportes líquidos do mês aberto (P19, K2)",
+      "entrega": "004",
+      "regras": [
+        "P19",
+        "K2"
+      ],
+      "entrada": {
+        "a": {
+          "mes_referencia": "2026-04",
+          "eventos": [
+            {
+              "id": "e0",
+              "ativo": "A",
+              "data": "2026-04-20",
+              "tipo": "aporte",
+              "valor": 30000
+            },
+            {
+              "id": "e1",
+              "ativo": "A",
+              "data": "2026-04-25",
+              "tipo": "aporte",
+              "valor": 8000
+            },
+            {
+              "id": "e2",
+              "ativo": "A",
+              "data": "2026-05-03",
+              "tipo": "aporte",
+              "valor": 50000
+            },
+            {
+              "id": "e3",
+              "ativo": "A",
+              "data": "2026-05-04",
+              "tipo": "rendimento",
+              "valor": 2000
+            },
+            {
+              "id": "t1o",
+              "ativo": "A",
+              "data": "2026-05-06",
+              "tipo": "transferencia",
+              "valor": -10000,
+              "transferencia": "t1"
+            },
+            {
+              "id": "t1d",
+              "ativo": "B",
+              "data": "2026-05-06",
+              "tipo": "transferencia",
+              "valor": 10000,
+              "transferencia": "t1"
+            },
+            {
+              "id": "e4",
+              "ativo": "A",
+              "data": "2026-05-08",
+              "tipo": "resgate",
+              "valor": -15000
+            },
+            {
+              "id": "e5",
+              "ativo": "A",
+              "data": "2026-05-10",
+              "tipo": "estorno",
+              "valor": -30000,
+              "referencia": "e0"
+            },
+            {
+              "id": "e6",
+              "ativo": "B",
+              "data": "2026-05-12",
+              "tipo": "marcacao",
+              "valor": -700
+            }
+          ]
+        },
+        "b": {
+          "mes_referencia": null,
+          "eventos": [
+            {
+              "id": "f1",
+              "ativo": "A",
+              "data": "2026-01-05",
+              "tipo": "aporte",
+              "valor": 100000
+            },
+            {
+              "id": "f2",
+              "ativo": "A",
+              "data": "2026-01-10",
+              "tipo": "resgate",
+              "valor": -20000
+            },
+            {
+              "id": "f3",
+              "ativo": "A",
+              "data": "2026-01-31",
+              "tipo": "rendimento",
+              "valor": 500
+            }
+          ]
+        }
+      },
+      "esperado": {
+        "aportes_liquidos": 5000,
+        "aportes_liquidos_sem_fechamento": 80000
+      }
     }
   ]
 }

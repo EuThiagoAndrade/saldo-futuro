@@ -2,13 +2,13 @@
 
 > **Ciclo:** `004`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#39`
 > **Plano:** `_project/drafts/004_telas_produto/004_plan.md`
 > **Branch:** `feature/issue-39`
 > **PR:** [#46](https://github.com/EuThiagoAndrade/saldo-futuro/pull/46)
-> **Integração:** `Pendente`
+> **Integração:** `Integrada por squash em 7420ae5, em 2026-10-14`
 > **Autorização inicial:** "autorizo a implementação da issue #39" em 2026-10-14
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-14
@@ -69,7 +69,7 @@ Não se aplica.
 | Testes da governança | `node --test scripts/validate-governance.test.mjs`: 39 passaram |
 | Validador | 0 erros, 0 avisos |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos | PR #46: CI (aplicação e banco), governança e Vercel verdes |
 
 ## Revisão da correção
 
@@ -90,18 +90,20 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 004 (completo)
+Situação: Aguardando autorização de implementação — ciclo 004 (completo)
 Quem: Responsável
-Conferir: [PR #46](https://github.com/EuThiagoAndrade/saldo-futuro/pull/46): checks, diff e as decisões incidentais desta task
-Diga: "aprovo o merge da PR #46"
+Conferir: Issue #40 e escopo (item D)
+Diga: "autorizo a implementação da issue #40"
 ```
+
+Integrada; o artefato ativo passa a ser a task da issue #40.
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `saldo-futuro + 004 + implementar_issue + 39 + 401fa49`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: antes, issue #39 aberta, sem branch nem task; depois, branch `feature/issue-39` publicada, PR #46 aberta e esta task `Aguardando integração`.
+- `state_before` / `state_after`: antes, PR #46 aberta com checks verdes; depois, PR #46 integrada por squash em `7420ae5` e issue #39 fechada, depois de "aprovo o merge da PR #46" em 2026-10-14. Reconciliado no início da issue #40.
 - `result`: `executed`
 - `evidence`: autorização de 2026-10-14; base `main` @ `401fa49`; a tabela "Evidências" acima.
-- `blockers`: aprovação do merge e checks remotos.
+- `blockers`: nenhum.

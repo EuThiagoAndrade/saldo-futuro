@@ -128,3 +128,28 @@ export async function lerMarcosDoFechamento(cliente: Cliente): Promise<{ ultimo:
     maisAntigo: data?.[0] ? mesDaColuna(data[0].data) : null,
   };
 }
+
+export interface InsumosDoInicio {
+  ativos: Ativo[];
+  eventos: Evento[];
+  consolidados: { mes: string; vi: number; vf: number }[];
+  posicoes: PosicaoLida[];
+}
+
+/** Insumos do Início, lidos como uma composição coerente (D13). */
+export async function lerInsumosDoInicio(cliente: Cliente): Promise<InsumosDoInicio> {
+  const { insumos } = await lerComposicao(
+    () => marcaCarteira(cliente),
+    async () => ({
+      ativos: await lerAtivos(cliente),
+      eventos: await lerEventos(cliente),
+      consolidados: (await lerTabela<{ mes: string; vi: number; vf: number }>(cliente, "consolidados_mensais", { colunas: "mes, vi, vf" })).map(
+        (c) => ({ ...c, mes: mesDaColuna(c.mes) }),
+      ),
+      posicoes: await lerTabela<PosicaoLida>(cliente, "posicoes_mensais", {
+        colunas: "mes, ativo_id, saldo_inicial, saldo_final, ajuste, tipo_ajuste",
+      }),
+    }),
+  );
+  return insumos;
+}
