@@ -34,7 +34,7 @@ export interface ClienteCarga {
 
 export class ErroSincronizacao extends Error {
   constructor(
-    readonly motivo: "busca" | "resposta" | "sem_valores" | "gravacao",
+    readonly motivo: "busca" | "resposta" | "sem_valores" | "gravacao" | "tempo",
     detalhe: string,
   ) {
     super(`${motivo}: ${detalhe}`);
@@ -119,15 +119,20 @@ export async function sincronizarBenchmark(
   benchmark: BenchmarkSgs,
   inicio: DataCivil,
   fim: DataCivil,
-  { buscar, cliente }: { buscar: Buscar; cliente: ClienteCarga },
+  { buscar, cliente, signal }: { buscar: Buscar; cliente: ClienteCarga; signal?: AbortSignal },
 ): Promise<number> {
+  const conferirPrazo = () => {
+    if (signal?.aborted) throw new ErroSincronizacao("tempo", "tempo de busca esgotado");
+  };
   const valores: ValorCarga[] = [];
   for (const janela of janelas(inicio, fim)) {
+    conferirPrazo();
     const url = urlDaJanela(benchmark.codigoSgs, janela);
     let resposta: Awaited<ReturnType<Buscar>>;
     try {
       resposta = await buscar(url);
     } catch (erro) {
+      conferirPrazo();
       throw new ErroSincronizacao("busca", `${url}: ${String(erro)}`);
     }
     if (!resposta.ok) throw new ErroSincronizacao("busca", `${url}: HTTP ${resposta.status}`);
@@ -135,10 +140,12 @@ export async function sincronizarBenchmark(
     try {
       corpo = JSON.parse(await resposta.text());
     } catch {
+      conferirPrazo();
       throw new ErroSincronizacao("resposta", `${url}: JSON inválido`);
     }
     valores.push(...validarResposta(corpo, janela, benchmark.periodicidade));
   }
+  conferirPrazo();
   if (new Set(valores.map((v) => v.data)).size !== valores.length) {
     throw new ErroSincronizacao("resposta", "data repetida entre as respostas");
   }

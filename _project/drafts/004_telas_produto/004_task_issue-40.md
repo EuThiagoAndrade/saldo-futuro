@@ -2,13 +2,13 @@
 
 > **Ciclo:** `004`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#40`
 > **Plano:** `_project/drafts/004_telas_produto/004_plan.md`
 > **Branch:** `feature/issue-40`
 > **PR:** [#47](https://github.com/EuThiagoAndrade/saldo-futuro/pull/47)
-> **Integração:** `Pendente`
+> **Integração:** `Integrada por squash; conferida no GitHub em 2026-10-14`
 > **Autorização inicial:** "autorizo a implementação da issue #40" em 2026-10-14
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-14
@@ -73,7 +73,7 @@ Não se aplica.
 | Testes da governança | `node --test scripts/validate-governance.test.mjs`: 39 passaram |
 | Validador | 0 erros, 0 avisos |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos | Todos passaram: aplicação/preview, Supabase local/banco/e2e, governança e Vercel; conferidos com `gh pr checks 47` |
 
 ## Revisão da correção
 
@@ -95,10 +95,10 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 004 (completo)
+Situação: Aguardando autorização de implementação — ciclo 004 (completo)
 Quem: Responsável
-Conferir: [PR #47](https://github.com/EuThiagoAndrade/saldo-futuro/pull/47): checks e diff; a conferência do CR-51 e do CR-52 está registrada em `004_validation_casos_inicio.md`
-Diga: "aprovo o merge da PR #47"
+Conferir: [Issue #41](https://github.com/EuThiagoAndrade/saldo-futuro/issues/41) e item E do plano
+Diga: "autorizo a implementação da issue #41"
 ```
 
 ## Handoff de saída
@@ -106,7 +106,7 @@ Diga: "aprovo o merge da PR #47"
 - `handoff_schema_version: 2`
 - `logical_key`: `saldo-futuro + 004 + implementar_issue + 40 + 7420ae5`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: antes, issue #40 aberta, sem branch nem task; depois, branch `feature/issue-40` publicada, PR #47 aberta e esta task `Aguardando integração`.
-- `result`: `executed`
-- `evidence`: autorização de 2026-10-14; base `main` @ `7420ae5`; a tabela "Evidências" acima e `004_validation_casos_inicio.md`.
-- `blockers`: checks remotos e aprovação do merge.
+- `state_before` / `state_after`: task `Aguardando integração` e PR #47 aberta; PR #47 integrada e issue #40 fechada, task reconciliada como `Concluída` no início da issue #41.
+- `result`: `already_executed_and_reconciled`
+- `evidence`: autorização de 2026-10-14; base `main` @ `7420ae5`; tabela "Evidências" e `004_validation_casos_inicio.md`; merge e checks de #47 e fechamento de #40 conferidos com `gh` em 2026-10-14. A autorização de #41 está na task seguinte.
+- `blockers`: nenhum desta entrega.
