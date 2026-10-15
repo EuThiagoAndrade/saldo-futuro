@@ -90,9 +90,14 @@ export default async function LancamentosPage({ searchParams }: { searchParams: 
       </form>
 
       <section aria-labelledby="lancamentos-do-mes" className="flex flex-col gap-3">
-        <h2 id="lancamentos-do-mes" className="text-lg/7 font-semibold text-text">
-          {mesBr(mes)} {fechado ? <span className="ml-2 rounded-sm bg-neutral-subtle px-2 py-0.5 text-sm/5 font-medium text-text-secondary">Mês fechado</span> : null}
-        </h2>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 id="lancamentos-do-mes" className="text-lg/7 font-semibold text-text">
+            {mesBr(mes)} {fechado ? <span className="ml-2 rounded-sm bg-neutral-subtle px-2 py-0.5 text-sm/5 font-medium text-text-secondary">Mês fechado</span> : null}
+          </h2>
+          <Link href={`/lancamentos/fechamento/${mes}`} className={botaoSecundario}>
+            Fechamento de {mesBr(mes)}
+          </Link>
+        </div>
 
         {linhas.length === 0 ? (
           <EstadoVazio

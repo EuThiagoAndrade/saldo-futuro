@@ -427,8 +427,8 @@ Uma PR por issue. A PR documental do plano, a PR de release e a PR de encerramen
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | A [#37](https://github.com/EuThiagoAndrade/saldo-futuro/issues/37), B [#38](https://github.com/EuThiagoAndrade/saldo-futuro/issues/38), C [#39](https://github.com/EuThiagoAndrade/saldo-futuro/issues/39), D [#40](https://github.com/EuThiagoAndrade/saldo-futuro/issues/40), E [#41](https://github.com/EuThiagoAndrade/saldo-futuro/issues/41) e F [#42](https://github.com/EuThiagoAndrade/saldo-futuro/issues/42), criadas em 2026-10-14 |
-| PR(s) | Plano: [#36](https://github.com/EuThiagoAndrade/saldo-futuro/pull/36), integrada por squash; A: [#43](https://github.com/EuThiagoAndrade/saldo-futuro/pull/43), integrada por squash; B: [#45](https://github.com/EuThiagoAndrade/saldo-futuro/pull/45) |
-| Branch(es) | Plano: `chore/cycle-004-plan`; A: `feature/issue-37`; B: `feature/issue-38` |
+| PR(s) | Plano: [#36](https://github.com/EuThiagoAndrade/saldo-futuro/pull/36), integrada por squash; A: [#43](https://github.com/EuThiagoAndrade/saldo-futuro/pull/43), integrada por squash; B: [#45](https://github.com/EuThiagoAndrade/saldo-futuro/pull/45), integrada por squash; C: [#46](https://github.com/EuThiagoAndrade/saldo-futuro/pull/46) |
+| Branch(es) | Plano: `chore/cycle-004-plan`; A: `feature/issue-37`; B: `feature/issue-38`; C: `feature/issue-39` |
 | Destino após conclusão | `_project/executed/004_telas_produto/004_plan.md` |
 
 ## Próximo passo

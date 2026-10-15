@@ -1,7 +1,8 @@
 import "server-only";
 import type { Evento, TipoAjuste } from "../financeiro/eventos";
-import { type Cliente, lerTabela } from "../leitura";
+import { type Cliente, ErroLeitura, lerComposicao, lerTabela, marcaCarteira } from "../leitura";
 import { deLinhaEvento, type LinhaEvento } from "./carteira";
+import { mesDaColuna, type PosicaoLida } from "./fechamento";
 
 // Leituras completas das telas da carteira (D13): todas as linhas, na ordem declarada, com a
 // sessão do usuário (a RLS restringe às próprias linhas).
@@ -67,4 +68,63 @@ export function nomeDoAtivo(ativos: Ativo[], id: string): string {
   const ativo = ativos.find((a) => a.id === id);
   if (!ativo) return "Ativo";
   return ativo.sistema === "transito" ? "Em trânsito" : ativo.nome;
+}
+
+export interface InsumosDoFechamento {
+  ativos: Ativo[];
+  eventos: Evento[];
+  posicoes: PosicaoLida[];
+  mesesFechados: string[];
+}
+
+/**
+ * Insumos da prévia do fechamento, lidos como uma composição coerente (D13): ativos, eventos,
+ * posições e meses fechados da mesma versão da carteira, ou ErroLeitura.
+ */
+export async function lerInsumosDoFechamento(cliente: Cliente): Promise<InsumosDoFechamento> {
+  const { insumos } = await lerComposicao(
+    () => marcaCarteira(cliente),
+    async () => {
+      const consolidados = await lerTabela<{ mes: string }>(cliente, "consolidados_mensais", { colunas: "mes" });
+      return {
+        ativos: await lerAtivos(cliente),
+        eventos: await lerEventos(cliente),
+        posicoes: await lerTabela<PosicaoLida>(cliente, "posicoes_mensais", {
+          colunas: "mes, ativo_id, saldo_inicial, saldo_final, ajuste, tipo_ajuste",
+        }),
+        mesesFechados: consolidados.map((c) => mesDaColuna(c.mes)),
+      };
+    },
+  );
+  return insumos;
+}
+
+export interface ConsolidadoLido {
+  vi: number;
+  vf: number;
+  aportes: number;
+  resgates: number;
+  rendimento: number;
+  marcacao: number;
+  cambio: number;
+  migracao: number;
+}
+
+export async function lerConsolidado(cliente: Cliente, mes: string): Promise<ConsolidadoLido | null> {
+  const linhas = await lerTabela<ConsolidadoLido>(cliente, "consolidados_mensais", {
+    colunas: "vi, vf, aportes, resgates, rendimento, marcacao, cambio, migracao",
+    filtrar: (consulta) => consulta.eq("mes", `${mes}-01`),
+  });
+  return linhas[0] ?? null;
+}
+
+/** Último mês fechado e mês do evento mais antigo, para o aviso do Início. */
+export async function lerMarcosDoFechamento(cliente: Cliente): Promise<{ ultimo: string | null; maisAntigo: string | null }> {
+  const consolidados = await lerTabela<{ mes: string }>(cliente, "consolidados_mensais", { colunas: "mes" });
+  const { data, error } = await cliente.from("eventos").select("data").order("data", { ascending: true }).limit(1);
+  if (error) throw new ErroLeitura("pagina", error.message);
+  return {
+    ultimo: consolidados.length ? mesDaColuna(consolidados.at(-1)!.mes) : null,
+    maisAntigo: data?.[0] ? mesDaColuna(data[0].data) : null,
+  };
 }
