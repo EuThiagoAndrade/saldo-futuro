@@ -124,6 +124,15 @@ const MENSAGENS: Record<string, string> = {
   tipo_ajuste: "Escolha o tipo de ajuste do ativo.",
   transferencia_inexistente: "Transferência não encontrada.",
   nao_autenticado: "Sua sessão terminou. Entre de novo.",
+  // Fechamento (KB-004, seção 5).
+  pendencia: "Informe o saldo real de todos os ativos do mês, mesmo que igual ao calculado.",
+  identidade: "Os saldos não fecham com os lançamentos do mês. Confira os valores e tente de novo.",
+  sequencia: "Os meses são fechados em ordem: feche antes o mês seguinte ao último fechado.",
+  inicio: "O primeiro fechamento é o do mês do lançamento mais antigo.",
+  mes_nao_terminado: "O mês só pode ser fechado depois do seu último dia.",
+  reabertura: "Só o último mês fechado pode ser reaberto.",
+  mes_invalido: "Mês inválido.",
+  saldos_invalidos: "Há saldo informado para um ativo que não entra neste fechamento.",
 };
 
 export const MENSAGEM_GENERICA = "Não foi possível concluir a operação. Tente novamente.";
