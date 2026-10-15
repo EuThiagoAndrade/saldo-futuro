@@ -7,7 +7,7 @@
 > **Issue:** `#40`
 > **Plano:** `_project/drafts/004_telas_produto/004_plan.md`
 > **Branch:** `feature/issue-40`
-> **PR:** —
+> **PR:** [#47](https://github.com/EuThiagoAndrade/saldo-futuro/pull/47)
 > **Integração:** `Pendente`
 > **Autorização inicial:** "autorizo a implementação da issue #40" em 2026-10-14
 > **Modo contínuo:** `—`
@@ -95,20 +95,18 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 004 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 004"
+Situação: Aguardando merge — ciclo 004 (completo)
+Quem: Responsável
+Conferir: [PR #47](https://github.com/EuThiagoAndrade/saldo-futuro/pull/47): checks, diff e a conferência dos valores do CR-51 e do CR-52 (`004_validation_casos_inicio.md`), que precede o merge
+Diga: "aprovo o merge da PR #47"
 ```
-
-A implementação da issue #40 está autorizada e em andamento nesta branch.
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `saldo-futuro + 004 + implementar_issue + 40 + 7420ae5`
-- `effect_class`: `local_mutation`
-- `state_before` / `state_after`: antes, issue #40 aberta, sem branch nem task; depois, branch `feature/issue-40` e esta task em andamento.
+- `effect_class`: `remote_mutation`
+- `state_before` / `state_after`: antes, issue #40 aberta, sem branch nem task; depois, branch `feature/issue-40` publicada, PR #47 aberta e esta task `Aguardando integração`.
 - `result`: `executed`
-- `evidence`: autorização de 2026-10-14; base `main` @ `7420ae5`.
-- `blockers`: nenhum.
+- `evidence`: autorização de 2026-10-14; base `main` @ `7420ae5`; a tabela "Evidências" acima e `004_validation_casos_inicio.md`.
+- `blockers`: conferência do responsável dos valores do CR-51 e do CR-52, checks remotos e aprovação do merge.
