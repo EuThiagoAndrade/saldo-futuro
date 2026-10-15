@@ -7,7 +7,7 @@
 > **Issue:** — (encerramento documental sem issue recursiva)
 > **Plano:** `_project/executed/004_telas_produto/004_plan.md`
 > **Branch:** `chore/cycle-004-closure`
-> **PR:** [#50](https://github.com/EuThiagoAndrade/saldo-futuro/pull/50), rascunho dependente da release #44
+> **PR:** [#50](https://github.com/EuThiagoAndrade/saldo-futuro/pull/50), encerramento após a release #44
 > **Integração:** prospectiva; válida somente depois do merge desta PR, conferido no GitHub
 > **Autorização inicial:** "aprovo o plano do ciclo 004" em 2026-10-14; encerramento também solicitado expressamente em 2026-10-15
 > **Modo contínuo:** `—`
@@ -17,7 +17,7 @@
 
 Instanciada de `.agent/templates/task.md`; autoridades: `.agent/ai_behavior.md`, `_project/README.md`, plano v4 aprovado e decisão humana de 2026-10-15. Workflow `.agent/workflows/atualizar_docs.md`, skills locais `doc-updater` e `governance-check`, templates de plano/KB e `.github/pull_request_template.md` lidos no ponto de uso.
 
-**Encerramento prospectivo:** esta branch descreve o estado depois do próprio merge. O estado atual no GitHub prevalece: a release [#44](https://github.com/EuThiagoAndrade/saldo-futuro/pull/44) ainda precisa de checks verdes, aprovação própria, integração e publicação de `v0.3.0`; só depois a PR documental de encerramento pode ser integrada, também com aprovação própria. A preparação antecipada não fecha o ciclo em `main`.
+**Encerramento prospectivo:** esta branch descreve o estado depois do próprio merge. A release [#44](https://github.com/EuThiagoAndrade/saldo-futuro/pull/44) foi integrada após aprovação humana específica, e a [v0.3.0](https://github.com/EuThiagoAndrade/saldo-futuro/releases/tag/v0.3.0) foi publicada em 2026-10-15. A PR documental ainda exige checks verdes e aprovação própria. A preparação antecipada não fecha o ciclo em `main`.
 
 ## Objetivo
 
@@ -51,6 +51,7 @@ Não se aplica.
 - [x] Preparar plano/tasks concluídos, documentação viva e caminhos em `executed/`, como estado prospectivo.
 - [x] Conferir gates documentais e diff final; alterações restritas aos registros e referências do ciclo.
 - [x] Publicar a PR documental [#50](https://github.com/EuThiagoAndrade/saldo-futuro/pull/50) em rascunho para revisão, dependente da release.
+- [x] Receber "aprovo o merge da PR #44", reconferir os checks da revisão `6330364`, integrar por squash e confirmar a publicação automática de `v0.3.0`; incorporar os metadados da release nesta branch documental.
 
 ## Evidências
 
@@ -60,7 +61,7 @@ Não se aplica.
 | Última implementação | PR #49: 201 unitários, 239 asserções de banco, 78 E2E com backend e 13 sem backend; seis E2E finais de acessos; axe sem violações em 360/1280 px; evidências na task #42 |
 | Produção sem sessão | 22/22 verificações públicas passaram; resultado e limites na task #42 |
 | Produção autenticada | Relato parcial: logo ausente no celular e lentidão em cada troca de tela. Os demais grupos não foram declarados conferidos |
-| Release | PR #44 aberta; [CI](https://github.com/EuThiagoAndrade/saldo-futuro/actions/runs/38787225505) e [governança](https://github.com/EuThiagoAndrade/saldo-futuro/actions/runs/38787230121) aprovados por `workflow_dispatch` na revisão `6330364`; Vercel aprovado; integração e publicação pendentes |
+| Release | PR #44 integrada por squash após "aprovo o merge da PR #44"; [CI](https://github.com/EuThiagoAndrade/saldo-futuro/actions/runs/38787225505) e [governança](https://github.com/EuThiagoAndrade/saldo-futuro/actions/runs/38787230121) aprovados na revisão `6330364`; Vercel aprovado; [publicação automática](https://github.com/EuThiagoAndrade/saldo-futuro/actions/runs/38789233853) concluída e [v0.3.0](https://github.com/EuThiagoAndrade/saldo-futuro/releases/tag/v0.3.0) publicada às 18:52:43 UTC de 2026-10-15 |
 | Testes e validador de governança | 39/39 testes passaram; validador com 0 erros e 0 avisos; referências, privacidade, barreiras e frases humanas conferidas manualmente |
 | `git diff --check` | Passou |
 | Checks remotos do encerramento | PR #50 publicada; resultados da revisão corrente no GitHub, exigidos verdes antes do merge |
@@ -75,7 +76,7 @@ Não se aplica.
 - As pendências para o próximo ciclo são: incluir o logo à esquerda no header mobile e diagnosticar/corrigir a lentidão de navegação, com dados fictícios, conservando autenticação, RLS e coerência D13. A causa de produção não está comprovada; regiões e custos por consulta ainda precisam ser medidos. Não há nova ideação, plano, issue ou reserva do ciclo `005` nesta entrega.
 - A migração da origem, anteriormente imaginada como `005`, não tinha reserva nem plano. Continua futura, a replanejar sem numeração atribuída.
 - O alerta de dependência preexistente registrado nas tasks #41/#42 não foi corrigido nem ampliado por este encerramento.
-- A PR é preparada para revisão antes da integração da release; seu merge permanece bloqueado até a PR #44 integrada, a tag publicada e a aprovação própria. Não há integração automática do próximo ciclo.
+- A PR foi preparada em rascunho antes da integração da release. A dependência foi satisfeita pela integração da PR #44 e pela publicação da tag; o merge documental ainda exige checks verdes e aprovação própria. Não há integração automática do próximo ciclo.
 
 ## Encerramento
 
@@ -97,7 +98,7 @@ Diga: —
 - `logical_key`: `saldo-futuro + 004 + atualizar_docs + encerramento + 0a99ac7`
 - `effect_class`: `remote_mutation`
 - `state_before`: ciclo 004 em execução; seis entregas integradas; verificação pública aprovada, conferência autenticada parcial e dois pontos relatados; decisão humana de encerrar antes do próximo ciclo; release #44 aberta.
-- `state_after`: encerramento documental publicado na PR #50 como estado prospectivo em `executed/`, com pendências e limites registrados; o estado corrente segue ciclo em execução até a release e o merge da PR documental.
+- `state_after`: release #44 integrada e `v0.3.0` publicada; encerramento documental na PR #50 como estado prospectivo em `executed/`, com pendências e limites registrados; o ciclo corrente segue em execução até o merge documental.
 - `result`: `executed`
-- `evidence`: instrução humana de 2026-10-15; conferências GitHub; tasks e tabela acima; templates e autoridades lidos; `gh pr list --head chore/cycle-004-closure --state all` vazio antes da criação e `gh pr create --draft` devolveu #50; nenhum SHA do próprio merge registrado.
-- `blockers`: release #44 integrada e `v0.3.0` publicada; checks verdes e aprovação individual do merge da PR documental. O próximo ciclo não foi iniciado.
+- `evidence`: instruções humanas de encerramento e aprovação literal da PR #44 em 2026-10-15; conferências GitHub e release publicada; tasks e tabela acima; templates e autoridades lidos; `gh pr list --head chore/cycle-004-closure --state all` vazio antes da criação e `gh pr create --draft` devolveu #50; nenhum SHA do próprio merge registrado.
+- `blockers`: checks verdes e aprovação individual do merge da PR #50. O próximo ciclo não foi iniciado.

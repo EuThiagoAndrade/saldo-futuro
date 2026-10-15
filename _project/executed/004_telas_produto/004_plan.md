@@ -771,4 +771,4 @@ Nenhum achado foi contestado.
 - `state_after`: plano e tasks reconciliados e documentação viva atualizada como estado prospectivo; ciclo em `executed/` só passa a valer em `main` pelo merge documental depois da release.
 - `result`: `executed`
 - `evidence`: tasks das entregas, PRs integradas, verificação pública, relato do responsável e decisão posterior de 2026-10-15; task de encerramento.
-- `blockers`: release #44 integrada com `v0.3.0` publicada; checks verdes e aprovação própria da PR de encerramento.
+- `blockers`: checks verdes e aprovação própria da PR de encerramento #50; a release #44 já foi integrada e a [v0.3.0](https://github.com/EuThiagoAndrade/saldo-futuro/releases/tag/v0.3.0) publicada em 2026-10-15, conforme a task de encerramento.
