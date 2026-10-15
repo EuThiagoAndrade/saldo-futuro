@@ -2,12 +2,12 @@
 
 > **Ciclo:** `004`
 > **Trilha:** `normal`
-> **Estado:** `Em andamento`
+> **Estado:** `Aguardando integração`
 > **Tipo:** `feature`
 > **Issue:** `#42`
 > **Plano:** `_project/drafts/004_telas_produto/004_plan.md`
 > **Branch:** `feature/issue-42`
-> **PR:** —
+> **PR:** [#49](https://github.com/EuThiagoAndrade/saldo-futuro/pull/49)
 > **Integração:** `Pendente`
 > **Autorização inicial:** "autorizo a implementação da issue #42" em 2026-10-15
 > **Modo contínuo:** `—`
@@ -45,8 +45,8 @@ Não se aplica.
 - [x] Conferir autorização, plano, issue, base e dependência integrada; criar branch e task.
 - [x] Implementar página, ações, normalização, confirmação e avisos.
 - [x] Provar fluxo admin, recusas, permanência da conta e acessibilidade com dados fictícios.
-- [x] Executar gates e revisar diff e governança; staging seletivo na publicação.
-- [ ] Publicar PR revisável e registrar checks e próximo passo.
+- [x] Executar gates e revisar diff, staging seletivo e governança; oito arquivos da entrega, sem segredo ou dado real.
+- [x] Publicar PR revisável [#49](https://github.com/EuThiagoAndrade/saldo-futuro/pull/49), registrar checks e próximo passo.
 
 ## Evidências
 
@@ -62,7 +62,7 @@ Não se aplica.
 | Preview sem backend | Build de produção e 13 testes passaram; 70 pulados por exigirem backend/medição opcional. A rota nova mostra o aviso sem chamadas a outra origem |
 | Validador | 39/39 testes; 0 erros/avisos; quatro itens manuais conferidos: referências, privacidade, semântica das barreiras e autorização literal |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos | [PR #49](https://github.com/EuThiagoAndrade/saldo-futuro/pull/49): resultados correntes verificáveis no GitHub, acompanhados por `gh pr checks --watch`; devem estar verdes na revisão corrente antes do merge |
 
 ## Revisão da correção
 
@@ -102,18 +102,18 @@ Não se aplica. Ciclo completo: verificação, release e encerramento permanecem
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 004 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 004"
+Situação: Aguardando merge — ciclo 004 (completo)
+Quem: Responsável
+Conferir: [PR #49](https://github.com/EuThiagoAndrade/saldo-futuro/pull/49): checks e diff
+Diga: "aprovo o merge da PR #49"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `saldo-futuro + 004 + implementar_issue + 42 + be006cd`
-- `effect_class`: `local_mutation`
-- `state_before` / `state_after`: issue #42 aberta, plano em execução e autorização recebida; branch `feature/issue-42` e task criadas, implementação em andamento.
+- `effect_class`: `remote_mutation`
+- `state_before` / `state_after`: issue #42 aberta, plano em execução e autorização recebida sobre `main` @ `be006cd`; branch `feature/issue-42` publicada, PR #49 aberta e task aguardando integração.
 - `result`: `executed`
-- `evidence`: autorização humana de 2026-10-15; issue #42 e merge da PR #48 conferidos por `gh`; branch baseada em `origin/main` @ `be006cd`.
-- `blockers`: nenhum para implementar; merge exige aprovação própria após checks verdes.
+- `evidence`: autorização humana de 2026-10-15; issue #42 e merge da PR #48 conferidos por `gh`; gates na tabela acima; `gh pr list --head feature/issue-42 --state all` vazio antes da publicação e `gh pr create` devolveu #49; nenhuma duplicação.
+- `blockers`: aprovação própria do merge, condicionada aos checks verdes da revisão corrente no GitHub. A verificação em produção vem depois da integração e exige autorização própria; roteiro nesta task.
