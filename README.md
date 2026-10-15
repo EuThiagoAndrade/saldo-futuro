@@ -12,7 +12,9 @@ O Saldo Futuro substitui o [Meus-Investimentos](https://github.com/EuThiagoAndra
 
 ## Estado atual
 
-O ciclo `000` implantou a governança do projeto e o design system. O ciclo `001` entregou a fundação da aplicação, em produção em `investimentos.euthiagoandrade.com.br`: login com Google restrito a e-mails autorizados, perfis `admin` e `user`, isolamento por RLS provado por testes de banco, PWA instalável e versão `0.1.0`. A única tela autenticada é uma página "em construção". **Nenhuma funcionalidade de produto está disponível.** O ciclo `002` reformou a governança (níveis por risco, próximo passo predefinido, modo contínuo e documentação viva). O ciclo `003` entregou as regras financeiras, ainda sem tela: carteira, lançamentos, fechamento mensal, Modified Dietz e benchmarks, especificados na [KB-004](_project/knowledge/KB-004_regras_financeiras.md) e testados contra casos de referência, na versão `0.2.0`. O próximo ciclo é o `004`, das telas.
+O ciclo `004` entregou as telas do produto: Início, ativos, lançamentos, transferências, fechamento mensal, benchmarks e comparação, sincronização com o SGS e administração de acessos. A versão `0.3.0` reúne essas telas sobre as regras financeiras do ciclo `003`, especificadas na [KB-004](_project/knowledge/KB-004_regras_financeiras.md). A fundação inclui login Google restrito a e-mails autorizados, perfis `admin` e `user`, RLS por usuário e PWA instalável.
+
+O encerramento do `004` foi solicitado pelo responsável com pendências conhecidas: logo no cabeçalho mobile, lentidão em cada troca de tela e conferência autenticada parcial em produção. A verificação pública passou; os pontos relatados não foram declarados resolvidos. O [registro de encerramento](_project/executed/004_telas_produto/004_task_closure.md) preserva a decisão e os limites das evidências. O próximo ciclo proposto é o `005`, para identidade mobile e desempenho; a migração dos dados da origem continua fora das entregas realizadas.
 
 ## Mapa de ciclos
 
@@ -22,10 +24,11 @@ O ciclo `000` implantou a governança do projeto e o design system. O ciclo `001
 | `001` | Fundação: aplicação Next.js, Supabase, autenticação, perfis, RLS, deploy e release-please | Concluído |
 | `002` | Reforma da governança: níveis por risco, próximo passo predefinido, modo contínuo e documentação viva | Concluído |
 | `003` | Regras financeiras: eventos, fechamento, consolidação, Modified Dietz e benchmarks, com casos de referência | Concluído |
-| `004` | Telas pensadas primeiro para o celular | Planejado |
-| `005` | Migração única dos dados e virada | Planejado |
+| `004` | Telas pensadas primeiro para o celular | Concluído com pendências registradas |
+| `005` | Logo no cabeçalho mobile e desempenho de navegação | Proposto, sem reserva |
+| — | Migração única dos dados e virada | A replanejar |
 
-O registro oficial dos ciclos é [`_project/cycles.md`](_project/cycles.md). Os ciclos `004` e `005` ainda não têm plano. Até o ciclo `001`, os documentos numeravam esses ciclos como `002` a `004`; o glossário de `_project/README.md` registra o mapeamento.
+O registro oficial dos ciclos é [`_project/cycles.md`](_project/cycles.md). O plano do `004` está em `executed/`; o `005` ainda não foi reservado nem tem plano. A migração era uma intenção do roteiro anterior, sem reserva de ciclo. Até o ciclo `001`, os documentos numeravam os ciclos de regras, telas e migração como `002` a `004`; o glossário de `_project/README.md` registra o mapeamento histórico.
 
 ## Stack decidida
 
