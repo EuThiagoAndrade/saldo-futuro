@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.0](https://github.com/EuThiagoAndrade/saldo-futuro/compare/v0.2.0...v0.3.0) (2026-10-15)
+
+
+### Features
+
+* **issue-37:** base da interface, parser de quantias e apoio dos testes ([#43](https://github.com/EuThiagoAndrade/saldo-futuro/issues/43)) ([e23f31b](https://github.com/EuThiagoAndrade/saldo-futuro/commit/e23f31bc9acc9e82363314d15f717fc46c355044))
+* **issue-38:** telas de ativos, lançamentos e transferências ([#45](https://github.com/EuThiagoAndrade/saldo-futuro/issues/45)) ([401fa49](https://github.com/EuThiagoAndrade/saldo-futuro/commit/401fa495f2b66c74079063de3d759eb4f189a989))
+* **issue-39:** tela de fechamento mensal ([#46](https://github.com/EuThiagoAndrade/saldo-futuro/issues/46)) ([7420ae5](https://github.com/EuThiagoAndrade/saldo-futuro/commit/7420ae5e98df611af78e533a763104ef923f627e))
+* **issue-40:** Início com rentabilidade, períodos e gráficos ([#47](https://github.com/EuThiagoAndrade/saldo-futuro/issues/47)) ([1cccf9e](https://github.com/EuThiagoAndrade/saldo-futuro/commit/1cccf9e9387a13e3c9cd169ad8328ceae133e36c))
+* **issue-41:** benchmarks, comparação e sincronização com SGS ([#48](https://github.com/EuThiagoAndrade/saldo-futuro/issues/48)) ([be006cd](https://github.com/EuThiagoAndrade/saldo-futuro/commit/be006cd3c68780fc38b943ebea20be9abc6e716b))
+* **issue-42:** administrar lista de acessos ([#49](https://github.com/EuThiagoAndrade/saldo-futuro/issues/49)) ([0a99ac7](https://github.com/EuThiagoAndrade/saldo-futuro/commit/0a99ac7ab00e02b611cc6108da8a8667879e0972))
+
 ## [0.2.0](https://github.com/EuThiagoAndrade/saldo-futuro/compare/v0.1.0...v0.2.0) (2026-10-14)
 
 
