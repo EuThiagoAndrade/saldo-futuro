@@ -10,7 +10,7 @@ if (process.env.MEDIR_NAVEGACAO === '1') {
   if (!['127.0.0.1', 'localhost'].includes(backend.hostname)) throw new Error('Ensaio exige Supabase local.');
   const contexto = new AsyncLocalStorage();
   const registrar = (registro) => appendFileSync(process.env.MEDICAO_LOG, JSON.stringify(registro) + '\n');
-  const processo = (tipo, detalhe = {}) => appendFileSync(process.env.MEDICAO_LOG + '.processos', JSON.stringify({ tipo, pid: process.pid, ppid: process.ppid, instante: new Date().toISOString(), uptime: process.uptime(), ...detalhe }) + '\n');
+  const processo = (tipo, detalhe = {}) => appendFileSync(process.env.MEDICAO_LOG + '.processos', JSON.stringify({ tipo, node: process.version, pid: process.pid, ppid: process.ppid, instante: new Date().toISOString(), uptime: process.uptime(), ...detalhe }) + '\n');
   processo('inicio');
   process.on('exit', (codigo) => processo('fim', { codigo }));
   process.on('uncaughtExceptionMonitor', (erro) => processo('excecao', { nome: erro.name }));

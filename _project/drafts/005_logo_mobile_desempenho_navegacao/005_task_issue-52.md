@@ -72,6 +72,8 @@ Outra tentativa no Chrome instalado terminou com timeout de conteúdo no retorno
 
 No Chromium fixado, a queda repetiu como `ERR_CONNECTION_RESET`, e o registro de ciclo de vida capturou saída nativa do processo Next/Node com código `-1073740791` (`0xC0000409`), em `local/issue-52/ensaio-falha-processo/`. Isso distingue a indisponibilidade de um simples tempo de navegação lento, sem afirmar a causa nativa. A inspeção do Next fixado mostrou que ele próprio evita `Response.clone()` por um problema do Undici (`dedupe-fetch.js`/`clone-response.js`). O preload passou a reutilizar esse helper existente, sem nova dependência; teste independente agora confere corpo, status 206, cabeçalho e URL, além de atraso/correlação/sanitização. Hipótese a validar na coleta completa, sem alterar fonte, proteção, banco ou cálculo do produto. Erros de preparação/aquecimento também passam a registrar falha do bloco e impedir publicação de série parcial.
 
+O bloco isolado de 160 amostras/50 ms passou com essa clonagem em 4 min, mas a queda nativa repetiu na tentativa completa com Node 24.15.0. Portanto, a clonagem não foi declarada causa ou solução da falha. Localizado outro Node 24 já disponível (24.19.0), compatível com o projeto, para comparação de runtime. O comando de medição passou a executar checks/build/Playwright/servidor com o próprio `process.execPath`, evitando mistura silenciosa do Node registrado com outro selecionado por shims npm/npx. O log de ciclo de vida registra a versão efetiva do processo; nenhum pacote, configuração de produto ou dependência foi alterado por essa escolha de runtime. Coleta válida continua pendente até passar integralmente.
+
 ## Encerramento
 
 Não se aplica.
