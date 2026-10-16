@@ -1,0 +1,86 @@
+# Task — Issue #52: Medir navegação e estabelecer baseline com dados fictícios
+
+> **Ciclo:** `005`
+> **Trilha:** `normal`
+> **Estado:** `Em andamento`
+> **Tipo:** `chore`
+> **Issue:** `#52`
+> **Plano:** `_project/drafts/005_logo_mobile_desempenho_navegacao/005_plan.md`
+> **Branch:** `chore/issue-52`
+> **PR:** —
+> **Integração:** `Pendente`
+> **Autorização inicial:** "autorizo a implementação da issue #52" em 2026-10-15
+> **Modo contínuo:** `—`
+> **Início:** 2026-10-15
+> **Última atualização:** 2026-10-15
+> **handoff_schema_version:** `2`
+
+## Objetivo
+
+Executar a unidade A do plano aprovado: protocolo optativo e baseline local por clique, sem otimizar produto.
+
+## Escopo autorizado
+
+Issue https://github.com/EuThiagoAndrade/saldo-futuro/issues/52 e item 1 do plano v1, integrado pela PR #51 (9914a907e91d9487c9ba9543bafff71a7dbf8e5e). Somente apoio de ensaio e relatório sanitizado; nenhuma implementação de #53/#54.
+
+## Elegibilidade da trilha curta
+
+Não se aplica.
+
+## Barreiras de domínio
+
+| Barreira | Aplica-se? | Evidência ou justificativa |
+| :-- | :-- | :-- |
+| G1 — exatidão financeira | Sim, preservação | Fixtures pelas RPCs existentes; casos financeiros existentes, contagens completas e nenhum cálculo de produto alterado. |
+| G2 — isolamento por RLS | Sim | Somente backend local; cenários com sessão própria, RPCs como usuário e pgTAP existente. Nenhuma proteção removida. |
+| G3 — privacidade de dados | Sim | Somente dados fictícios; métricas sem payload, cookies ou credenciais; artefatos locais ignorados antes da sanitização. |
+| G4 — migrações só acrescentam | Não se aplica | Nenhuma migração prevista ou alterada. |
+
+## Execução
+
+- [x] Issue OPEN, autorização, plano aprovado e PR #51 MERGED conferidos via gh; HEAD e origin/main iguais à base integrada.
+- [x] Branch criada preservando mudanças preexistentes de cycles.md, plano e handoff das issues.
+- [ ] Protocolo, baseline e gates executados.
+- [ ] Staging revisado e PR publicada.
+
+## Evidências
+
+| Validação | Resultado |
+| :-- | :-- |
+| Testes | Pendente |
+| Validador | Pendente |
+| `git diff --check` | Pendente |
+| Checks remotos | Pendente |
+
+## Revisão da correção
+
+Não se aplica.
+
+## Decisões incidentais e desvios
+
+Workflow `.agent/workflows/implementar_issue.md`, template `.agent/templates/task.md`, template da PR e gate governance-check lidos no ponto de uso, junto das autoridades canônicas, lições, KB-003, ADR-001/002/003 e plano v1. Nenhuma nova dependência. Supabase local e Docker disponíveis; não acessar projeto remoto vinculado.
+
+## Encerramento
+
+Não se aplica.
+
+## Próximo passo
+
+```text
+PRÓXIMO PASSO
+Situação: Pronto para continuar — ciclo 005 (completo)
+Quem: Qualquer ferramenta, a pedido do responsável
+Conferir: —
+Diga: "continue o ciclo 005"
+```
+
+## Handoff de saída
+
+- `handoff_schema_version: 2`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 005 + implementar_issue + 52/A_baseline_navegacao + 9914a907e91d9487c9ba9543bafff71a7dbf8e5e`
+- `effect_class`: `local_mutation`
+- `state_before`: plano Aprovado; ciclo Planejamento; issue #52 aberta; sem branch/task/PR correspondente nas consultas.
+- `state_after`: branch chore/issue-52 e task Em andamento; autorização individual registrada; execução da unidade A iniciada.
+- `result`: `executed`
+- `evidence`: autorização humana acima, issue #52 OPEN, PR #51 MERGED e base conferidas via gh/Git; task e branch locais.
+- `blockers`: nenhum identificado no início; resultados dos ensaios e gates pendentes.

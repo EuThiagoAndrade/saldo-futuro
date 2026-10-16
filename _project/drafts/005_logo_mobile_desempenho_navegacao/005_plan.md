@@ -1,7 +1,7 @@
 # Plano de Implementação — Logo no cabeçalho mobile e desempenho de navegação
 
 > **Ciclo:** `005`
-> **Status:** `Aprovado`
+> **Status:** `Em Execução`
 > **Versão:** `v1`
 > **Data de criação:** 2026-10-15
 > **Última atualização:** 2026-10-15
@@ -205,7 +205,7 @@ Branches de entrega: `chore/issue-N` para A e `feature/issue-N` para B/C, com n�
 - Nenhuma dependência de pacote nova, outro checkout ou mudança externa prevista.
 - Infraestrutura de ensaio futura: Node 24, dependências fixadas, navegador e Docker/Supabase local funcionando. Não foram verificados integralmente no rascunho; falta de capacidade na execução exige Parado, sem substituir teste de banco por mock como prova de isolamento.
 - Pendências não bloqueadoras da redação: quais rotas ainda incomodam após a alteração regional e preferência pessoal sobre o símbolo. Esta v1 propõe rotas principais e logo completo; aprovação posterior confirmará as propostas ou determinará correção.
-- Bloqueadores da execução/publicação: revisão formal e aprovação do plano pendentes, estado remoto a reconferir por `gh` após a falha de conexão observada, issues/autorização de implementação ausentes e baseline ainda não medida.
+- Estado operacional: revisão formal concluída, plano aprovado e integrado pela PR #51 e issues A–C criadas como #52–#54. A implementação de A foi autorizada individualmente em 2026-10-15 e está registrada em `005_task_issue-52.md`; B/C dependem das entregas anteriores.
 
 ## Riscos, suposições e rollback
 
@@ -247,9 +247,9 @@ Rollback de código por PR própria, revertendo apenas a mudança problemática 
 
 | Campo | Valor |
 | :-- | :-- |
-| Issue(s) | — (não criadas; unidades propostas A–C) |
+| Issue(s) | A: [#52](https://github.com/EuThiagoAndrade/saldo-futuro/issues/52), em implementação autorizada; B: [#53](https://github.com/EuThiagoAndrade/saldo-futuro/issues/53); C: [#54](https://github.com/EuThiagoAndrade/saldo-futuro/issues/54) — abertas, dependentes das entregas anteriores |
 | PR(s) | [#51 — publicação documental](https://github.com/EuThiagoAndrade/saldo-futuro/pull/51) |
-| Branch(es) | `chore/cycle-005-plan` (publicação documental) |
+| Branch(es) | `chore/cycle-005-plan` (publicação documental); `chore/issue-52` (unidade A) |
 | Origem | `59f7498272b6d83ecdfa7db38eb37d6bf95ac436`, ideação e autorização do rascunho em 2026-10-15 |
 | Destino após conclusão | `_project/executed/005_logo_mobile_desempenho_navegacao/005_plan.md` |
 
@@ -257,10 +257,10 @@ Rollback de código por PR própria, revertendo apenas a mudança problemática 
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 005 (completo)
-Quem: Responsável
-Conferir: Checks e diff da PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/51
-Diga: "aprovo o merge da PR #51"
+Situação: Pronto para continuar — ciclo 005 (completo)
+Quem: Qualquer ferramenta, a pedido do responsável
+Conferir: —
+Diga: "continue o ciclo 005"
 ```
 
 ## Handoff de saída
@@ -334,6 +334,44 @@ Diga: "aprovo o merge da PR #51"
 - `result`: `executed`
 - `evidence`: manifestação humana atual, cabeçalho, revisão preservada, integridade do corpo conferida antes da promoção e estado local/remoto observado acima; PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/51 criada e anexada ao chat. Gates locais em 2026-10-15: 39/39 testes de governança com temporário local; validador com 0 erros e 0 avisos; `git diff --check` limpo. Conferência manual de referências, privacidade, barreiras e autorização, com staging restrito aos três documentos do ciclo. Checks remotos são conferidos no HEAD corrente da PR, sem antecipar seu resultado neste registro.
 - `blockers`: integração documental exige checks verdes no HEAD corrente e aprovação específica de merge da PR #51; issues aguardam integração e apresentação/confirmação dos payloads.
+
+## Integração documental e preparação das issues
+
+- **Autorização de merge:** "aprovo o merge da PR #51", recebida nesta conversa em 2026-10-15, depois da publicação e dos checks da revisão `4ab9ccbf054d1cbbc502061e727eddd31a0fb4d1`.
+- **Precondições reconferidas:** PR aberta, fora de draft, base `main`, estado `CLEAN`/`MERGEABLE`, sem mudança de revisão. Diff limitado à ideação, plano e `cycles.md`. Os cinco checks do HEAD aprovado passaram: lint/tipos/testes/build/E2E sem backend, banco/E2E autenticado, governança, Vercel e comentário de preview.
+- **Resultado:** PR #51 integrada por squash em `9914a907e91d9487c9ba9543bafff71a7dbf8e5e`, às 20:28:26 de 2026-10-15 (`America/Cuiaba`; GitHub: 2026-10-16T00:28:26Z). Estado `MERGED` e commit conferidos via `gh`; `main` local sincronizada por fast-forward com `origin/main`, sem alteração de produto.
+- **Preparação seguinte:** títulos/corpos A–C em `005_handoff_issues.md`, derivados dos itens aprovados e na ordem dos campos dos Issue Forms `chore.yml` e `feature_request.yml`, lidos no ponto de uso junto de `.agent/workflows/criar_issues.md` e `.agent/templates/plano_implementacao.md`. Consulta das últimas 100 issues (todos os estados) não encontrou correspondência por plano ou títulos; reconferir chave lógica antes de qualquer criação.
+- **Pergunta registrada:** confirma a criação das três issues A–C com os payloads de `005_handoff_issues.md`? O workflow `criar_issues` exige "Sem modo contínuo, apresentar o payload e obter a confirmação do responsável antes de criar". Nenhuma issue ou task de implementação foi criada. Ciclo permanece em Planejamento, plano Aprovado e próximo ciclo 006. Estes registros pós-merge ficam locais para acompanhar o próximo trabalho documental autorizado; não houve push direto em `main`.
+
+### Handoff da integração e preparação
+
+- `handoff_schema_version: 2`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 005 + integrar_plano_preparar_issues + PR-51/A-C + 4ab9ccbf054d1cbbc502061e727eddd31a0fb4d1`
+- `effect_class`: `remote_mutation`
+- `state_before`: plano Aprovado; PR #51 aberta em 4ab9ccb com checks verdes; aguardando merge; aprovação específica recebida.
+- `state_after`: PR #51 integrada em 9914a90, main local sincronizada; payloads A–C preparados e próximo passo local Parado, aguardando confirmação para criar issues; sem implementação.
+- `result`: `executed`
+- `evidence`: autorização humana acima, PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/51 em MERGED, commit 9914a907e91d9487c9ba9543bafff71a7dbf8e5e; checks verdes da revisão 4ab9ccb; payloads locais e questão de confirmação. Registros pós-merge: 39/39 testes de governança passaram com temporário local, validador com 0 erros e 0 avisos, `git diff --check` limpo; referências, privacidade, barreiras e autorização conferidas manualmente. Históricos de redação/revisão/publicação preservados.
+- `blockers`: nenhum para o merge, já executado; confirmação dos payloads necessária para criar issues. Validação documental dos registros locais realizada ao final desta preparação.
+
+## Criação das issues
+
+- **Autorização humana:** "pode criar as issues.", em 2026-10-15, respondendo à apresentação dos títulos/corpos A–C em `005_handoff_issues.md`. A confirmação resolve a parada anterior e cobre somente a criação e a rastreabilidade, sem implementar.
+- **Workflow e templates no ponto de uso:** `.agent/workflows/criar_issues.md`, `.github/ISSUE_TEMPLATE/chore.yml` para A, `.github/ISSUE_TEMPLATE/feature_request.yml` para B/C e `.agent/templates/plano_implementacao.md` para o registro; autoridades `.agent/ai_behavior.md`, `_project/README.md`, `_project/cycles.md`, plano aprovado e payloads confirmados conferidos. PR #51 reconfirmada como MERGED em 9914a907e91d9487c9ba9543bafff71a7dbf8e5e.
+- **Resultado remoto:** A criada como [#52](https://github.com/EuThiagoAndrade/saldo-futuro/issues/52), B como [#53](https://github.com/EuThiagoAndrade/saldo-futuro/issues/53) e C como [#54](https://github.com/EuThiagoAndrade/saldo-futuro/issues/54). Antes de cada criação, consulta de todos os estados, com retorno abaixo do limite de 1.000, sem título ou chave lógica correspondentes; após criar, releitura comprovou título, corpo e estado OPEN. Dependências de B/C vinculadas aos números observados, conforme previsto na confirmação dos payloads.
+- **Payload efetivo:** títulos/corpos e hashes em `005_handoff_issues.md`; as três chaves lógicas publicadas seguem `EuThiagoAndrade/saldo-futuro + 005 + criar_issues + <tipo/unidade> + v1@9914a907e91d9487c9ba9543bafff71a7dbf8e5e`. Os critérios e limites aprovados foram preservados.
+- **Estado local:** rastreabilidade do plano e de `cycles.md` atualizada; plano Aprovado, ciclo Planejamento e próxima numeração 006 preservados. Registros ficam locais para a próxima entrega autorizada, sem push direto em main e sem PR documental adicional. Nenhuma task, branch ou código de implementação criado.
+
+### Handoff da criação das issues
+
+- `handoff_schema_version: 2`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 005 + criar_issues + chore/A_baseline_navegacao,feature/B_logo_mobile,feature/C_otimizar_navegacao + v1@9914a907e91d9487c9ba9543bafff71a7dbf8e5e`; chaves individuais publicadas nos respectivos corpos e preservadas em `005_handoff_issues.md`.
+- `effect_class`: `remote_mutation`
+- `state_before`: plano Aprovado e integrado; payloads A–C apresentados; situação Parado por confirmação pendente, resolvida pela autorização humana atual; nenhuma issue correspondente existente nas consultas antes de criar.
+- `state_after`: issues #52, #53 e #54 abertas e conferidas; plano e cycles.md com rastreabilidade; Aguardando autorização de implementação da issue #52; sem execução iniciada.
+- `result`: `executed`
+- `evidence`: autorização humana atual; URLs #52–#54 acima, releituras `gh issue view` com igualdade de título/corpo e estado OPEN; payloads efetivos e SHA-256 no handoff auxiliar; dependências #52 → #53 → #54; revisão e aprovação do plano preservadas. Gates deste registro em 2026-10-15: 39/39 testes de governança com temporário local, validador com 0 erros e 0 avisos, `git diff --check` limpo e hashes dos três corpos locais iguais aos remotos verificados. Referências, privacidade, barreiras e autorização conferidas manualmente.
+- `blockers`: nenhum para a criação, concluída; implementação de #52 depende da autorização específica. G1/G2 da execução e G3/G4 do ciclo continuam conforme o plano.
 
 ## Pós-mortem
 
