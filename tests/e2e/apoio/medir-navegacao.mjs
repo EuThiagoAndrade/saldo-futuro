@@ -20,8 +20,11 @@ const env = { ...process.env, NEXT_PUBLIC_SUPABASE_URL: status.API_URL,
   SUPABASE_SECRET_KEY: status.SECRET_KEY, NEXT_PUBLIC_ENABLE_PASSWORD_LOGIN: 'true',
   MEDIR_NAVEGACAO: '1', MEDICAO_LOG: resolve(pasta, 'consultas.ndjson') };
 writeFileSync(env.MEDICAO_LOG, '');
+writeFileSync(env.MEDICAO_LOG + '.processos', '');
+writeFileSync(resolve(pasta, 'amostras.ndjson'), '');
+executar('node', ['--test', 'tests/e2e/apoio/medicao-fetch.check.mjs', 'tests/e2e/apoio/resumir-medicao.check.mjs'], { stdio: 'inherit' });
 executar('npm', ['run', 'build'], { env, stdio: 'inherit' });
-writeFileSync(resolve(pasta, 'ambiente.json'), JSON.stringify({
+const ambiente = {
   revisao: executar('git', ['rev-parse', 'HEAD']).trim(),
   diff: executar('git', ['diff', '--stat']).trim(),
   build: readFileSync('.next/BUILD_ID', 'utf8').trim(), node: process.version,
@@ -30,6 +33,20 @@ writeFileSync(resolve(pasta, 'ambiente.json'), JSON.stringify({
   supabase: executar('npx', ['supabase', '--version']).trim(), viewport: [1280, 900],
   concorrencia: 1, inicio: new Date().toISOString(), piloto: env.MEDICAO_PILOTO === '1',
   fontes: Object.fromEntries(['tests/e2e/navegacao-desempenho.spec.ts', 'tests/e2e/apoio/medicao-fetch.mjs', 'tests/e2e/apoio/medicao.config.ts', 'tests/e2e/apoio/medir-navegacao.mjs'].map((p) => [p, createHash('sha256').update(readFileSync(p)).digest('hex')])),
-}, null, 2));
-executar('npx', ['playwright', 'test', '--config=tests/e2e/apoio/medicao.config.ts'], { env, stdio: 'inherit' });
+  blocos: [],
+};
+const salvarAmbiente = () => writeFileSync(resolve(pasta, 'ambiente.json'), JSON.stringify(ambiente, null, 2));
+salvarAmbiente();
+let indice = 0;
+let volumes;
+for (const rodada of (ambiente.piloto ? [1] : [1, 2, 3])) for (const atraso of (ambiente.piloto ? [50] : [0, 50, 100])) for (const volume of ['vazia', 'cheia']) {
+  const bloco = { rodada, atraso, volume, inicio: new Date().toISOString() };
+  ambiente.blocos.push(bloco); salvarAmbiente();
+  executar('npx', ['playwright', 'test', '--config=tests/e2e/apoio/medicao.config.ts'], { env: { ...env,
+    MEDICAO_BLOCO: JSON.stringify([rodada, atraso, volume]), MEDICAO_IDENTIFICADOR_BASE: String(++indice * 100_000) }, stdio: 'inherit' });
+  const atual = readFileSync(resolve(pasta, 'volumes.json'), 'utf8');
+  if (volumes && volumes !== atual) throw new Error('Volumes divergentes entre blocos.');
+  volumes = atual;
+  bloco.fim = new Date().toISOString(); salvarAmbiente();
+}
 if (env.MEDICAO_PILOTO !== '1') resumir();

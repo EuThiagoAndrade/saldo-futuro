@@ -8,7 +8,7 @@ As séries sanitizadas e os metadados são registrados em `005_validation_series
 
 ## Ambiente e volumes
 
-Revisão do ensaio: `7112308fe5dcc7235a1e102068946d9d969a33a1`, árvore limpa antes do build. A revisão de produto é a base aprovada `9914a907e91d9487c9ba9543bafff71a7dbf8e5e`; a diferença contém apenas apoio de testes e rastreabilidade. Build `u-p0VIKYnHlPCqhKMfjoQ`, iniciado em 2026-10-15 às 20:51:33 (America/Cuiaba). Hashes das fontes do ensaio ficam nos metadados, permitindo distinguir alteração de apoio de alteração de produto.
+Revisão/build/horários finais serão preenchidos após a coleta completa e ficam nos metadados de `005_validation_series.json`. A revisão de produto é a base aprovada `9914a907e91d9487c9ba9543bafff71a7dbf8e5e`; a diferença contém apenas apoio de testes e rastreabilidade. Hashes das fontes do ensaio permitem distinguir alteração de apoio de alteração de produto.
 
 Node v24.15.0; Next 16.4.0; React 19.3.0; Supabase CLI 2.120.0; Chrome 155.0.8059.80; Windows 10.0.26300 x64; Intel i5-11400 2,60 GHz (12 processadores lógicos), 15,87 GiB de RAM. `next build` + `next start` em 127.0.0.1:3105, Supabase/Docker local em 127.0.0.1:54321. Viewport 1280 × 900; concorrência 1. Nenhum outro ensaio/build foi executado durante a baseline. Tempo local, transporte e overhead do apoio estão incluídos; não é medição de SQL puro.
 
@@ -28,6 +28,8 @@ Contagens exatas feitas com a sessão do cenário, fora do cronômetro. Fixtures
 ## Condições e validade
 
 Três rodadas de 20 amostras por direção prioritária, volume, condição e atraso: Início ↔ Lançamentos e Início ↔ Ativos; carteira vazia/cheia; primeira visita em contexto novo/revisita com cinco aquecimentos; 0/50/100 ms por chamada efetiva ao Supabase. Sem nova sessão de login dentro do cronômetro. Cache/prefetch normais dos Links existentes, com pedidos de prefetch explicitamente identificados nas séries; nenhuma alteração em prefetch, fallback ou consulta de produto.
+
+O protocolo é executado em 18 blocos serializados de rodada/atraso/volume, com servidor novo por bloco no mesmo build. Fixtures têm contagens idênticas entre blocos; cada bloco limpa seus cenários, e login/preparo/primeira renderização do servidor ficam fora das transições. Essa forma foi adotada após uma tentativa monolítica perder o servidor com 576 amostras e registrar falha/limpeza; a causa da queda não foi confirmada. Essa tentativa e o ensaio interrompido para ajustar a validade da sessão ficam somente em `local/`, sem compor a baseline. Não houve exclusão seletiva de tempos lentos ou incorretos.
 
 Relógio no evento real de clique; feedback exige conteúdo/carregamento de destino visível; pronto exige título e marcador específico após leitura, não apenas URL/menu. Mediana é a média dos dois centrais em n par; p95 é o posto `ceil(0,95 × n)`. Cada série de 20 preserva as amostras lentas; erro de resposta ou conteúdo interrompe a execução, em vez de ser descartado. As durações de resposta do servidor e de chamadas são independentes do relógio do navegador e correlacionadas por identificadores sintéticos. Chamadas significam transporte observado no preload, abaixo da deduplicação do Next.js, não número de expressões `await` executadas no código.
 

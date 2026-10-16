@@ -15,7 +15,7 @@ const destinos = {
 };
 type Rota = keyof typeof destinos;
 const pares: [Rota, Rota][] = [['/', '/lancamentos'], ['/lancamentos', '/'], ['/', '/ativos'], ['/ativos', '/']];
-let serial = 0;
+let serial = Number(process.env.MEDICAO_IDENTIFICADOR_BASE ?? 0);
 const pasta = 'local/issue-52';
 const viewport = { width: 1280, height: 900 };
 const benchmark = '00500000-0000-4000-8000-000000000052';
@@ -123,15 +123,15 @@ async function sessao(browser: Browser, usuario: UsuarioDeTeste) {
 test('baseline por clique, três rodadas, 20 amostras, dois volumes, primeira visita/revisita e atrasos 0/50/100', async ({ browser }) => {
   expect(new URL(process.env.NEXT_PUBLIC_SUPABASE_URL!).hostname).toBe('127.0.0.1');
   const u: Record<string, UsuarioDeTeste> = {};
-  writeFileSync(`${pasta}/amostras.ndjson`, '');
   try {
     Object.assign(u, await criarUsuarios('medicao005', { vazia: 'user', cheia: 'user', admin: 'admin' }));
     await benchmarkFicticio(u.admin);
     // Primeira renderização autenticada do servidor separada da baseline.
     const inicial = await browser.newContext({ viewport });
     const inicio = performance.now();
-    try { await identificar(inicial, 0); await entrar(await inicial.newPage(), u.vazia); }
-    finally { appendFileSync(`${pasta}/amostras.ndjson`, JSON.stringify({ tipo: 'primeira_renderizacao', ms: performance.now() - inicio, incluiLogin: true }) + '\n'); await inicial.close(); }
+    const primeiroId = await identificar(inicial, 0);
+    try { await entrar(await inicial.newPage(), u.vazia); }
+    finally { appendFileSync(`${pasta}/amostras.ndjson`, JSON.stringify({ tipo: 'primeira_renderizacao', id: primeiroId, bloco: process.env.MEDICAO_BLOCO, ms: performance.now() - inicio, incluiLogin: true }) + '\n'); await inicial.close(); }
     await carga(u.cheia);
     const quantidades = { vazia: await volumes(u.vazia), cheia: await volumes(u.cheia) };
     expect(quantidades.cheia.eventos).toBeGreaterThan(1000);
@@ -140,7 +140,9 @@ test('baseline por clique, três rodadas, 20 amostras, dois volumes, primeira vi
     const estados = { vazia: await sessao(browser, u.vazia), cheia: await sessao(browser, u.cheia) };
     writeFileSync(`${pasta}/navegador.json`, JSON.stringify({ versao: browser.version() }));
     const piloto = process.env.MEDICAO_PILOTO === '1';
-    for (let rodada = 1; rodada <= (piloto ? 1 : 3); rodada++) for (const atraso of (piloto ? [50] : [0, 50, 100])) for (const volume of ['vazia', 'cheia'] as const) {
+    const [rodada, atraso, volume] = JSON.parse(process.env.MEDICAO_BLOCO!) as [number, number, 'vazia' | 'cheia'];
+    expect([1, 2, 3]).toContain(rodada); expect([0, 50, 100]).toContain(atraso); expect(['vazia', 'cheia']).toContain(volume);
+    {
       const cheio = volume === 'cheia';
       // O protocolo inteiro pode ultrapassar a validade de uma sessão. Renovar por login
       // fora do cronômetro de cada bloco mantém contextos novos sem reutilizar token expirado.
@@ -176,7 +178,7 @@ test('baseline por clique, três rodadas, 20 amostras, dois volumes, primeira vi
       }
     }
     // Percurso adicional sem escrita: ciclo completo, filtro/período e histórico.
-    for (const volume of ['vazia', 'cheia'] as const) {
+    if (rodada === 3 && atraso === 100 || piloto) {
       const c = await browser.newContext({ viewport, storageState: estados[volume] });
       try {
         const id = await identificar(c, 0); const p = await c.newPage();

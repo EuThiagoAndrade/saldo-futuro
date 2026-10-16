@@ -64,6 +64,8 @@ Pilotos preparatórios identificaram/corrigiram diretório de trabalho da config
 
 Verificações já executadas: `npm ci` (409 pacotes; cinco vulnerabilidades altas reportadas nas dependências fixadas, sem atualização fora do escopo); lint sem erro (três avisos preexistentes em script ignorado de `local/`); typecheck passou; 201 testes unitários; 239 asserções pgTAP; quatro testes nativos do apoio (estatísticas, opt-in, recusa de backend remoto, atraso/resposta/correlação/sanitização); 39 testes de governança com TEMP/TMP local; validador 0 erros/0 avisos; `git diff --check` limpo. Banco/fixture de desempenho e gates finais ainda em curso, sem resultado presumido.
 
+Build e E2E sem backend passaram (13 testes e 71 skips previstos). A tentativa monolítica seguinte perdeu o servidor com 576 amostras; registrou uma falha de conexão e limpeza concluída, sem publicar estatística parcial. Causa não confirmada por logs do processo/sistema. Evidências somente em `local/issue-52/ensaio-falha-servidor/`. O apoio passou a executar 18 blocos serializados de rodada/atraso/volume, cada um com servidor novo no mesmo build, contagens idênticas e limpeza própria. Mantém todas as 2.880 amostras, condições e aquecimentos do plano; registra primeiros renders/reinícios à parte e recusa bloco ausente/falho. Não altera o código de produto, o CI normal ou o escopo das outras unidades.
+
 ## Encerramento
 
 Não se aplica.

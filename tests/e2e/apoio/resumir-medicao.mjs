@@ -16,7 +16,7 @@ export function resumir() {
   const ambiente = JSON.parse(readFileSync(`${pasta}/ambiente.json`, 'utf8'));
   const amostras = linhas('amostras.ndjson');
   const consultas = linhas('consultas.ndjson');
-  if (ambiente.piloto || amostras.some((r) => r.tipo === 'falha') || !amostras.some((r) => r.tipo === 'limpeza' && r.resultado === 'passou')) throw new Error('Ensaio incompleto/falho ou piloto.');
+  if (ambiente.piloto || ambiente.blocos.length !== 18 || ambiente.blocos.some((b) => !b.fim) || amostras.some((r) => r.tipo === 'falha') || amostras.filter((r) => r.tipo === 'limpeza' && r.resultado === 'passou').length !== 18) throw new Error('Ensaio incompleto/falho ou piloto.');
   const medidas = amostras.filter((r) => r.tipo === 'amostra');
   if (medidas.length !== 2880) throw new Error(`Esperadas 2880 amostras, observadas ${medidas.length}.`);
   if (consultas.some((r) => r.status < 200 || r.status >= 400)) throw new Error('Resposta de servidor/Supabase com erro; investigar, sem descartar.');
@@ -45,7 +45,7 @@ export function resumir() {
   });
   writeFileSync(`${destino}_series.json`, JSON.stringify({ ambiente, navegador: JSON.parse(readFileSync(`${pasta}/navegador.json`, 'utf8')), volumes: JSON.parse(readFileSync(`${pasta}/volumes.json`, 'utf8')), resumo, series,
     adicionais: amostras.filter((r) => r.tipo !== 'amostra'),
-    primeiraRenderizacao: consultas.filter((r) => r.id === 'm1' && r.caminho === '/'),
+    primeiraRenderizacao: consultas.filter((r) => amostras.some((a) => a.tipo === 'primeira_renderizacao' && a.id === r.id) && r.caminho === '/'),
   }));
   const f = (n) => n.toFixed(1);
   const tabela = ['| Rodada | Atraso ms | Volume | Par | Condição | Feedback med/p95 ms | Pronto med/p95 ms | Servidor med/p95 ms | Chamadas med/p95 por amostra | Prefetch pedidos |',
