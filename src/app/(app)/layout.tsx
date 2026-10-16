@@ -1,3 +1,6 @@
+import Image from "next/image";
+import Link from "next/link";
+import logo from "../../../design-system/assets/logo-saldo-futuro.svg";
 import { IconeOlho, IconeOlhoFechado } from "@/components/icones";
 import { Navegacao } from "@/components/navegacao";
 import { backend } from "@/lib/config";
@@ -16,7 +19,14 @@ export default async function AppLayout({ children }: Readonly<{ children: React
   return (
     <div className="min-h-screen lg:pl-60">
       <div className="mx-auto max-w-[1120px] px-4 pb-[calc(5.5rem+env(safe-area-inset-bottom))] sm:px-6 lg:px-8 lg:pb-12">
-        <header className="flex justify-end py-3">
+        <header className="flex items-center justify-between gap-2 py-3 lg:justify-end">
+          <Link
+            href="/"
+            aria-label="Saldo Futuro"
+            className="flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-md px-2 hover:bg-surface lg:hidden"
+          >
+            <Image src={logo} alt="" className="h-8 w-auto" />
+          </Link>
           <form action={alternarOcultarValores}>
             <button
               type="submit"

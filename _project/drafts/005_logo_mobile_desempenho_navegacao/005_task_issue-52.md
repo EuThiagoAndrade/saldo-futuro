@@ -2,13 +2,13 @@
 
 > **Ciclo:** `005`
 > **Trilha:** `normal`
-> **Estado:** `Em andamento`
+> **Estado:** `Concluída`
 > **Tipo:** `chore`
 > **Issue:** `#52`
 > **Plano:** `_project/drafts/005_logo_mobile_desempenho_navegacao/005_plan.md`
 > **Branch:** `chore/issue-52`
 > **PR:** [#55](https://github.com/EuThiagoAndrade/saldo-futuro/pull/55)
-> **Integração:** `Pendente`
+> **Integração:** `Integrada`
 > **Autorização inicial:** "autorizo a implementação da issue #52" em 2026-10-15
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-15
@@ -48,6 +48,7 @@ Não se aplica.
 - [x] Staging seletivo revisado e commit `ebc393f` criado e enviado para `origin/chore/issue-52`.
 - [x] PR #55 aberta para a base `main`, vinculada à issue #52 e anexada a esta task.
 - [x] Checks remotos da PR #55 passaram no HEAD `342c13f`: CI principal, Supabase/pgTAP/E2E autenticado, governança e Vercel.
+- [x] Pós-merge reconciliado em 2026-10-16: PR #55 integrada em `7dbba4b5678ab4820ee3fed22c8575b64908df10`; a dependência A está satisfeita. A issue #52 ainda aparece `OPEN` no GitHub.
 
 ## Evidências
 
@@ -67,6 +68,8 @@ Não se aplica.
 ## Decisões incidentais e desvios
 
 Workflow `.agent/workflows/implementar_issue.md`, template `.agent/templates/task.md`, template da PR e gate governance-check lidos no ponto de uso, junto das autoridades canônicas, lições, KB-003, ADR-001/002/003 e plano v1. Nenhuma nova dependência. Supabase local e Docker disponíveis; não acessar projeto remoto vinculado.
+
+Em 2026-10-16, o `gh pr view 55` confirmou estado `MERGED`, merge commit `7dbba4b5678ab4820ee3fed22c8575b64908df10`, base `main` e branch `chore/issue-52`. O `gh issue view 52` ainda retornou `OPEN`; a integração da PR satisfaz a dependência técnica de B. A task foi reconciliada como `Concluída`/`Integrada`, sem alterar o estado externo da issue.
 
 Ao retomar, o scanner nativo `@tailwindcss/oxide` confirmou que o relatório bruto `.md` de 6.110.052 bytes fazia a varredura automática tentar alocar 8 GiB e falhar. O JSON foi preservado byte a byte com gzip/Base64 no mesmo artefato documental permitido. A varredura completa do documento final (738.593 bytes) concluiu em 70 ms, com 241 arquivos. Nenhum CSS, código de produto ou conteúdo da evidência foi descartado. O responsável confirmou aguardar o gate local completo antes da PR.
 
@@ -98,19 +101,19 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 005 (completo)
-Quem: Responsável
-Conferir: Checks e diff da PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/55
-Diga: "aprovo o merge da PR #55"
+Situação: Pronto para continuar — ciclo 005 (completo)
+Quem: Qualquer ferramenta, a pedido do responsável
+Conferir: —
+Diga: "continue o ciclo 005"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 005 + implementar_issue + 52/A_baseline_navegacao + 9914a907e91d9487c9ba9543bafff71a7dbf8e5e`
-- `effect_class`: `remote_mutation`
-- `state_before`: plano Aprovado; ciclo Em execução; issue #52 aberta; baseline completa; task Em andamento; sem PR; gate autenticado/D9 e bloco canônico final pendentes.
-- `state_after`: task Em andamento, próximo passo Aguardando merge; série preservada byte a byte em gzip/Base64 no Markdown canônico; build e gates locais passaram; commits `ebc393f` e `342c13f` publicados; PR #55 aberta; checks do HEAD `342c13f` verdes e nova rodada disparada por este handoff; integração aguarda aprovação explícita.
+- `effect_class`: `local_mutation`
+- `state_before`: task `Em andamento`, PR #55 `Aguardando merge`, checks verdes registrados no HEAD final; issue #52 aberta.
+- `state_after`: task `Concluída`, integração `Integrada`; PR #55 `MERGED` em `7dbba4b5678ab4820ee3fed22c8575b64908df10`; issue #52 permanece `OPEN` no GitHub; a implementação da #53 foi autorizada e registrada em `005_task_issue-53.md`.
 - `result`: `executed`
-- `evidence`: autorização inicial da issue #52; decisão do responsável de aguardar os gates locais completos antes da PR; baseline em `005_validation_desempenho.md`/`005_validation_series.md`; build passou; scan após gzip/Base64 completou em 70 ms; unitários 201, pgTAP 239, checks de apoio 5, E2E sem backend 13, E2E local 78; D9 mediana 478 ms; commits `ebc393f`/`342c13f`; PR #55; checks remotos verdes no HEAD `342c13f` e reconfirmação após este update.
-- `blockers`: nenhum técnico; integração exige frase explícita de aprovação do merge, depois dos checks verdes no HEAD final.
+- `evidence`: PR #55 https://github.com/EuThiagoAndrade/saldo-futuro/pull/55 e `gh pr view 55` (`MERGED`, base `main`, merge commit `7dbba4b5678ab4820ee3fed22c8575b64908df10`); `gh issue view 52` (`OPEN`); checks verdes registrados no HEAD `3572a8f`; task e handoff atualizados em 2026-10-16.
+- `blockers`: nenhum para a dependência técnica A; issue #52 permanece aberta no GitHub.
