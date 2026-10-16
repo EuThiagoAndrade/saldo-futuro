@@ -1,5 +1,10 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
+import { gzipSync } from 'node:zlib';
+
+export function compactarSerie(dados) {
+  return gzipSync(JSON.stringify(dados)).toString('base64');
+}
 
 export function estatisticas(valores) {
   if (!valores.length || valores.some((v) => !Number.isFinite(v) || v < 0)) throw new Error('Série inválida.');
@@ -43,10 +48,33 @@ export function resumir() {
       chamadasPorAmostra: estatisticas(g.map((r) => (porId.get(r.id) ?? []).filter((q) => q.tipo === 'supabase').length)),
       prefetch: g.reduce((s, r) => s + (porId.get(r.id) ?? []).filter((q) => q.tipo === 'servidor' && q.prefetch).length, 0) };
   });
-  writeFileSync(`${destino}_series.json`, JSON.stringify({ ambiente, navegador: JSON.parse(readFileSync(`${pasta}/navegador.json`, 'utf8')), volumes: JSON.parse(readFileSync(`${pasta}/volumes.json`, 'utf8')), resumo, series,
+  const dados = { ambiente, navegador: JSON.parse(readFileSync(`${pasta}/navegador.json`, 'utf8')), volumes: JSON.parse(readFileSync(`${pasta}/volumes.json`, 'utf8')), resumo, series,
     adicionais: amostras.filter((r) => r.tipo !== 'amostra'),
     primeiraRenderizacao: consultas.filter((r) => amostras.some((a) => a.tipo === 'primeira_renderizacao' && a.id === r.id) && r.caminho === '/'),
-  }));
+  };
+  const fence = '````';
+  const payload = compactarSerie(dados).match(/.{1,120}/g).join('\n');
+  const artefato = [
+    '# Séries sanitizadas de navegação — ciclo 005',
+    '',
+    'JSON UTF-8 sem perda, compactado com gzip e codificado em Base64. Durações individuais arredondadas a 0,01 ms; resumos calculados antes do arredondamento. Cada consulta é [categoria, início relativo ao pedido em ms, duração em ms, status].',
+    '',
+    'Extração para `005_validation_series.json` com Node.js:',
+    '',
+    '```js',
+    "const fs = require('node:fs');",
+    "const zlib = require('node:zlib');",
+    "const md = fs.readFileSync('005_validation_series.md', 'utf8');",
+    "const base64 = md.match(/````base64\\n([\\s\\S]*?)\\n````/)[1].replace(/\\s/g, '');",
+    "fs.writeFileSync('005_validation_series.json', zlib.gunzipSync(Buffer.from(base64, 'base64')));",
+    '```',
+    '',
+    `${fence}base64`,
+    payload,
+    fence,
+    '',
+  ].join('\n');
+  writeFileSync(`${destino}_series.md`, artefato);
   const f = (n) => n.toFixed(1);
   const tabela = ['| Rodada | Atraso ms | Volume | Par | Condição | Feedback med/p95 ms | Pronto med/p95 ms | Servidor med/p95 ms | Chamadas med/p95 por amostra | Prefetch pedidos |',
     '| :-- | --: | :-- | :-- | :-- | --: | --: | --: | --: | --: |',
