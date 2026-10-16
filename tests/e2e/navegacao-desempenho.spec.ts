@@ -5,7 +5,7 @@ import { sqlLocal } from './apoio/banco';
 import { clienteDoUsuario, criarUsuarios, entrar, removerUsuarios, type UsuarioDeTeste } from './apoio/supabase';
 
 test.skip(process.env.MEDIR_NAVEGACAO !== '1', 'Ensaio optativo, somente pelo comando dedicado.');
-test.setTimeout(7_200_000);
+test.setTimeout(14_400_000);
 
 const destinos = {
   '/': { titulo: 'Início', pronto: 'main section[aria-label="Gráficos"] > :last-child' },
@@ -142,6 +142,9 @@ test('baseline por clique, três rodadas, 20 amostras, dois volumes, primeira vi
     const piloto = process.env.MEDICAO_PILOTO === '1';
     for (let rodada = 1; rodada <= (piloto ? 1 : 3); rodada++) for (const atraso of (piloto ? [50] : [0, 50, 100])) for (const volume of ['vazia', 'cheia'] as const) {
       const cheio = volume === 'cheia';
+      // O protocolo inteiro pode ultrapassar a validade de uma sessão. Renovar por login
+      // fora do cronômetro de cada bloco mantém contextos novos sem reutilizar token expirado.
+      estados[volume] = await sessao(browser, u[volume]);
       for (const [origem, destino] of pares) for (const condicao of ['primeira', 'revisita']) {
         const grupo = await browser.newContext({ viewport, storageState: estados[volume] });
         try {

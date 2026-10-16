@@ -11,7 +11,7 @@ node tests/e2e/apoio/medir-navegacao.mjs
 
 O comando lê as chaves exclusivamente de `npx supabase status -o json`, sem imprimi-las ou gravá-las, define o backend local no processo, faz um build de produção novo e inicia `next start` na porta 3105. A configuração dedicada recusa reutilizar um servidor existente. Não use `next dev`. Não configure produção ou SGS real para este ensaio.
 
-O protocolo padrão executa 2.880 amostras: 4 direções prioritárias (Início ↔ Lançamentos e Início ↔ Ativos), 2 volumes, 2 condições, 3 atrasos e 3 rodadas de 20. Revisitas têm cinco ciclos de aquecimento por grupo; primeiras visitas têm contexto novo por amostra, autenticado por cookies de uma sessão de preparo externa ao contexto. A origem é aberta antes do cronômetro, sem visitar o destino. Links mantêm seu prefetch normal; não se desabilita cache ou prefetch. A estabilização antes do clique é de 150 ms. O Link precisa estar hidratado. Viewport 1280 × 900 e concorrência 1.
+O protocolo padrão executa 2.880 amostras: 4 direções prioritárias (Início ↔ Lançamentos e Início ↔ Ativos), 2 volumes, 2 condições, 3 atrasos e 3 rodadas de 20. Revisitas têm cinco ciclos de aquecimento por grupo; primeiras visitas têm contexto novo por amostra, autenticado por cookies de uma sessão de preparo externa ao contexto. A sessão é renovada por login fora do cronômetro antes de cada bloco de rodada/atraso/volume, pois o protocolo inteiro pode ultrapassar a validade de uma sessão local. A origem é aberta antes do cronômetro, sem visitar o destino. Links mantêm seu prefetch normal; não se desabilita cache ou prefetch. A estabilização antes do clique é de 150 ms. O Link precisa estar hidratado. Viewport 1280 × 900 e concorrência 1.
 
 Os usuários exclusivos `medicao005.*@example.com` recebem carteiras vazia e com 30 ativos/60 meses por RPCs da sessão. O ativo de sistema também é contado. Um benchmark mensal fictício exclusivo é criado pelo apoio SQL local e carregado pela RPC como admin; somente esse benchmark é removido. O teste usa `finally` para limpar cenários após sucesso ou falha, inclusive preparação parcial. Uma interrupção forçada do processo pode impedir `finally`; a próxima execução remove os restos dos mesmos nomes antes de preparar. Não execute duas cópias simultâneas.
 
@@ -28,7 +28,7 @@ Os arquivos brutos ficam em `local/issue-52/` (ignorado). O resumo valida matriz
 Para conferir o apoio:
 
 ```sh
-node --test tests/e2e/apoio/medicao-fetch.test.mjs tests/e2e/apoio/resumir-medicao.test.mjs
+node --test tests/e2e/apoio/medicao-fetch.check.mjs tests/e2e/apoio/resumir-medicao.check.mjs
 ```
 
 `MEDICAO_PILOTO=1` executa um piloto de uma rodada/uma amostra por condição, somente com 50 ms. Não gera a baseline publicável e o resumidor o recusa. Remova essa variável para a execução completa. Uma execução substitui os arquivos locais da anterior; preserve-os em outra pasta de `local/` se precisar comparar tentativas. Para comparar baseline/candidata na unidade C, use builds das duas revisões, o mesmo ambiente/dados/condições e alterne as execuções; nenhuma candidata é implementada na unidade A.

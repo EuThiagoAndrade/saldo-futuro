@@ -60,6 +60,10 @@ Não se aplica.
 
 Workflow `.agent/workflows/implementar_issue.md`, template `.agent/templates/task.md`, template da PR e gate governance-check lidos no ponto de uso, junto das autoridades canônicas, lições, KB-003, ADR-001/002/003 e plano v1. Nenhuma nova dependência. Supabase local e Docker disponíveis; não acessar projeto remoto vinculado.
 
+Pilotos preparatórios identificaram/corrigiram diretório de trabalho da configuração, uso do Chrome instalado, exclusão do anúncio de rota do Next da checagem de erros, marcador específico do formulário Novo ativo (há formulários em diálogos ocultos) e espera de hidratação do Link antes do clique. O piloto completo passou em 1,7 min, incluindo filtros/histórico/percurso adicional e limpeza. Seus dados não são a baseline. A primeira tentativa completa foi interrompida integralmente para renovar a sessão por bloco fora do cronômetro, antes de ultrapassar o `jwt_expiry = 3600` local; arquivos preservados somente em `local/issue-52/ensaio-interrompido-sessao/`. A próxima execução limpa os nomes exclusivos remanescentes; nenhuma amostra dessa tentativa compõe a baseline final.
+
+Verificações já executadas: `npm ci` (409 pacotes; cinco vulnerabilidades altas reportadas nas dependências fixadas, sem atualização fora do escopo); lint sem erro (três avisos preexistentes em script ignorado de `local/`); typecheck passou; 201 testes unitários; 239 asserções pgTAP; quatro testes nativos do apoio (estatísticas, opt-in, recusa de backend remoto, atraso/resposta/correlação/sanitização); 39 testes de governança com TEMP/TMP local; validador 0 erros/0 avisos; `git diff --check` limpo. Banco/fixture de desempenho e gates finais ainda em curso, sem resultado presumido.
+
 ## Encerramento
 
 Não se aplica.
