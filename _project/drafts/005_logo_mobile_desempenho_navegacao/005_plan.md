@@ -248,7 +248,7 @@ Rollback de código por PR própria, revertendo apenas a mudança problemática 
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | — (não criadas; unidades propostas A–C) |
-| PR(s) | — (não publicadas neste workflow) |
+| PR(s) | [#51 — publicação documental](https://github.com/EuThiagoAndrade/saldo-futuro/pull/51) |
 | Branch(es) | `chore/cycle-005-plan` (publicação documental) |
 | Origem | `59f7498272b6d83ecdfa7db38eb37d6bf95ac436`, ideação e autorização do rascunho em 2026-10-15 |
 | Destino após conclusão | `_project/executed/005_logo_mobile_desempenho_navegacao/005_plan.md` |
@@ -257,10 +257,10 @@ Rollback de código por PR própria, revertendo apenas a mudança problemática 
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 005 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 005"
+Situação: Aguardando merge — ciclo 005 (completo)
+Quem: Responsável
+Conferir: Checks e diff da PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/51
+Diga: "aprovo o merge da PR #51"
 ```
 
 ## Handoff de saída
@@ -328,12 +328,12 @@ Diga: "continue o ciclo 005"
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 005 + aprovacao_publicacao_documental + 005_plan + v1/rodada-1`
-- `effect_class`: `local_mutation`
+- `effect_class`: `remote_mutation`
 - `state_before`: plano v1 em Em Revisão, veredito APTO PARA APROVAÇÃO, aprovação pendente; ciclo em Planejamento; sem PR documental.
-- `state_after`: plano v1 Aprovado, aprovação humana de 2026-10-15 registrada; branch documental preparada; publicação já autorizada, ainda pendente; ciclo em Planejamento, sem issues ou implementação.
+- `state_after`: plano v1 Aprovado, aprovação humana de 2026-10-15 registrada; PR documental #51 publicada na branch chore/cycle-005-plan, aguardando merge; ciclo em Planejamento, sem issues ou implementação.
 - `result`: `executed`
-- `evidence`: manifestação humana atual, cabeçalho, revisão preservada, integridade do corpo conferida antes da promoção e estado local/remoto observado acima. Gates locais em 2026-10-15: 39/39 testes de governança com temporário local; validador com 0 erros e 0 avisos; `git diff --check` limpo. Conferência manual de referências, privacidade, barreiras e autorização, com staging restrito aos três documentos do ciclo.
-- `blockers`: merge documental exige checks verdes e aprovação específica; issues aguardam integração e apresentação/confirmação dos payloads. Nenhum bloqueio para publicar a documentação aprovada.
+- `evidence`: manifestação humana atual, cabeçalho, revisão preservada, integridade do corpo conferida antes da promoção e estado local/remoto observado acima; PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/51 criada e anexada ao chat. Gates locais em 2026-10-15: 39/39 testes de governança com temporário local; validador com 0 erros e 0 avisos; `git diff --check` limpo. Conferência manual de referências, privacidade, barreiras e autorização, com staging restrito aos três documentos do ciclo. Checks remotos são conferidos no HEAD corrente da PR, sem antecipar seu resultado neste registro.
+- `blockers`: integração documental exige checks verdes no HEAD corrente e aprovação específica de merge da PR #51; issues aguardam integração e apresentação/confirmação dos payloads.
 
 ## Pós-mortem
 
