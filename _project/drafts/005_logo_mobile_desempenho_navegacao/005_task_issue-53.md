@@ -7,7 +7,7 @@
 > **Issue:** `#53`
 > **Plano:** `_project/drafts/005_logo_mobile_desempenho_navegacao/005_plan.md`
 > **Branch:** `feature/issue-53`
-> **PR:** —
+> **PR:** [#56](https://github.com/EuThiagoAndrade/saldo-futuro/pull/56)
 > **Integração:** `Pendente`
 > **Autorização inicial:** "autorizo a implementação da issue #53" em 2026-10-16
 > **Modo contínuo:** `—`
@@ -43,7 +43,7 @@ Não se aplica.
 - [x] Inspecionar o layout e os testes atuais; implementar o logo responsivo com dimensões reservadas e alvo/foco acessíveis.
 - [x] Validar 360, 390, 768, 1024 e 1280 px, ambos os estados de ocultação, desktop, folha Mais, teclado, sem JavaScript e axe.
 - [x] Executar gates locais aplicáveis do plano, revisar diff/privacidade e registrar resultados reais.
-- [ ] Criar commit e PR com staging seletivo; conferir checks no HEAD e registrar o próximo passo.
+- [x] Staging seletivo revisado; commit `f73a0cde528227cbc50fd5146d8de0069e2625db` e PR #56 criados; checks remotos aprovados nesse HEAD.
 
 ## Evidências
 
@@ -53,7 +53,7 @@ Não se aplica.
 | Build | `npm run build -- --webpack` passou, inclusive com backend local. `npm run build` pelo Turbopack falhou ao iniciar o processo filho para `globals.css` (panic/exit code 0) em duas tentativas. |
 | Banco e E2E | `npx supabase test db` — 6 arquivos/239 testes pgTAP passaram. E2E autenticado serial — 80 passaram, 6 skips esperados; a tentativa paralela anterior perdeu o servidor local por carga. |
 | Governança | `node --test scripts/validate-governance.test.mjs` — 39 passaram; `node scripts/validate-governance.mjs` — 0 erros, 0 avisos, 4 verificações manuais; `git diff --check` passou. |
-| Checks remotos | Pendente |
+| Checks remotos | No HEAD `f73a0cde`: CI principal, Supabase/banco/E2E autenticado, governança e Vercel passaram. |
 
 ## Revisão da correção
 
@@ -75,19 +75,19 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 005 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 005"
+Situação: Aguardando merge — ciclo 005 (completo)
+Quem: Responsável
+Conferir: Checks verdes e diff da PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/56
+Diga: "aprovo o merge da PR #56"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 005 + implementar_issue + 53/B_logo_mobile + 7dbba4b5678ab4820ee3fed22c8575b64908df10`
-- `effect_class`: `local_mutation`
-- `state_before`: plano aprovado/em execução; issue #53 aberta; dependência #52 integrada pela PR #55; base `origin/main` em `7dbba4b`; sem task, branch ou PR da #53.
-- `state_after`: task #53 `Em andamento`; logo responsivo e testes de regressão implementados; gates locais registrados; staging seletivo, commit, PR e checks remotos pendentes.
+- `effect_class`: `remote_mutation`
+- `state_before`: task #53 `Em andamento`; implementação e gates locais concluídos; branch `feature/issue-53` no commit `f73a0cde`; PR ainda não publicada.
+- `state_after`: task #53 `Em andamento`, PR #56 aberta e aguardando merge; CI, Supabase/banco/E2E autenticado, governança e Vercel passaram no HEAD `f73a0cde528227cbc50fd5146d8de0069e2625db`.
 - `result`: `executed`
-- `evidence`: issue #53 https://github.com/EuThiagoAndrade/saldo-futuro/issues/53; PR #55 integrada em `7dbba4b5678ab4820ee3fed22c8575b64908df10`; branch `feature/issue-53` baseada em `origin/main`; 201 unitários, 239 pgTAP, 80 E2E, 39 testes de governança aprovados; typecheck, build Webpack, lint, validador e diff check registrados acima.
-- `blockers`: nenhum técnico local; staging, commit, publicação e checks remotos ainda pendentes.
+- `evidence`: issue #53 https://github.com/EuThiagoAndrade/saldo-futuro/issues/53; PR #56 https://github.com/EuThiagoAndrade/saldo-futuro/pull/56; merge da dependência A na PR #55 em `7dbba4b5678ab4820ee3fed22c8575b64908df10`; 201 unitários, 239 pgTAP, 80 E2E, 39 testes de governança aprovados; checks remotos verdes no HEAD informado.
+- `blockers`: nenhum técnico; integração requer aprovação explícita do responsável com "aprovo o merge da PR #56".

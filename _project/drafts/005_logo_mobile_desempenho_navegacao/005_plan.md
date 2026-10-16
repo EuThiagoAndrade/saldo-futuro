@@ -205,7 +205,7 @@ Branches de entrega: `chore/issue-N` para A e `feature/issue-N` para B/C, com n�
 - Nenhuma dependência de pacote nova, outro checkout ou mudança externa prevista.
 - Infraestrutura de ensaio futura: Node 24, dependências fixadas, navegador e Docker/Supabase local funcionando. Não foram verificados integralmente no rascunho; falta de capacidade na execução exige Parado, sem substituir teste de banco por mock como prova de isolamento.
 - Pendências não bloqueadoras da redação: quais rotas ainda incomodam após a alteração regional e preferência pessoal sobre o símbolo. Esta v1 propõe rotas principais e logo completo; aprovação posterior confirmará as propostas ou determinará correção.
-- Estado operacional (2026-10-16): revisão formal concluída; plano aprovado e integrado pela PR #51; A (#52) integrada pela PR #55 em `7dbba4b` (a issue permanece aberta no GitHub); B (#53) autorizada e registrada em `005_task_issue-53.md`; C (#54) segue dependente de A e B.
+- Estado operacional (2026-10-16): revisão formal concluída; plano aprovado e integrado pela PR #51; A (#52) integrada pela PR #55 em `7dbba4b` (a issue permanece aberta no GitHub); B (#53) implementada na PR #56, checks remotos aprovados e aguardando merge; C (#54) segue dependente de A e B.
 
 ## Riscos, suposições e rollback
 
@@ -247,9 +247,9 @@ Rollback de código por PR própria, revertendo apenas a mudança problemática 
 
 | Campo | Valor |
 | :-- | :-- |
-| Issue(s) | A: [#52](https://github.com/EuThiagoAndrade/saldo-futuro/issues/52), integração pela PR #55 concluída (issue ainda aberta); B: [#53](https://github.com/EuThiagoAndrade/saldo-futuro/issues/53), autorizada e em implementação; C: [#54](https://github.com/EuThiagoAndrade/saldo-futuro/issues/54), aberta e dependente de A e B |
-| PR(s) | [#51 — publicação documental](https://github.com/EuThiagoAndrade/saldo-futuro/pull/51); [#55 — unidade A](https://github.com/EuThiagoAndrade/saldo-futuro/pull/55), integrada |
-| Branch(es) | `chore/cycle-005-plan` (publicação documental); `chore/issue-52` (unidade A); `feature/issue-53` (unidade B) |
+| Issue(s) | A: [#52](https://github.com/EuThiagoAndrade/saldo-futuro/issues/52), integração pela PR #55 concluída (issue ainda aberta); B: [#53](https://github.com/EuThiagoAndrade/saldo-futuro/issues/53), implementação na PR #56 aguardando merge; C: [#54](https://github.com/EuThiagoAndrade/saldo-futuro/issues/54), aberta e dependente de A e B |
+| PR(s) | [#51 — publicação documental](https://github.com/EuThiagoAndrade/saldo-futuro/pull/51); [#55 — unidade A](https://github.com/EuThiagoAndrade/saldo-futuro/pull/55), integrada; [#56 — unidade B](https://github.com/EuThiagoAndrade/saldo-futuro/pull/56), checks aprovados |
+| Branch(es) | `chore/cycle-005-plan` (publicação documental); `chore/issue-52` (unidade A); `feature/issue-53` (unidade B, PR #56) |
 | Origem | `59f7498272b6d83ecdfa7db38eb37d6bf95ac436`, ideação e autorização do rascunho em 2026-10-15 |
 | Destino após conclusão | `_project/executed/005_logo_mobile_desempenho_navegacao/005_plan.md` |
 
