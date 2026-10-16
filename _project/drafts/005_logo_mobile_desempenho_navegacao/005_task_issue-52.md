@@ -68,6 +68,8 @@ Build e E2E sem backend passaram (13 testes e 71 skips previstos). A tentativa m
 
 A primeira execução por blocos completou dois blocos/320 amostras, mas uma checagem de propriedade interna de hidratação do React falhou na preparação de uma amostra do terceiro bloco. Tentativa inteira preservada somente em `local/issue-52/ensaio-falha-hidratacao/`, com falha e limpeza registradas. A checagem interna foi removida: o observador usa relógio monotônico com `timeOrigin` e preserva apenas o cronômetro sintético entre documentos, registrando `nativa` quando o clique faz navegação completa. Isso permite medir o clique real sem perder o relógio por troca de documento, sem excluir erro de navegador ou modificar o Link do produto. O piloto verifica também uma navegação completa forçada; erros não tratados no navegador invalidam a amostra. Nenhuma série parcial dessas tentativas vira resultado final.
 
+Outra tentativa no Chrome instalado terminou com timeout de conteúdo no retorno ao Início: URL correta, sem h1/main de destino e sem resposta HTTP de erro capturada. Registros em `local/issue-52/ensaio-falha-marcador/`; causa não confirmada. O bloco isolado de 160 amostras da carteira cheia/0 ms passou em 2 min sem reproduzir a falha. O apoio passou a guardar diagnóstico de marcador e exceções do navegador somente em `local/`, sem copiar esses textos/imagens para as séries. Instalado o Chromium já fixado pelo Playwright do projeto (`npx playwright install chromium`), sem alterar dependências, para usar o mesmo runtime do CI na coleta final. Isso não é apresentado como correção de produto nem como prova da causa das falhas preparatórias. Piloto completo com troca de documento forçada passou nos dois volumes.
+
 ## Encerramento
 
 Não se aplica.

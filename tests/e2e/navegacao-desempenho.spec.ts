@@ -25,7 +25,11 @@ const observados = new WeakSet<Page>();
 async function novaPagina(contexto: BrowserContext) {
   const page = await contexto.newPage();
   const erros: string[] = []; errosDoNavegador.set(page, erros);
-  page.on('pageerror', (erro) => erros.push(erro.name));
+  page.on('pageerror', (erro) => {
+    erros.push(erro.name);
+    // Diagnóstico apenas local/ignorado; nunca copiado para as séries publicáveis.
+    appendFileSync(`${pasta}/erros-browser.ndjson`, JSON.stringify({ nome: erro.name, mensagem: erro.message }) + '\n');
+  });
   return page;
 }
 
@@ -112,7 +116,9 @@ async function medir(page: Page, origem: Rota, destino: Rota, cheio: boolean) {
   try {
     await page.waitForFunction(() => (window as typeof window & { medicao?: { pronto?: number } }).medicao?.pronto !== undefined, undefined, { timeout: 20_000 });
   } catch (erro) {
-    console.log('Diagnóstico de marcador:', await page.evaluate(() => ({ caminho: location.pathname, titulos: [...document.querySelectorAll('main h1')].map((e) => ({ texto: e.textContent, visivel: e.getClientRects().length > 0 })), medicao: (window as typeof window & { medicao?: unknown }).medicao })));
+    writeFileSync(`${pasta}/falha-marcador.json`, JSON.stringify(await page.evaluate(() => ({ caminho: location.pathname, titulo: document.title, principais: document.querySelectorAll('main').length, titulos: [...document.querySelectorAll('h1,h2')].map((e) => ({ texto: e.textContent, visivel: e.getClientRects().length > 0 })), corpo: document.body.innerText.slice(0, 1500), medicao: (window as typeof window & { medicao?: unknown }).medicao })), null, 2));
+    await page.screenshot({ path: `${pasta}/falha-marcador.png` });
+    console.log('Diagnóstico do marcador preservado somente em local/issue-52; exceções:', errosDoNavegador.get(page));
     throw erro;
   }
   await pronto(page, destino, cheio);
