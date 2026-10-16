@@ -66,6 +66,8 @@ Verificações já executadas: `npm ci` (409 pacotes; cinco vulnerabilidades alt
 
 Build e E2E sem backend passaram (13 testes e 71 skips previstos). A tentativa monolítica seguinte perdeu o servidor com 576 amostras; registrou uma falha de conexão e limpeza concluída, sem publicar estatística parcial. Causa não confirmada por logs do processo/sistema. Evidências somente em `local/issue-52/ensaio-falha-servidor/`. O apoio passou a executar 18 blocos serializados de rodada/atraso/volume, cada um com servidor novo no mesmo build, contagens idênticas e limpeza própria. Mantém todas as 2.880 amostras, condições e aquecimentos do plano; registra primeiros renders/reinícios à parte e recusa bloco ausente/falho. Não altera o código de produto, o CI normal ou o escopo das outras unidades.
 
+A primeira execução por blocos completou dois blocos/320 amostras, mas uma checagem de propriedade interna de hidratação do React falhou na preparação de uma amostra do terceiro bloco. Tentativa inteira preservada somente em `local/issue-52/ensaio-falha-hidratacao/`, com falha e limpeza registradas. A checagem interna foi removida: o observador usa relógio monotônico com `timeOrigin` e preserva apenas o cronômetro sintético entre documentos, registrando `nativa` quando o clique faz navegação completa. Isso permite medir o clique real sem perder o relógio por troca de documento, sem excluir erro de navegador ou modificar o Link do produto. O piloto verifica também uma navegação completa forçada; erros não tratados no navegador invalidam a amostra. Nenhuma série parcial dessas tentativas vira resultado final.
+
 ## Encerramento
 
 Não se aplica.

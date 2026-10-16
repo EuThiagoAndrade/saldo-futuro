@@ -19,6 +19,51 @@ let serial = Number(process.env.MEDICAO_IDENTIFICADOR_BASE ?? 0);
 const pasta = 'local/issue-52';
 const viewport = { width: 1280, height: 900 };
 const benchmark = '00500000-0000-4000-8000-000000000052';
+const errosDoNavegador = new WeakMap<Page, string[]>();
+const observados = new WeakSet<Page>();
+
+async function novaPagina(contexto: BrowserContext) {
+  const page = await contexto.newPage();
+  const erros: string[] = []; errosDoNavegador.set(page, erros);
+  page.on('pageerror', (erro) => erros.push(erro.name));
+  return page;
+}
+
+// Serializável pelo Playwright; preserva só o cronômetro sintético em sessionStorage
+// quando o clique troca de documento. Nenhum estado financeiro ou de sessão é salvo.
+function observarNavegacao() {
+  type Alvo = { titulo: string; seletor: string; vazio: boolean };
+  type Estado = Alvo & { inicio: number; origemTempo: number };
+  const w = window as typeof window & { sfObservando?: boolean; sfAlvo?: Alvo; medicao?: { inicio: number; feedback?: number; pronto?: number; nativa: boolean } };
+  if (w.sfObservando) return;
+  w.sfObservando = true;
+  const monitorar = (estado: Estado) => {
+    const m = { inicio: estado.inicio, nativa: estado.origemTempo !== performance.timeOrigin } as NonNullable<typeof w.medicao>;
+    w.medicao = m;
+    const frame = () => {
+      const decorrido = performance.timeOrigin + performance.now() - estado.inicio;
+      const visivel = (e: Element) => e.getClientRects().length > 0;
+      const cabecalho = [...document.querySelectorAll('main h1')].some((e) => e.textContent === estado.titulo && visivel(e));
+      const carregando = [...document.querySelectorAll('main [role="status"], main [aria-busy="true"]')].some((e) => visivel(e) && /carregando/i.test(e.textContent ?? ''));
+      if ((cabecalho || carregando) && m.feedback === undefined) m.feedback = decorrido;
+      const marcador = estado.vazio
+        ? [...document.querySelectorAll('main h2')].some((e) => e.textContent === 'Patrimônio e rentabilidade aparecem depois do primeiro fechamento' && visivel(e))
+        : [...document.querySelectorAll(estado.seletor)].some(visivel);
+      if (cabecalho && marcador) { m.pronto = decorrido; sessionStorage.removeItem('sf_medicao_cronometro'); }
+      else requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+  };
+  const salvo = sessionStorage.getItem('sf_medicao_cronometro');
+  if (salvo) monitorar(JSON.parse(salvo) as Estado);
+  document.addEventListener('click', () => {
+    if (!w.sfAlvo) return;
+    const estado = { ...w.sfAlvo, inicio: performance.timeOrigin + performance.now(), origemTempo: performance.timeOrigin };
+    delete w.sfAlvo;
+    sessionStorage.setItem('sf_medicao_cronometro', JSON.stringify(estado));
+    monitorar(estado);
+  }, { capture: true });
+}
 
 function limparBenchmark() {
   sqlLocal(`delete from public.benchmarks where id = '${benchmark}';`);
@@ -54,28 +99,14 @@ async function pronto(page: Page, rota: Rota, cheio: boolean) {
 
 async function medir(page: Page, origem: Rota, destino: Rota, cheio: boolean) {
   await pronto(page, origem, cheio);
+  expect(errosDoNavegador.get(page) ?? []).toEqual([]);
   const link = page.getByRole('navigation', { name: 'Menu lateral', exact: true }).getByRole('link', { name: destinos[destino].titulo, exact: true });
-  // Esperar a hidratação do Link evita cronometrar um clique nativo antes do React.
-  await expect.poll(() => link.evaluate((e) => Object.keys(e).some((k) => k.startsWith('__reactProps$')))).toBe(true);
-  // O instante vem do evento real de clique; rAF observa DOM visível, não só URL/menu ativo.
-  await page.evaluate(({ titulo, seletor, vazio }) => {
-    const w = window as typeof window & { medicao?: { inicio: number; feedback?: number; pronto?: number } };
-    document.addEventListener('click', () => {
-      w.medicao = { inicio: performance.now() };
-      const observar = () => {
-        const m = w.medicao!;
-        const visivel = (e: Element) => e.getClientRects().length > 0;
-        const cabecalho = [...document.querySelectorAll('main h1')].some((e) => e.textContent === titulo && visivel(e));
-        const carregando = [...document.querySelectorAll('main [role="status"], main [aria-busy="true"]')].some((e) => visivel(e) && /carregando/i.test(e.textContent ?? ''));
-        if ((cabecalho || carregando) && m.feedback === undefined) m.feedback = performance.now() - m.inicio;
-        const marcador = vazio
-          ? [...document.querySelectorAll('main h2')].some((e) => e.textContent === 'Patrimônio e rentabilidade aparecem depois do primeiro fechamento' && visivel(e))
-          : [...document.querySelectorAll(seletor)].some(visivel);
-        if (cabecalho && marcador) m.pronto = performance.now() - m.inicio;
-        else requestAnimationFrame(observar);
-      };
-      requestAnimationFrame(observar);
-    }, { once: true, capture: true });
+  if (!observados.has(page)) {
+    await page.addInitScript(observarNavegacao); await page.evaluate(observarNavegacao); observados.add(page);
+  }
+  await page.evaluate((alvo) => {
+    (window as typeof window & { sfAlvo?: typeof alvo; medicao?: unknown }).sfAlvo = alvo;
+    delete (window as typeof window & { medicao?: unknown }).medicao;
   }, { titulo: destinos[destino].titulo, seletor: destinos[destino].pronto, vazio: destino === '/' && !cheio });
   await link.click();
   try {
@@ -85,7 +116,8 @@ async function medir(page: Page, origem: Rota, destino: Rota, cheio: boolean) {
     throw erro;
   }
   await pronto(page, destino, cheio);
-  return page.evaluate(() => (window as typeof window & { medicao: { inicio: number; feedback: number; pronto: number } }).medicao);
+  expect(errosDoNavegador.get(page) ?? []).toEqual([]);
+  return page.evaluate(() => (window as typeof window & { medicao: { inicio: number; feedback: number; pronto: number; nativa: boolean } }).medicao);
 }
 
 async function carga(usuario: UsuarioDeTeste) {
@@ -150,7 +182,7 @@ test('baseline por clique, três rodadas, 20 amostras, dois volumes, primeira vi
       for (const [origem, destino] of pares) for (const condicao of ['primeira', 'revisita']) {
         const grupo = await browser.newContext({ viewport, storageState: estados[volume] });
         try {
-          const pagina = await grupo.newPage();
+          const pagina = await novaPagina(grupo);
           if (condicao === 'revisita') {
             await identificar(grupo, atraso);
             await pagina.goto(origem);
@@ -160,13 +192,13 @@ test('baseline por clique, três rodadas, 20 amostras, dois volumes, primeira vi
             const contexto = condicao === 'primeira' ? await browser.newContext({ viewport, storageState: estados[volume] }) : grupo;
             try {
               const id = await identificar(contexto, atraso);
-              const page = condicao === 'primeira' ? await contexto.newPage() : pagina;
+              const page = condicao === 'primeira' ? await novaPagina(contexto) : pagina;
               if (condicao === 'primeira') await page.goto(origem);
               await pronto(page, origem, cheio);
               // Janela fixa de estabilização; prefetch continua normal e é contabilizado.
               await page.waitForTimeout(150);
               const tempos = await medir(page, origem, destino, cheio);
-              appendFileSync(`${pasta}/amostras.ndjson`, JSON.stringify({ tipo: 'amostra', id, rodada, atraso, volume, origem, destino, condicao, amostra, feedback: tempos.feedback, pronto: tempos.pronto }) + '\n');
+              appendFileSync(`${pasta}/amostras.ndjson`, JSON.stringify({ tipo: 'amostra', id, rodada, atraso, volume, origem, destino, condicao, amostra, feedback: tempos.feedback, pronto: tempos.pronto, nativa: tempos.nativa }) + '\n');
               if (condicao === 'revisita') { await identificar(contexto, atraso); await medir(page, destino, origem, cheio); }
             } catch (erro) {
               appendFileSync(`${pasta}/amostras.ndjson`, JSON.stringify({ tipo: 'falha', rodada, atraso, volume, origem, destino, condicao, amostra }) + '\n');
@@ -181,11 +213,19 @@ test('baseline por clique, três rodadas, 20 amostras, dois volumes, primeira vi
     if (rodada === 3 && atraso === 100 || piloto) {
       const c = await browser.newContext({ viewport, storageState: estados[volume] });
       try {
-        const id = await identificar(c, 0); const p = await c.newPage();
+        const id = await identificar(c, 0); const p = await novaPagina(c);
         await p.goto('/');
         for (const [o, d] of [['/', '/lancamentos'], ['/lancamentos', '/ativos'], ['/ativos', '/benchmarks'], ['/benchmarks', '/']] as [Rota, Rota][]) {
           const tempos = await medir(p, o, d, volume === 'cheia');
           appendFileSync(`${pasta}/amostras.ndjson`, JSON.stringify({ tipo: 'percurso', id, volume, origem: o, destino: d, feedback: tempos.feedback, pronto: tempos.pronto }) + '\n');
+        }
+        if (piloto) {
+          await p.evaluate(() => document.addEventListener('click', (evento) => {
+            const link = (evento.target as Element).closest('a');
+            if (link) { evento.preventDefault(); evento.stopImmediatePropagation(); location.assign(link.href); }
+          }, { capture: true, once: true }));
+          expect((await medir(p, '/', '/ativos', volume === 'cheia')).nativa).toBe(true);
+          await p.goto('/');
         }
         if (volume === 'cheia') {
           await p.getByLabel('Período', { exact: true }).selectOption('desde_inicio');
