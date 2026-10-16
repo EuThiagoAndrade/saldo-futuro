@@ -248,6 +248,9 @@ test('baseline por clique, três rodadas, 20 amostras, dois volumes, primeira vi
         appendFileSync(`${pasta}/amostras.ndjson`, JSON.stringify({ tipo: 'adicional', volume, resultado: 'passou', escrita: false }) + '\n');
       } finally { await c.close(); }
     }
+  } catch (erro) {
+    appendFileSync(`${pasta}/amostras.ndjson`, JSON.stringify({ tipo: 'falha', fase: 'bloco', bloco: process.env.MEDICAO_BLOCO }) + '\n');
+    throw erro;
   } finally {
     // Nomes fixos permitem limpar também preparação parcialmente concluída.
     const restos = { ...u, vazia: u.vazia ?? { email: 'medicao005.vazia@example.com', id: '', papel: 'user' as const }, cheia: u.cheia ?? { email: 'medicao005.cheia@example.com', id: '', papel: 'user' as const }, admin: u.admin ?? { email: 'medicao005.admin@example.com', id: '', papel: 'admin' as const } };

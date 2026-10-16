@@ -19,12 +19,13 @@ test('correlaciona servidor/consulta, aplica atraso e não registra query, cooki
   try {
     execFileSync(process.execPath, ['--input-type=module', '-e', `
       import { createServer } from 'node:http';
-      const backend = createServer((req,res) => res.end('payload-ficticio-nao-registrar'));
+      const backend = createServer((req,res) => { res.writeHead(206, { 'x-prova': 'ficticio' }); res.end('payload-ficticio-nao-registrar'); });
       await new Promise(r => backend.listen(0, '127.0.0.1', r));
       process.env.NEXT_PUBLIC_SUPABASE_URL = 'http://127.0.0.1:' + backend.address().port;
       await import(${JSON.stringify(preload)});
       const app = createServer(async (req,res) => {
         const r = await fetch(process.env.NEXT_PUBLIC_SUPABASE_URL + '/rest/v1/ativos?segredo=falso');
+        if (r.status !== 206 || r.headers.get('x-prova') !== 'ficticio' || !r.url.endsWith('/rest/v1/ativos?segredo=falso')) throw new Error('Metadados mudaram.');
         res.end(await r.text());
       });
       await new Promise(r => app.listen(0, '127.0.0.1', r));
@@ -38,7 +39,7 @@ test('correlaciona servidor/consulta, aplica atraso e não registra query, cooki
     const consulta = registros.find((r) => r.tipo === 'supabase');
     const servidor = registros.find((r) => r.tipo === 'servidor');
     assert.equal(consulta.id, 'm42'); assert.equal(consulta.categoria, 'ativos');
-    assert.equal(consulta.pedido, servidor.pedido); assert.equal(consulta.status, 200);
+    assert.equal(consulta.pedido, servidor.pedido); assert.equal(consulta.status, 206);
     assert.ok(consulta.ms >= 45); assert.ok(servidor.ms >= consulta.ms);
   } finally { rmSync(pasta, { recursive: true }); }
 });

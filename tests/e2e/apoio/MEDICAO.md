@@ -5,7 +5,7 @@ Pré-requisitos: Node 24, `npm ci`, Docker/Supabase local iniciado e Chromium do
 Na raiz do repositório:
 
 ```powershell
-$env:PLAYWRIGHT_CHANNEL='chrome' # opcional, usa o Chrome instalado
+Remove-Item Env:PLAYWRIGHT_CHANNEL -ErrorAction SilentlyContinue # Chromium fixado pelo Playwright
 node tests/e2e/apoio/medir-navegacao.mjs
 ```
 
@@ -17,7 +17,7 @@ O protocolo padrão executa 2.880 amostras: 4 direções prioritárias (Início 
 
 Os usuários exclusivos `medicao005.*@example.com` recebem carteiras vazia e com 30 ativos/60 meses por RPCs da sessão. O ativo de sistema também é contado. Um benchmark mensal fictício exclusivo é criado pelo apoio SQL local e carregado pela RPC como admin; somente esse benchmark é removido. O teste usa `finally` para limpar cenários após sucesso ou falha, inclusive preparação parcial. Uma interrupção forçada do processo pode impedir `finally`; a próxima execução remove os restos dos mesmos nomes antes de preparar. Não execute duas cópias simultâneas.
 
-O preload `medicao-fetch.mjs` é carregado somente pelo servidor desse comando com `MEDIR_NAVEGACAO=1`. Sem essa opção, ele é inerte. O código de produto não o importa. O atraso de 0/50/100 ms acontece antes de cada chamada ao Supabase local (inclui autenticação e perfil), sem atrasar assets ou preparação de dados. O corpo clonado da resposta é consumido dentro da duração, que inclui transporte e o custo desse apoio; não representa tempo SQL puro. A resposta original segue para a aplicação. Nenhuma chamada ao SGS real é permitida.
+O preload `medicao-fetch.mjs` é carregado somente pelo servidor desse comando com `MEDIR_NAVEGACAO=1`. Sem essa opção, ele é inerte. O código de produto não o importa. O atraso de 0/50/100 ms acontece antes de cada chamada ao Supabase local (inclui autenticação e perfil), sem atrasar assets ou preparação de dados. O corpo clonado da resposta é consumido dentro da duração, que inclui transporte e o custo desse apoio; não representa tempo SQL puro. O helper de clonagem do Next fixado pelo projeto evita a clonagem nativa do Undici; a resposta consumida pela aplicação preserva status, cabeçalhos, URL e corpo, conferidos por teste. Nenhuma chamada ao SGS real é permitida.
 
 O relógio do navegador começa no evento real de clique. Um observador por `requestAnimationFrame` exige título visível de destino e marcador específico após a leitura dos dados (gráficos do Início cheio, estado vazio do Início vazio, seção de lançamentos, formulário Novo ativo, links de comparação do catálogo). URL e menu ativo não bastam. O feedback aceita título de destino/carregamento visível; conteúdo pronto pode ser o primeiro feedback. Cada amostra exige destino correto, marcador visível, ausência de alerta de erro em `main` e ausência de exceção não tratada no navegador. O cronômetro sintético atravessa trocas de documento por `sessionStorage`, sem gravar conteúdo financeiro ou de sessão. A região de anúncio de rota do Next.js fica fora dessa checagem. Falha interrompe o ensaio e fica registrada; não é removida como outlier.
 

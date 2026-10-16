@@ -3,6 +3,7 @@ import { AsyncLocalStorage } from 'node:async_hooks';
 import { Server } from 'node:http';
 import { appendFileSync } from 'node:fs';
 import { setTimeout as esperar } from 'node:timers/promises';
+import { cloneResponse } from 'next/dist/server/lib/clone-response.js';
 
 if (process.env.MEDIR_NAVEGACAO === '1') {
   const backend = new URL(process.env.NEXT_PUBLIC_SUPABASE_URL);
@@ -41,9 +42,10 @@ if (process.env.MEDIR_NAVEGACAO === '1') {
     let status = 0;
     try {
       if (ctx.atraso) await esperar(ctx.atraso);
-      const resposta = await original(input, init);
-      // Consumir o corpo no cronômetro inclui transporte, preservando a resposta original.
-      await resposta.clone().arrayBuffer();
+      // O próprio Next evita Response.clone() por um problema do Undici. Reutilizar
+      // seu helper fixado preserva status/cabeçalhos/URL/corpo, sem uma nova dependência.
+      const [resposta, copia] = cloneResponse(await original(input, init));
+      await copia.arrayBuffer();
       status = resposta.status;
       return resposta;
     } finally {
