@@ -7,7 +7,7 @@
 > **Issue:** `#52`
 > **Plano:** `_project/drafts/005_logo_mobile_desempenho_navegacao/005_plan.md`
 > **Branch:** `chore/issue-52`
-> **PR:** —
+> **PR:** [#55](https://github.com/EuThiagoAndrade/saldo-futuro/pull/55)
 > **Integração:** `Pendente`
 > **Autorização inicial:** "autorizo a implementação da issue #52" em 2026-10-15
 > **Modo contínuo:** `—`
@@ -45,7 +45,9 @@ Não se aplica.
 - [x] Build de produção e E2E sem backend: build Next 16.4 passou; 13 testes passaram e 71 skips previstos.
 - [x] E2E autenticado/D9 no Supabase local: 78 testes passaram, seis skips esperados; D9 mediana 478 ms (348, 429, 478, 480, 495), limite 1.000 ms; dados fictícios limpos.
 - [x] Governança final, privacidade e revisão do diff: validador 0 erros/avisos, 39 testes de governança, 265.157 campos sem sinais sensíveis e `git diff --check` limpo.
-- [ ] Staging seletivo, commit, push, PR e checks remotos.
+- [x] Staging seletivo revisado e commit `ebc393f` criado e enviado para `origin/chore/issue-52`.
+- [x] PR #55 aberta para a base `main`, vinculada à issue #52 e anexada a esta task.
+- [ ] Checks remotos do HEAD final e preview; merge aguarda aprovação explícita.
 
 ## Evidências
 
@@ -56,7 +58,7 @@ Não se aplica.
 | Validador | 0 erros e 0 avisos após as alterações finais (2026-10-16); quatro itens permanecem para conferência manual de referências, privacidade, barreiras e autorização. |
 | `git diff --check` | Limpo após as alterações finais (2026-10-16), incluindo conferência de whitespace no relatório novo. |
 | Privacidade G3 | Revisão manual e varredura dos 265.157 campos da série sem credenciais, cookies, emails ou valores; a extração gzip/Base64 foi comparada byte a byte com a série original. `valores_benchmark` é somente o nome da categoria de tabela. |
-| Checks remotos | Não iniciados: PR ainda não publicada. |
+| Checks remotos | Em execução após publicação da PR #55; estados conferidos no HEAD `ebc393f` (CI, governança, banco/E2E autenticado e preview pendentes no primeiro snapshot). |
 
 ## Revisão da correção
 
@@ -86,7 +88,7 @@ O bloco isolado de 160 amostras/50 ms passou com essa clonagem em 4 min, mas a q
 
 Com Node v24.19.0 e Chromium Playwright 156.0.8078.4, os 18 blocos terminaram no mesmo build e nas mesmas contagens de fixture: 2.880 amostras, 144 grupos completos, zero erros de resposta/navegação e 18 limpezas confirmadas. A série foi sanitizada; o relatório registra medianas, p95, observações e a limitação de deduplicação do Next. Duas navegações completas de documento foram preservadas nos dados. Não houve mudança em produto ou otimização. A pedido do responsável, a execução foi encerrada depois de obter uma conclusão. O build separado para repetir os gates foi interrompido; E2E autenticado final, revalidação de governança e publicação da PR continuam pendentes.
 
-Em 2026-10-16, os gates locais finais passaram: lint (sem erros, três avisos preexistentes em `local/`), typecheck, 201 unitários, 239 pgTAP, 39 testes de governança prévios, cinco checks do apoio, 13 E2E sem backend, build de produção e 78 E2E autenticados com seis skips previstos. D9 mediu mediana de 478 ms, abaixo do limite de 1.000 ms. A série completa foi preservada byte a byte em gzip/Base64 dentro do Markdown canônico; a varredura completa levou 70 ms e o build concluiu. O responsável pediu aguardar os gates locais antes da PR; essa condição está atendida. Faltam a validação final da governança, a revisão do diff, o staging seletivo e a publicação.
+Em 2026-10-16, os gates locais finais passaram: lint (sem erros, três avisos preexistentes em `local/`), typecheck, 201 unitários, 239 pgTAP, 39 testes de governança, cinco checks do apoio, 13 E2E sem backend, build de produção e 78 E2E autenticados com seis skips previstos. D9 mediu mediana de 478 ms, abaixo do limite de 1.000 ms. A série completa foi preservada byte a byte em gzip/Base64 dentro do Markdown canônico; a varredura completa levou 70 ms e o build concluiu. O responsável pediu aguardar os gates locais antes da PR; essa condição está atendida. Commit `ebc393f` enviado; PR #55 criada e checks remotos em execução. O merge permanece pendente de checks verdes e aprovação explícita.
 
 ## Encerramento
 
@@ -106,9 +108,9 @@ Diga: "continue o ciclo 005"
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 005 + implementar_issue + 52/A_baseline_navegacao + 9914a907e91d9487c9ba9543bafff71a7dbf8e5e`
-- `effect_class`: `local_mutation`
+- `effect_class`: `remote_mutation`
 - `state_before`: plano Aprovado; ciclo Em execução; issue #52 aberta; baseline completa; task Em andamento; sem PR; gate autenticado/D9 e bloco canônico final pendentes.
-- `state_after`: task Em andamento; série preservada byte a byte em gzip/Base64 no Markdown canônico após diagnóstico e mitigação da falha de alocação do scanner; build, gates locais, E2E autenticado e D9 passaram; governança final/staging/commit/PR em preparação.
+- `state_after`: task Em andamento; série preservada byte a byte em gzip/Base64 no Markdown canônico após diagnóstico e mitigação da falha de alocação do scanner; build e gates locais passaram; commit `ebc393f` enviado e PR #55 aberta; checks remotos pendentes.
 - `result`: `executed`
-- `evidence`: autorização inicial da issue #52; decisão mais recente do responsável de aguardar os gates locais completos antes da PR; baseline em `005_validation_desempenho.md`/`005_validation_series.md`; build passou; scan após gzip/Base64 completou em 70 ms; unitários 201, pgTAP 239, checks de apoio 5, E2E sem backend 13, E2E local 78; D9 mediana 478 ms; sem falhas.
-- `blockers`: staging seletivo, commit, push e PR ainda em andamento; checks remotos vêm após publicar a PR, e merge exige aprovação explícita depois de verdes.
+- `evidence`: autorização inicial da issue #52; decisão mais recente do responsável de aguardar os gates locais completos antes da PR; baseline em `005_validation_desempenho.md`/`005_validation_series.md`; build passou; scan após gzip/Base64 completou em 70 ms; unitários 201, pgTAP 239, checks de apoio 5, E2E sem backend 13, E2E local 78; D9 mediana 478 ms; commit `ebc393f`; PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/55 aberta; checks observados em andamento.
+- `blockers`: checks remotos ainda pendentes; merge exige aprovação explícita depois de ficarem verdes.
