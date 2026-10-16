@@ -47,7 +47,7 @@ Não se aplica.
 - [x] Governança final, privacidade e revisão do diff: validador 0 erros/avisos, 39 testes de governança, 265.157 campos sem sinais sensíveis e `git diff --check` limpo.
 - [x] Staging seletivo revisado e commit `ebc393f` criado e enviado para `origin/chore/issue-52`.
 - [x] PR #55 aberta para a base `main`, vinculada à issue #52 e anexada a esta task.
-- [ ] Checks remotos do HEAD final e preview; merge aguarda aprovação explícita.
+- [x] Checks remotos da PR #55 passaram no HEAD `342c13f`: CI principal, Supabase/pgTAP/E2E autenticado, governança e Vercel.
 
 ## Evidências
 
@@ -58,7 +58,7 @@ Não se aplica.
 | Validador | 0 erros e 0 avisos após as alterações finais (2026-10-16); quatro itens permanecem para conferência manual de referências, privacidade, barreiras e autorização. |
 | `git diff --check` | Limpo após as alterações finais (2026-10-16), incluindo conferência de whitespace no relatório novo. |
 | Privacidade G3 | Revisão manual e varredura dos 265.157 campos da série sem credenciais, cookies, emails ou valores; a extração gzip/Base64 foi comparada byte a byte com a série original. `valores_benchmark` é somente o nome da categoria de tabela. |
-| Checks remotos | Em execução após publicação da PR #55; estados conferidos no HEAD `ebc393f` (CI, governança, banco/E2E autenticado e preview pendentes no primeiro snapshot). |
+| Checks remotos | Passaram no HEAD `342c13f`: CI principal (lint, tipos, unitários, build, E2E sem backend), Supabase local/pgTAP/E2E autenticado, governança e Vercel. Esta atualização de handoff dispara nova rodada, que será conferida no HEAD vigente antes da integração. |
 
 ## Revisão da correção
 
@@ -98,10 +98,10 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 005 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 005"
+Situação: Aguardando merge — ciclo 005 (completo)
+Quem: Responsável
+Conferir: Checks e diff da PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/55
+Diga: "aprovo o merge da PR #55"
 ```
 
 ## Handoff de saída
@@ -110,7 +110,7 @@ Diga: "continue o ciclo 005"
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 005 + implementar_issue + 52/A_baseline_navegacao + 9914a907e91d9487c9ba9543bafff71a7dbf8e5e`
 - `effect_class`: `remote_mutation`
 - `state_before`: plano Aprovado; ciclo Em execução; issue #52 aberta; baseline completa; task Em andamento; sem PR; gate autenticado/D9 e bloco canônico final pendentes.
-- `state_after`: task Em andamento; série preservada byte a byte em gzip/Base64 no Markdown canônico após diagnóstico e mitigação da falha de alocação do scanner; build e gates locais passaram; commit `ebc393f` enviado e PR #55 aberta; checks remotos pendentes.
+- `state_after`: task Em andamento, próximo passo Aguardando merge; série preservada byte a byte em gzip/Base64 no Markdown canônico; build e gates locais passaram; commits `ebc393f` e `342c13f` publicados; PR #55 aberta; checks do HEAD `342c13f` verdes e nova rodada disparada por este handoff; integração aguarda aprovação explícita.
 - `result`: `executed`
-- `evidence`: autorização inicial da issue #52; decisão mais recente do responsável de aguardar os gates locais completos antes da PR; baseline em `005_validation_desempenho.md`/`005_validation_series.md`; build passou; scan após gzip/Base64 completou em 70 ms; unitários 201, pgTAP 239, checks de apoio 5, E2E sem backend 13, E2E local 78; D9 mediana 478 ms; commit `ebc393f`; PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/55 aberta; checks observados em andamento.
-- `blockers`: checks remotos ainda pendentes; merge exige aprovação explícita depois de ficarem verdes.
+- `evidence`: autorização inicial da issue #52; decisão do responsável de aguardar os gates locais completos antes da PR; baseline em `005_validation_desempenho.md`/`005_validation_series.md`; build passou; scan após gzip/Base64 completou em 70 ms; unitários 201, pgTAP 239, checks de apoio 5, E2E sem backend 13, E2E local 78; D9 mediana 478 ms; commits `ebc393f`/`342c13f`; PR #55; checks remotos verdes no HEAD `342c13f` e reconfirmação após este update.
+- `blockers`: nenhum técnico; integração exige frase explícita de aprovação do merge, depois dos checks verdes no HEAD final.
