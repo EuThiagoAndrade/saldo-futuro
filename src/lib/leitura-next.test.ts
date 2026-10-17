@@ -20,8 +20,13 @@ function deduplicarComoNext(fetchReal: typeof fetch): typeof fetch {
   };
 }
 
-/** Data API com uma linha por tabela; troca de versão logo depois do primeiro transporte indicado. */
-function dataApi(trocarApos: (transporte: string) => boolean) {
+/**
+ * Data API com uma linha por tabela; troca de versão logo depois do primeiro transporte indicado. A
+ * versão 2 é uma escrita que muda vários componentes da marca: refechamento e um evento novo.
+ * Requisições em voo ao mesmo tempo formam um lote, atendido na ordem de chegada ou na inversa: o
+ * banco pode ler consultas paralelas em qualquer ordem.
+ */
+function dataApi(trocarApos: (transporte: string, indice: number) => boolean, ordem: "chegada" | "inversa" = "chegada") {
   let versao = 1;
   const transportes: string[] = [];
   const linhas = (tabela: string, filtros: URLSearchParams): object[] => {
@@ -32,17 +37,32 @@ function dataApi(trocarApos: (transporte: string) => boolean) {
       case "ativos": return filtros.has("desativado_em") ? [] : [{ id: "a1", nome: "Ativo fictício", tipo_ajuste: null, sistema: null, ativo: true, desativado_em: null }];
       case "coberturas_benchmark": return [{ inicio: "2026-01-01", fim: "2026-02-01", atualizado_em: `v${versao}` }];
       case "valores_benchmark": return [{ data: "2026-01-01", valor: versao === 1 ? 0.8 : 0.9 }];
+      case "eventos": return versao === 1 ? [] : [{ id: "e1", ativo_id: "a1", data: "2026-02-05", tipo: "aporte", valor: 10000, estorno_de: null, transferencia_id: null }];
       default: return [];
     }
   };
-  const fetchFalso: typeof fetch = async (entrada, init) => {
-    const pedido = new Request(entrada, init);
+  const fila: { pedido: Request; responder: (r: Response) => void }[] = [];
+  let agendado = false;
+  let maiorLote = 0;
+  const fetchFalso: typeof fetch = (entrada, init) => new Promise<Response>((responder) => {
+    fila.push({ pedido: new Request(entrada, init), responder });
+    if (agendado) return;
+    agendado = true;
+    setImmediate(() => {
+      agendado = false;
+      const lote = fila.splice(0);
+      maiorLote = Math.max(maiorLote, lote.length);
+      if (ordem === "inversa") lote.reverse();
+      for (const { pedido, responder: r } of lote) r(servir(pedido));
+    });
+  });
+  const servir = (pedido: Request): Response => {
     const url = new URL(pedido.url);
     const tabela = url.pathname.split("/").at(-1)!;
     const transporte = `${pedido.method} ${tabela} ${url.searchParams.get("select")}`;
     transportes.push(transporte);
     const dados = linhas(tabela, url.searchParams);
-    if (versao === 1 && trocarApos(transporte)) versao = 2;
+    if (versao === 1 && trocarApos(transporte, transportes.length - 1)) versao = 2;
     const intervalo = dados.length ? `0-${dados.length - 1}/${dados.length}` : `*/0`;
     const corpo = pedido.method === "HEAD" ? null : JSON.stringify(dados);
     return new Response(corpo, { status: 200, headers: { "content-type": "application/json", "content-range": intervalo } });
@@ -51,7 +71,7 @@ function dataApi(trocarApos: (transporte: string) => boolean) {
     auth: { persistSession: false, autoRefreshToken: false },
     global: { fetch: deduplicarComoNext(fetchFalso) },
   });
-  return { cliente, transportes, versao: () => versao };
+  return { cliente, transportes, versao: () => versao, maiorLote: () => maiorLote };
 }
 
 describe("D13 com a deduplicação do Next", () => {
@@ -81,4 +101,42 @@ describe("D13 com a deduplicação do Next", () => {
     expect(resultado.valores).toEqual([{ data: "2026-01-01", valor: "0.9" }]);
     expect(resultado.cobertura?.atualizado_em).toBe("v2");
   });
+});
+
+// Uma escrita depois de cada transporte possível: entre componentes da marca antes (lidos juntos),
+// no seu início e fim, entre insumos e páginas, e entre componentes da marca depois. O resultado é
+// sempre uma versão inteira, nunca a mistura (D13 com a marca em paralelo).
+describe("D13 com escrita depois de qualquer transporte", () => {
+  const casos = {
+    Início: async (api: ReturnType<typeof dataApi>) => {
+      const r = await lerInsumosDoInicio(api.cliente);
+      return [r.consolidados[0].vf === 1020000, r.posicoes[0].saldo_final === 1020000, r.eventos.length === 1];
+    },
+    fechamento: async (api: ReturnType<typeof dataApi>) => {
+      const r = await lerInsumosDoFechamento(api.cliente);
+      return [r.posicoes[0].saldo_final === 1020000, r.eventos.length === 1];
+    },
+    Comparação: async (api: ReturnType<typeof dataApi>) => {
+      const r = await lerComparacao(api.cliente, "benchmark-ficticio");
+      return [r.consolidados[0].vf === 1020000n, r.eventos.length === 1, r.valores[0].valor === "0.9", r.cobertura?.atualizado_em === "v2"];
+    },
+  };
+  it.each((Object.keys(casos) as (keyof typeof casos)[]).flatMap((caso) => [[caso, "chegada"], [caso, "inversa"]] as const))(
+    "%s, lote em ordem de %s",
+    async (caso, ordem) => {
+      const versoes = new Set<string>();
+      let maiorLote = 0;
+      for (let k = 0; ; k++) {
+        const api = dataApi((_t, indice) => indice === k, ordem);
+        const nova = await casos[caso](api);
+        expect(new Set(nova).size, `escrita depois do transporte ${k}`).toBe(1);
+        versoes.add(nova[0] ? "nova" : "antiga");
+        maiorLote = Math.max(maiorLote, api.maiorLote());
+        if (api.versao() === 1) break;
+      }
+      expect([...versoes].sort()).toEqual(["antiga", "nova"]);
+      // Os componentes da marca estiveram em voo juntos.
+      expect(maiorLote).toBeGreaterThanOrEqual(5);
+    },
+  );
 });

@@ -14,6 +14,27 @@ export function estatisticas(valores) {
     p95: ordenada[Math.ceil(0.95 * n) - 1], min: ordenada[0], max: ordenada.at(-1) };
 }
 
+/**
+ * Rejeição de transporte (status 0) repetida com sucesso pelo próprio cliente (fetchWithRetry do
+ * postgrest-js) é aceita e listada: mesma categoria, mesmo pedido, resposta 2xx posterior e pedido do
+ * servidor em 2xx. Qualquer outra resposta fora de 2xx/3xx continua interrompendo a publicação.
+ */
+export function transportesRepetidos(consultas) {
+  const ok = (status) => status >= 200 && status < 400;
+  const usadas = new Set();
+  const ocorrencias = [];
+  for (const r of consultas) {
+    if (ok(r.status)) continue;
+    const servidor = consultas.find((p) => p.tipo === 'servidor' && p.pedido === r.pedido);
+    const repeticao = r.tipo === 'supabase' && r.status === 0 && servidor && ok(servidor.status) && consultas.find((q) => q !== r && !usadas.has(q)
+      && q.tipo === 'supabase' && q.pedido === r.pedido && q.categoria === r.categoria && q.inicio >= r.inicio + r.ms && ok(q.status));
+    if (!repeticao) throw new Error('Resposta de servidor/Supabase com erro; investigar, sem descartar.');
+    usadas.add(repeticao);
+    ocorrencias.push({ id: r.id, caminho: r.caminho, categoria: r.categoria, inicio: r.inicio, ms: r.ms, repeticaoInicio: repeticao.inicio, repeticaoStatus: repeticao.status });
+  }
+  return ocorrencias;
+}
+
 export function resumir() {
   const pasta = 'local/issue-52';
   const destino = '_project/drafts/005_logo_mobile_desempenho_navegacao/005_validation';
@@ -24,7 +45,7 @@ export function resumir() {
   if (ambiente.piloto || ambiente.blocos.length !== 18 || ambiente.blocos.some((b) => !b.fim) || amostras.some((r) => r.tipo === 'falha') || amostras.filter((r) => r.tipo === 'limpeza' && r.resultado === 'passou').length !== 18) throw new Error('Ensaio incompleto/falho ou piloto.');
   const medidas = amostras.filter((r) => r.tipo === 'amostra');
   if (medidas.length !== 2880) throw new Error(`Esperadas 2880 amostras, observadas ${medidas.length}.`);
-  if (consultas.some((r) => r.status < 200 || r.status >= 400)) throw new Error('Resposta de servidor/Supabase com erro; investigar, sem descartar.');
+  const repetidas = transportesRepetidos(consultas);
   const grupos = new Map();
   for (const r of medidas) {
     const chave = `${r.rodada}|${r.atraso}|${r.volume}|${r.origem} → ${r.destino}|${r.condicao}`;
@@ -48,7 +69,7 @@ export function resumir() {
       chamadasPorAmostra: estatisticas(g.map((r) => (porId.get(r.id) ?? []).filter((q) => q.tipo === 'supabase').length)),
       prefetch: g.reduce((s, r) => s + (porId.get(r.id) ?? []).filter((q) => q.tipo === 'servidor' && q.prefetch).length, 0) };
   });
-  const dados = { ambiente, navegador: JSON.parse(readFileSync(`${pasta}/navegador.json`, 'utf8')), volumes: JSON.parse(readFileSync(`${pasta}/volumes.json`, 'utf8')), resumo, series,
+  const dados = { ambiente, transportesRepetidos: repetidas, navegador: JSON.parse(readFileSync(`${pasta}/navegador.json`, 'utf8')), volumes: JSON.parse(readFileSync(`${pasta}/volumes.json`, 'utf8')), resumo, series,
     adicionais: amostras.filter((r) => r.tipo !== 'amostra'),
     primeiraRenderizacao: consultas.filter((r) => amostras.some((a) => a.tipo === 'primeira_renderizacao' && a.id === r.id) && r.caminho === '/'),
   };
@@ -58,6 +79,8 @@ export function resumir() {
     '# Séries sanitizadas de navegação — ciclo 005',
     '',
     'JSON UTF-8 sem perda, compactado com gzip e codificado em Base64. Durações individuais arredondadas a 0,01 ms; resumos calculados antes do arredondamento. Cada consulta é [categoria, início relativo ao pedido em ms, duração em ms, status].',
+    '',
+    `Rejeições de transporte (status 0) repetidas com sucesso pelo cliente no mesmo pedido, mantidas nas séries sem descarte: ${repetidas.length}${repetidas.map((o) => `; amostra ${o.id}, ${o.caminho}, ${o.categoria}, rejeição em ${o.inicio.toFixed(1)} ms e repetição ${o.repeticaoStatus} em ${o.repeticaoInicio.toFixed(1)} ms`).join('')}. Lista completa em \`transportesRepetidos\`.`,
     '',
     'Extração para `005_validation_series.json` com Node.js:',
     '',
@@ -80,7 +103,7 @@ export function resumir() {
     '| :-- | --: | :-- | :-- | :-- | --: | --: | --: | --: | --: |',
     ...resumo.map((r) => `| ${r.chave.split('|').join(' | ')} | ${f(r.feedback.mediana)}/${f(r.feedback.p95)} | ${f(r.pronto.mediana)}/${f(r.pronto.p95)} | ${r.servidor ? `${f(r.servidor.mediana)}/${f(r.servidor.p95)}` : 'sem pedido'} | ${r.chamadasPorAmostra.mediana}/${r.chamadasPorAmostra.p95} | ${r.prefetch} |`)];
   writeFileSync(`${pasta}/tabela.md`, tabela.join('\n') + '\n');
-  console.log(`2880 amostras, ${consultas.length} registros sanitizados, 144 grupos completos; limpeza confirmada.`);
+  console.log(`2880 amostras, ${consultas.length} registros sanitizados, 144 grupos completos; limpeza confirmada; ${repetidas.length} rejeição(ões) de transporte repetida(s) com sucesso, listada(s) na série.`);
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) resumir();

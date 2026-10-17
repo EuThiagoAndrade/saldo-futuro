@@ -18,7 +18,10 @@ export async function lerCatalogo(cliente: Cliente) {
 /** Marcas dos dois lados envolvem todas as consultas, inclusive tabelas com uma única página. */
 export async function lerComparacao(cliente: Cliente, benchmarkId: string) {
   const { marca, insumos } = await lerComposicao(
-    async (sinal) => ({ carteira: await marcaCarteira(cliente, sinal), benchmark: await marcaBenchmark(cliente, benchmarkId, sinal) }),
+    async (sinal) => {
+      const [carteira, benchmark] = await Promise.all([marcaCarteira(cliente, sinal), marcaBenchmark(cliente, benchmarkId, sinal)]);
+      return { carteira, benchmark };
+    },
     async (_marca, sinal) => ({
       consolidados: (await lerTabela<{ mes: string; vi: number; vf: number }>(cliente, "consolidados_mensais", { colunas: "mes, vi, vf", sinal }))
         .map((m) => ({ mes: mesDaColuna(m.mes), vi: BigInt(m.vi), vf: BigInt(m.vf) })),
