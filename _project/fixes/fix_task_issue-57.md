@@ -2,12 +2,12 @@
 
 > **Ciclo:** `—`
 > **Trilha:** `curta`
-> **Estado:** `Em andamento`
+> **Estado:** `Aguardando integração`
 > **Tipo:** `fix`
 > **Issue:** `#57`
 > **Plano:** `—`
 > **Branch:** `fix/issue-57`
-> **PR:** —
+> **PR:** [#58](https://github.com/EuThiagoAndrade/saldo-futuro/pull/58)
 > **Integração:** `Pendente`
 > **Autorização inicial:** "confirmo a trilha curta e autorizo abrir e corrigir a issue [FIX] Leituras D13 deduplicadas pelo Next" em 2026-10-17, confirmada como única escolha em resposta à pergunta de desambiguação
 > **Modo contínuo:** `—`
@@ -50,7 +50,8 @@ Restaurar a garantia D13 do plano `004` nas leituras feitas dentro do servidor N
 - [x] Provar a correção no Vitest e no `next start`; regressões, lint, typecheck, build, e2e completa e D9.
 - [x] Reavaliar a elegibilidade com o diff final: só módulos de leitura, testes e o apoio/documentação da medição; sem rota, schema, cliente Supabase, autenticação ou visual.
 - [x] Revisão da correção (rodada 1): `APTO PARA APROVAÇÃO`.
-- [ ] PR, checks remotos e aprovação do merge.
+- [x] Commit `717f30f` e PR #58 com `Closes #57`.
+- [ ] Checks remotos e aprovação do merge.
 
 ## Evidências
 
@@ -124,18 +125,18 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — correção da issue #57
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue a correção da issue #57"
+Situação: Aguardando merge — correção da issue #57
+Quem: Responsável
+Conferir: checks e diff da [PR #58](https://github.com/EuThiagoAndrade/saldo-futuro/pull/58)
+Diga: "aprovo o merge da PR #58"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + fix + revisar_plano + issue-57/rodada-1 + 739c72fae9ec75a7ea5d106ec29ede9fc3d05f58cc85934103510ffd55c0c43f`
-- `effect_class`: `local_mutation`
-- `state_before` / `state_after`: antes, issue #57 aberta e correção no working tree da branch `fix/issue-57`, sem commit ou PR, aguardando revisão (rodada 1); depois, mesma issue, branch e implementação, com rodada 1 registrada, veredito `APTO PARA APROVAÇÃO` e situação `Pronto para continuar`, para preparar a PR pelo workflow `corrigir_trilha_curta`.
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + fix + corrigir_trilha_curta + 57 + 355fbb340ef0dda26f7f5c90fa4ee66767085971`
+- `effect_class`: `remote_mutation`
+- `state_before` / `state_after`: antes, correção revisada (rodada 1, `APTO PARA APROVAÇÃO`, hash `739c72fa…` conferido) no working tree, sem commit nem PR; depois, commit `717f30f` na branch remota `fix/issue-57` e PR #58 aberta contra `main` em `355fbb340ef0dda26f7f5c90fa4ee66767085971`, aguardando checks e aprovação do merge.
 - `result`: `executed`
-- `evidence`: https://github.com/EuThiagoAndrade/saldo-futuro/issues/57; seção Revisão da correção, Rodada 1, com identidade do código revisado, 204 testes unitários, prova D13 no `next start`, 12 testes e2e selecionados, 239 asserções de banco, 39 testes de governança, 5 de apoio, build, typecheck, lint e validador aprovados; nenhuma implementação, issue ou PR alterada pelo revisor.
-- `blockers`: nenhum
+- `evidence`: https://github.com/EuThiagoAndrade/saldo-futuro/pull/58; https://github.com/EuThiagoAndrade/saldo-futuro/issues/57; evidências locais na seção Evidências e parecer na Revisão da correção.
+- `blockers`: checks remotos pendentes; aprovação do merge.
