@@ -7,7 +7,7 @@
 > **Issue:** — (encerramento documental sem issue recursiva)
 > **Plano:** `_project/executed/005_logo_mobile_desempenho_navegacao/005_plan.md`
 > **Branch:** `chore/cycle-005-closure`
-> **PR:** —
+> **PR:** [#60](https://github.com/EuThiagoAndrade/saldo-futuro/pull/60)
 > **Integração:** prospectiva; válida somente depois do merge desta PR, conferido no GitHub
 > **Autorização inicial:** "aprovo o plano do ciclo 005" em 2026-10-15 (cobre a preparação do encerramento); "autorizo a verificação em produção do ciclo 005. Também autorizo corrigir a release editando as PRs #55, #56, #58 e #59 com BEGIN_COMMIT_OVERRIDE." em 2026-10-17
 > **Modo contínuo:** `—`
