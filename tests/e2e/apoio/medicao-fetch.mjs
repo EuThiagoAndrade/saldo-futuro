@@ -1,7 +1,7 @@
 // Preload exclusivo do ensaio optativo. Nunca importado pelo produto.
 import { AsyncLocalStorage } from 'node:async_hooks';
 import { Server } from 'node:http';
-import { appendFileSync } from 'node:fs';
+import { appendFileSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { setTimeout as esperar } from 'node:timers/promises';
 import { cloneResponse } from 'next/dist/server/lib/clone-response.js';
 
@@ -9,6 +9,7 @@ if (process.env.MEDIR_NAVEGACAO === '1') {
   const backend = new URL(process.env.NEXT_PUBLIC_SUPABASE_URL);
   if (!['127.0.0.1', 'localhost'].includes(backend.hostname)) throw new Error('Ensaio exige Supabase local.');
   const contexto = new AsyncLocalStorage();
+  const travasD13 = new Set();
   const registrar = (registro) => appendFileSync(process.env.MEDICAO_LOG, JSON.stringify(registro) + '\n');
   const processo = (tipo, detalhe = {}) => appendFileSync(process.env.MEDICAO_LOG + '.processos', JSON.stringify({ tipo, node: process.version, pid: process.pid, ppid: process.ppid, instante: new Date().toISOString(), uptime: process.uptime(), ...detalhe }) + '\n');
   processo('inicio');
@@ -22,12 +23,13 @@ if (process.env.MEDIR_NAVEGACAO === '1') {
     const id = /(?:^|;\s*)sf_medicao=(m[0-9]+)/.exec(cookie)?.[1];
     if (!id) return emitir.call(this, evento, ...args);
     const atraso = Number(/(?:^|;\s*)sf_atraso=(0|50|100)(?:;|$)/.exec(cookie)?.[1] ?? 0);
+    const provaD13 = /(?:^|;\s*)sf_d13=(d[0-9]+)(?:;|$)/.exec(cookie)?.[1];
     const inicio = performance.now();
     const caminho = new URL(req.url, 'http://localhost').pathname;
     const prefetch = req.headers['next-router-prefetch'] === '1' || req.headers.purpose === 'prefetch';
     const pedido = { id, pedido: `${id}-${inicio}`, caminho, prefetch };
     res.once('finish', () => registrar({ ...pedido, tipo: 'servidor', ms: performance.now() - inicio, status: res.statusCode }));
-    return contexto.run({ ...pedido, atraso, inicio }, () => emitir.call(this, evento, ...args));
+    return contexto.run({ ...pedido, atraso, provaD13, inicio }, () => emitir.call(this, evento, ...args));
   };
   const original = globalThis.fetch;
   globalThis.fetch = async (input, init) => {
@@ -47,6 +49,20 @@ if (process.env.MEDIR_NAVEGACAO === '1') {
       const [resposta, copia] = cloneResponse(await original(input, init));
       await copia.arrayBuffer();
       status = resposta.status;
+      if (ctx.provaD13 && categoria === 'posicoes_mensais' && !travasD13.has(ctx.provaD13)) {
+        const pastaD13 = process.env.MEDICAO_D13_GATE_DIR;
+        if (!pastaD13) throw new Error('A prova D13 exige MEDICAO_D13_GATE_DIR local.');
+        travasD13.add(ctx.provaD13);
+        mkdirSync(pastaD13, { recursive: true });
+        const pronto = `${pastaD13}/${ctx.provaD13}.ready`;
+        const liberar = `${pastaD13}/${ctx.provaD13}.release`;
+        writeFileSync(pronto, 'ready');
+        const limite = Date.now() + 120_000;
+        while (!existsSync(liberar)) {
+          if (Date.now() >= limite) throw new Error('Tempo excedido aguardando a mutação fictícia da prova D13.');
+          await esperar(25);
+        }
+      }
       return resposta;
     } finally {
       registrar({ id: ctx.id, pedido: ctx.pedido, caminho: ctx.caminho, prefetch: ctx.prefetch, tipo: 'supabase', categoria, inicio: inicio - ctx.inicio, ms: performance.now() - inicio, status, atraso: ctx.atraso });
