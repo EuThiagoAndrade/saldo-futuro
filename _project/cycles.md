@@ -1,7 +1,7 @@
 # Registro de ciclos
 
 > **Próximo ciclo:** `006`
-> **Última atualização:** 2026-10-15
+> **Última atualização:** 2026-10-17
 
 | Ciclo | Assunto | Estado | Ideação | Plano | Issues | Encerramento |
 | :-- | :-- | :-- | :-- | :-- | :-- | :-- |
@@ -11,6 +11,6 @@
 | `003` | Regras financeiras | `Concluído` | `_project/ideations/003_regras_financeiras.md` | `_project/executed/003_regras_financeiras/003_plan.md` | [#26](https://github.com/EuThiagoAndrade/saldo-futuro/issues/26), [#27](https://github.com/EuThiagoAndrade/saldo-futuro/issues/27), [#28](https://github.com/EuThiagoAndrade/saldo-futuro/issues/28) e [#29](https://github.com/EuThiagoAndrade/saldo-futuro/issues/29) — fechadas como concluídas | PR de encerramento documental (`chore/cycle-003-closure`); release `v0.2.0` |
 | `004` | Telas do produto | `Concluído` | `_project/ideations/004_telas_produto.md` | `_project/executed/004_telas_produto/004_plan.md` | [#37](https://github.com/EuThiagoAndrade/saldo-futuro/issues/37), [#38](https://github.com/EuThiagoAndrade/saldo-futuro/issues/38), [#39](https://github.com/EuThiagoAndrade/saldo-futuro/issues/39), [#40](https://github.com/EuThiagoAndrade/saldo-futuro/issues/40), [#41](https://github.com/EuThiagoAndrade/saldo-futuro/issues/41) e [#42](https://github.com/EuThiagoAndrade/saldo-futuro/issues/42) — fechadas | [PR #50](https://github.com/EuThiagoAndrade/saldo-futuro/pull/50), condicionada à release `0.3.0` pela [PR #44](https://github.com/EuThiagoAndrade/saldo-futuro/pull/44); pendências preservadas na task de encerramento |
 
-| `005` | Logo no cabeçalho mobile e desempenho de navegação | `Em execução` | `_project/ideations/005_logo_mobile_desempenho_navegacao.md` | `_project/drafts/005_logo_mobile_desempenho_navegacao/005_plan.md` | [#52](https://github.com/EuThiagoAndrade/saldo-futuro/issues/52) aberta após integração via PR #55; [#53](https://github.com/EuThiagoAndrade/saldo-futuro/issues/53) fechada após PR #56; [#54](https://github.com/EuThiagoAndrade/saldo-futuro/issues/54) aberta, com PR própria aguardando merge; correção D13 pela trilha curta: [#57](https://github.com/EuThiagoAndrade/saldo-futuro/issues/57), fechada após PR #58 | — |
+| `005` | Logo no cabeçalho mobile e desempenho de navegação | `Concluído` | `_project/ideations/005_logo_mobile_desempenho_navegacao.md` | `_project/executed/005_logo_mobile_desempenho_navegacao/005_plan.md` | [#52](https://github.com/EuThiagoAndrade/saldo-futuro/issues/52), [#53](https://github.com/EuThiagoAndrade/saldo-futuro/issues/53) e [#54](https://github.com/EuThiagoAndrade/saldo-futuro/issues/54) — fechadas como concluídas; correção pela trilha curta: [#57](https://github.com/EuThiagoAndrade/saldo-futuro/issues/57) | PR de encerramento documental (`chore/cycle-005-closure`); release pela PR do release-please após o encerramento |
 
 O ciclo `000` não tem ideação retroativa. Sua origem e as aprovações anteriores à implantação da governança estão registradas no próprio plano.

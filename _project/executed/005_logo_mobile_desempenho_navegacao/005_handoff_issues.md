@@ -38,7 +38,7 @@ Plano aprovado e integrado pela PR #51. A criação desta issue não inicia sua 
 
 ### Ciclo e plano relacionados
 
-Ciclo 005 — `_project/drafts/005_logo_mobile_desempenho_navegacao/005_plan.md`, v1, item 1 (A), protocolo de desempenho e gates; PR #51 integrada.
+Ciclo 005 — `_project/executed/005_logo_mobile_desempenho_navegacao/005_plan.md`, v1, item 1 (A), protocolo de desempenho e gates; PR #51 integrada.
 
 <!-- logical_key: EuThiagoAndrade/saldo-futuro + 005 + criar_issues + chore/A_baseline_navegacao + v1@9914a907e91d9487c9ba9543bafff71a7dbf8e5e -->
 
@@ -66,7 +66,7 @@ Fora: novo asset/marca, alteração dos tokens ou do contrato visual, novas tela
 
 ### Ciclo e plano relacionados
 
-Ciclo 005 — `_project/drafts/005_logo_mobile_desempenho_navegacao/005_plan.md`, v1, item 2 (B); PR #51 integrada; `design-system/DESIGN.md`, seções 4, 7 e 8.
+Ciclo 005 — `_project/executed/005_logo_mobile_desempenho_navegacao/005_plan.md`, v1, item 2 (B); PR #51 integrada; `design-system/DESIGN.md`, seções 4, 7 e 8.
 
 ### Dependências, riscos e autorizações
 
@@ -103,7 +103,7 @@ Fora: regra financeira, schema/RPC/índice/migração, mudanças em autenticaç�
 
 ### Ciclo e plano relacionados
 
-Ciclo 005 — `_project/drafts/005_logo_mobile_desempenho_navegacao/005_plan.md`, v1, item 3 (C), protocolo de desempenho/barreiras/gates; PR #51 integrada; D2, D8 e D13 do plano executado 004.
+Ciclo 005 — `_project/executed/005_logo_mobile_desempenho_navegacao/005_plan.md`, v1, item 3 (C), protocolo de desempenho/barreiras/gates; PR #51 integrada; D2, D8 e D13 do plano executado 004.
 
 ### Dependências, riscos e autorizações
 

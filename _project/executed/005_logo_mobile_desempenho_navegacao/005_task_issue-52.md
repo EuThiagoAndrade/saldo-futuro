@@ -5,7 +5,7 @@
 > **Estado:** `Concluída`
 > **Tipo:** `chore`
 > **Issue:** `#52`
-> **Plano:** `_project/drafts/005_logo_mobile_desempenho_navegacao/005_plan.md`
+> **Plano:** `_project/executed/005_logo_mobile_desempenho_navegacao/005_plan.md`
 > **Branch:** `chore/issue-52`
 > **PR:** [#55](https://github.com/EuThiagoAndrade/saldo-futuro/pull/55)
 > **Integração:** `Integrada`
@@ -101,10 +101,10 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 005 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
+Situação: Concluído — ciclo 005 (completo)
+Quem: —
 Conferir: —
-Diga: "continue o ciclo 005"
+Diga: —
 ```
 
 ## Handoff de saída
