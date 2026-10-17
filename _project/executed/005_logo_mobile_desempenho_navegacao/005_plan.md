@@ -1,10 +1,10 @@
 # Plano de Implementação — Logo no cabeçalho mobile e desempenho de navegação
 
 > **Ciclo:** `005`
-> **Status:** `Em Execução`
+> **Status:** `Concluído`
 > **Versão:** `v1`
 > **Data de criação:** 2026-10-15
-> **Última atualização:** 2026-10-16
+> **Última atualização:** 2026-10-17
 > **Tipo:** `feature`
 > **Prioridade:** `P2`
 > **Nível:** `completo`
@@ -205,7 +205,7 @@ Branches de entrega: `chore/issue-N` para A e `feature/issue-N` para B/C, com n�
 - Nenhuma dependência de pacote nova, outro checkout ou mudança externa prevista.
 - Infraestrutura de ensaio futura: Node 24, dependências fixadas, navegador e Docker/Supabase local funcionando. Não foram verificados integralmente no rascunho; falta de capacidade na execução exige Parado, sem substituir teste de banco por mock como prova de isolamento.
 - Pendências não bloqueadoras da redação: quais rotas ainda incomodam após a alteração regional e preferência pessoal sobre o símbolo. Esta v1 propõe rotas principais e logo completo; aprovação posterior confirmará as propostas ou determinará correção.
-- Estado operacional (2026-10-17): plano aprovado e integrado pela PR #51; A (#52) integrada pela PR #55 em `7dbba4b` (issue #52 permanece aberta no GitHub); B (#53) integrada por squash pela PR #56 em `355fbb340ef0dda26f7f5c90fa4ee66767085971` (issue #53 fechada); C (#54) autorizada em 2026-10-17; a prova D13 no Next real confirmou composição mista, corrigida pela trilha curta na issue #57 (PR #58, `5d04b74`). Com nova baseline nesse commit, a candidata de marca em paralelo atingiu o aceite de ganho; a PR da C aguarda checks e aprovação do merge.
+- Estado operacional (2026-10-17): plano aprovado e integrado pela PR #51; A (#52) integrada pela PR #55 em `7dbba4b` (issue #52 permanece aberta no GitHub); B (#53) integrada por squash pela PR #56 em `355fbb340ef0dda26f7f5c90fa4ee66767085971` (issue #53 fechada); C (#54) autorizada em 2026-10-17; a prova D13 no Next real confirmou composição mista, corrigida pela trilha curta na issue #57 (PR #58, `5d04b74`). Com nova baseline nesse commit, a candidata de marca em paralelo atingiu o aceite de ganho e foi integrada pela PR #59 em `a263a48`. Verificação em produção: 22/22 públicas e seis itens autenticados aprovados pelo responsável. Release corrigida por override de commits; encerramento na PR documental `chore/cycle-005-closure`.
 
 ## Riscos, suposições e rollback
 
@@ -247,8 +247,8 @@ Rollback de código por PR própria, revertendo apenas a mudança problemática 
 
 | Campo | Valor |
 | :-- | :-- |
-| Issue(s) | A: [#52](https://github.com/EuThiagoAndrade/saldo-futuro/issues/52), integrada pela PR #55 (issue ainda aberta); B: [#53](https://github.com/EuThiagoAndrade/saldo-futuro/issues/53), fechada após a PR #56; C: [#54](https://github.com/EuThiagoAndrade/saldo-futuro/issues/54), aberta, com PR própria; correção D13 descoberta na C: [#57](https://github.com/EuThiagoAndrade/saldo-futuro/issues/57), fechada após a PR #58 |
-| PR(s) | [#51 — publicação documental](https://github.com/EuThiagoAndrade/saldo-futuro/pull/51); [#55 — unidade A](https://github.com/EuThiagoAndrade/saldo-futuro/pull/55), integrada; [#56 — unidade B](https://github.com/EuThiagoAndrade/saldo-futuro/pull/56), integrada por squash em `355fbb340ef0dda26f7f5c90fa4ee66767085971`; [#58 — correção D13](https://github.com/EuThiagoAndrade/saldo-futuro/pull/58), integrada por squash em `5d04b7453e7d01f3d1b15a28e9746c47ca7ea4c3` |
+| Issue(s) | A: [#52](https://github.com/EuThiagoAndrade/saldo-futuro/issues/52), integrada pela PR #55 (issue ainda aberta); B: [#53](https://github.com/EuThiagoAndrade/saldo-futuro/issues/53), fechada após a PR #56; C: [#54](https://github.com/EuThiagoAndrade/saldo-futuro/issues/54), fechada após a PR #59; correção D13 descoberta na C: [#57](https://github.com/EuThiagoAndrade/saldo-futuro/issues/57), fechada após a PR #58 |
+| PR(s) | [#51 — publicação documental](https://github.com/EuThiagoAndrade/saldo-futuro/pull/51); [#55 — unidade A](https://github.com/EuThiagoAndrade/saldo-futuro/pull/55), integrada; [#56 — unidade B](https://github.com/EuThiagoAndrade/saldo-futuro/pull/56), integrada por squash em `355fbb340ef0dda26f7f5c90fa4ee66767085971`; [#58 — correção D13](https://github.com/EuThiagoAndrade/saldo-futuro/pull/58), integrada por squash em `5d04b7453e7d01f3d1b15a28e9746c47ca7ea4c3`; [#59 — unidade C](https://github.com/EuThiagoAndrade/saldo-futuro/pull/59), integrada por squash em `a263a486d4837e6f0add4ac5d1fc73b8cdc23c02`; encerramento em `chore/cycle-005-closure` |
 | Branch(es) | `chore/cycle-005-plan` (publicação documental); `chore/issue-52` (unidade A); `feature/issue-53` (unidade B); `feature/issue-54` (unidade C); `fix/issue-57` (correção D13) |
 | Origem | `59f7498272b6d83ecdfa7db38eb37d6bf95ac436`, ideação e autorização do rascunho em 2026-10-15 |
 | Destino após conclusão | `_project/executed/005_logo_mobile_desempenho_navegacao/005_plan.md` |
@@ -257,10 +257,10 @@ Rollback de código por PR própria, revertendo apenas a mudança problemática 
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 005 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
+Situação: Concluído — ciclo 005 (completo)
+Quem: —
 Conferir: —
-Diga: "continue o ciclo 005"
+Diga: —
 ```
 
 ## Handoff de saída
@@ -375,6 +375,8 @@ Diga: "continue o ciclo 005"
 
 ## Pós-mortem
 
-- **Data de conclusão:** —
-- **Desvios:** —
-- **Lições comprovadas:** —
+- **Data de conclusão:** 2026-10-17, efetiva com o merge da PR de encerramento.
+- **Resultado:** logo à esquerda no cabeçalho mobile (B); retorno ao Início cerca de 40% mais rápido na simulação local de 50 ms por chamada, nas três rodadas, com as mesmas chamadas (C); conferência autenticada em produção aprovada nos seis itens. Ganho medido apenas localmente.
+- **Desvios:** a prova D13 no Next real exigida antes da C falhou e virou a correção da trilha curta #57 (PR #58), mudando a baseline da C; uma execução da baseline com Node v24.15.0 falhou e foi refeita no v24.19.0 da A; o resumidor passou a aceitar só rejeição de transporte repetida com sucesso, sempre listada; a C usou uma execução completa de cada revisão, em sequência, com verificação alternada curta do bloco carteira vazia/0 ms, por decisão do responsável; os squashes do ciclo saíram com o título da PR e não geraram release, corrigida por `BEGIN_COMMIT_OVERRIDE`, de modo que a PR de release surge depois do encerramento.
+- **Lições comprovadas:** declarar sempre o próximo passo; o assunto do squash segue Conventional Commits, não o título da PR (`.agent/lessons_learned.md`). A deduplicação de GET por pedido do Next e o uso de signal por fase estão consolidados na KB-003.
+- **Observação aberta:** na verificação alternada, / → /ativos ficou cerca de 15–17 ms acima da baseline, dentro do limite, sem causa identificada; a página não usa a marca.

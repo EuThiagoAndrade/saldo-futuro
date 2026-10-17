@@ -2,13 +2,13 @@
 
 > **Ciclo:** `005`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#54`
-> **Plano:** `_project/drafts/005_logo_mobile_desempenho_navegacao/005_plan.md`
+> **Plano:** `_project/executed/005_logo_mobile_desempenho_navegacao/005_plan.md`
 > **Branch:** `feature/issue-54`
 > **PR:** [#59](https://github.com/EuThiagoAndrade/saldo-futuro/pull/59)
-> **Integração:** `Pendente`
+> **Integração:** `Integrada por squash em a263a48 (2026-10-17)`
 > **Autorização inicial:** "autorizo a implementação da issue #54" em 2026-10-17
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-17
@@ -50,7 +50,7 @@ Não se aplica.
 - [x] Regressar cálculos, atualização após escrita, isolamento A/B/admin, sessão encerrada, ocultação, acessibilidade, chamadas por pedido e D9 ≤ 1 s (e2e completa e `desempenho.spec.ts`).
 - [x] Registrar séries, medianas/p95, comparações, chamadas, verificação alternada e limites em `005_validation_desempenho.md` e nas séries `005_validation_series_c_baseline.md` e `005_validation_series_c_candidata.md`.
 - [x] Executar gates locais; revisar privacidade, diff e staging seletivo; commits `16f05af` e `1fc65f1`; PR #59 com `Closes #54`.
-- [ ] Checks remotos e aprovação do merge.
+- [x] Checks remotos verdes no HEAD `c95814b` (app, database, Governance, Vercel) e "aprovo o merge da PR #59"; integrada por squash em `a263a486d4837e6f0add4ac5d1fc73b8cdc23c02`, issue #54 fechada como concluída.
 
 ## Evidências
 
@@ -69,7 +69,7 @@ Não se aplica.
 | Testes de governança | `node.exe --test scripts/validate-governance.test.mjs` — 39/39 passaram com `TEMP`/`TMP` em `local/issue-54/governance-temp/`; uma tentativa inicial no temp do sandbox falhou com `EPERM` e foi descartada. |
 | Validador | `node.exe scripts/validate-governance.mjs` — 0 erros, 0 avisos, 4 itens manuais. |
 | `git diff --check` | Passou. |
-| Checks remotos | Pendente. |
+| Checks remotos | PR #59 no HEAD `c95814b`: "Lint, types, tests, build and preview e2e" 1 min 23 s, "Supabase local, database tests and auth e2e" 6 min 28 s, "Validate governance" 13 s, Vercel e Vercel Preview Comments, todos com sucesso. |
 
 ## Revisão da correção
 
@@ -132,10 +132,10 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 005 (completo)
-Quem: Responsável
-Conferir: checks e diff da [PR #59](https://github.com/EuThiagoAndrade/saldo-futuro/pull/59)
-Diga: "aprovo o merge da PR #59"
+Situação: Concluído — ciclo 005 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
@@ -143,8 +143,8 @@ Diga: "aprovo o merge da PR #59"
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 005 + implementar_issue + 54/C_navegacao + 5d04b7453e7d01f3d1b15a28e9746c47ca7ea4c3`
 - `effect_class`: `remote_mutation`
-- `state_before`: issue #54 parada após falha D13; correção #57 integrada em `5d04b74`; branch `feature/issue-54` sem commits próprios.
-- `state_after`: nova baseline `5d04b74` e candidata `16f05af` medidas; aceite de ganho atingido; verificação alternada sem regressão acima do limite; commits `16f05af` e `1fc65f1` publicados em `feature/issue-54`; PR #59 aberta contra `main`, aguardando checks e aprovação do merge.
+- `state_before`: PR #59 aberta e aprovada pelo responsável, checks pendentes.
+- `state_after`: PR #59 integrada por squash em `a263a486d4837e6f0add4ac5d1fc73b8cdc23c02`; issue #54 fechada; reconciliação registrada no encerramento do ciclo.
 - `result`: `executed`
-- `evidence`: https://github.com/EuThiagoAndrade/saldo-futuro/pull/59; relatório e séries no diretório do ciclo; evidências e decisões nesta task.
-- `blockers`: checks remotos pendentes; aprovação do merge.
+- `evidence`: https://github.com/EuThiagoAndrade/saldo-futuro/pull/59 (`merged`, 2026-10-17T22:35:41Z); https://github.com/EuThiagoAndrade/saldo-futuro/issues/54 (`closed`, `completed`).
+- `blockers`: nenhum

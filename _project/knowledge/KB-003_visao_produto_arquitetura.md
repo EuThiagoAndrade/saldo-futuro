@@ -6,7 +6,7 @@ tags:
   - referência
 author: "Thiago Andrade e Claude"
 module: "Produto"
-last_updated: "2026-10-15"
+last_updated: "2026-10-17"
 origin_cycle: "002"
 ---
 
@@ -43,14 +43,16 @@ O Saldo Futuro é um sistema web de gestão de investimentos pessoais, multiusu�
   - catálogo de benchmarks, cobertura, comparação e sincronização sob demanda com o SGS, restrita ao admin;
   - lista de acessos, normalização dos e-mails, papel inicial e remoção com confirmação;
   - Conta, navegação responsiva e Ocultar valores, lembrado por cookie e aplicado na renderização do servidor.
+- identidade mobile e desempenho (ciclo `005`):
+  - logo à esquerda no cabeçalho mobile, com link para o Início;
+  - leitura coerente que vai ao banco em cada fase dentro do servidor Next e marcas lidas em paralelo, reduzindo a espera ao voltar ao Início.
 
 Permanecem fora da entrega:
 
 - migração dos dados do `Meus-Investimentos`;
-- troca do papel ou revogação de uma conta pela tela (continuam em P3/P4 da KB-002);
-- logo no cabeçalho mobile e otimização da lentidão relatada em cada troca de tela, propostos para o próximo ciclo.
+- troca do papel ou revogação de uma conta pela tela (continuam em P3/P4 da KB-002).
 
-O encerramento do `004` foi determinado pelo responsável com essas pendências e com conferência autenticada parcial em produção. As 22 verificações públicas passaram; os testes locais/CI não equivalem à conferência autenticada completa, e a medição local de 175 ms não mede a latência Vercel–Supabase. Evidências, diagnóstico e decisão ficam em `_project/executed/004_telas_produto/004_task_issue-42.md` e `004_task_closure.md`. O ciclo `005` permanece apenas proposto, sem reserva.
+O encerramento do `004` foi determinado pelo responsável com essas pendências e com conferência autenticada parcial em produção. As 22 verificações públicas passaram; os testes locais/CI não equivalem à conferência autenticada completa, e a medição local de 175 ms não mede a latência Vercel–Supabase. Evidências, diagnóstico e decisão ficam em `_project/executed/004_telas_produto/004_task_issue-42.md` e `004_task_closure.md`. O ciclo `005` tratou o logo e a lentidão; a conferência autenticada do `005` passou nos seis itens do roteiro (`_project/executed/005_logo_mobile_desempenho_navegacao/005_task_closure.md`). Os ganhos de desempenho foram medidos localmente, com atraso artificial por chamada, e não são medida de produção (`005_validation_desempenho.md`).
 
 ### Onde está cada coisa
 
@@ -159,8 +161,8 @@ Definidos em `supabase/migrations/20261014193630_benchmarks.sql`.
 ### Interface e PWA
 
 - A aplicação usa os tokens e a fonte IBM Plex Sans do `design-system/DESIGN.md` (`src/app/globals.css`).
-- O grupo `src/app/(app)/` oferece Início, Lançamentos, Ativos, Benchmarks, Transferências, Conta e Administração (só para admin), com barra inferior no celular e menu lateral no desktop. O logo atual está no menu lateral e no login; sua inclusão no header mobile é uma pendência conhecida.
-- As leituras usadas em cálculo são completas e paginadas; composições de carteira e benchmark conferem marcas antes/depois, repetindo no máximo três vezes. Dado indisponível aparece como `N/D`, sem virar zero. As regras de apresentação do Início estão na seção 15 da KB-004, com CR-51/CR-52.
+- O grupo `src/app/(app)/` oferece Início, Lançamentos, Ativos, Benchmarks, Transferências, Conta e Administração (só para admin), com barra inferior no celular e menu lateral no desktop. O logo está no menu lateral, no login e, no celular, à esquerda do cabeçalho.
+- As leituras usadas em cálculo são completas e paginadas; composições de carteira e benchmark conferem marcas antes/depois, repetindo no máximo três vezes. Dentro do servidor Next, cada fase passa um `AbortSignal` próprio às consultas, porque o Next devolve a mesma resposta para GET idênticos no mesmo pedido; os componentes de cada marca são lidos em paralelo, sem sobrepor as fases (`src/lib/leitura.ts`). Dado indisponível aparece como `N/D`, sem virar zero. As regras de apresentação do Início estão na seção 15 da KB-004, com CR-51/CR-52.
 - É instalável como PWA pelo menu do navegador, sem service worker e sem modo offline (`src/app/manifest.ts`; ADR-002).
 
 ### Qualidade, CI e release
@@ -190,3 +192,4 @@ O plano executado do ciclo `001` (`_project/executed/001_fundacao_aplicacao/001_
 | 2026-10-13 | `002` | Criação, a partir do estado entregue no ciclo `001` |
 | 2026-10-14 | `003` | Regras financeiras: carteira, benchmarks, KB-004, módulos em `src/lib/` e versão `0.2.0` |
 | 2026-10-15 | `004` | Telas do produto e versão `0.3.0`; acesso por ponto de entrada, leitura completa/coerente, gráficos e pendências conhecidas de mobile/desempenho e verificação autenticada parcial |
+| 2026-10-17 | `005` | Logo no cabeçalho mobile; leitura coerente fresca no Next (#57) e marcas em paralelo (#54); conferência autenticada em produção aprovada |

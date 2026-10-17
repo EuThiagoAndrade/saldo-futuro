@@ -77,3 +77,7 @@ Origem: ciclo `003`, issue #26. Outro modelo recebeu só as regras e as entradas
 ### 2026-10-17 — Toda saída de workflow precisa declarar o próximo passo
 
 Origem: ciclo `005`, merge da PR #56. A resposta confirmou a integração da issue #53, mas omitiu o bloco `PRÓXIMO PASSO`; o responsável precisou perguntar qual era a próxima ação. Ao encerrar uma solicitação regida por workflow, determine a situação efetiva pelo artefato, pelo plano e pelo estado atual do GitHub, especialmente depois de um merge, e apresente o bloco canônico completo: situação e alvo, quem age, o que conferir com link e a frase exata. Não repita a situação que acabou de ser superada nem deixe o próximo passo implícito. A frase do bloco indica o próximo ponto de aprovação e não autoriza por si só a mutação seguinte; após integrar a issue #53, por exemplo, o ciclo aguarda autorização própria para a #54.
+
+### 2026-10-17 — O assunto do squash segue Conventional Commits, não o título da PR
+
+Origem: ciclo `005`, PRs #55, #56, #58 e #59. Os merges por squash usaram o título da PR (`[CHORE]`, `[FEATURE]`, `[FIX]`), que é o prefixo das issues, como assunto do commit. O release-please não reconheceu nenhuma das entregas e não propôs a versão; a correção exigiu `BEGIN_COMMIT_OVERRIDE` nas PRs já integradas. Ao integrar, passe explicitamente o assunto convencional da entrega (`feat(issue-N): …`, `fix(issue-N): …` ou `chore(issue-N): …`, como em `_project/README.md`) e confira o assunto resultante em `main` antes de encerrar a entrega.

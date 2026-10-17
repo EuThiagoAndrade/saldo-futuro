@@ -5,7 +5,7 @@
 > **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#53`
-> **Plano:** `_project/drafts/005_logo_mobile_desempenho_navegacao/005_plan.md`
+> **Plano:** `_project/executed/005_logo_mobile_desempenho_navegacao/005_plan.md`
 > **Branch:** `feature/issue-53`
 > **PR:** [#56](https://github.com/EuThiagoAndrade/saldo-futuro/pull/56)
 > **Integração:** `Integrada em 2026-10-17 por squash, commit `355fbb340ef0dda26f7f5c90fa4ee66767085971``
@@ -76,10 +76,10 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando autorização de implementação — ciclo 005 (completo)
-Quem: Responsável
-Conferir: Issue #54 e escopo do item C em https://github.com/EuThiagoAndrade/saldo-futuro/issues/54
-Diga: "autorizo a implementação da issue #54"
+Situação: Concluído — ciclo 005 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
