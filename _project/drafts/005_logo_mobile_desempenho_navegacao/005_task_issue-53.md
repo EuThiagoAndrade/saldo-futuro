@@ -2,17 +2,17 @@
 
 > **Ciclo:** `005`
 > **Trilha:** `normal`
-> **Estado:** `Em andamento`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#53`
 > **Plano:** `_project/drafts/005_logo_mobile_desempenho_navegacao/005_plan.md`
 > **Branch:** `feature/issue-53`
 > **PR:** [#56](https://github.com/EuThiagoAndrade/saldo-futuro/pull/56)
-> **Integração:** `Pendente`
+> **Integração:** `Integrada em 2026-10-17 por squash, commit `355fbb340ef0dda26f7f5c90fa4ee66767085971``
 > **Autorização inicial:** "autorizo a implementação da issue #53" em 2026-10-16
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-16
-> **Última atualização:** 2026-10-16
+> **Última atualização:** 2026-10-17
 > **handoff_schema_version:** `2`
 
 ## Objetivo
@@ -43,7 +43,8 @@ Não se aplica.
 - [x] Inspecionar o layout e os testes atuais; implementar o logo responsivo com dimensões reservadas e alvo/foco acessíveis.
 - [x] Validar 360, 390, 768, 1024 e 1280 px, ambos os estados de ocultação, desktop, folha Mais, teclado, sem JavaScript e axe.
 - [x] Executar gates locais aplicáveis do plano, revisar diff/privacidade e registrar resultados reais.
-- [x] Staging seletivo revisado; commit `f73a0cde528227cbc50fd5146d8de0069e2625db` e PR #56 criados; checks remotos aprovados nesse HEAD.
+- [x] Staging seletivo revisado; commit `f73a0cde528227cbc50fd5146d8de0069e2625db` e PR #56 criados; checks remotos passaram nesse HEAD.
+- [x] PR #56 integrada por squash em `355fbb340ef0dda26f7f5c90fa4ee66767085971`; issue #53 fechada no GitHub; task reconciliada no início da implementação da #54.
 
 ## Evidências
 
@@ -61,7 +62,7 @@ Não se aplica.
 
 ## Decisões incidentais e desvios
 
-Workflow `.agent/workflows/implementar_issue.md`, template `.agent/templates/task.md`, template da PR e gate `.agent/skills/governance-check/governance-check.md` lidos no ponto de uso, junto das autoridades `.agent/ai_behavior.md`, `_project/README.md`, `_project/cycles.md`, `.agent/lessons_learned.md`, plano aprovado e `design-system/DESIGN.md`. Issue #53 conferida aberta no GitHub; PR #55 conferida integrada; nenhuma branch ou PR anterior de #53 encontrada. Não usar dados reais.
+Workflow `.agent/workflows/implementar_issue.md`, template `.agent/templates/task.md`, template da PR e gate `.agent/skills/governance-check/governance-check.md` lidos no ponto de uso, junto das autoridades `.agent/ai_behavior.md`, `_project/README.md`, `_project/cycles.md`, `.agent/lessons_learned.md`, plano aprovado e `design-system/DESIGN.md`. Issue #53 foi conferida aberta antes da implementação; agora está fechada após a PR #56. PR #55 conferida integrada; nenhuma branch ou PR anterior de #53 encontrada. Não usar dados reais.
 
 Implementação: o link da marca aparece só abaixo do breakpoint `lg`, usa o SVG institucional já existente e aponta para `/`; `next/image` reserva a altura de 32 px, enquanto o link mantém alvo mínimo 44×44 px e foco visível. Os testes cobrem as cinco larguras aprovadas, bordas/folgas/ausência de overflow, estado de ocultação antes e depois da ação, desktop, marca na folha Mais, navegação por teclado e funcionamento do formulário sem JavaScript. Não houve alteração em tokens, contrato visual, autenticação, lógica financeira, dependências ou schema; não foram usadas carteiras reais.
 
@@ -75,19 +76,19 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 005 (completo)
+Situação: Aguardando autorização de implementação — ciclo 005 (completo)
 Quem: Responsável
-Conferir: Checks verdes e diff da PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/56
-Diga: "aprovo o merge da PR #56"
+Conferir: Issue #54 e escopo do item C em https://github.com/EuThiagoAndrade/saldo-futuro/issues/54
+Diga: "autorizo a implementação da issue #54"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 005 + implementar_issue + 53/B_logo_mobile + 7dbba4b5678ab4820ee3fed22c8575b64908df10`
-- `effect_class`: `remote_mutation`
-- `state_before`: task #53 `Em andamento`; implementação e gates locais concluídos; branch `feature/issue-53` no commit `f73a0cde`; PR ainda não publicada.
-- `state_after`: task #53 `Em andamento`, PR #56 aberta e aguardando merge; CI, Supabase/banco/E2E autenticado, governança e Vercel passaram no HEAD `f73a0cde528227cbc50fd5146d8de0069e2625db`.
-- `result`: `executed`
-- `evidence`: issue #53 https://github.com/EuThiagoAndrade/saldo-futuro/issues/53; PR #56 https://github.com/EuThiagoAndrade/saldo-futuro/pull/56; merge da dependência A na PR #55 em `7dbba4b5678ab4820ee3fed22c8575b64908df10`; 201 unitários, 239 pgTAP, 80 E2E, 39 testes de governança aprovados; checks remotos verdes no HEAD informado.
-- `blockers`: nenhum técnico; integração requer aprovação explícita do responsável com "aprovo o merge da PR #56".
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 005 + implementar_issue + 53/B_logo_mobile + PR56@355fbb340ef0dda26f7f5c90fa4ee66767085971`
+- `effect_class`: `local_mutation`
+- `state_before`: task #53 `Em andamento`; PR #56 aguardando merge na última task registrada.
+- `state_after`: task #53 `Concluída`; PR #56 `MERGED` por squash em `355fbb340ef0dda26f7f5c90fa4ee66767085971`; issue #53 `CLOSED`; próxima issue autorizada: #54.
+- `result`: `already_executed_and_reconciled`
+- `evidence`: PR #56 https://github.com/EuThiagoAndrade/saldo-futuro/pull/56 reporta `merged=true` e SHA do merge; issue #53 https://github.com/EuThiagoAndrade/saldo-futuro/issues/53 reporta `closed` em 2026-10-17; `origin/main` atualizado para o mesmo SHA.
+- `blockers`: nenhum para a reconciliação; issue #52 continua `OPEN` no GitHub apesar da integração da entrega A via PR #55.
