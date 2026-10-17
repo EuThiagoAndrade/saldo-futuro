@@ -18,13 +18,13 @@ export async function lerCatalogo(cliente: Cliente) {
 /** Marcas dos dois lados envolvem todas as consultas, inclusive tabelas com uma única página. */
 export async function lerComparacao(cliente: Cliente, benchmarkId: string) {
   const { marca, insumos } = await lerComposicao(
-    async () => ({ carteira: await marcaCarteira(cliente), benchmark: await marcaBenchmark(cliente, benchmarkId) }),
-    async () => ({
-      consolidados: (await lerTabela<{ mes: string; vi: number; vf: number }>(cliente, "consolidados_mensais", { colunas: "mes, vi, vf" }))
+    async (sinal) => ({ carteira: await marcaCarteira(cliente, sinal), benchmark: await marcaBenchmark(cliente, benchmarkId, sinal) }),
+    async (_marca, sinal) => ({
+      consolidados: (await lerTabela<{ mes: string; vi: number; vf: number }>(cliente, "consolidados_mensais", { colunas: "mes, vi, vf", sinal }))
         .map((m) => ({ mes: mesDaColuna(m.mes), vi: BigInt(m.vi), vf: BigInt(m.vf) })),
-      eventos: await lerEventos(cliente),
+      eventos: await lerEventos(cliente, sinal),
       valores: (await lerTabela<{ data: string; valor: number | string }>(cliente, "valores_benchmark", {
-        colunas: "data, valor", filtrar: (consulta) => consulta.eq("benchmark_id", benchmarkId),
+        colunas: "data, valor", filtrar: (consulta) => consulta.eq("benchmark_id", benchmarkId), sinal,
       })).map((v) => ({ data: v.data, valor: String(v.valor) })),
     }),
   );

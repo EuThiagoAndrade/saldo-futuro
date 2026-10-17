@@ -1,5 +1,5 @@
 import { test, expect, type Browser, type BrowserContext, type Page } from '@playwright/test';
-import { appendFileSync, writeFileSync } from 'node:fs';
+import { appendFileSync, existsSync, mkdirSync, unlinkSync, writeFileSync } from 'node:fs';
 import { mesSeguinte } from '../../src/lib/financeiro/datas';
 import { sqlLocal } from './apoio/banco';
 import { clienteDoUsuario, criarUsuarios, entrar, removerUsuarios, type UsuarioDeTeste } from './apoio/supabase';
@@ -17,6 +17,7 @@ type Rota = keyof typeof destinos;
 const pares: [Rota, Rota][] = [['/', '/lancamentos'], ['/lancamentos', '/'], ['/', '/ativos'], ['/ativos', '/']];
 let serial = Number(process.env.MEDICAO_IDENTIFICADOR_BASE ?? 0);
 const pasta = 'local/issue-52';
+const pastaD13Evidencia = 'local/issue-57';
 const viewport = { width: 1280, height: 900 };
 const benchmark = '00500000-0000-4000-8000-000000000052';
 const errosDoNavegador = new WeakMap<Page, string[]>();
@@ -140,6 +141,7 @@ async function carga(usuario: UsuarioDeTeste) {
     for (const id of ids) saldos[id] += 10100;
     expect((await cliente.rpc('fechar_mes', { p_mes: `${mes}-01`, p_saldos: saldos })).error).toBeNull();
   }
+  return { ids, saldos };
 }
 
 async function volumes(usuario: UsuarioDeTeste) {
@@ -256,5 +258,56 @@ test('baseline por clique, três rodadas, 20 amostras, dois volumes, primeira vi
     const restos = { ...u, vazia: u.vazia ?? { email: 'medicao005.vazia@example.com', id: '', papel: 'user' as const }, cheia: u.cheia ?? { email: 'medicao005.cheia@example.com', id: '', papel: 'user' as const }, admin: u.admin ?? { email: 'medicao005.admin@example.com', id: '', papel: 'admin' as const } };
     try { limparBenchmark(); } finally { await removerUsuarios(restos); }
     appendFileSync(`${pasta}/amostras.ndjson`, JSON.stringify({ tipo: 'limpeza', resultado: 'passou' }) + '\n');
+  }
+});
+
+test('prova D13 no Next real: alteração entre páginas devolve só a versão nova', async ({ page }) => {
+  test.skip(process.env.MEDICAO_D13 !== '1', 'Prova isolada da coerência no servidor Next de produção local.');
+  const pastaD13 = process.env.MEDICAO_D13_GATE_DIR;
+  expect(pastaD13).toBeTruthy();
+  mkdirSync(pastaD13!, { recursive: true });
+  const prova = 'd54054';
+  const prontoD13 = `${pastaD13}/${prova}.ready`;
+  const liberarD13 = `${pastaD13}/${prova}.release`;
+  for (const caminho of [prontoD13, liberarD13]) if (existsSync(caminho)) unlinkSync(caminho);
+
+  let usuarios: Record<string, UsuarioDeTeste> = {};
+  let navegacao: ReturnType<typeof page.goto> | undefined;
+  try {
+    expect(new URL(process.env.NEXT_PUBLIC_SUPABASE_URL!).hostname).toBe('127.0.0.1');
+    usuarios = await criarUsuarios('d13next', { a: 'user' });
+    const cliente = await clienteDoUsuario(usuarios.a);
+    const { ids, saldos } = await carga(usuarios.a);
+    await entrar(page, usuarios.a);
+    await identificar(page.context(), 0);
+    await page.context().addCookies([{ name: 'sf_d13', value: prova, url: 'http://127.0.0.1:3105' }]);
+
+    navegacao = page.goto('/');
+    await expect.poll(() => existsSync(prontoD13), { timeout: 120_000 }).toBe(true);
+
+    const mes = '2026-09-01';
+    expect((await cliente.rpc('reabrir_mes', { p_mes: mes })).error).toBeNull();
+    const saldosNovos = { ...saldos, [ids[0]]: saldos[ids[0]] + 100_000 };
+    expect((await cliente.rpc('fechar_mes', { p_mes: mes, p_saldos: saldosNovos })).error).toBeNull();
+    writeFileSync(liberarD13, 'release');
+
+    const resposta = await navegacao;
+    expect(resposta?.status()).toBe(200);
+    await expect(page.getByRole('heading', { level: 1, name: 'Início' })).toBeVisible();
+    await expect(page.locator('main').getByRole('alert')).toHaveCount(0);
+    const patrimonio = page.locator('main').getByText('Patrimônio', { exact: true }).first().locator('..');
+    const distribuicao = page.getByRole('figure').filter({ hasText: 'Distribuição por ativo em setembro de 2026' });
+    await distribuicao.getByText('Ver os números').click();
+    const linhaAtivo1 = distribuicao.getByRole('rowheader', { name: 'Ativo fictício 1', exact: true }).locator('..');
+    // A marca final vai ao banco, vê o refechamento e a composição inteira é lida de novo.
+    await expect(linhaAtivo1).toContainText('R$ 7.060,00');
+    await expect(patrimonio).toContainText('R$ 182.800,00');
+    mkdirSync(pastaD13Evidencia, { recursive: true });
+    appendFileSync(`${pastaD13Evidencia}/prova-d13.ndjson`, JSON.stringify({ tipo: 'prova_d13_next', resultado: 'versao_nova_inteira', alteracao: 'entre_paginas_de_posicoes', detalhe_da_posicao_atualizado: true, patrimonio_atualizado: true }) + '\n');
+  } finally {
+    writeFileSync(liberarD13, 'release');
+    await navegacao?.catch(() => null);
+    if (Object.keys(usuarios).length) await removerUsuarios(usuarios);
+    for (const caminho of [prontoD13, liberarD13]) if (existsSync(caminho)) unlinkSync(caminho);
   }
 });

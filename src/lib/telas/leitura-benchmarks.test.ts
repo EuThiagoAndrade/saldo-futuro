@@ -14,7 +14,7 @@ it.each(["entre_tabelas", "entre_cobertura_valores"])("D13: %s devolve somente a
       let head = false;
       const consulta = {
         select(c: string, opcoes?: { head?: boolean }) { colunas = c; head = !!opcoes?.head; return consulta; },
-        order() { return consulta; }, eq() { return consulta; }, not() { return consulta; }, limit() { return consulta; }, range() { return consulta; }, maybeSingle() { return consulta; },
+        order() { return consulta; }, eq() { return consulta; }, not() { return consulta; }, limit() { return consulta; }, range() { return consulta; }, maybeSingle() { return consulta; }, abortSignal() { return consulta; },
         then(resolve: (r: unknown) => unknown) {
           let data: unknown = [];
           if (tabela === "consolidados_mensais") data = colunas.includes("fechado_em")

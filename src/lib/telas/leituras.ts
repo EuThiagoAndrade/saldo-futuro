@@ -16,13 +16,14 @@ export interface Ativo {
   desativado_em: string | null;
 }
 
-export function lerAtivos(cliente: Cliente): Promise<Ativo[]> {
-  return lerTabela<Ativo>(cliente, "ativos", { colunas: "id, nome, tipo_ajuste, sistema, ativo, desativado_em" });
+export function lerAtivos(cliente: Cliente, sinal?: AbortSignal): Promise<Ativo[]> {
+  return lerTabela<Ativo>(cliente, "ativos", { colunas: "id, nome, tipo_ajuste, sistema, ativo, desativado_em", sinal });
 }
 
-export async function lerEventos(cliente: Cliente): Promise<Evento[]> {
+export async function lerEventos(cliente: Cliente, sinal?: AbortSignal): Promise<Evento[]> {
   const linhas = await lerTabela<LinhaEvento>(cliente, "eventos", {
     colunas: "id, ativo_id, data, tipo, valor, estorno_de, transferencia_id",
+    sinal,
   });
   return linhas.map(deLinhaEvento);
 }
@@ -83,14 +84,15 @@ export interface InsumosDoFechamento {
  */
 export async function lerInsumosDoFechamento(cliente: Cliente): Promise<InsumosDoFechamento> {
   const { insumos } = await lerComposicao(
-    () => marcaCarteira(cliente),
-    async () => {
-      const consolidados = await lerTabela<{ mes: string }>(cliente, "consolidados_mensais", { colunas: "mes" });
+    (sinal) => marcaCarteira(cliente, sinal),
+    async (_marca, sinal) => {
+      const consolidados = await lerTabela<{ mes: string }>(cliente, "consolidados_mensais", { colunas: "mes", sinal });
       return {
-        ativos: await lerAtivos(cliente),
-        eventos: await lerEventos(cliente),
+        ativos: await lerAtivos(cliente, sinal),
+        eventos: await lerEventos(cliente, sinal),
         posicoes: await lerTabela<PosicaoLida>(cliente, "posicoes_mensais", {
           colunas: "mes, ativo_id, saldo_inicial, saldo_final, ajuste, tipo_ajuste",
+          sinal,
         }),
         mesesFechados: consolidados.map((c) => mesDaColuna(c.mes)),
       };
@@ -139,15 +141,16 @@ export interface InsumosDoInicio {
 /** Insumos do Início, lidos como uma composição coerente (D13). */
 export async function lerInsumosDoInicio(cliente: Cliente): Promise<InsumosDoInicio> {
   const { insumos } = await lerComposicao(
-    () => marcaCarteira(cliente),
-    async () => ({
-      ativos: await lerAtivos(cliente),
-      eventos: await lerEventos(cliente),
-      consolidados: (await lerTabela<{ mes: string; vi: number; vf: number }>(cliente, "consolidados_mensais", { colunas: "mes, vi, vf" })).map(
+    (sinal) => marcaCarteira(cliente, sinal),
+    async (_marca, sinal) => ({
+      ativos: await lerAtivos(cliente, sinal),
+      eventos: await lerEventos(cliente, sinal),
+      consolidados: (await lerTabela<{ mes: string; vi: number; vf: number }>(cliente, "consolidados_mensais", { colunas: "mes, vi, vf", sinal })).map(
         (c) => ({ ...c, mes: mesDaColuna(c.mes) }),
       ),
       posicoes: await lerTabela<PosicaoLida>(cliente, "posicoes_mensais", {
         colunas: "mes, ativo_id, saldo_inicial, saldo_final, ajuste, tipo_ajuste",
+        sinal,
       }),
     }),
   );

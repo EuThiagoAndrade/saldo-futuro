@@ -9,6 +9,11 @@
 // leitura de insumos e de novo depois da última, e só aceita o conjunto se forem iguais. Marca
 // diferente descarta todos os insumos e repete, até 3 tentativas; depois, erro recuperável.
 // As marcas usam só colunas existentes, alteradas pelas mesmas transações que mudam os insumos.
+//
+// Fresca: dentro de um pedido, o Next devolve a mesma resposta para GET/HEAD idênticos, salvo se o
+// fetch recebe um signal (next/dist/server/lib/dedupe-fetch.js). Sem isso, a marca final e as novas
+// tentativas repetiriam a resposta da primeira leitura. Cada fase recebe um signal próprio, que
+// nunca é abortado: só faz a consulta ir ao banco.
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 
@@ -82,18 +87,23 @@ export type Cliente = Pick<SupabaseClient, "from">;
 export function lerTabela<T>(
   cliente: Cliente,
   tabela: Tabela,
-  { colunas = "*", filtrar, ...opcoes }: { colunas?: string; filtrar?: (consulta: Consulta) => Consulta } & OpcoesLeitura = {},
+  { colunas = "*", filtrar, sinal, ...opcoes }: { colunas?: string; filtrar?: (consulta: Consulta) => Consulta; sinal?: AbortSignal } & OpcoesLeitura = {},
 ): Promise<T[]> {
   return lerTudo<T>((de, ate) => {
     let consulta: Consulta = cliente.from(tabela).select(colunas, { count: "exact" });
     if (filtrar) consulta = filtrar(consulta);
     for (const coluna of ORDENS[tabela]) consulta = consulta.order(coluna, { ascending: true });
-    return consulta.range(de, ate);
+    return fresca(consulta.range(de, ate), sinal);
   }, opcoes);
 }
 
-async function contar(cliente: Cliente, tabela: Tabela): Promise<number> {
-  const { count, error } = await cliente.from(tabela).select("*", { count: "exact", head: true });
+/** Com signal, a consulta escapa da deduplicação do Next e vai ao banco. */
+function fresca(consulta: Consulta, sinal?: AbortSignal): Consulta {
+  return sinal ? consulta.abortSignal(sinal) : consulta;
+}
+
+async function contar(cliente: Cliente, tabela: Tabela, sinal?: AbortSignal): Promise<number> {
+  const { count, error } = await fresca(cliente.from(tabela).select("*", { count: "exact", head: true }), sinal);
   if (error || count === null) throw new ErroLeitura("pagina", error?.message ?? `sem contagem de ${tabela}`);
   return count;
 }
@@ -109,22 +119,21 @@ export interface MarcaCarteira {
 }
 
 /** Marca de versão da carteira do usuário da sessão (a RLS restringe as linhas). */
-export async function marcaCarteira(cliente: Cliente): Promise<MarcaCarteira> {
+export async function marcaCarteira(cliente: Cliente, sinal?: AbortSignal): Promise<MarcaCarteira> {
   const meses = await lerTabela<{ mes: string; fechado_em: string }>(cliente, "consolidados_mensais", {
     colunas: "mes, fechado_em",
+    sinal,
   });
-  const desativacao = await cliente
-    .from("ativos")
-    .select("desativado_em")
-    .not("desativado_em", "is", null)
-    .order("desativado_em", { ascending: false })
-    .limit(1);
+  const desativacao = await fresca(
+    cliente.from("ativos").select("desativado_em").not("desativado_em", "is", null).order("desativado_em", { ascending: false }).limit(1),
+    sinal,
+  );
   if (desativacao.error) throw new ErroLeitura("pagina", desativacao.error.message);
   return {
     meses: meses.map((m) => [m.mes, m.fechado_em]),
-    eventos: await contar(cliente, "eventos"),
-    transferencias: await contar(cliente, "transferencias"),
-    ativos: await contar(cliente, "ativos"),
+    eventos: await contar(cliente, "eventos", sinal),
+    transferencias: await contar(cliente, "transferencias", sinal),
+    ativos: await contar(cliente, "ativos", sinal),
     ultimaDesativacao: desativacao.data?.[0]?.desativado_em ?? null,
   };
 }
@@ -136,12 +145,11 @@ export interface MarcaBenchmark {
 }
 
 /** Cobertura de um benchmark: carregar_benchmark a altera na transação que substitui os valores. */
-export async function marcaBenchmark(cliente: Cliente, benchmark: string): Promise<MarcaBenchmark | null> {
-  const { data, error } = await cliente
-    .from("coberturas_benchmark")
-    .select("inicio, fim, atualizado_em")
-    .eq("benchmark_id", benchmark)
-    .maybeSingle();
+export async function marcaBenchmark(cliente: Cliente, benchmark: string, sinal?: AbortSignal): Promise<MarcaBenchmark | null> {
+  const { data, error } = await fresca(
+    cliente.from("coberturas_benchmark").select("inicio, fim, atualizado_em").eq("benchmark_id", benchmark),
+    sinal,
+  ).maybeSingle();
   if (error) throw new ErroLeitura("pagina", error.message);
   return data;
 }
@@ -149,23 +157,24 @@ export async function marcaBenchmark(cliente: Cliente, benchmark: string): Promi
 /**
  * Lê os insumos de uma composição entre duas leituras da marca. Devolve a marca conferida (por
  * exemplo, a cobertura usada no cálculo) e os insumos de uma única versão, ou ErroLeitura("mudou").
+ * Cada fase recebe um signal novo, que as consultas devem usar para ler o banco de novo.
  */
 export async function lerComposicao<M, T>(
-  lerMarca: () => Promise<M>,
-  lerInsumos: (marca: M) => Promise<T>,
+  lerMarca: (sinal: AbortSignal) => Promise<M>,
+  lerInsumos: (marca: M, sinal: AbortSignal) => Promise<T>,
   tentativas = TENTATIVAS,
 ): Promise<{ marca: M; insumos: T }> {
   for (let tentativa = 1; tentativa <= tentativas; tentativa++) {
-    const antes = await lerMarca();
+    const antes = await lerMarca(new AbortController().signal);
     let insumos: T;
     try {
-      insumos = await lerInsumos(antes);
+      insumos = await lerInsumos(antes, new AbortController().signal);
     } catch (erro) {
       // A contagem que muda no meio de uma coleta também é "os dados mudaram": repete.
       if (erro instanceof ErroLeitura && erro.motivo === "contagem") continue;
       throw erro;
     }
-    const depois = await lerMarca();
+    const depois = await lerMarca(new AbortController().signal);
     if (JSON.stringify(antes) === JSON.stringify(depois)) return { marca: antes, insumos };
   }
   throw new ErroLeitura("mudou", `${tentativas} tentativas`);
