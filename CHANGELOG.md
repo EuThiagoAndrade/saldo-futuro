@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.4.0](https://github.com/EuThiagoAndrade/saldo-futuro/compare/v0.3.0...v0.4.0) (2026-10-17)
+
+
+### Features
+
+* **issue-53:** exibir logo no cabeçalho mobile ([355fbb3](https://github.com/EuThiagoAndrade/saldo-futuro/commit/355fbb340ef0dda26f7f5c90fa4ee66767085971))
+* **issue-54:** ler os componentes da marca em paralelo para reduzir a espera na navegação ([a263a48](https://github.com/EuThiagoAndrade/saldo-futuro/commit/a263a486d4837e6f0add4ac5d1fc73b8cdc23c02))
+
+
+### Bug Fixes
+
+* **issue-57:** ler o banco em cada fase da composição D13 no Next ([5d04b74](https://github.com/EuThiagoAndrade/saldo-futuro/commit/5d04b7453e7d01f3d1b15a28e9746c47ca7ea4c3))
+
 ## [0.3.0](https://github.com/EuThiagoAndrade/saldo-futuro/compare/v0.2.0...v0.3.0) (2026-10-15)
 
 
