@@ -7,7 +7,7 @@
 > **Issue:** `#54`
 > **Plano:** `_project/drafts/005_logo_mobile_desempenho_navegacao/005_plan.md`
 > **Branch:** `feature/issue-54`
-> **PR:** —
+> **PR:** [#59](https://github.com/EuThiagoAndrade/saldo-futuro/pull/59)
 > **Integração:** `Pendente`
 > **Autorização inicial:** "autorizo a implementação da issue #54" em 2026-10-17
 > **Modo contínuo:** `—`
@@ -49,7 +49,8 @@ Não se aplica.
 - [x] Comprovar D13: escrita depois de cada transporte com lotes concorrentes nas duas ordens, mutações detectadas, provas no `next start` entre páginas e entre componentes da marca; `leitura.spec.ts` (>1.000 linhas, ordenação, erros de página/contagem, reabertura/refechamento, retroativo, três tentativas e erro recuperável) e Comparação com benchmark passam.
 - [x] Regressar cálculos, atualização após escrita, isolamento A/B/admin, sessão encerrada, ocultação, acessibilidade, chamadas por pedido e D9 ≤ 1 s (e2e completa e `desempenho.spec.ts`).
 - [x] Registrar séries, medianas/p95, comparações, chamadas, verificação alternada e limites em `005_validation_desempenho.md` e nas séries `005_validation_series_c_baseline.md` e `005_validation_series_c_candidata.md`.
-- [ ] Executar gates locais; revisar privacidade, diff e staging seletivo; criar commit/PR e reconciliar checks remotos.
+- [x] Executar gates locais; revisar privacidade, diff e staging seletivo; commits `16f05af` e `1fc65f1`; PR #59 com `Closes #54`.
+- [ ] Checks remotos e aprovação do merge.
 
 ## Evidências
 
@@ -131,19 +132,19 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Parado — ciclo 005 (completo)
+Situação: Aguardando merge — ciclo 005 (completo)
 Quem: Responsável
-Conferir: [pergunta sobre a regressão em /ativos](#pergunta-sobre-a-regressão-em-ativos)
-Diga: sua resposta à pergunta registrada
+Conferir: checks e diff da [PR #59](https://github.com/EuThiagoAndrade/saldo-futuro/pull/59)
+Diga: "aprovo o merge da PR #59"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 005 + implementar_issue + 54/C_navegacao + 355fbb340ef0dda26f7f5c90fa4ee66767085971`
-- `effect_class`: `local_mutation`
-- `state_before`: PR #56 integrada; issue #54 aberta e autorizada; branch/task #54 inexistentes; lição do responsável presente como modificação local não commitada.
-- `state_after`: branch `feature/issue-54` na base `origin/main` `355fbb340ef0dda26f7f5c90fa4ee66767085971`; task #54 `Bloqueada` após prova D13 confirmar composição mista no Next real; task #53 reconciliada como `Concluída`; plano/ciclos atualizados; nenhuma otimização de produto iniciada.
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 005 + implementar_issue + 54/C_navegacao + 5d04b7453e7d01f3d1b15a28e9746c47ca7ea4c3`
+- `effect_class`: `remote_mutation`
+- `state_before`: issue #54 parada após falha D13; correção #57 integrada em `5d04b74`; branch `feature/issue-54` sem commits próprios.
+- `state_after`: nova baseline `5d04b74` e candidata `16f05af` medidas; aceite de ganho atingido; verificação alternada sem regressão acima do limite; commits `16f05af` e `1fc65f1` publicados em `feature/issue-54`; PR #59 aberta contra `main`, aguardando checks e aprovação do merge.
 - `result`: `executed`
-- `evidence`: GitHub API: PR #56 `merged=true`, merge SHA `355fbb340ef0dda26f7f5c90fa4ee66767085971`; issue #53 `closed`; issue #54 `open`; Git fetch confirmou `origin/main` no SHA de merge; build local de produção passou; teste D13 no `next start` confirmou posição fictícia em R$ 7.060,00 e patrimônio antigo em R$ 181.800,00, contra total coerente esperado de R$ 182.800,00; 13 transportes Supabase, todos 2xx; evidência sanitizada sob `local/issue-54/`; nenhum arquivo de produto alterado.
-- `blockers`: decisão do responsável sobre revisar o escopo da issue #54 para forçar leituras frescas no Next, mesmo com possível aumento de transportes, ou manter os critérios atuais e encerrar esta tentativa sem otimização.
+- `evidence`: https://github.com/EuThiagoAndrade/saldo-futuro/pull/59; relatório e séries no diretório do ciclo; evidências e decisões nesta task.
+- `blockers`: checks remotos pendentes; aprovação do merge.
