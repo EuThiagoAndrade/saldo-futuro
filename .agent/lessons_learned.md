@@ -73,3 +73,7 @@ Origem: ciclo `003`, issue #27. A limpeza do teste de concorrência (`delete fro
 ### 2026-10-14 — O recálculo cego de casos de referência encontra entradas ambíguas, não só contas erradas
 
 Origem: ciclo `003`, issue #26. Outro modelo recebeu só as regras e as entradas dos casos, sem os valores esperados. Não achou nenhum erro de cálculo, mas expôs um caso sem saldo real informado, em que o componente de rendimento dependia de uma suposição, e um motivo de recusa diferente do que a KB nomeava. Ao validar casos de referência, entregue ao recalculador só as regras e as entradas, e trate cada divergência como possível lacuna da especificação antes de supor erro de quem recalculou.
+
+### 2026-10-17 — Toda saída de workflow precisa declarar o próximo passo
+
+Origem: ciclo `005`, merge da PR #56. A resposta confirmou a integração da issue #53, mas omitiu o bloco `PRÓXIMO PASSO`; o responsável precisou perguntar qual era a próxima ação. Ao encerrar uma solicitação regida por workflow, determine a situação efetiva pelo artefato, pelo plano e pelo estado atual do GitHub, especialmente depois de um merge, e apresente o bloco canônico completo: situação e alvo, quem age, o que conferir com link e a frase exata. Não repita a situação que acabou de ser superada nem deixe o próximo passo implícito. A frase do bloco indica o próximo ponto de aprovação e não autoriza por si só a mutação seguinte; após integrar a issue #53, por exemplo, o ciclo aguarda autorização própria para a #54.

@@ -261,12 +261,14 @@ test('baseline por clique, três rodadas, 20 amostras, dois volumes, primeira vi
   }
 });
 
-test('prova D13 no Next real: alteração entre páginas devolve só a versão nova', async ({ page }) => {
+for (const [alvo, alteracao, prova] of [
+  ['posicoes_mensais', 'entre_paginas_de_posicoes', 'd54054'],
+  ['transferencias', 'entre_componentes_da_marca', 'd54055'],
+] as const) test(`prova D13 no Next real: alteração ${alteracao.replaceAll('_', ' ')} devolve só a versão nova`, async ({ page }) => {
   test.skip(process.env.MEDICAO_D13 !== '1', 'Prova isolada da coerência no servidor Next de produção local.');
   const pastaD13 = process.env.MEDICAO_D13_GATE_DIR;
   expect(pastaD13).toBeTruthy();
   mkdirSync(pastaD13!, { recursive: true });
-  const prova = 'd54054';
   const prontoD13 = `${pastaD13}/${prova}.ready`;
   const liberarD13 = `${pastaD13}/${prova}.release`;
   for (const caminho of [prontoD13, liberarD13]) if (existsSync(caminho)) unlinkSync(caminho);
@@ -280,7 +282,7 @@ test('prova D13 no Next real: alteração entre páginas devolve só a versão n
     const { ids, saldos } = await carga(usuarios.a);
     await entrar(page, usuarios.a);
     await identificar(page.context(), 0);
-    await page.context().addCookies([{ name: 'sf_d13', value: prova, url: 'http://127.0.0.1:3105' }]);
+    await page.context().addCookies([{ name: 'sf_d13', value: prova, url: 'http://127.0.0.1:3105' }, { name: 'sf_d13_alvo', value: alvo, url: 'http://127.0.0.1:3105' }]);
 
     navegacao = page.goto('/');
     await expect.poll(() => existsSync(prontoD13), { timeout: 120_000 }).toBe(true);
@@ -303,7 +305,7 @@ test('prova D13 no Next real: alteração entre páginas devolve só a versão n
     await expect(linhaAtivo1).toContainText('R$ 7.060,00');
     await expect(patrimonio).toContainText('R$ 182.800,00');
     mkdirSync(pastaD13Evidencia, { recursive: true });
-    appendFileSync(`${pastaD13Evidencia}/prova-d13.ndjson`, JSON.stringify({ tipo: 'prova_d13_next', resultado: 'versao_nova_inteira', alteracao: 'entre_paginas_de_posicoes', detalhe_da_posicao_atualizado: true, patrimonio_atualizado: true }) + '\n');
+    appendFileSync(`${pastaD13Evidencia}/prova-d13.ndjson`, JSON.stringify({ tipo: 'prova_d13_next', resultado: 'versao_nova_inteira', alteracao, detalhe_da_posicao_atualizado: true, patrimonio_atualizado: true }) + '\n');
   } finally {
     writeFileSync(liberarD13, 'release');
     await navegacao?.catch(() => null);

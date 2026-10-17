@@ -98,3 +98,72 @@ Os candidatos permitidos continuam limitados ao plano: paralelismo dos component
 O relato humano de melhora após mudança de região da Vercel é contexto do plano; não foi medido nem verificado aqui. Esta baseline é local; 50/100 ms são simulações controladas por chamada. Não estimam rede regional real, Vercel–Supabase, cold start serverless ou ganho em produção. Não existe candidata nesta unidade e não há resultado antes/depois de otimização. O teste histórico D9 é HTTP local e continua separado da navegação por clique.
 
 As rotas Benchmarks, Conta, Transferências e prévia de fechamento recebem percurso/verificação adicional; não se afirma mediana/p95 de três rodadas dessas rotas. A primeira renderização do servidor após iniciar é registrada separadamente, sem chamá-la de cold start de produção. O total que inclui login é rotulado e não compõe as amostras de transição.
+
+## Unidade C (#54): nova baseline, candidata e comparação
+
+### Por que a baseline foi refeita
+
+A prova D13 no Next real exigida acima falhou: a deduplicação por pedido do Next devolvia a resposta da marca inicial para a marca final e para as novas tentativas. A correção foi feita pela trilha curta na issue #57 (PR #58, `5d04b7453e7d01f3d1b15a28e9746c47ca7ea4c3`): cada fase da composição passa um `AbortSignal` próprio às consultas. A marca final passou a ir ao banco, o que muda o custo medido nesta unidade; por isso a baseline da C é `5d04b74`, e não a da A.
+
+### Execuções
+
+Mesmo protocolo e comando da A (`tests/e2e/apoio/medir-navegacao.mjs`), com Chromium fixado pelo Playwright, carga fictícia idêntica e Node v24.19.0, o mesmo da A.
+
+- Baseline `5d04b74`: 2.880 amostras, 144 grupos, 18 limpezas, sem falha de amostra; série em `005_validation_series_c_baseline.md`. Uma chamada entre 118.835 registros (`consolidados_mensais`, `/`, 0 ms) teve o transporte rejeitado e foi repetida com sucesso pelo próprio postgrest-js após 1 s; a amostra (1.328 ms) foi mantida, e o resumidor passou a aceitar somente esse caso, sempre listado, por decisão do responsável.
+- Candidata `16f05af`: 2.880 amostras, 144 grupos, 18 limpezas, sem falhas nem rejeições; série em `005_validation_series_c_candidata.md`.
+- Tentativas que não compõem resultado, preservadas somente em `local/`: uma tentativa da baseline com Node v24.15.0, interrompida no bloco 6 por timeout de marcador com estado de erro sem resposta HTTP de erro (padrão das falhas preparatórias da A nesse Node), e duas preparações da verificação alternada que falharam no build, antes de medir.
+- Desvio autorizado pelo responsável: uma execução completa de cada revisão, em sequência, em vez de execuções alternadas. A deriva entre execuções foi controlada depois por uma verificação curta e alternada do bloco carteira vazia/0 ms.
+
+### Nova baseline em relação à A
+
+Chamadas Supabase por pedido de destino `/`: 13 → 18 (+5, a marca final: meses, última desativação e três contagens); Lançamentos (5/6) e Ativos (3) inalterados. Medianas de conteúdo pronto, carteira cheia:
+
+| Atraso ms | Navegação | A | Baseline C |
+| --: | :-- | --: | --: |
+| 0 | /lancamentos → / (primeira) | 261,5 | 316,0 |
+| 50 | /lancamentos → / (primeira) | 1.066,3 | 1.424,7 |
+| 100 | /lancamentos → / (primeira) | 1.679,8 | 2.279,1 |
+
+O custo da correção D13 é compatível com cinco consultas sequenciais a mais. As demais rotas não pioraram.
+
+### Candidata
+
+`marcaCarteira` lê os cinco componentes da marca com `Promise.all`, e a Comparação lê as marcas da carteira e do benchmark juntas. As fases antes → insumos → depois continuam sem sobreposição, e o total de chamadas por tentativa não muda. Cada componente só muda num sentido e toda leitura da marca antes termina antes dos insumos; uma escrita posterior à leitura de um componente aparece nele na marca depois. `Promise.all` não é retrato único: a garantia continua sendo a conferência antes = depois.
+
+Provas: Vitest com escrita depois de cada transporte da composição e requisições concorrentes atendidas em lote nas ordens de chegada e inversa (Início, fechamento e Comparação); as mutações de fases sobrepostas e de marca final sem signal foram detectadas. No `next start`, escritas entre páginas de posições e entre componentes da marca (contagem de transferências retida antes de sair) produziram a versão nova inteira, com 34 transportes por pedido, todos 2xx, igual à versão sequencial. Regressões e2e, D9 e gates na task da issue #54.
+
+### Aceite de ganho
+
+Mediana de conteúdo pronto, carteira cheia, 50 ms por chamada, por rodada (baseline → candidata):
+
+| Navegação | Condição | Rodada 1 | Rodada 2 | Rodada 3 |
+| :-- | :-- | --: | --: | --: |
+| /lancamentos → / | primeira | 1.427,4 → 847,4 (−40,6%) | 1.422,5 → 853,1 (−40,0%) | 1.426,8 → 847,8 (−40,6%) |
+| /lancamentos → / | revisita | 1.413,9 → 847,6 (−40,1%) | 1.412,5 → 846,3 (−40,1%) | 1.431,4 → 847,2 (−40,8%) |
+| /ativos → / | primeira | 1.421,8 → 853,6 (−40,0%) | 1.419,3 → 851,5 (−40,0%) | 1.425,1 → 850,4 (−40,3%) |
+| /ativos → / | revisita | 1.414,4 → 846,5 (−40,2%) | 1.414,2 → 846,9 (−40,1%) | 1.414,8 → 841,7 (−40,5%) |
+
+Os quatro pares de retorno ao Início atingem o aceite (pelo menos 20% e 50 ms) nas três rodadas. Grupos de 60 amostras, mesma condição: com 100 ms, cerca de −940 ms (cheia: 2.279,1 → 1.338,5 ms); sem atraso artificial, cheia: 316,0 → 223,1 ms e vazia: 232,3 → 144,7 ms (/lancamentos → /, primeira). Destinos Lançamentos e Ativos não usam a marca e ficam com o mesmo número de chamadas. Pedidos de prefetch: 17.996 na baseline e 17.858 na candidata.
+
+### Regressão e verificação alternada
+
+Na comparação das execuções completas, 1 de 48 grupos excedeu `max(20 ms, 10% da baseline)`: / → /ativos, carteira vazia, 0 ms, primeira visita, p95 80,5 → 112,3 ms (+31,8), mediana +15,6 ms. Os indícios eram de deriva entre execuções: a chamada `ativos`, idêntica nas duas revisões, teve mediana de 4,01 ms na baseline e 5,83 ms na candidata, e o servidor de /ativos com 50 ms foi de 269,9 (A), 255,0 (baseline) e 269,1 ms (candidata).
+
+Verificação curta autorizada pelo responsável: bloco carteira vazia/0 ms executado quatro vezes na mesma pasta e com o mesmo harness, alternando os dois arquivos de produto que diferem entre as revisões, com build novo antes de cada execução (baseline → candidata → baseline → candidata; 160 amostras por execução, nenhuma resposta fora de 2xx/3xx). Medianas/p95 em ms, juntando as duas execuções de cada revisão (n = 40):
+
+| Navegação | Condição | Baseline | Candidata | Δ mediana | Δ p95 |
+| :-- | :-- | --: | --: | --: | --: |
+| / → /lancamentos | primeira | 78,8/81,0 | 79,1/95,3 | +0,3 | +14,3 |
+| / → /lancamentos | revisita | 73,2/81,7 | 65,0/81,4 | −8,2 | −0,3 |
+| /lancamentos → / | primeira | 229,7/247,0 | 144,1/146,3 | −85,6 | −100,7 |
+| /lancamentos → / | revisita | 231,3/263,4 | 131,0/147,3 | −100,3 | −116,1 |
+| / → /ativos | primeira | 79,5/80,8 | 94,6/96,9 | +15,1 | +16,1 |
+| / → /ativos | revisita | 64,8/80,7 | 80,9/97,8 | +16,1 | +17,1 |
+| /ativos → / | primeira | 166,8/179,9 | 138,4/146,7 | −28,5 | −33,2 |
+| /ativos → / | revisita | 164,2/180,9 | 130,8/148,1 | −33,4 | −32,8 |
+
+Nenhum grupo excede o limite. O +31,8 ms de p95 não se repetiu. Em / → /ativos, porém, a candidata ficou cerca de 15–17 ms acima da baseline nas duas execuções alternadas, de forma consistente; o valor está dentro do limite e equivale a cerca de um quadro do cronômetro por `requestAnimationFrame`. A página Ativos não usa a marca, e a causa não foi identificada; o registro fica como observação, não como ganho nem como regressão comprovada.
+
+### Limites
+
+Simulação local com atraso artificial por chamada; não mede rede real, Vercel–Supabase, cold start ou ganho em produção. As execuções completas são uma por revisão, em sequência, por decisão do responsável; a verificação alternada cobre apenas o bloco carteira vazia/0 ms. Feedback de carregamento e prefetch não foram alterados: em todas as 2.880 transições de cada execução, feedback e conteúdo pronto coincidiram, e o ganho veio da redução do caminho sequencial no servidor.

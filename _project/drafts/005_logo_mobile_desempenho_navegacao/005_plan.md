@@ -205,7 +205,7 @@ Branches de entrega: `chore/issue-N` para A e `feature/issue-N` para B/C, com n�
 - Nenhuma dependência de pacote nova, outro checkout ou mudança externa prevista.
 - Infraestrutura de ensaio futura: Node 24, dependências fixadas, navegador e Docker/Supabase local funcionando. Não foram verificados integralmente no rascunho; falta de capacidade na execução exige Parado, sem substituir teste de banco por mock como prova de isolamento.
 - Pendências não bloqueadoras da redação: quais rotas ainda incomodam após a alteração regional e preferência pessoal sobre o símbolo. Esta v1 propõe rotas principais e logo completo; aprovação posterior confirmará as propostas ou determinará correção.
-- Estado operacional (2026-10-16): revisão formal concluída; plano aprovado e integrado pela PR #51; A (#52) integrada pela PR #55 em `7dbba4b` (a issue permanece aberta no GitHub); B (#53) implementada na PR #56, checks remotos aprovados e aguardando merge; C (#54) segue dependente de A e B.
+- Estado operacional (2026-10-17): plano aprovado e integrado pela PR #51; A (#52) integrada pela PR #55 em `7dbba4b` (issue #52 permanece aberta no GitHub); B (#53) integrada por squash pela PR #56 em `355fbb340ef0dda26f7f5c90fa4ee66767085971` (issue #53 fechada); C (#54) autorizada em 2026-10-17; a prova D13 no Next real confirmou composição mista, corrigida pela trilha curta na issue #57 (PR #58, `5d04b74`). Com nova baseline nesse commit, a candidata de marca em paralelo atingiu o aceite de ganho; a PR da C aguarda checks e aprovação do merge.
 
 ## Riscos, suposições e rollback
 
@@ -247,9 +247,9 @@ Rollback de código por PR própria, revertendo apenas a mudança problemática 
 
 | Campo | Valor |
 | :-- | :-- |
-| Issue(s) | A: [#52](https://github.com/EuThiagoAndrade/saldo-futuro/issues/52), integração pela PR #55 concluída (issue ainda aberta); B: [#53](https://github.com/EuThiagoAndrade/saldo-futuro/issues/53), implementação na PR #56 aguardando merge; C: [#54](https://github.com/EuThiagoAndrade/saldo-futuro/issues/54), aberta e dependente de A e B |
-| PR(s) | [#51 — publicação documental](https://github.com/EuThiagoAndrade/saldo-futuro/pull/51); [#55 — unidade A](https://github.com/EuThiagoAndrade/saldo-futuro/pull/55), integrada; [#56 — unidade B](https://github.com/EuThiagoAndrade/saldo-futuro/pull/56), checks aprovados |
-| Branch(es) | `chore/cycle-005-plan` (publicação documental); `chore/issue-52` (unidade A); `feature/issue-53` (unidade B, PR #56) |
+| Issue(s) | A: [#52](https://github.com/EuThiagoAndrade/saldo-futuro/issues/52), integrada pela PR #55 (issue ainda aberta); B: [#53](https://github.com/EuThiagoAndrade/saldo-futuro/issues/53), fechada após a PR #56; C: [#54](https://github.com/EuThiagoAndrade/saldo-futuro/issues/54), aberta, com PR própria; correção D13 descoberta na C: [#57](https://github.com/EuThiagoAndrade/saldo-futuro/issues/57), fechada após a PR #58 |
+| PR(s) | [#51 — publicação documental](https://github.com/EuThiagoAndrade/saldo-futuro/pull/51); [#55 — unidade A](https://github.com/EuThiagoAndrade/saldo-futuro/pull/55), integrada; [#56 — unidade B](https://github.com/EuThiagoAndrade/saldo-futuro/pull/56), integrada por squash em `355fbb340ef0dda26f7f5c90fa4ee66767085971`; [#58 — correção D13](https://github.com/EuThiagoAndrade/saldo-futuro/pull/58), integrada por squash em `5d04b7453e7d01f3d1b15a28e9746c47ca7ea4c3` |
+| Branch(es) | `chore/cycle-005-plan` (publicação documental); `chore/issue-52` (unidade A); `feature/issue-53` (unidade B); `feature/issue-54` (unidade C); `fix/issue-57` (correção D13) |
 | Origem | `59f7498272b6d83ecdfa7db38eb37d6bf95ac436`, ideação e autorização do rascunho em 2026-10-15 |
 | Destino após conclusão | `_project/executed/005_logo_mobile_desempenho_navegacao/005_plan.md` |
 

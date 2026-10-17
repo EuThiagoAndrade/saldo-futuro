@@ -118,22 +118,29 @@ export interface MarcaCarteira {
   ultimaDesativacao: string | null;
 }
 
-/** Marca de versão da carteira do usuário da sessão (a RLS restringe as linhas). */
+/**
+ * Marca de versão da carteira do usuário da sessão (a RLS restringe as linhas). Os componentes são
+ * lidos juntos: cada um só muda num sentido, e toda leitura da marca antes termina antes dos insumos,
+ * então uma escrita depois da leitura de um componente aparece nele na marca depois. Promise.all não é
+ * um retrato único; a conferência antes = depois é que garante a versão (D13).
+ */
 export async function marcaCarteira(cliente: Cliente, sinal?: AbortSignal): Promise<MarcaCarteira> {
-  const meses = await lerTabela<{ mes: string; fechado_em: string }>(cliente, "consolidados_mensais", {
-    colunas: "mes, fechado_em",
-    sinal,
-  });
-  const desativacao = await fresca(
-    cliente.from("ativos").select("desativado_em").not("desativado_em", "is", null).order("desativado_em", { ascending: false }).limit(1),
-    sinal,
-  );
+  const [meses, desativacao, eventos, transferencias, ativos] = await Promise.all([
+    lerTabela<{ mes: string; fechado_em: string }>(cliente, "consolidados_mensais", { colunas: "mes, fechado_em", sinal }),
+    fresca(
+      cliente.from("ativos").select("desativado_em").not("desativado_em", "is", null).order("desativado_em", { ascending: false }).limit(1),
+      sinal,
+    ),
+    contar(cliente, "eventos", sinal),
+    contar(cliente, "transferencias", sinal),
+    contar(cliente, "ativos", sinal),
+  ]);
   if (desativacao.error) throw new ErroLeitura("pagina", desativacao.error.message);
   return {
     meses: meses.map((m) => [m.mes, m.fechado_em]),
-    eventos: await contar(cliente, "eventos", sinal),
-    transferencias: await contar(cliente, "transferencias", sinal),
-    ativos: await contar(cliente, "ativos", sinal),
+    eventos,
+    transferencias,
+    ativos,
     ultimaDesativacao: desativacao.data?.[0]?.desativado_em ?? null,
   };
 }

@@ -2,13 +2,13 @@
 
 > **Ciclo:** `—`
 > **Trilha:** `curta`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `fix`
 > **Issue:** `#57`
 > **Plano:** `—`
 > **Branch:** `fix/issue-57`
 > **PR:** [#58](https://github.com/EuThiagoAndrade/saldo-futuro/pull/58)
-> **Integração:** `Pendente`
+> **Integração:** `Integrada por squash em 5d04b74 (2026-10-17)`
 > **Autorização inicial:** "confirmo a trilha curta e autorizo abrir e corrigir a issue [FIX] Leituras D13 deduplicadas pelo Next" em 2026-10-17, confirmada como única escolha em resposta à pergunta de desambiguação
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-17
@@ -51,7 +51,7 @@ Restaurar a garantia D13 do plano `004` nas leituras feitas dentro do servidor N
 - [x] Reavaliar a elegibilidade com o diff final: só módulos de leitura, testes e o apoio/documentação da medição; sem rota, schema, cliente Supabase, autenticação ou visual.
 - [x] Revisão da correção (rodada 1): `APTO PARA APROVAÇÃO`.
 - [x] Commit `717f30f` e PR #58 com `Closes #57`.
-- [ ] Checks remotos e aprovação do merge.
+- [x] Checks remotos verdes (app, database, Governance, Vercel) e aprovação do merge ("aprovo o merge da PR #58"); integrada por squash em `5d04b7453e7d01f3d1b15a28e9746c47ca7ea4c3` e issue #57 fechada como concluída.
 
 ## Evidências
 
@@ -69,7 +69,7 @@ Restaurar a garantia D13 do plano `004` nas leituras feitas dentro do servidor N
 | Testes de governança | `node --test scripts/validate-governance.test.mjs`: 39/39, com `TEMP`/`TMP` em `local/issue-57/governance-temp/`. |
 | Validador | `node scripts/validate-governance.mjs`: 0 erros, 0 avisos, 4 itens manuais. |
 | `git diff --check` | Passou. |
-| Checks remotos | Pendente. |
+| Checks remotos | PR #58 no HEAD `c9194d9`: "Lint, types, tests, build and preview e2e" 1 min 11 s, "Supabase local, database tests and auth e2e" 4 min 44 s, "Validate governance" 11 s, Vercel e Vercel Preview Comments, todos com sucesso. |
 
 ## Revisão da correção
 
@@ -125,10 +125,10 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — correção da issue #57
-Quem: Responsável
-Conferir: checks e diff da [PR #58](https://github.com/EuThiagoAndrade/saldo-futuro/pull/58)
-Diga: "aprovo o merge da PR #58"
+Situação: Concluído — correção da issue #57
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
@@ -136,7 +136,7 @@ Diga: "aprovo o merge da PR #58"
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + fix + corrigir_trilha_curta + 57 + 355fbb340ef0dda26f7f5c90fa4ee66767085971`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: antes, correção revisada (rodada 1, `APTO PARA APROVAÇÃO`, hash `739c72fa…` conferido) no working tree, sem commit nem PR; depois, commit `717f30f` na branch remota `fix/issue-57` e PR #58 aberta contra `main` em `355fbb340ef0dda26f7f5c90fa4ee66767085971`, aguardando checks e aprovação do merge.
+- `state_before` / `state_after`: antes, PR #58 aberta e aprovada pelo responsável, checks pendentes; depois, PR #58 integrada por squash em `5d04b7453e7d01f3d1b15a28e9746c47ca7ea4c3`, issue #57 fechada; reconciliação registrada na entrega seguinte (issue #54).
 - `result`: `executed`
-- `evidence`: https://github.com/EuThiagoAndrade/saldo-futuro/pull/58; https://github.com/EuThiagoAndrade/saldo-futuro/issues/57; evidências locais na seção Evidências e parecer na Revisão da correção.
-- `blockers`: checks remotos pendentes; aprovação do merge.
+- `evidence`: https://github.com/EuThiagoAndrade/saldo-futuro/pull/58 (`merged`, `mergedAt` 2026-10-17T17:14:57Z); https://github.com/EuThiagoAndrade/saldo-futuro/issues/57 (`closed`, `completed`).
+- `blockers`: nenhum
