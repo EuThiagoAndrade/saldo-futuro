@@ -2,7 +2,7 @@
 
 > **Ciclo:** `006`
 > **Trilha:** `normal`
-> **Estado:** `Em andamento`
+> **Estado:** `Bloqueada`
 > **Tipo:** `feature`
 > **Issue:** `#63`
 > **Plano:** `_project/drafts/006_migracao_dados_virada/006_plan.md`
@@ -75,20 +75,22 @@ Não se aplica; esta não é a última issue do ciclo.
 
 ## Próximo passo
 
+Pergunta registrada: Você pode restabelecer a autenticação do GitHub CLI para que a PR da issue #63 seja aberta?
+
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 006 (completo)
+Situação: Parado — correção da issue #63
 Quem: Responsável
-Conferir: PR da issue #63 e checks remotos
-Diga: "aprovo o merge da PR #N"
+Conferir: A pergunta registrada
+Diga: sua resposta à pergunta registrada
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 006 + implementar_issue + 63/A + base 9cfb2efdde5efa2ebf9dbd054abb21f4b77e1c9f`
-- `effect_class`: `local_mutation`
-- `state_before` / `state_after`: plano `Aprovado`, issue #63 `OPEN`, base `main` em `9cfb2efdde5efa2ebf9dbd054abb21f4b77e1c9f`, sem branch ou task da issue / plano `Em Execução`, ciclo `Em execução`, issue #63 `OPEN`, branch `feature/issue-63`, task e implementação local concluídas; PR e checks remotos pendentes
+- `effect_class`: `remote_mutation`
+- `state_before` / `state_after`: plano `Aprovado`, issue #63 `OPEN`, base `main` em `9cfb2efdde5efa2ebf9dbd054abb21f4b77e1c9f`, sem branch ou task da issue / plano `Em Execução`, ciclo `Em execução`, issue #63 `OPEN`, branch `feature/issue-63` publicada em `2ea4c3a`, implementação local concluída; PR não aberta porque `gh auth status` indicou token inválido
 - `result`: `executed`
 - `evidence`: issue e corpo conferidos pelo conector GitHub; plano aprovado e PR #62 integrada; `HEAD` igual a `origin/main`; branch e task criadas após a autorização recebida em 2026-10-17; resultados reais na tabela de evidências
-- `blockers`: publicar a PR, aguardar checks remotos e aprovação específica do merge
+- `blockers`: autenticação inválida no GitHub CLI; PR e checks remotos pendentes; aprovação específica do merge necessária depois
