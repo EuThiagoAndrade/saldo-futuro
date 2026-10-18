@@ -2,12 +2,12 @@
 
 > **Ciclo:** `006` (trilha curta: `—`)
 > **Trilha:** `curta`
-> **Estado:** `Em andamento`
+> **Estado:** `Aguardando integração`
 > **Tipo:** `fix`
 > **Issue:** `#70`
 > **Plano:** `—`
 > **Branch:** `fix/issue-70`
-> **PR:** `—`
+> **PR:** [#71](https://github.com/EuThiagoAndrade/saldo-futuro/pull/71)
 > **Integração:** `Pendente`
 > **Autorização inicial:** "confirmo a trilha curta e autorizo abrir e corrigir a issue [FIX] Alinhar tabela consolidado_mensal na leitura da migração" em 2026-10-18
 > **Modo contínuo:** `—`
@@ -53,7 +53,7 @@ Fazer o leitor da simulação reconhecer a tabela de consolidação da origem co
 - [x] Executar teste unitário de simulação, typecheck, lint e `git diff --check`.
 - [x] Executar governance-check.
 - [x] Revisão formal da correção; veredito `APTO PARA APROVAÇÃO`, rodada 1.
-- [ ] Abrir PR com `Closes #70` depois de veredito apto.
+- [x] Abrir PR #71 com `Closes #70` depois de veredito apto.
 - [ ] Aprovação explícita de merge e integração.
 
 ## Evidências
@@ -65,7 +65,7 @@ Fazer o leitor da simulação reconhecer a tabela de consolidação da origem co
 | Lint | `npm run lint`: 0 erros; 3 avisos preexistentes em `local/validacao-ciclo-003/conferir.mjs`, fora do diff. |
 | Validador | `node --test scripts/validate-governance.test.mjs`: 39/39 passaram; `node scripts/validate-governance.mjs`: 0 erros, 0 avisos e 4 itens manuais. |
 | `git diff --check` | Passou. |
-| Checks remotos | Pendente. |
+| Checks remotos do HEAD `c20d72d` | CI em andamento; Governance e Vercel passaram. |
 
 ## Revisão da correção
 
@@ -114,11 +114,18 @@ Não se aplica — correção pela trilha curta.
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — correção da issue #70
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue a correção da issue #70"
+Situação: Aguardando merge — correção da issue #70
+Quem: Responsável
+Conferir: [PR #71](https://github.com/EuThiagoAndrade/saldo-futuro/pull/71), checks remotos e diff
+Diga: "aprovo o merge da PR #71"
 ```
+
+## Continuação — publicação da PR
+
+- Branch `fix/issue-70` publicada no remoto; commit de implementação `c20d72d5596a8bfbfbb4000c0cad4648db34bf0e`.
+- PR #71 aberta contra `main`, vinculando `Closes #70`; revisão formal `APTO PARA APROVAÇÃO` registrada acima.
+- Estado registrado no momento desta atualização: CI em andamento; Governance e Vercel passaram. Merge continua sem aprovação.
+- Handoff: `handoff_schema_version: 2`; `effect_class: remote_mutation`; `state_before`: correção revisada na branch, PR ainda não publicada; `state_after`: PR #71 aberta e anexada a esta tarefa, CI pendente; `result: executed`; evidência: URL da PR e runs remotas; `blockers`: conclusão dos checks remotos e aprovação explícita "aprovo o merge da PR #71".
 
 ## Handoff de saída
 
