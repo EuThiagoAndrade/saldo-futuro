@@ -2,13 +2,13 @@
 
 > **Ciclo:** `006`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#63`
 > **Plano:** `_project/drafts/006_migracao_dados_virada/006_plan.md`
 > **Branch:** `feature/issue-63`
 > **PR:** [#66](https://github.com/EuThiagoAndrade/saldo-futuro/pull/66)
-> **Integração:** `Pendente`
+> **Integração:** `Integrada em 2026-10-18 por squash, commit `ce84e66466876c93dafd8fc852fbfd8f39ff2edf``
 > **Autorização inicial:** "Autorizo a implementação da issue #63 (simulação da migração)" em 2026-10-17
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-17
@@ -77,10 +77,10 @@ Não se aplica; esta não é a última issue do ciclo.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 006 (completo)
+Situação: Aguardando autorização de implementação — ciclo 006 (completo)
 Quem: Responsável
-Conferir: [PR #66](https://github.com/EuThiagoAndrade/saldo-futuro/pull/66), checks remotos e diff
-Diga: "aprovo o merge da PR #66"
+Conferir: [issue #64](https://github.com/EuThiagoAndrade/saldo-futuro/issues/64) e seu escopo
+Diga: "autorizo a implementação da issue #64"
 ```
 
 ## Handoff de saída

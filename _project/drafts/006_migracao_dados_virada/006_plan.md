@@ -307,7 +307,7 @@ Uma PR por issue, cada uma com aprovação própria do merge. O encerramento vai
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | A [#63](https://github.com/EuThiagoAndrade/saldo-futuro/issues/63), B [#64](https://github.com/EuThiagoAndrade/saldo-futuro/issues/64) e C [#65](https://github.com/EuThiagoAndrade/saldo-futuro/issues/65) |
-| PR(s) | [#62](https://github.com/EuThiagoAndrade/saldo-futuro/pull/62) (plano, integrada) |
+| PR(s) | [#62](https://github.com/EuThiagoAndrade/saldo-futuro/pull/62) (plano, integrada); [#66](https://github.com/EuThiagoAndrade/saldo-futuro/pull/66) (issue A, integrada); [#68](https://github.com/EuThiagoAndrade/saldo-futuro/pull/68) (issue B, aberta) |
 | Branch(es) | `chore/cycle-006-ideation` (rascunho local); `chore/cycle-006-plan` depois da aprovação |
 | Destino após conclusão | `_project/executed/006_migracao_dados_virada/006_plan.md` |
 
@@ -317,19 +317,19 @@ Uma PR por issue, cada uma com aprovação própria do merge. O encerramento vai
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 006 (completo)
 Quem: Responsável
-Conferir: [PR #66](https://github.com/EuThiagoAndrade/saldo-futuro/pull/66), checks remotos e diff
-Diga: "aprovo o merge da PR #66"
+Conferir: [PR #68](https://github.com/EuThiagoAndrade/saldo-futuro/pull/68), checks remotos e diff
+Diga: "aprovo o merge da PR #68"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 006 + implementar_issue + 63/A + base 9cfb2efdde5efa2ebf9dbd054abb21f4b77e1c9f`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 006 + implementar_issue + 64/B + base ce84e66466876c93dafd8fc852fbfd8f39ff2edf`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: plano `Em Execução`; ciclo `Em execução`; issue #63 `OPEN`; branch `feature/issue-63` em `4a8a8e7`; task bloqueada, sem PR / task `Aguardando integração`; PR #66 `OPEN`, base `main`, fora de draft; após o push documental `d20eee0`, Governance está em andamento, CI e Vercel pendentes e Vercel Preview Comments aprovado
+- `state_before` / `state_after`: plano `Em Execução`; issue #63 integrada pela PR #66; issue #64 `OPEN` sem branch / branch `feature/issue-64`, task `Aguardando integração`, PR #68 `OPEN` contra `main`
 - `result`: `executed`
-- `evidence`: autorização humana de implementação em 2026-10-17; autenticação `gh` confirmada; PR #66 aberta via `gh` e vinculada à issue #63; HEAD e checks registrados na task
-- `blockers`: checks remotos do HEAD atualizado e aprovação específica "aprovo o merge da PR #66" após todos ficarem verdes
+- `evidence`: autorização do responsável para a issue #64 em 2026-10-18; gates locais registrados na task; PR #68 aberta via `gh` com `Closes #64`
+- `blockers`: checks remotos do HEAD atualizado e "aprovo o merge da PR #68" depois de todos verdes
 
 ## Revisão crítica
 

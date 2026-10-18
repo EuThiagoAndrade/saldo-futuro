@@ -87,11 +87,30 @@ async function calcularHashOrigem(caminhoBanco) {
 
 function imprimirUso() {
   process.stderr.write(
-    "Uso: npm run migracao -- simular --db local/arquivo.sqlite --user-id UUID [--out-dir local/migracao-issue-63]\n",
+    [
+      "Uso:",
+      "  npm run migracao -- simular --db local/arquivo.sqlite --user-id UUID [--out-dir local/migracao-issue-63]",
+      "  npm run migracao -- gravar --db local/arquivo.sqlite --plano local/.../plano-*.json [--sessao local/sessao.json] [--out-dir local/migracao-issue-64]",
+      "  npm run migracao -- conferir --db local/arquivo.sqlite [--sessao local/sessao.json]",
+      "gravar e conferir usam NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY e a sessão do responsável",
+      "(arquivo em local/ com access_token e refresh_token, ou SALDO_FUTURO_ACCESS_TOKEN e SALDO_FUTURO_REFRESH_TOKEN).",
+      "",
+    ].join("\n"),
   );
 }
 
-if (argumentos[0] !== "simular") {
+if (argumentos[0] === "gravar" || argumentos[0] === "conferir") {
+  try {
+    // Só gravar e conferir carregam o cliente do Supabase; simular nunca o importa.
+    const modulo = await import("./migracao-gravacao.mjs");
+    const apoio = { argumento, caminhoLocal, diretorioLocal, calcularHashOrigem, obterLocal, foraDoDiretorio, raiz };
+    await (argumentos[0] === "gravar" ? modulo.executarGravacao(apoio) : modulo.executarConferencia(apoio));
+  } catch (erro) {
+    const detalhe = erro instanceof Error ? erro.message : "erro desconhecido";
+    process.stderr.write(`O modo ${argumentos[0]} não foi concluído: ${detalhe}\n`);
+    process.exitCode = 2;
+  }
+} else if (argumentos[0] !== "simular") {
   imprimirUso();
   process.exitCode = 2;
 } else {
