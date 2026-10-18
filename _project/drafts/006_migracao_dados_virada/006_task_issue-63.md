@@ -59,7 +59,7 @@ Não se aplica; esta é a issue A do ciclo completo 006.
 | E2E | 13 passaram e 75 foram pulados sem backend Supabase. Executado em porta local alternativa por bloqueio de loopback do sandbox. |
 | Validador | Harness de governança: 39/39; `node scripts/validate-governance.mjs`: 0 erros, 0 avisos, 4 verificações manuais. |
 | `git diff --check` | Passou. |
-| Checks remotos | PR #66 no HEAD `4a8a8e7e26900870b52ff81d3eacf845ceb8a501`: 2 aprovados, 3 pendentes. |
+| Checks remotos | Snapshot inicial no HEAD `4a8a8e7`: 2 aprovados, 3 pendentes. Após o push documental `d20eee0`, Governance está em andamento, CI e Vercel pendentes e Vercel Preview Comments aprovado; novo push exige reconferência no HEAD atualizado. |
 
 ## Revisão da correção
 
@@ -88,7 +88,7 @@ Diga: "aprovo o merge da PR #66"
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 006 + implementar_issue + 63/A + base 9cfb2efdde5efa2ebf9dbd054abb21f4b77e1c9f`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: plano `Em Execução`, issue #63 `OPEN`, branch `feature/issue-63` em `4a8a8e7`, task bloqueada e sem PR / task `Aguardando integração`; PR #66 `OPEN`, base `main`, fora de draft, HEAD `4a8a8e7e26900870b52ff81d3eacf845ceb8a501`; 2 checks aprovados e 3 pendentes
+- `state_before` / `state_after`: plano `Em Execução`, issue #63 `OPEN`, branch `feature/issue-63` em `4a8a8e7`, task bloqueada e sem PR / task `Aguardando integração`; PR #66 `OPEN`, base `main`, fora de draft; após o push documental `d20eee0`, Governance está em andamento, CI e Vercel pendentes e Vercel Preview Comments aprovado
 - `result`: `executed`
 - `evidence`: autenticação `gh` confirmada (`gh auth status` e `gh api user`); PR #66 criada via `gh`, vinculada à issue #63, base `main`, fora de draft; HEAD e checks registrados na tabela de evidências
-- `blockers`: 3 checks remotos pendentes; merge exige checks verdes e aprovação específica "aprovo o merge da PR #66"
+- `blockers`: checks remotos do HEAD atualizado e aprovação específica "aprovo o merge da PR #66" após todos ficarem verdes
