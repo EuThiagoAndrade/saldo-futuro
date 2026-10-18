@@ -6,7 +6,7 @@ tags:
   - acesso
 author: "Thiago Andrade e Claude"
 module: "Operação"
-last_updated: "2026-10-13"
+last_updated: "2026-10-18"
 origin_cycle: "001"
 ---
 
@@ -14,7 +14,7 @@ origin_cycle: "001"
 
 ## Finalidade
 
-Roteiro verificável para levar o Saldo Futuro a `investimentos.euthiagoandrade.com.br` e para operar a lista de acessos depois disso. É consultada no Gate H-C do ciclo `001` (configuração externa feita pelo responsável), na verificação em produção (Gate V-C) e sempre que for preciso autorizar, promover ou revogar um acesso.
+Roteiro verificável para levar o Saldo Futuro a `investimentos.euthiagoandrade.com.br` e para operar a lista de acessos depois disso. É consultada no Gate H-C do ciclo `001` (configuração externa feita pelo responsável), na verificação em produção (Gate V-C) sempre que for preciso autorizar, promover ou revogar um acesso e, no ciclo `006`, na migração dos dados e na virada.
 
 ## Limite de autoridade
 
@@ -202,6 +202,140 @@ try { Invoke-RestMethod -Uri "https://investimentos.euthiagoandrade.com.br/api/k
 | `status: 500` | A função `public.keepalive()` não responde no banco (falta o `db push`) |
 | `status: 503` | As variáveis do Supabase não entraram no build de produção |
 
+### Migração e virada (ciclo 006)
+
+Roteiro da ação externa da issue #65. Ele leva a carteira do `Meus-Investimentos` para a conta do responsável em produção, pelo migrador das issues #63 e #64 (`npm run migracao`), e registra a virada. Quem executa é o responsável, na própria máquina. O agente não abre o SQLite real, o relatório detalhado, o plano, o diário nem a sessão, e não executa nada contra produção: ele só lê as saídas de contagem que o responsável colar na conversa.
+
+**O que nunca sai de `local/`:** a cópia do SQLite, o relatório detalhado, o plano de operações, o diário, a trava e a sessão. Nenhum desses arquivos vai para o repositório, para issues, PRs ou tasks, nem para mensagens a ferramentas externas.
+
+#### M0. Pré-requisitos e regime de gravador único
+
+| Item | Como conferir |
+| :-- | :-- |
+| `main` atualizada, com as issues #63 e #64 integradas | `git checkout main`, `git pull` e `npm ci` |
+| Node.js 24 ou mais recente | `node --version` |
+| Produção com todas as migrações | `npx supabase migration list`: local e remoto alinhados (S12) |
+| Conta de destino do responsável vazia | A conta já entrou na aplicação, mas não tem nenhum ativo, lançamento ou mês fechado. O migrador confere e recusa se não estiver vazia |
+| UUID do usuário de destino | Painel do Supabase, Authentication, Users, coluna do identificador da conta do responsável. Ele é usado só no comando, não é registrado |
+| Regime de gravador único | **Uma máquina e um processo.** Ninguém usa a aplicação durante a carga, nem o responsável em outra aba ou no celular. O migrador impede um segundo processo na mesma pasta com a trava, mas não impede escrita de outra máquina ou da aplicação; essa escrita é detectada na conferência seguinte e para a carga |
+
+Todos os comandos abaixo são de PowerShell, na raiz do repositório. A pasta de trabalho é `local\migracao-006\`; ela é ignorada pelo Git.
+
+#### M1. Congelamento da origem
+
+1. Feche um mês no `Meus-Investimentos`, como de costume. A virada acontece logo depois desse fechamento: só migram meses fechados, e qualquer lançamento em mês aberto recusa a simulação.
+2. A partir daqui, **não lance mais nada na origem**. Ela fica congelada e intacta; é o caminho de volta.
+3. Pare o backend da origem, para o SQLite não estar em uso. Copie o arquivo do banco para `local\migracao-006\meus-investimentos.sqlite`. Se existir ao lado dele um arquivo com o mesmo nome terminado em `-wal`, copie-o também, como `localmigracao-006meus-investimentos.sqlite-wal`.
+
+```powershell
+New-Item -ItemType Directory -Force local\migracao-006 | Out-Null
+Copy-Item "<caminho-do-banco-da-origem>" local\migracao-006\meus-investimentos.sqlite
+```
+
+#### M2. Simular e conferir o relatório
+
+```powershell
+npm run migracao -- simular --db local\migracao-006\meus-investimentos.sqlite --user-id <uuid-do-destino> --out-dir local\migracao-006
+```
+
+- `"estado":"simulada"`: o plano de operações foi gravado em `local\migracao-006\plano-<...>.json`; anote o caminho que a saída mostra em `"plano"`.
+- `"estado":"recusada"`: nada foi gerado para gravar. A saída lista os códigos das recusas (por exemplo, `M6_TRANSITO_SEM_PAR_UNICO`, `M10_COBERTURA_OU_CONSISTENCIA`) com as quantidades. **Pare aqui** e informe ao agente só os códigos e as quantidades; a decisão sobre o caso volta ao plano, com exemplos fictícios.
+
+Com a simulação aceita, abra o relatório detalhado (`relatorio-<...>.json`, na mesma pasta) e confira, sem copiá-lo para lugar nenhum:
+
+- a lista de meses e, em cada mês, o patrimônio do destino (`vf`) contra o da origem (`patrimonioOrigem`);
+- `ativosEmM7`: os ativos e meses cujo histórico vira um único evento de migração, com o motivo; esses meses ficam com rentabilidade `N/D`;
+- no resumo, os meses só com consolidado que não migram e os ativos que serão desativados.
+
+Se algo no relatório não corresponder ao que você conhece da carteira, pare e descreva ao agente só a natureza da dúvida (por exemplo, "um ativo em M7 que eu não esperava"), sem valores nem nomes.
+
+#### M3. Sessão do responsável
+
+O migrador grava com a **sua** sessão e a chave publicável, como a aplicação. Nunca use a chave secreta: o migrador a recusa.
+
+1. Defina, só nesta janela do PowerShell, a URL e a chave publicável do projeto de produção (S3):
+
+```powershell
+$env:NEXT_PUBLIC_SUPABASE_URL = "https://<project-id>.supabase.co"
+$env:NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = "<chave-publicável>"
+```
+
+2. Entre na aplicação de produção com o Google, num navegador de computador. Abra as ferramentas do desenvolvedor (F12), aba Console, e execute o trecho abaixo. Ele lê o cookie da sessão desta aba e copia para a área de transferência só o token de acesso e o de renovação, sem mostrá-los:
+
+```javascript
+(() => {
+  const cookies = Object.fromEntries(document.cookie.split("; ").map((c) => [c.slice(0, c.indexOf("=")), c.slice(c.indexOf("=") + 1)]));
+  const base = Object.keys(cookies).map((n) => n.replace(/\.\d+$/, "")).find((n) => /^sb-[^-]+-auth-token$/.test(n));
+  const partes = Object.keys(cookies).filter((n) => n === base || n.startsWith(`${base}.`)).sort((a, b) => Number(a.split(".").pop()) - Number(b.split(".").pop()));
+  let valor = partes.map((n) => decodeURIComponent(cookies[n])).join("");
+  if (valor.startsWith("base64-")) valor = atob(valor.slice(7).replace(/-/g, "+").replace(/_/g, "/"));
+  const s = JSON.parse(valor);
+  copy(JSON.stringify({ access_token: s.access_token, refresh_token: s.refresh_token }));
+  return "sessão copiada";
+})();
+```
+
+3. Grave a área de transferência no arquivo da sessão (sem BOM, que o migrador não aceitaria) e **feche a aba da aplicação sem clicar em Sair**. Sair encerra a sessão em todos os lugares, inclusive no migrador.
+
+```powershell
+[IO.File]::WriteAllText("$PWD\local\migracao-006\sessao.json", (Get-Clipboard))
+```
+
+Não verificado em produção: o formato do cookie foi conferido no código da biblioteca usada pela aplicação (`@supabase/ssr`), não no navegador de produção. Se o trecho falhar, pare e informe ao agente a mensagem de erro do console, sem colar o valor do cookie.
+
+O token de acesso vale cerca de uma hora e o migrador o renova sozinho enquanto o processo roda, mas não grava a renovação de volta no arquivo. Se um comando posterior responder "Sessão do responsável recusada", entre de novo na aplicação e repita os passos 2 e 3.
+
+#### M4. Gravar
+
+```powershell
+npm run migracao -- gravar --db local\migracao-006\meus-investimentos.sqlite --plano <caminho-do-plano> --sessao local\migracao-006\sessao.json --out-dir local\migracao-006
+```
+
+O migrador confere que o plano corresponde à cópia do SQLite e à conta da sessão, cria a trava `gravacao.trava`, registra cada operação no diário (`diario-<...>.jsonl`) e só termina com uma destas saídas. **Não apague o diário nem a trava**, salvo onde a tabela manda.
+
+| `result` / `motivo` | Significa | O que fazer |
+| :-- | :-- | :-- |
+| `executed` / `concluida` | Todas as operações confirmadas e o destino igual ao plano | Siga para M5 |
+| `already_executed_and_reconciled` / `ja_concluida` | O plano inteiro já estava aplicado; nada foi gravado | Siga para M5 |
+| `not_executed` / `destino_nao_vazio` | A conta de destino tem dados e não há retomada comprovada | Pare; nada foi gravado. Decisão do responsável, com o agente, antes de qualquer limpeza |
+| `not_executed` / `trava_presente` | Existe `gravacao.trava` na pasta | Confira no Gerenciador de Tarefas que nenhum outro `node` do migrador está rodando. Só então, se a trava sobrou de um processo interrompido, apague `local\migracao-006\gravacao.trava` e repita M4 |
+| `not_executed` / `plano_invalido`, `usuario_divergente` ou `diario_divergente` | O plano foi alterado, a sessão é de outra conta ou o diário é de outro plano ou outra conta | Pare e informe o motivo ao agente |
+| `ambiguous_human_intervention_required` / `desconhecida` | A resposta de uma chamada se perdeu (rede ou tempo esgotado). O efeito dela é desconhecido e **ela não é reenviada** | Espere alguns minutos e repita o mesmo comando M4. O migrador relê o destino: se o efeito aparece exatamente uma vez, ele o reconhece e continua |
+| `ambiguous_human_intervention_required` / `desconhecida_sem_efeito` | Na retomada, o efeito da operação desconhecida ainda não aparece | A chamada original pode ainda estar em execução. Espere e repita M4 mais tarde. Se continuar assim, pare: a decisão é esperar mais ou desfazer a carga (M7). Nunca reenvie à mão |
+| `ambiguous_human_intervention_required` / `estado_divergente` | O destino não é um prefixo exato do plano: houve escrita de fora ou um efeito parcial ou duplicado | Pare. Informe ao agente o motivo e as contagens de `diferencas`. O caminho provável é M7 |
+| `ambiguous_human_intervention_required` / `recusada` | O banco recusou uma operação e desfez a transação dela | Pare e informe o motivo ao agente; a causa precisa ser entendida antes de repetir |
+| `leitura_falhou` | Uma leitura do destino falhou ou mudou durante a leitura | Confira a conexão e repita M4; a retomada continua do ponto confirmado |
+
+`confirmadas` e `total` mostram quantas operações do plano estão confirmadas; `enviadas`, quantas esta execução enviou.
+
+#### M5. Conferir
+
+```powershell
+npm run migracao -- conferir --db local\migracao-006\meus-investimentos.sqlite --sessao local\migracao-006\sessao.json
+```
+
+O modo só lê. Ele simula de novo a partir da cópia do SQLite e compara o destino inteiro, mês a mês: consolidado, posições, patrimônio com o trânsito, rentabilidade, acumulado e meses `N/D`. O resultado aceito é `"ok":true` com `"diferencas":{}`. Qualquer diferença é "Parado": informe ao agente só as categorias e as contagens.
+
+#### M6. O que informar ao agente
+
+Cole na conversa **somente** as linhas de saída dos três comandos (`simular`, `gravar` e `conferir`). Elas contêm apenas estado, contagens, motivos e caminhos dentro de `local/`. Nunca cole o relatório, o plano, o diário, a sessão, valores, nomes de ativos, instituições ou prints com dados. Depois, diga "concluí a ação externa da issue #65". O agente registra na task só contagens e diferenças.
+
+Depois da conferência sem diferença, apague o arquivo da sessão (`Remove-Item local\migracao-006\sessao.json`) e mantenha o restante da pasta até o encerramento do ciclo.
+
+#### M7. Caminho de volta
+
+Antes da confirmação da virada, a origem continua congelada e intacta: voltar a ela é só retomar o uso. Para limpar o destino, como nenhuma função apaga eventos, exclua o usuário de destino (a carteira sai em cascata) e **mantenha** o e-mail na lista de autorizados, para poder entrar de novo. No editor SQL do Supabase:
+
+```sql
+delete from auth.users where email = '<e-mail-do-responsável>';
+```
+
+Depois, entre de novo na aplicação com o Google: o hook recria a conta com o papel da lista. Se o papel esperado for `admin`, confira que a lista o registra (P3). A conta nova tem **outro UUID**, então uma nova carga recomeça em M2, com o UUID novo e outra pasta de trabalho (por exemplo, `local\migracao-006-b\`): o diário antigo pertence à conta excluída e o migrador o recusa.
+
+#### M8. Data de virada
+
+A data de virada é o dia em que a conferência M5 termina sem diferença. A partir dela, o Saldo Futuro é a fonte de verdade e a origem não recebe lançamentos. A data é registrada na verificação em produção do ciclo 006 ("autorizo a verificação em produção do ciclo 006") e entra na KB-003 pela PR de encerramento.
+
 ## Fontes
 
 Consultadas em 2026-10-12 e conferidas na execução de 2026-10-13. São documentação oficial, sem versão fixada; os valores que dependem do plano ou do painel devem ser reconferidos.
@@ -222,3 +356,4 @@ Consultadas em 2026-10-12 e conferidas na execução de 2026-10-13. São documen
 | :-- | :-- | :-- |
 | 2026-10-12 | `001` | Criação |
 | 2026-10-13 | `001` | Correções depois da execução do Gate H-C: um único `db push`, tela do Google em modo Testando (GC2, GC4 e armadilha 7), rótulo "Project ID", Redirect URL sem `localhost`, alerta de senhas vazadas aceito, integração Cron não instalada, ordem das variáveis na Vercel, teste direto do keepalive e limitação dos logs |
+| 2026-10-18 | `006` | Seção "Migração e virada": roteiro da ação externa da issue #65 (M0 a M8) |

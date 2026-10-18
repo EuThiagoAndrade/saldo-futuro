@@ -2,13 +2,13 @@
 
 > **Ciclo:** `006`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#64`
 > **Plano:** `_project/drafts/006_migracao_dados_virada/006_plan.md`
 > **Branch:** `feature/issue-64`
 > **PR:** [#68](https://github.com/EuThiagoAndrade/saldo-futuro/pull/68)
-> **Integração:** `Pendente`
+> **Integração:** `Integrada em 2026-10-18 por squash, commit `114da00e250ae73ef79ad8a9f46e4e73b4c8af99``
 > **Autorização inicial:** "A próxima etapa é a issue #64. implemente a issue #64" em 2026-10-18
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-18
@@ -62,7 +62,7 @@ Não se aplica; esta é a issue B do ciclo completo 006.
 | `service_role` | Nenhuma ocorrência no código, testes e CLI da migração. |
 | Validador | Harness: 39/39. `node scripts/validate-governance.mjs` conferido depois do bloco "Aguardando merge". |
 | `git diff --check` | Passou. |
-| Checks remotos | PR #68 aberta no commit `9f6e2ed`; conferir os checks no HEAD atualizado depois deste push documental. |
+| Checks remotos | HEAD `35dcf23`: CI (app e Supabase local, 98 e2e com backend), Governance, Vercel e Vercel Preview Comments aprovados. |
 
 ## Revisão da correção
 
@@ -87,10 +87,10 @@ Não se aplica; esta não é a última issue do ciclo.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 006 (completo)
+Situação: Aguardando autorização de implementação — ciclo 006 (completo)
 Quem: Responsável
-Conferir: [PR #68](https://github.com/EuThiagoAndrade/saldo-futuro/pull/68), checks remotos, diff e as decisões incidentais 1 e 2 da task
-Diga: "aprovo o merge da PR #68"
+Conferir: [issue #65](https://github.com/EuThiagoAndrade/saldo-futuro/issues/65) e seu escopo
+Diga: "autorizo a implementação da issue #65"
 ```
 
 ## Handoff de saída

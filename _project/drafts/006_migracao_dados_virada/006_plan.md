@@ -307,7 +307,7 @@ Uma PR por issue, cada uma com aprovação própria do merge. O encerramento vai
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | A [#63](https://github.com/EuThiagoAndrade/saldo-futuro/issues/63), B [#64](https://github.com/EuThiagoAndrade/saldo-futuro/issues/64) e C [#65](https://github.com/EuThiagoAndrade/saldo-futuro/issues/65) |
-| PR(s) | [#62](https://github.com/EuThiagoAndrade/saldo-futuro/pull/62) (plano, integrada); [#66](https://github.com/EuThiagoAndrade/saldo-futuro/pull/66) (issue A, integrada); [#68](https://github.com/EuThiagoAndrade/saldo-futuro/pull/68) (issue B, aberta) |
+| PR(s) | [#62](https://github.com/EuThiagoAndrade/saldo-futuro/pull/62) (plano, integrada); [#66](https://github.com/EuThiagoAndrade/saldo-futuro/pull/66) (issue A, integrada); [#68](https://github.com/EuThiagoAndrade/saldo-futuro/pull/68) (issue B, integrada); [#69](https://github.com/EuThiagoAndrade/saldo-futuro/pull/69) (issue C, aberta) |
 | Branch(es) | `chore/cycle-006-ideation` (rascunho local); `chore/cycle-006-plan` depois da aprovação |
 | Destino após conclusão | `_project/executed/006_migracao_dados_virada/006_plan.md` |
 
@@ -317,19 +317,19 @@ Uma PR por issue, cada uma com aprovação própria do merge. O encerramento vai
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 006 (completo)
 Quem: Responsável
-Conferir: [PR #68](https://github.com/EuThiagoAndrade/saldo-futuro/pull/68), checks remotos e diff
-Diga: "aprovo o merge da PR #68"
+Conferir: [PR #69](https://github.com/EuThiagoAndrade/saldo-futuro/pull/69), checks remotos e o roteiro da KB-002
+Diga: "aprovo o merge da PR #69"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 006 + implementar_issue + 64/B + base ce84e66466876c93dafd8fc852fbfd8f39ff2edf`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 006 + implementar_issue + 65/C + base 114da00e250ae73ef79ad8a9f46e4e73b4c8af99`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: plano `Em Execução`; issue #63 integrada pela PR #66; issue #64 `OPEN` sem branch / branch `feature/issue-64`, task `Aguardando integração`, PR #68 `OPEN` contra `main`
+- `state_before` / `state_after`: plano `Em Execução`; issues #63 e #64 integradas (PRs #66 e #68); issue #65 `OPEN` sem branch / branch `chore/issue-65`, task `Aguardando integração`, PR #69 `OPEN` contra `main`
 - `result`: `executed`
-- `evidence`: autorização do responsável para a issue #64 em 2026-10-18; gates locais registrados na task; PR #68 aberta via `gh` com `Closes #64`
-- `blockers`: checks remotos do HEAD atualizado e "aprovo o merge da PR #68" depois de todos verdes
+- `evidence`: autorização do responsável para a issue #65 em 2026-10-18; validador verde; PR #69 aberta via `gh` com `Closes #65`
+- `blockers`: checks remotos do HEAD atualizado e "aprovo o merge da PR #69" depois de todos verdes; depois, a ação externa
 
 ## Revisão crítica
 
