@@ -1,7 +1,7 @@
 # Plano de Implementação — Migração única dos dados e virada
 
 > **Ciclo:** `006`
-> **Status:** `Aprovado`
+> **Status:** `Em Execução`
 > **Versão:** `v3`
 > **Data de criação:** 2026-10-17
 > **Última atualização:** 2026-10-17
@@ -306,8 +306,8 @@ Uma PR por issue, cada uma com aprovação própria do merge. O encerramento vai
 
 | Campo | Valor |
 | :-- | :-- |
-| Issue(s) | — |
-| PR(s) | — |
+| Issue(s) | A [#63](https://github.com/EuThiagoAndrade/saldo-futuro/issues/63), B [#64](https://github.com/EuThiagoAndrade/saldo-futuro/issues/64) e C [#65](https://github.com/EuThiagoAndrade/saldo-futuro/issues/65) |
+| PR(s) | [#62](https://github.com/EuThiagoAndrade/saldo-futuro/pull/62) (plano, integrada) |
 | Branch(es) | `chore/cycle-006-ideation` (rascunho local); `chore/cycle-006-plan` depois da aprovação |
 | Destino após conclusão | `_project/executed/006_migracao_dados_virada/006_plan.md` |
 
@@ -317,19 +317,19 @@ Uma PR por issue, cada uma com aprovação própria do merge. O encerramento vai
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 006 (completo)
 Quem: Responsável
-Conferir: checks e diff da PR #62 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/62)
-Diga: "aprovo o merge da PR #62"
+Conferir: PR da issue #63, checks locais e remotos
+Diga: "aprovo o merge da PR #N"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 006 + aprovacao_publicacao_documental + 006_plan + v3/rodada-3`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 006 + implementar_issue + 63/A + base 9cfb2efdde5efa2ebf9dbd054abb21f4b77e1c9f`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: plano `v3` em `Em Revisão`, veredito `APTO PARA APROVAÇÃO`, aprovação `Pendente`, sem PR documental / plano `v3` `Aprovado` em 2026-10-17, PR documental publicada na branch `chore/cycle-006-plan`, aguardando merge; ciclo `006` segue em `Planejamento`, sem issues
+- `state_before` / `state_after`: plano `Aprovado` e integrado; issue #63 `OPEN`, sem branch ou task / plano `Em Execução`; ciclo `Em execução`; issue #63 `OPEN`; branch `feature/issue-63` e task criadas; implementação da issue A concluída localmente, aguardando publicação da PR e checks remotos
 - `result`: `executed`
-- `evidence`: seção "Aprovação e publicação documental", abaixo
-- `blockers`: o merge documental exige checks verdes no HEAD e "aprovo o merge da PR #N"; as issues exigem o plano integrado e a confirmação dos payloads
+- `evidence`: autorização humana de implementação em 2026-10-17; issue #63 e plano conferidos; branch e task persistente; resultados reais registrados na task da issue #63
+- `blockers`: publicar a PR da issue #63, aguardar checks remotos e a aprovação específica do merge
 
 ## Revisão crítica
 
@@ -531,6 +531,35 @@ Nenhum achado foi contestado. As regras financeiras alteradas (M5 e M7) seguem c
 - **Autoridades e templates no ponto de uso:** `.agent/ai_behavior.md`, `_project/README.md`, `_project/cycles.md`, `.agent/templates/plano_implementacao.md`, `.github/pull_request_template.md` e `.agent/workflows/criar_issues.md`, este último para as precondições da etapa seguinte.
 - **Reconciliação externa:** `origin/main` em `49b930fc5472264985ae16ac138be5c7dc410dff`; nenhuma branch nem PR anterior do ciclo 006.
 - **Estado:** o ciclo segue em `Planejamento` até a primeira entrega, e o próximo ciclo segue `007`.
+
+## Integração documental e preparação das issues
+
+- **Autorização de merge:** "aprovo o merge da PR #62", recebida em 2026-10-17. Executado depois de "continue o ciclo 006", quando os checks terminaram.
+- **Precondições reconferidas:**
+  - PR aberta, fora de draft, base `main`, `MERGEABLE`/`CLEAN`;
+  - HEAD `6a8a24b79ed6cd23e310be771d6d73f0460f7ed7`, o mesmo da aprovação, com o merge travado nesse HEAD (`--match-head-commit`);
+  - diff limitado à ideação, ao plano e a `cycles.md`;
+  - os cinco checks passaram: lint/tipos/testes/build/e2e de preview; Supabase local, banco e e2e autenticado; governança; Vercel; comentário de preview.
+- **Resultado:** PR #62 integrada por squash em `9cfb2efdde5efa2ebf9dbd054abb21f4b77e1c9f` (GitHub: 2026-10-18T02:43:12Z). `main` local sincronizada por fast-forward.
+- **Preparação seguinte:** payloads A a C em `006_handoff_issues.md`, derivados dos itens aprovados, na ordem dos campos de `feature_request.yml` (A e B) e `chore.yml` (C). A busca no GitHub não encontrou issue equivalente. Nenhuma issue foi criada.
+- **Estado:** plano `Aprovado`, ciclo em `Planejamento`, próximo ciclo `007`. Estes registros pós-merge ficam locais até a próxima entrega documental autorizada, sem push direto em `main`.
+
+## Criação das issues
+
+- **Autorização humana:** "confirmo a criação das issues A, B e C com os payloads de 006_handoff_issues.md", em 2026-10-17. Ela resolve a parada anterior e cobre só a criação e a rastreabilidade, sem implementar.
+- **Workflow e templates no ponto de uso:** `.agent/workflows/criar_issues.md`, `.github/ISSUE_TEMPLATE/feature_request.yml` (A e B) e `chore.yml` (C).
+- **Antes de criar:** busca em todas as issues, por título e por chave lógica `006 + criar_issues`, sem correspondência.
+- **Resultado remoto:** A como [#63](https://github.com/EuThiagoAndrade/saldo-futuro/issues/63), B como [#64](https://github.com/EuThiagoAndrade/saldo-futuro/issues/64) e C como [#65](https://github.com/EuThiagoAndrade/saldo-futuro/issues/65), criadas nessa ordem. As dependências foram preenchidas com os números observados: B depende de #63, e C depende de #64.
+- **Conferência:** a releitura de cada issue no GitHub mostrou título e corpo idênticos ao payload e estado `OPEN`. Os hashes estão em `006_handoff_issues.md`.
+- **Estado:** plano `Aprovado`, ciclo em `Planejamento` até a primeira entrega, próximo ciclo `007`. Nenhuma task, branch ou código de implementação foi criado. Estes registros ficam locais até a próxima entrega documental autorizada, sem push direto em `main`.
+
+## Implementação da issue #63
+
+- **Autorização humana:** "Autorizo a implementação da issue #63 (simulação da migração)", recebida em 2026-10-17.
+- **Execução:** issue #63 aberta e conferida; plano aprovado e integrado pela PR #62; branch `feature/issue-63` criada a partir de `9cfb2efdde5efa2ebf9dbd054abb21f4b77e1c9f`; task persistente criada em `006_task_issue-63.md`.
+- **Escopo:** simulação somente leitura do SQLite, regras M1 a M10, replay em memória, plano determinístico e relatório local. Nenhum SQLite real foi aberto; nenhum acesso ou gravação no Supabase foi incluído.
+- **Validação:** testes Vitest (237), typecheck, lint, build webpack, E2E sem backend, validador e `git diff --check`; resultados e limites estão na task da issue #63.
+- **Estado:** plano `Em Execução`, ciclo `Em execução`; aguardando a publicação da PR e os checks remotos. O merge exige "aprovo o merge da PR #N".
 
 ## Pós-mortem
 

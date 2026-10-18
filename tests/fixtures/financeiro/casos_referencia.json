@@ -2580,6 +2580,104 @@
         "aportes_liquidos": 5000,
         "aportes_liquidos_sem_fechamento": 80000
       }
+    },
+    {
+      "id": "CR-M01",
+      "titulo": "Replay exato, câmbio separado e ajuste da origem",
+      "entrega": "006",
+      "regras": ["M1", "M2", "M3", "M4"],
+      "entrada": {
+        "ativos": [{"id": 1, "descricao": "Fundo Renda Variável", "classificacao": "Renda variável", "ativo": true}],
+        "eventos": [
+          {"id": 1, "ativo_id": 1, "data_evento": "2025-01-05", "ano": 2025, "mes": 1, "tipo_evento": "APORTE", "valor": 100.00, "origem": "manual"},
+          {"id": 2, "ativo_id": 1, "data_evento": "2025-01-15", "ano": 2025, "mes": 1, "tipo_evento": "CAMBIO", "valor": 19.99, "origem": "manual"},
+          {"id": 3, "ativo_id": 1, "data_evento": "2025-01-20", "ano": 2025, "mes": 1, "tipo_evento": "RENDIMENTO", "valor": 2.00, "origem": "manual", "observacao": "direcao=negativo"},
+          {"id": 4, "ativo_id": 1, "data_evento": "2025-01-31", "ano": 2025, "mes": 1, "tipo_evento": "CORRECAO_MARCACAO", "valor": 1.00, "origem": "calculado"}
+        ],
+        "posicoes": [{"ativo_id": 1, "ano": 2025, "mes": 1, "saldo_inicio": 0, "saldo_fim": 118.99}],
+        "consolidados": [{"ano": 2025, "mes": 1, "valor_total": 118.99, "status": "fechado", "fechado": true}]
+      },
+      "esperado": {
+        "ajuste_tipo": "marcacao",
+        "jan2025.X.saldo_fim": "11899",
+        "jan2025.patrimonio": "11899",
+        "jan2025.aportes": "10000",
+        "jan2025.rendimento": "-200",
+        "jan2025.cambio": "1999",
+        "jan2025.marcacao": "100",
+        "jan2025.retorno": "N/D"
+      }
+    },
+    {
+      "id": "CR-M02",
+      "titulo": "Pareamento do trânsito como transferência",
+      "entrega": "006",
+      "regras": ["M2", "M6", "M10"],
+      "entrada": {
+        "ativos": [{"id": 1, "descricao": "Fundo Conservador", "classificacao": "Pós-fixado", "ativo": true}],
+        "eventos": [
+          {"id": 1, "ativo_id": 1, "data_evento": "2025-01-05", "ano": 2025, "mes": 1, "tipo_evento": "APORTE", "valor": 100.00, "origem": "manual"},
+          {"id": 2, "ativo_id": 1, "data_evento": "2025-02-05", "ano": 2025, "mes": 2, "tipo_evento": "RESGATE", "valor": 30.00, "origem": "manual"},
+          {"id": 3, "ativo_id": null, "data_evento": "2025-02-06", "ano": 2025, "mes": 2, "tipo_evento": "TRANSFERENCIA_PENDENTE", "valor": 30.00, "origem": "manual"}
+        ],
+        "posicoes": [
+          {"ativo_id": 1, "ano": 2025, "mes": 1, "saldo_inicio": 0, "saldo_fim": 100.00},
+          {"ativo_id": 1, "ano": 2025, "mes": 2, "saldo_inicio": 100.00, "saldo_fim": 70.00}
+        ],
+        "consolidados": [
+          {"ano": 2025, "mes": 1, "valor_total": 100.00, "status": "fechado", "fechado": true},
+          {"ano": 2025, "mes": 2, "valor_total": 100.00, "status": "fechado", "fechado": true}
+        ]
+      },
+      "esperado": {
+        "jan2025.X.saldo_fim": "10000",
+        "fev2025.X.saldo_fim": "7000",
+        "fev2025.Em_trânsito.saldo_fim": "3000",
+        "fev2025.patrimonio": "10000",
+        "fev2025.resgates": "0",
+        "fev2025.retorno": "0",
+        "fev2025.acumulado": "0",
+        "operacao_fev": "transferir"
+      }
+    },
+    {
+      "id": "CR-M03",
+      "titulo": "Fallback M7 preserva transferência e torna retorno N/D",
+      "entrega": "006",
+      "regras": ["M3", "M6", "M7", "M10", "P15", "K1"],
+      "entrada": {
+        "ativos": [{"id": 1, "descricao": "Fundo de Longo Prazo", "classificacao": "Renda fixa", "ativo": true}],
+        "eventos": [
+          {"id": 1, "ativo_id": 1, "data_evento": "2025-01-05", "ano": 2025, "mes": 1, "tipo_evento": "APORTE", "valor": 100.00, "origem": "manual"},
+          {"id": 2, "ativo_id": 1, "data_evento": "2025-02-05", "ano": 2025, "mes": 2, "tipo_evento": "RESGATE", "valor": 30.00, "origem": "manual"},
+          {"id": 3, "ativo_id": null, "data_evento": "2025-02-06", "ano": 2025, "mes": 2, "tipo_evento": "TRANSFERENCIA_PENDENTE", "valor": 30.00, "origem": "manual"},
+          {"id": 4, "ativo_id": 1, "data_evento": "2025-02-28", "ano": 2025, "mes": 2, "tipo_evento": "RENDIMENTO", "valor": 20.00, "origem": "calculado"}
+        ],
+        "posicoes": [
+          {"ativo_id": 1, "ano": 2025, "mes": 1, "saldo_inicio": 0, "saldo_fim": 100.00},
+          {"ativo_id": 1, "ano": 2025, "mes": 2, "saldo_inicio": 90.00, "saldo_fim": 80.00},
+          {"ativo_id": 1, "ano": 2025, "mes": 3, "saldo_inicio": 80.00, "saldo_fim": 80.00}
+        ],
+        "consolidados": [
+          {"ano": 2025, "mes": 1, "valor_total": 100.00, "status": "fechado", "fechado": true},
+          {"ano": 2025, "mes": 2, "valor_total": 110.00, "status": "fechado", "fechado": true},
+          {"ano": 2025, "mes": 3, "valor_total": 110.00, "status": "fechado", "fechado": true}
+        ]
+      },
+      "esperado": {
+        "jan2025.X.saldo_fim": "10000",
+        "fev2025.X.saldo_fim": "8000",
+        "fev2025.Em_trânsito.saldo_fim": "3000",
+        "fev2025.patrimonio": "11000",
+        "fev2025.migracao": "1000",
+        "fev2025.retorno": "N/D",
+        "fev2025.acumulado": "N/D",
+        "mar2025.X.saldo_fim": "8000",
+        "mar2025.Em_trânsito.saldo_fim": "3000",
+        "mar2025.patrimonio": "11000",
+        "mar2025.retorno": "0",
+        "m7": "Fundo de Longo Prazo@2025-02"
+      }
     }
   ]
 }

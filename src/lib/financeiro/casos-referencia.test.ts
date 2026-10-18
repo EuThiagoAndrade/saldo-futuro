@@ -23,9 +23,10 @@ function textoDoValor(valor: unknown): string {
 
 function esperadosDaKb(markdown: string): Map<string, Esperado> {
   const casos = new Map<string, Esperado>();
-  const secoes = markdown.split(/^#### (?=CR-\d{2} )/m).slice(1);
+  const secoes = markdown.split(/^#### (?=CR-(?:M\d{2}|\d{2}) )/m).slice(1);
   for (const secao of secoes) {
-    const id = secao.slice(0, 5);
+    const id = /^(CR-(?:M\d{2}|\d{2}))/m.exec(secao)?.[1];
+    if (!id) throw new Error("identificador de caso de referência inválido");
     if (casos.has(id)) throw new Error(`${id} repetido na KB`);
     const inicio = secao.indexOf("- **Esperado:**");
     if (inicio < 0) throw new Error(`${id} sem bloco Esperado na KB`);
@@ -84,7 +85,7 @@ describe("casos de referência da KB-004", () => {
 
   it("todo caso tem entrega conhecida e ao menos um valor esperado", () => {
     for (const caso of casos) {
-      expect(["B", "C", "D", "004"]).toContain(caso.entrega);
+      expect(["B", "C", "D", "004", "006"]).toContain(caso.entrega);
       expect(Object.keys(caso.esperado).length).toBeGreaterThan(0);
     }
   });
