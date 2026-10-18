@@ -1,8 +1,8 @@
 # Plano de Implementação — Migração única dos dados e virada
 
 > **Ciclo:** `006`
-> **Status:** `Em Execução`
-> **Versão:** `v3`
+> **Status:** `Aprovado`
+> **Versão:** `v4`
 > **Data de criação:** 2026-10-17
 > **Última atualização:** 2026-10-18
 > **Tipo:** `feature`
@@ -10,10 +10,11 @@
 > **Nível:** `completo`
 > **Autorização inicial:** "confirmo o nível completo e autorizo a ideação do ciclo 006" em 2026-10-17
 > **Autorização do rascunho:** "autorizo o rascunho do plano do ciclo 006" em 2026-10-17
+> **Autorização da revisão v4:** "Decido pela alternativa A (migracao no trânsito, com migração SQL aditiva e exceção à K12) e pelas regras complementares 1 a 4 como propostas. Prepare a revisão v4 do plano do ciclo 006 com a issue D." em 2026-10-18
 > **Modo contínuo:** `—`
-> **Revisão formal:** `Concluída`
-> **Veredito da revisão:** `APTO PARA APROVAÇÃO`
-> **Aprovação humana pós-revisão:** `Aprovada em 2026-10-17`
+> **Revisão formal:** `Concluída` (v4, rodada 4); rodadas 1 a 3 concluídas sobre a `v3`
+> **Veredito da revisão:** `APTO COM RESSALVAS` (v4, rodada 4); `APTO PARA APROVAÇÃO` na rodada 3, sobre a `v3`
+> **Aprovação humana pós-revisão:** `Aprovada em 2026-10-18` (v4); `v3` aprovada em 2026-10-17
 > **handoff_schema_version:** `2`
 
 ## Problema e contexto
@@ -34,11 +35,12 @@ O resultado é aceito quando, para todo mês migrado, o saldo final de cada ativ
   - `eventos`: `ativo_id` anulável, `data_evento` diária, `valor` não negativo, com a direção (`negativo`) gravada como texto em `observacao`; `origem` em `manual`, `calculado` ou `migrado`;
   - tipos `APORTE`, `RESGATE`, `RENDIMENTO`, `CORRECAO_MARCACAO`, `CAMBIO`, `TRANSFERENCIA_PENDENTE`, `MIGRACAO_HISTORICA` e `ESTORNO` (por `evento_referencia_id`);
   - os ajustes de fechamento são eventos `origem='calculado'` no último dia do mês, com tipo derivado da classificação do ativo (contém "cripto" ou "vari" → correção de marcação; senão, rendimento);
-  - o trânsito é um evento `TRANSFERENCIA_PENDENTE` **sem ativo e sem contraperna**; seu saldo acumulado entra no `valor_total` do consolidado e não gera posição;
+  - o trânsito é um evento `TRANSFERENCIA_PENDENTE` **sem ativo e sem contraperna**; seu saldo acumulado entra no `valor_total` do consolidado e não gera posição. No fechamento da origem (`materializar_fechamento_event_sourcing`), a variação do trânsito não entra em `total_aportes`, `total_resgates` nem `total_rendimento`: a origem não registra de onde o dinheiro veio nem para onde foi. A importação da planilha (`_popular_eventos_transferencia`) gera o primeiro saldo diferente de zero como saldo inicial e, depois, só a variação entre meses, com o valor positivo e a direção em `observacao`;
   - dinheiro em `NUMERIC(15,2)`, que no SQLite é armazenado como REAL;
   - `posicoes_mensais` (saldo de início e fim por ativo e mês) e `consolidado_mensal` (com `status` e `fechado` redundantes);
   - meses que a própria origem importou de CSV têm eventos `MIGRACAO_HISTORICA` e totais nulos.
 - **Baseline ausente.** O SQLite real não está em `local/`. Volume, intervalo de meses e qualidade dos dados são desconhecidos; a primeira saída da issue A são as contagens agregadas, sem valores.
+- **Primeira simulação real (2026-10-18, execução pós-merge da issue C).** Depois da correção da issue #70 (PR #71), `simular` recusou com `M6_TRANSITO_SEM_PAR_UNICO`, quantidade 2: dois eventos de trânsito, um positivo e um negativo em meses consecutivos, sem ativo, sem referência e sem nenhum `RESGATE` ou `APORTE` nesses meses. O destino foi conferido vazio e `gravar` não foi executado. O responsável não sabe a origem nem o destino desse dinheiro. É o caso não coberto que motiva a `v4`.
 - Tooling: Node.js 24.15 com `node:sqlite` nativo (`DatabaseSync`) e `@supabase/supabase-js` já como dependência. Nenhuma dependência nova é necessária.
 
 ## Escopo
@@ -51,6 +53,7 @@ O resultado é aceito quando, para todo mês migrado, o saldo final de cada ativ
 - Gravação em produção pela sessão autenticada do responsável, pelas funções existentes, idempotente e retomável, com recusa se o destino não estiver vazio.
 - Conferência pós-gravação, que relê o destino e compara com a origem mês a mês.
 - Roteiro da virada (congelamento da origem, simulação, gravação, conferência e caminho de volta) e registro da data de virada.
+- **Desde a `v4`:** uma única migração SQL aditiva (issue D), que cria a função `lancar_migracao_transito`, o único meio de lançar um evento `migracao` no ativo "Em trânsito" (exceção à K12), e o uso dessa função pela simulação, pela gravação e pela conferência.
 
 ### Fora do escopo
 
@@ -61,7 +64,8 @@ O resultado é aceito quando, para todo mês migrado, o saldo final de cada ativ
 - Atributos descritivos do ativo da origem sem coluna no destino (classificação, instituição, liquidez etc.).
 - Mais de uma conta (decisão do responsável).
 - Desligar a infraestrutura da origem.
-- Mudança de schema: não há migração prevista (G4).
+- Outra mudança de schema além da migração da issue D (G4). `lancar_evento` não muda e continua recusando o trânsito.
+- Expor o lançamento de `migracao` no trânsito na interface da aplicação.
 
 ## Decisões e autoridades
 
@@ -76,6 +80,22 @@ As perguntas da ideação foram apresentadas com alternativas e exemplos fictíc
 | 6 — mês aberto | Virada logo depois de um fechamento: só meses fechados na origem migram |
 | 9 — divergência | Aceitar `migracao` depois de uma simulação sem gravação, cujo detalhe fica em `local/` para conferência do responsável |
 
+### Decisões do responsável (2026-10-18, revisão v4 de M6)
+
+A recusa da primeira simulação real (ver "Contexto e baseline") foi levada ao responsável com alternativas e exemplos fictícios. As funções atuais do destino só alteram o trânsito por `transferir` (`lancar_evento` recusa ativo de sistema, K12), e o fechamento só aceita uma variação do patrimônio explicada por componentes. Sem contrapartida, a única classificação que não é fluxo externo nem rendimento é `migracao`.
+
+| Questão | Alternativas apresentadas | Decisão |
+| :-- | :-- | :-- |
+| Representação da variação de trânsito sem par | **A:** evento `migracao` no próprio trânsito, por uma função nova, aditiva, exceção à K12. **B:** ativo sintético de contrapartida com `migracao` e transferência para o trânsito (inventa um ativo). Aporte ou resgate externo no trânsito ficou descartado por K12 e por classificar como fluxo um dinheiro de origem desconhecida | **A** |
+| 1 — Par real único no mesmo mês | Manter a transferência atual (sem fluxo externo e sem migração) | Manter |
+| 2 — Par ambíguo | Recusar, com código e contagem próprios | Recusar (`M6_TRANSITO_PAR_AMBIGUO`) |
+| 3 — Saldo acumulado do trânsito negativo no fim de um mês | Recusar com a contagem de meses, sem corrigir nem limitar | Recusar (`M6_TRANSITO_SALDO_NEGATIVO`) |
+| 4 — Consistência de M10 | `valor_total` = soma dos saldos finais + saldo acumulado do trânsito, sem mudança | Manter |
+
+Consequência aceita com a alternativa A: o mês com `migracao` no trânsito tem rentabilidade `N/D` (P15), e todo período que o inclua tem acumulado `N/D` (K1). A variação do patrimônio continua calculável.
+
+**Autorização registrada na mesma instrução:** depois da implementação aprovada e integrada, o agente executa **somente** `simular` sobre a cópia em `local/migracao-006/`, sem `gravar` e sem acesso ao Supabase. Ao responsável e nos artefatos, informa só códigos e contagens. Se houver outra recusa, para em "Parado". Se a simulação for aceita, para antes de `gravar` e apresenta a execução seguinte passo a passo, um passo por vez.
+
 ### Regras de mapeamento propostas (G1, decididas na aprovação do plano)
 
 Estas regras detalham a alternativa D. Os exemplos são fictícios, em centavos quando não indicado. "Aprovo o plano do ciclo 006" aprova estas regras como estão; uma regra contestada volta como achado de revisão. A issue A as transcreve para a KB-004 com casos de referência.
@@ -87,15 +107,23 @@ Estas regras detalham a alternativa D. Os exemplos são fictícios, em centavos 
 | M3 | Ajustes calculados da origem (`origem='calculado'`) | Não viram eventos. O destino recalcula o ajuste no fechamento a partir do saldo real (o `saldo_fim` da origem). A simulação confere que o ajuste do destino é igual à soma dos ajustes calculados da origem no ativo e mês; se não for, o ativo e mês caem em M7 | Saldo inicial 100.000, aporte 50.000, ajuste calculado da origem 1.000, `saldo_fim` 151.000 → destino: aporte 50.000 e ajuste `rendimento` 1.000 |
 | M4 | Tipos manuais | `APORTE` → `aporte`; `RESGATE` → `resgate`; `RENDIMENTO` → `rendimento`; `CORRECAO_MARCACAO` → `marcacao`; `CAMBIO` → `cambio`; `MIGRACAO_HISTORICA` → `migracao`. O câmbio passa a componente próprio (a origem o somava ao rendimento); a soma dos componentes não muda. Evento de valor zero (o `CHECK` da origem o admite) não tem efeito no saldo, é descartado e entra na contagem | Rendimento 800 e câmbio 200: origem mostra rendimento 1.000; destino mostra rendimento 800 e câmbio 200 |
 | M5 | `ESTORNO` | `estornar_evento` sobre o evento mapeado, na data do estorno da origem. Se o evento referenciado foi substituído por M7, o ativo e mês do estorno também caem em M7. **Recusa a simulação inteira** o `ESTORNO` cujo evento referenciado seja `TRANSFERENCIA_PENDENTE` ou tenha sido consumido por M6. Motivo: na origem, o saldo do trânsito soma só eventos de tipo literal `TRANSFERENCIA_PENDENTE` (`_saldo_transferencia_pendente`), e o `ESTORNO` exige `ativo_id`. Esse estorno altera um ativo e não o trânsito, efeito que nenhuma operação do destino reproduz: `corrigir_transferencia` reduziria também o trânsito. Por isso a migração não gera `corrigir_transferencia`; o caso vai a "Parado" com a contagem, para decisão do responsável com exemplos | Aporte 10.000 em 05/03 e estorno em 20/03 → aporte e estorno no destino, saldo líquido zero. Trânsito +30.000 e um `ESTORNO` que o referencia, lançado no ativo X → na origem o trânsito continua com 30.000 e X perde 30.000 → recusa |
-| M6 | Trânsito (`TRANSFERENCIA_PENDENTE` sem ativo) | Parear cada evento de trânsito positivo com um `RESGATE`, e cada negativo com um `APORTE`, do mesmo valor absoluto e do mesmo mês. O par precisa ser único nos dois sentidos: o evento de trânsito tem exatamente um candidato, e esse candidato só serve a ele. Cada evento é consumido uma única vez. O par vira uma `transferir` de ou para o ativo "Em trânsito", **na data mais tardia das duas**, porque `transferir` grava as duas pernas na mesma data. Transferência não é fluxo (P6), então a data dentro do mês não altera o fechamento nem o Dietz. Evento de trânsito sem par único, ou com par em outro mês, **recusa a simulação inteira**. O trânsito não tem fallback, porque não aceita `migracao` (K12) | Resgate de 30.000 de X em 05/03 e trânsito +30.000 em 06/03 → transferência X → trânsito de 30.000 em 06/03. Abril: trânsito −30.000 e aporte 30.000 no Y em 12/04 → transferência trânsito → Y em 12/04. Março e abril deixam de ter esse resgate e esse aporte como fluxo externo. Dois resgates de 30.000 no mesmo mês para um trânsito de 30.000 → recusa |
+| M6 | Trânsito (`TRANSFERENCIA_PENDENTE` sem ativo) — **revisada na `v4`** | Cada `TRANSFERENCIA_PENDENTE` é uma **variação do saldo acumulado** do ativo "Em trânsito": positiva aumenta, negativa reduz, com a direção lida por M2 (`observacao`), nunca pelo sinal da coluna `valor`. **Candidato a par** de um evento de trânsito positivo é um `RESGATE` não calculado, do mesmo valor absoluto e do mesmo mês; de um negativo, um `APORTE` nas mesmas condições. Cada evento de trânsito cai em exatamente um caso: **(a) par único** — exatamente um candidato, e esse candidato só serve a ele: o par vira uma `transferir` de ou para o trânsito **na data mais tardia das duas**, e os dois eventos são consumidos uma única vez. Transferência não é fluxo (P6), então a data dentro do mês não altera o fechamento nem o Dietz; **(b) sem candidato** — vira um evento `migracao` no trânsito, pela função `lancar_migracao_transito` (issue D), com o valor assinado da variação e a data do evento de origem. Nenhum aporte, resgate, ativo ou contrapartida é criado; o mês fica com rentabilidade `N/D` (P15) e os períodos que o incluem, `N/D` (K1); **(c) par ambíguo** — dois ou mais candidatos, ou um candidato que serve a mais de um evento de trânsito: **recusa a simulação inteira** (`M6_TRANSITO_PAR_AMBIGUO`, com a contagem de eventos de trânsito). **Saldo:** o saldo acumulado do trânsito no fim de cada mês do intervalo de M10 é a soma de todas as variações até o mês; se for negativo em algum mês, **recusa a simulação inteira** (`M6_TRANSITO_SALDO_NEGATIVO`, com a contagem de meses), sem corrigir nem limitar o saldo. Um saldo positivo no último mês fechado continua no trânsito como saldo de fechamento, sem destino inventado. Nos casos (a) e (b), o trânsito do destino termina cada mês com exatamente o saldo acumulado da origem, que é o termo do trânsito na consistência de M10. O trânsito não recebe M7 | Resgate de 30.000 de X em 05/03 e trânsito +30.000 em 06/03 → transferência X → trânsito de 30.000 em 06/03; março sem resgate externo e com retorno calculável. **Ex. A (sem par):** dez: trânsito +100.000, nenhum resgate → `migracao` +100.000 no trânsito; Vi 1.000.000 (X), Vf 1.100.000, migração +100.000, retorno de dez `N/D`; jan: trânsito −100.000, nenhum aporte → `migracao` −100.000; trânsito 0, Vf 1.000.000, retorno de jan `N/D`. **Ex. B:** jan com −40.000 → trânsito fecha jan com 60.000. **Ex. C:** sem saída até o último mês fechado → trânsito fecha com 100.000. **Ex. D:** dez: resgate de 100.000 de X e trânsito +100.000 → transferência; jan: trânsito −100.000 e aporte de 100.000 em Y → transferência; nenhum fluxo externo nem migração, retorno calculável. Dois resgates de 30.000 no mesmo mês para um trânsito de 30.000 → recusa (`M6_TRANSITO_PAR_AMBIGUO`). Trânsito −100.000 em dez sem saldo anterior → recusa (`M6_TRANSITO_SALDO_NEGATIVO`) |
 | M7 | Ativo e mês não reconciliável (alternativa D) | **Precedência:** as transferências de M6 são sempre preservadas, inteiras. Os demais eventos do ativo naquele mês (inclusive estornos) são substituídos por um único `migracao`, datado no último dia do mês, de valor `saldo_fim` da origem − saldo final do ativo no destino no mês anterior − soma das pernas de transferência do ativo no mês. Essa soma conta os eventos de tipo `transferencia`, que são as únicas pernas existentes, porque M5 nunca gera correção de transferência (estornos ligados a uma transferência). O ajuste do ativo fica zero. **Causas, e só estas:** (i) `saldo_inicio(m)` diferente de `saldo_fim(m−1)` na origem; (ii) ajuste divergente (M3); (iii) evento referenciado por estorno substituído (M5, em cascata); (iv) ativo com `saldo_fim` diferente de zero e sem histórico no destino no mês (só ajuste na origem); (v) replay cujo saldo calculado diverge por outro motivo. Se o valor calculado da `migracao` for zero, **recusa a simulação inteira**: um mês sem evento de migração teria rentabilidade calculada, e não `N/D` (P15), e nenhum evento de compensação é fabricado | Destino fechou fevereiro com 101.000 em X; a origem traz março com `saldo_inicio` 100.000, aporte 50.000 e `saldo_fim` 151.000 → `migracao` de 50.000 em 31/03 e rentabilidade de março `N/D`. Com transferência: X começa março com 100.000 no destino, transfere 30.000 ao trânsito e tem `saldo_fim` de 80.000 na origem → transferência preservada e `migracao` = 80.000 − 100.000 − (−30.000) = +10.000. Identidade: Vf − Vi = +10.000 = migração; as pernas somam zero e o trânsito fica com 30.000 |
 | M8 | Benchmarks e séries | Não migram. As séries públicas vêm da sincronização com o SGS já existente no destino | — |
 | M9 | Ativos desativados na origem | Migram como ativos comuns e são desativados no destino depois do último mês migrado, se o saldo for zero. Com saldo diferente de zero, ficam ativos e entram na contagem | Ativo com saldo final zero em junho e desativado na origem → desativado no destino ao fim da migração |
 | M10 | Cobertura e referências do histórico | **Mês fechado** na origem é o que tem `consolidado_mensal` com `status='fechado'` **e** `fechado=1`; só um dos dois recusa a simulação. **Intervalo migrado:** do primeiro mês com `posicoes_mensais` até o último mês fechado. Todo mês do intervalo precisa estar fechado (lacuna recusa), e o primeiro precisa ter `saldo_inicio` zero em todas as posições e ao menos um evento não calculado (K7). **Ativos esperados por mês:** todo ativo com posição no mês anterior ou evento no mês precisa de posição no mês; ausente, recusa (não é M7, porque M7 precisa desse `saldo_fim`). **Consistência:** `valor_total(m)` = soma dos `saldo_fim` + saldo acumulado do trânsito até `m`; divergente, recusa. **Antes do intervalo:** meses que só têm consolidado, sem posição (importação de CSV da própria origem), não migram: o destino não tem como distribuí-los por ativo sem inventar. A simulação informa quantos são. **Depois do intervalo:** qualquer evento em mês aberto recusa, porque viola o congelamento | Origem com consolidados de jan/2020 a dez/2022 sem posição e posições de jan/2023 em diante → o destino começa em jan/2023; a simulação relata "36 meses só com consolidado, não migrados". Fevereiro de 2024 sem consolidado entre janeiro e março fechados → recusa |
 
-**Precedência das recusas.** Recusam a simulação inteira, sem gravar nada, e levam a "Parado" com as contagens: conversão inválida (M2); estorno ligado ao trânsito ou a evento consumido por M6 (M5); trânsito sem par único (M6); `migracao` de valor zero (M7); qualquer falha de cobertura ou consistência (M10); nome com mais de 100 caracteres; indício de mais de um usuário. Só as causas (i) a (v) de M7 admitem o fallback por `migracao`. Nenhuma condição aparece nas duas listas.
+**Precedência das recusas.** Recusam a simulação inteira, sem gravar nada, e levam a "Parado" com as contagens: conversão inválida (M2); estorno ligado ao trânsito ou a evento consumido por M6 (M5); par de trânsito ambíguo e, depois, saldo acumulado do trânsito negativo (M6, desde a `v4`; substituem a recusa por "trânsito sem par único" da `v3`); `migracao` de valor zero (M7); qualquer falha de cobertura ou consistência (M10); nome com mais de 100 caracteres; indício de mais de um usuário. Só as causas (i) a (v) de M7 admitem o fallback por `migracao`. Nenhuma condição aparece nas duas listas.
 
-Regras que valem para todas: o `nome` do ativo é a `descricao` da origem; as datas são as da origem, salvo a transferência (M6) e a `migracao` (M7); meses migram em ordem, com os eventos do mês antes do fechamento (K7, P8 e K13 continuam valendo); a reconciliação final compara, por mês, o saldo final de cada ativo e o patrimônio (`vf` do destino com `valor_total` da origem, trânsito incluído) e a lista de meses marcados como `N/D` por migração.
+**Exceção à K12 (issue D, decidida na `v4`).** Uma migração nova cria `public.lancar_migracao_transito(p_data date, p_valor bigint) returns uuid`, `security definer`, com `search_path` vazio e execução só para `authenticated`, como as demais funções da carteira. Ela:
+
+- localiza o trânsito do próprio usuário (`auth.uid()` por `private.travar_carteira`) e não recebe id de ativo, então não alcança carteira alheia;
+- grava só o tipo `migracao`; recusa, nesta ordem, como `lancar_evento`: valor nulo ou zero (`recusado_sinal`), fora da faixa (`recusado_faixa`) e trânsito inexistente (`recusado_ativo_invalido`, antes do primeiro `criar_ativo`). Por essa ordem, a chamada com valor zero é uma sonda sem efeito, que responde `recusado_sinal` mesmo com o destino vazio;
+- aplica a mesma conferência de data de `lancar_evento` (`private.conferir_data_lancamento`): nada em mês fechado.
+
+`lancar_evento`, `transferir`, `fechar_mes` e as políticas não mudam: no fechamento, o saldo do trânsito continua sendo o calculado (agora incluindo a migração), sem saldo real nem ajuste (K12), e a identidade passa a contar a migração do trânsito no componente `migracao`. `estornar_evento` já aceita estornar esse evento, como qualquer evento comum; a migração nunca o gera. A K12 passa a dizer: o trânsito só recebe pernas de transferência e, exclusivamente por essa função, eventos `migracao`. A interface não oferece esse lançamento.
+
+Regras que valem para todas: o `nome` do ativo é a `descricao` da origem; as datas são as da origem, salvo a transferência (M6, caso a) e a `migracao` (M7); a `migracao` no trânsito (M6, caso b) usa a data da origem; meses migram em ordem, com os eventos do mês antes do fechamento (K7, P8 e K13 continuam valendo); a reconciliação final compara, por mês, o saldo final de cada ativo e o patrimônio (`vf` do destino com `valor_total` da origem, trânsito incluído) e a lista de meses marcados como `N/D` por migração.
 
 ### Mecanismo de execução
 
@@ -105,7 +133,7 @@ Regras que valem para todas: o `nome` do ativo é a `descricao` da origem; as da
 - **Plano de operações imutável.** A simulação gera uma lista ordenada de operações e grava em `local/` o plano junto com o hash SHA-256 do SQLite, o hash do próprio plano e o `user_id` de destino. `gravar` só executa um plano cujo hash confere com o SQLite e com o usuário da sessão.
 - **Único gravador.** O regime é um processo, numa máquina, com a aplicação sem uso durante a carga. O roteiro (issue C) exige isso, e o migrador o impõe localmente com um arquivo de trava criado de forma exclusiva (`wx`) em `local/`. Se a trava existir, o migrador não grava. Um gravador fora desse regime (outra máquina, a aplicação em uso) não é impedido pelo banco: as funções criam UUIDs novos e não recebem chave idempotente. Por isso a conferência abaixo roda antes de toda escrita e de todo fechamento, e qualquer diferença leva a "Parado". O caminho de volta é o do rollback.
 - **Diário por operação.** O diário em `local/` registra, para cada operação, o índice no plano, a intenção (antes da chamada) e o resultado com o UUID devolvido (depois).
-- **Resposta perdida: nunca repetir automaticamente.** Um erro de rede ou um tempo esgotado depois de enviar a chamada torna o resultado desconhecido. A chamada original pode ainda estar em execução: a ausência do efeito numa ou em várias releituras não prova que ela terminou sem efeito, e nenhuma espera arbitrária prova isso. As funções existentes não dão essa evidência, porque não têm chave idempotente nem consulta de término. Por isso o migrador grava a operação no diário como `desconhecida` e para ("Parado", `ambiguous_human_intervention_required`), sem nova escrita. Vale para `criar_ativo`, `lancar_evento`, `estornar_evento`, `transferir`, `fechar_mes` e `desativar_ativo`.
+- **Resposta perdida: nunca repetir automaticamente.** Um erro de rede ou um tempo esgotado depois de enviar a chamada torna o resultado desconhecido. A chamada original pode ainda estar em execução: a ausência do efeito numa ou em várias releituras não prova que ela terminou sem efeito, e nenhuma espera arbitrária prova isso. As funções existentes não dão essa evidência, porque não têm chave idempotente nem consulta de término. Por isso o migrador grava a operação no diário como `desconhecida` e para ("Parado", `ambiguous_human_intervention_required`), sem nova escrita. Vale para `criar_ativo`, `lancar_evento`, `lancar_migracao_transito` (desde a `v4`), `estornar_evento`, `transferir`, `fechar_mes` e `desativar_ativo`.
 - **Retomada de operação desconhecida.** Ao rodar `gravar` de novo, o migrador relê o destino:
   - se o efeito completo da operação aparece exatamente uma vez, a operação foi aplicada; o diário a registra e a carga segue;
   - se não aparece, ou aparece de forma parcial ou duplicada, o migrador continua parado e não reenvia nada.
@@ -113,12 +141,13 @@ Regras que valem para todas: o `nome` do ativo é a `descricao` da origem; as da
   A saída desse impasse é decisão humana registrada, apresentada pelo roteiro: esperar e reconferir, ou desfazer a carga pelo rollback (exclusão do usuário de destino). O plano não oferece reenvio automático nem recomenda reenvio manual como seguro. Se o responsável quiser uma garantia de idempotência real, isso exige mudar o banco: a situação passa a "Parado" por mudança de escopo, e essa mudança não entra neste ciclo.
 - **Comparação com o plano: efeitos completos.** O prefixo é comparado pelos efeitos de cada operação, não só pela presença de linhas:
   - ativos: nome, tipo de ajuste e estado ativo ou desativado, o que distingue o antes e o depois de `desativar_ativo`;
-  - eventos do mês aberto: multiconjunto de (ativo, data, tipo, valor, evento estornado), contra as primeiras `k` operações do mês. Eventos idênticos no mesmo dia são intercambiáveis, então o multiconjunto define o prefixo sem ambiguidade;
+  - eventos do mês aberto: multiconjunto de (ativo, data, tipo, valor, evento estornado), contra as primeiras `k` operações do mês, inclusive a `migracao` no trânsito (M6, caso b). Eventos idênticos no mesmo dia são intercambiáveis, então o multiconjunto define o prefixo sem ambiguidade;
   - transferências: cabeçalho com data e as duas pernas (origem, destino e valores opostos), comparadas como uma unidade;
   - meses fechados: consolidado e posições.
 - **Destino vazio e retomada.** A primeira execução exige destino vazio: só o ativo de trânsito, nenhum outro ativo, nenhum evento e nenhum mês fechado. A única exceção é a retomada comprovada: diário e plano com os mesmos hashes, mesmo usuário e destino igual a um prefixo exato do plano. Reexecutar depois de concluído reconhece o plano inteiro aplicado, registra `already_executed_and_reconciled` e não grava.
 - **Leitura completa (conferência e retomada).** Toda leitura do destino usa o contrato de `src/lib/leitura.ts` (`lerTudo`/`lerTabela`): páginas de 1.000 linhas (`max_rows`), contagem exata e recusa se a contagem mudar entre páginas. Falha de página ou mudança durante a leitura para a conferência. Igualdade de saldos num subconjunto nunca conta como reconciliação.
 - Se as funções existentes não sustentarem essas garantias nos testes da issue B, a situação passa a "Parado" por mudança de escopo, em vez de prometer idempotência que não existe.
+- **Função nova presente antes da primeira escrita (`v4`).** Se o plano de operações tiver `lancar_migracao_transito`, `gravar` confere, antes de qualquer escrita, que a função existe no destino: chama-a com valor zero e só segue se a resposta for a recusa `recusado_sinal`, que não grava nada. Qualquer outra resposta (função ausente, sem permissão, erro de rede) para sem escrita, com a orientação de fazer o `db push` da issue D. Assim, a ausência da migração no banco não deixa uma carga parcial.
 
 ### Pontos de aprovação
 
@@ -132,13 +161,25 @@ Regras que valem para todas: o `nome` do ativo é a `descricao` da origem; as da
 | Ação humana externa — "concluí a ação externa da issue #N" | Issues A e B integradas; roteiro da issue C integrado | O responsável congela a origem, simula, confere o relatório local, grava e roda a conferência, seguindo o roteiro | Qualquer ação do agente contra produção ou sobre o SQLite real | Resumo de contagens e diferenças informado pelo responsável, sem valores |
 | Verificar produção — "autorizo a verificação em produção do ciclo 006" | Ação externa concluída com conferência sem diferença | Conferir, sem registrar dados, que a aplicação abre com os meses fechados, sem erro, e registrar a data de virada | Leitura ou registro de valores, nomes de ativos ou prints com dados reais | Checklist da issue C |
 
+**Pontos acrescentados pela `v4`.** A aprovação da `v3` continua valendo para as entregas A, B e C, já integradas, e não cobre a `v4`.
+
+| Ponto | Precondição | Cobre | Não cobre | Conferir |
+| :-- | :-- | :-- | :-- | :-- |
+| Aprovar a `v4` — "aprovo o plano do ciclo 006" | Veredito apto na revisão da `v4`, posterior à última correção; manifestação humana posterior ao veredito | M6 revisado; a exceção à K12 e o contrato de `lancar_migracao_transito`; a migração SQL da issue D; preparar e publicar a PR documental da `v4` (plano, task da issue #65 e `cycles.md`); preparar e apresentar o payload da issue D | O merge da PR documental; a criação da issue D, que exige a confirmação do payload; implementação, merges, `db push`, `gravar` ou qualquer outra regra financeira | Veredito, M6, exceção à K12, item D e sequência |
+| Confirmar o payload da issue D (`criar_issues`) | `v4` aprovada e PR documental integrada | Criar a issue D exatamente como apresentada | Alterar escopo ou payload | Título, corpo e barreiras |
+| Autorizar implementação — "autorizo a implementação da issue #N" (D) | Issue D criada; `v4` integrada | Branch, task, migração SQL, código, testes, KB-004, KB-002 e abertura da PR | Merge, `db push` ou execução contra produção | Payload e escopo |
+| Simulação local pelo agente (autorizada em 2026-10-18) | PR da issue D integrada | Executar só `simular` sobre a cópia em `local/migracao-006/` e relatar só códigos e contagens | `gravar`, `conferir`, Supabase, leitura ou reprodução de valores, nomes ou identificadores | Códigos e contagens do resumo |
+| Ação humana externa da issue D — "concluí a ação externa da issue #N" (D) | PR da issue D integrada | O responsável faz o `db push` da migração da issue D a partir da `main` atualizada (KB-002, S12) e confere `migration list` | Qualquer escrita de dados da carteira | `migration list` com local e remoto alinhados, descrito em texto |
+
+A ação externa da issue C (#65) continua com o roteiro da KB-002 e só prossegue para `gravar` depois da ação externa da issue D e de uma simulação aceita.
+
 Toda cadeia para em "Parado", com pergunta e alternativas, se:
 
 - faltar capacidade, evidência ou autorização;
 - a simulação recusar por qualquer condição da precedência acima, ou revelar um caso não coberto por M1 a M10;
 - o destino não estiver vazio fora de uma retomada comprovada;
 - a trava de gravador único existir, ou a comparação com o plano divergir;
-- surgir necessidade de dependência nova ou de mudança de schema;
+- surgir necessidade de dependência nova ou de mudança de schema além da migração da issue D;
 - a conferência mostrar qualquer diferença.
 
 O modo contínuo não se aplica ao ciclo completo.
@@ -149,10 +190,10 @@ O modo contínuo não se aplica ao ciclo completo.
 
 | Barreira | Aplica-se? | Como o ciclo a atende ou justificativa |
 | :-- | :-- | :-- |
-| G1 — exatidão financeira | Sim | Regras M1 a M10 decididas na aprovação e transcritas na KB-004 com casos de referência fictícios (`CR-M01` em diante) no JSON de casos e conferência independente. A simulação reutiliza `src/lib/financeiro` (centavos inteiros, mesma aritmética do fechamento) e o destino reconfere a identidade em cada `fechar_mes`. Aceite: diferença zero por ativo e mês e no patrimônio. Nenhuma interpretação nova é escolhida pelo agente |
-| G2 — isolamento por RLS | Sim | Só as funções autenticadas existentes, sem `service_role`. Testes no Supabase local com usuários fictícios A e B: a gravação de A não toca B; a recusa com destino não vazio; a trava de gravador único; a retomada. `supabase test db` continua verde |
-| G3 — privacidade de dados | Sim, crítica | SQLite, sessão, diário e relatório detalhado só em `local/`. Fixtures fictícias geradas em memória. Evidências em task, PR e issue: só contagens (ativos, eventos por tipo, meses, ativos e meses em M7, desativados) e diferenças. O agente não abre o SQLite real nem a saída detalhada, salvo autorização explícita, e mesmo então não reproduz valores. Nenhum ambiente local de teste recebe dados reais: a simulação é em memória |
-| G4 — migrações só acrescentam | Não há migração prevista | As funções existentes bastam (`lancar_evento` já aceita `migracao`). Se faltar algo, parar e revisar o plano |
+| G1 — exatidão financeira | Sim | Regras M1 a M10 decididas na aprovação e transcritas na KB-004 com casos de referência fictícios (`CR-M01` em diante) no JSON de casos e conferência independente. A simulação reutiliza `src/lib/financeiro` (centavos inteiros, mesma aritmética do fechamento) e o destino reconfere a identidade em cada `fechar_mes`. Aceite: diferença zero por ativo e mês e no patrimônio. Nenhuma interpretação nova é escolhida pelo agente. **`v4`:** M6 revisado e a exceção à K12 decididos pelo responsável em 2026-10-18; a issue D transcreve ambos para a KB-004 com os casos `CR-M04` a `CR-M07` (exemplos A a D), conferidos de forma independente, com saldo do trânsito por mês, componente `migracao`, identidade, retorno `N/D` e acumulado |
+| G2 — isolamento por RLS | Sim | Só as funções autenticadas, sem `service_role`. Testes no Supabase local com usuários fictícios A e B: a gravação de A não toca B; a recusa com destino não vazio; a trava de gravador único; a retomada. `supabase test db` continua verde. **`v4`:** `lancar_migracao_transito` é `security definer`, filtra por `auth.uid()`, não recebe id de ativo e é executável só por `authenticated`; teste de banco prova que A só altera o próprio trânsito, que `anon` não executa a função e que `lancar_evento` continua recusando o trânsito |
+| G3 — privacidade de dados | Sim, crítica | SQLite, sessão, diário e relatório detalhado só em `local/`. Fixtures fictícias geradas em memória. Evidências em task, PR e issue: só contagens (ativos, eventos por tipo, meses, ativos e meses em M7, desativados) e diferenças. O agente não abre o SQLite real nem a saída detalhada, salvo autorização explícita, e mesmo então não reproduz valores. Nenhum ambiente local de teste recebe dados reais: a simulação é em memória. **`v4`:** a autorização de 2026-10-18 permite ao agente rodar só `simular` sobre a cópia em `local/`, relatando só códigos e contagens |
+| G4 — migrações só acrescentam | Sim, desde a `v4` (issue D) | Uma migração nova, `supabase/migrations/AAAAMMDDHHMMSS_migracao_transito.sql`, só cria a função e suas permissões; nenhuma migração existente é editada. Até a `v3`, não havia migração prevista. Outra necessidade de schema leva a "Parado" |
 
 ## Estratégia de testes
 
@@ -162,6 +203,16 @@ O modo contínuo não se aplica ao ciclo completo.
   - sinal por direção (M2) e mapeamento de tipos, inclusive valor zero (M4);
   - estorno simples, estorno em cascata para M7, e recusa de estorno ligado ao trânsito ou a evento consumido por M6 (M5);
   - pareamento M6: par único, datas diferentes no mesmo mês, par ambíguo, par em outro mês e prova de consumo único;
+  - M6 revisado (`v4`), com saldo do trânsito por mês, componentes, identidade (Vf − Vi = componentes), retorno do mês e acumulado, e a consistência de M10 (`valor_total` = saldos finais + trânsito acumulado):
+    - exemplo A: entrada e saída sem contrapartida em meses seguidos → aceito; trânsito 1.000 e depois 0; `migracao` +1.000 e −1.000 no trânsito; nenhum aporte, resgate ou ativo criado; retorno `N/D` nos dois meses; sem recusa de M6;
+    - exemplo B: saída parcial → trânsito 600 depois do segundo mês;
+    - exemplo C: trânsito aberto até o último mês fechado → saldo mantido no último fechamento, sem destino inventado;
+    - exemplo D: resgate real com trânsito positivo e aporte real com trânsito negativo no mesmo mês → duas transferências, sem migração, sem fluxo externo e sem contagem dupla; retorno calculável;
+    - par em outro mês → o trânsito vira `migracao` e o resgate continua fluxo externo do seu mês, sem dupla contagem no patrimônio;
+    - par ambíguo nos dois sentidos → `M6_TRANSITO_PAR_AMBIGUO` com a contagem;
+    - saldo negativo ao fim de um mês → `M6_TRANSITO_SALDO_NEGATIVO` com a contagem de meses;
+    - a direção vem de `observacao`, com `valor` sempre positivo na origem;
+    - ordem das operações do mês: `migracao` do trânsito antes do fechamento, com a data da origem;
   - M7 com transferência preservada, M7 com valor zero (recusa) e M7 no primeiro mês;
   - M9;
   - M10: mês só com consolidado antes do intervalo, lacuna entre meses fechados, `status` e `fechado` contraditórios, posição ausente com histórico, `valor_total` inconsistente e evento em mês aberto;
@@ -178,7 +229,9 @@ O modo contínuo não se aplica ao ciclo completo.
   - estado divergente (evento a mais no destino), que para sem escrita;
   - reexecução depois de concluído, sem gravar;
   - carteira fictícia com mais de 1.000 eventos, com conferência completa, falha de página e mudança entre leituras;
-  - isolamento A/B.
+  - isolamento A/B;
+  - **`v4` (issue D):** carteira fictícia com trânsito sem par (exemplos A e C) e com par real (exemplo D) migrada por `gravar` e seguida de `conferir` sem diferença; sonda de `lancar_migracao_transito` que para sem escrita quando a função falta; resposta perdida depois do commit de `lancar_migracao_transito`, reconhecida na retomada sem duplicar.
+- **Banco (`supabase test db`, issue D):** `lancar_migracao_transito` grava `migracao` no trânsito do próprio usuário; recusa valor zero, fora da faixa, mês fechado e trânsito inexistente; `anon` não a executa; o usuário B não altera o trânsito de A; `lancar_evento` continua recusando o trânsito; `fechar_mes` fecha o mês com a migração no componente `migracao`, sem saldo real nem ajuste no trânsito.
 - **Propriedade:** para a carteira fictícia, `simular` e `gravar` + `conferir` produzem os mesmos consolidados.
 - Gates mínimos e da aplicação de `_project/README.md`, inclusive `npx supabase test db`.
 
@@ -252,6 +305,30 @@ A KB-003 e a KB-004 **não** são alteradas nesta PR.
    - a data de virada e a retirada da pendência de migração na KB-003;
    - a correção do texto da KB-004 que atribui a migração ao ciclo `005`.
 
+### Item 4 — D: Trânsito sem contrapartida na migração (`v4`)
+
+**Contexto:** a primeira simulação real recusou por M6 com eventos de trânsito sem `RESGATE` ou `APORTE` correspondente, e o responsável não sabe a origem nem o destino desse dinheiro. A `v4` decide representar a variação como `migracao` no trânsito, o que o banco atual não permite (K12).
+
+**Ação técnica:**
+
+- migração `supabase/migrations/AAAAMMDDHHMMSS_migracao_transito.sql`, com `public.lancar_migracao_transito` e suas permissões, conforme a exceção à K12 acima, e teste de banco;
+- `src/lib/migracao/simular.ts`: M6 revisado, com os casos (a), (b) e (c), a recusa de saldo negativo e os códigos `M6_TRANSITO_PAR_AMBIGUO` e `M6_TRANSITO_SALDO_NEGATIVO`, que substituem `M6_TRANSITO_SEM_PAR_UNICO`;
+- `src/lib/migracao/tipos.ts`, `gravar.ts` e a conferência: a operação `lancar_migracao_transito`, a sonda antes da primeira escrita, a resposta perdida e a comparação por efeitos;
+- KB-004: M6 revisado, a exceção na seção 4.4 e na decisão K12, os casos `CR-M04` a `CR-M07` (exemplos A a D) e a paridade com `tests/fixtures/financeiro/casos_referencia.json`;
+- KB-002: no roteiro da migração, o `db push` da issue D antes de `gravar`, e os novos códigos de recusa.
+
+O formato do plano de operações muda. Nenhum plano real foi gravado, então nada precisa ser convertido; o hash do plano já impede usar um plano antigo.
+
+**Critérios de aceite:**
+
+- [ ] Exemplos A a D e as duas recusas novas com teste de unidade, conferindo saldo do trânsito por mês, componentes, identidade, retorno, acumulado e M10.
+- [ ] `CR-M04` a `CR-M07` na KB-004 e no JSON, com conferência independente registrada na task.
+- [ ] Teste de banco da função nova verde, com isolamento A/B; `lancar_evento` inalterado.
+- [ ] Integração `gravar` + `conferir` sem diferença na carteira fictícia com trânsito sem par e com par real.
+- [ ] Gates mínimos e da aplicação de `_project/README.md`, inclusive `npx supabase test db`.
+
+**Depois do merge, fora do aceite da PR:** a simulação local pelo agente, só com códigos e contagens, e o `db push` do responsável (ação externa da issue D). `gravar` continua pertencendo à ação externa da issue C.
+
 ## Arquivos afetados
 
 - `src/lib/migracao/` (novo) e seus testes.
@@ -259,6 +336,7 @@ A KB-003 e a KB-004 **não** são alteradas nesta PR.
 - `tests/fixtures/financeiro/casos_referencia.json` e testes de paridade.
 - Testes de integração com Supabase local (local escolhido na issue B, seguindo os existentes).
 - KB-004 (issue A); KB-002 (issue C); KB-003 e o ajuste de texto da KB-004 (encerramento).
+- Desde a `v4` (issue D): `supabase/migrations/AAAAMMDDHHMMSS_migracao_transito.sql`, um teste novo em `supabase/tests/database/`, `src/lib/migracao/` (`simular.ts`, `tipos.ts`, `gravar.ts` e testes), KB-004 (M6, seção 4.4, K12 e `CR-M04` a `CR-M07`), o JSON de casos e KB-002 (roteiro).
 - `_project/cycles.md`, ideação, plano e tasks do ciclo.
 
 ## Decomposição em issues e PRs
@@ -268,6 +346,7 @@ A KB-003 e a KB-004 **não** são alteradas nesta PR.
 | A | `[FEATURE] Simular a migração da origem sem gravar` | G1, G3 | Plano integrado |
 | B | `[FEATURE] Gravar a migração pela sessão do responsável, com retomada` | G1, G2, G3 | A |
 | C | `[CHORE] Roteiro da virada` | G3 | B. A ação externa e a verificação acontecem depois do merge |
+| D (`v4`) | `[FEATURE] Migrar o trânsito sem contrapartida como migração no trânsito` | G1, G2, G3, G4 | `v4` aprovada e integrada; A, B e C integradas. O `db push` e a simulação acontecem depois do merge; `gravar` continua na ação externa de C |
 
 Uma PR por issue, cada uma com aprovação própria do merge. O encerramento vai numa PR própria (`chore/cycle-006-closure`), sem issue, autorizado pela aprovação do plano, com merge aprovado à parte. Ela só é aberta depois da verificação em produção e leva o relato da execução, a data de virada e a atualização da KB-003.
 
@@ -276,6 +355,7 @@ Uma PR por issue, cada uma com aprovação própria do merge. O encerramento vai
 - O responsável coloca a cópia do SQLite em `local/` antes da primeira `simular` real, já na execução pós-merge da issue C. As issues A e B usam só dados fictícios.
 - A primeira simulação real pode recusar por uma condição da precedência ou revelar casos fora de M1 a M10. Nesse caso, "Parado" e decisão com exemplos antes de gravar.
 - Sessão do responsável válida durante `gravar`: o migrador usa a renovação de sessão; se ela expirar, a retomada cobre.
+- **`v4`:** a ação externa da issue C fica suspensa antes de `gravar` até a issue D ser integrada, o `db push` da issue D ser feito e uma nova simulação ser aceita. Depois de M6, a simulação ainda pode recusar por M7 ou M10, que vêm depois na precedência; nesse caso, "Parado" com códigos e contagens.
 
 ## Riscos, suposições e rollback
 
@@ -286,6 +366,10 @@ Uma PR por issue, cada uma com aprovação própria do merge. O encerramento vai
 - **Histórico anterior às posições (M10):** meses só com consolidado não migram; a cópia do SQLite em `local/` os preserva.
 - **Rentabilidade histórica diferente da origem:** esperada pelo Dietz (P11), pelo câmbio separado (M4), pelas transferências sem fluxo (M6) e pelos meses `N/D` (P15, O12). O aceite é sobre saldos e patrimônio, não sobre a rentabilidade da origem.
 - **Suposição:** a origem é de um único usuário, o responsável. Se a simulação indicar outra coisa, "Parado".
+- **Rentabilidade `N/D` pelo trânsito (`v4`):** cada mês com `migracao` no trânsito fica `N/D`, e os períodos que o incluem também (K1). É a consequência aceita de não saber se o dinheiro era novo ou veio de outro ativo; a variação do patrimônio continua calculável. Um par real único (caso a) evita esse efeito.
+- **Par por coincidência (`v4`):** um `RESGATE` ou `APORTE` sem relação com o trânsito, mas com o mesmo valor e no mesmo mês, é pareado como transferência. Os saldos e o patrimônio não mudam; só a classificação do fluxo naquele mês. É o mesmo critério aprovado na `v3`.
+- **Função nova ausente em produção (`v4`):** a sonda antes da primeira escrita impede a carga parcial; o roteiro manda fazer o `db push` antes de `gravar`.
+- **Exceção à K12 alcançável pela API (`v4`):** qualquer usuário autenticado pode chamar a função sobre o próprio trânsito. O efeito fica restrito à própria carteira (G2), a interface não a oferece e o mês fica `N/D`, sem esconder a variação.
 
 ## Sequência recomendada
 
@@ -294,6 +378,14 @@ Uma PR por issue, cada uma com aprovação própria do merge. O encerramento vai
 3. Ação externa (issue C): congelar, simular, conferir o relatório, gravar e conferir → "concluí a ação externa da issue #N".
 4. "autorizo a verificação em produção do ciclo 006".
 5. PR de encerramento, com relato, data de virada e KB-003 → "aprovo o merge da PR #N".
+
+**Sequência da `v4`**, inserida entre os passos 2 e 3, porque a ação externa da issue C parou na simulação:
+
+1. Revisão formal da `v4` (rodada 4) → "aprovo o plano do ciclo 006" → PR documental da `v4` → "aprovo o merge da PR #N" → payload da issue D → confirmação → issue D.
+2. "autorizo a implementação da issue #N" (D) → PR → "aprovo o merge da PR #N".
+3. Simulação local pelo agente, só com códigos e contagens. Outra recusa → "Parado". Aceita → para antes de `gravar`.
+4. Ação externa da issue D: `db push` pelo responsável → "concluí a ação externa da issue #N" (D).
+5. Retomada da ação externa da issue C a partir de `gravar`, um passo por vez, conforme o roteiro.
 
 ## Referências
 
@@ -306,9 +398,9 @@ Uma PR por issue, cada uma com aprovação própria do merge. O encerramento vai
 
 | Campo | Valor |
 | :-- | :-- |
-| Issue(s) | A [#63](https://github.com/EuThiagoAndrade/saldo-futuro/issues/63), B [#64](https://github.com/EuThiagoAndrade/saldo-futuro/issues/64) e C [#65](https://github.com/EuThiagoAndrade/saldo-futuro/issues/65) |
-| PR(s) | [#62](https://github.com/EuThiagoAndrade/saldo-futuro/pull/62) (plano, integrada); [#66](https://github.com/EuThiagoAndrade/saldo-futuro/pull/66) (issue A, integrada); [#68](https://github.com/EuThiagoAndrade/saldo-futuro/pull/68) (issue B, integrada); [#69](https://github.com/EuThiagoAndrade/saldo-futuro/pull/69) (issue C, aberta) |
-| Branch(es) | `chore/cycle-006-ideation` (rascunho local); `chore/cycle-006-plan` depois da aprovação |
+| Issue(s) | A [#63](https://github.com/EuThiagoAndrade/saldo-futuro/issues/63), B [#64](https://github.com/EuThiagoAndrade/saldo-futuro/issues/64) e C [#65](https://github.com/EuThiagoAndrade/saldo-futuro/issues/65), fechadas pelos merges (a ação externa de C segue pendente); correção pela trilha curta [#70](https://github.com/EuThiagoAndrade/saldo-futuro/issues/70); D a criar depois da aprovação da `v4` |
+| PR(s) | [#62](https://github.com/EuThiagoAndrade/saldo-futuro/pull/62) (plano, integrada); [#66](https://github.com/EuThiagoAndrade/saldo-futuro/pull/66) (issue A, integrada); [#68](https://github.com/EuThiagoAndrade/saldo-futuro/pull/68) (issue B, integrada); [#69](https://github.com/EuThiagoAndrade/saldo-futuro/pull/69) (issue C, integrada); [#71](https://github.com/EuThiagoAndrade/saldo-futuro/pull/71) (issue #70, integrada) |
+| Branch(es) | `chore/cycle-006-ideation` (rascunho local da `v1` a `v3`); `chore/cycle-006-plan` (PR #62); `chore/cycle-006-plan-v4` (rascunho local da `v4`, sem commit). O nome da branch de publicação da `v4` é conferido na publicação: `chore/cycle-006-plan` ainda existe no remoto, integrada pela PR #62 |
 | Destino após conclusão | `_project/executed/006_migracao_dados_virada/006_plan.md` |
 
 ## Próximo passo
@@ -317,19 +409,20 @@ Uma PR por issue, cada uma com aprovação própria do merge. O encerramento vai
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 006 (completo)
 Quem: Responsável
-Conferir: [PR #69](https://github.com/EuThiagoAndrade/saldo-futuro/pull/69), checks remotos e o roteiro da KB-002
-Diga: "aprovo o merge da PR #69"
+Conferir: [PR #72](https://github.com/EuThiagoAndrade/saldo-futuro/pull/72), checks remotos e o diff limitado ao plano, à task da issue #65 e a `cycles.md`
+Diga: "aprovo o merge da PR #72"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 006 + implementar_issue + 65/C + base 114da00e250ae73ef79ad8a9f46e4e73b4c8af99`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 006 + aprovar_plano + 006_plan + v4 (base b580334)`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: plano `Em Execução`; issues #63 e #64 integradas (PRs #66 e #68); issue #65 `OPEN` sem branch / branch `chore/issue-65`, task `Aguardando integração`, PR #69 `OPEN` contra `main`
+- `state_before`: plano `v4` `Em Revisão`, revisão `Concluída`, veredito `APTO COM RESSALVAS` (rodada 4), aprovação `Pendente (v4)`; rascunho local sem commit
+- `state_after`: plano `v4` `Aprovado` (`Aprovada em 2026-10-18`); PR documental da `v4` aberta contra `main`; payload da issue D apresentado, sem issue criada
 - `result`: `executed`
-- `evidence`: autorização do responsável para a issue #65 em 2026-10-18; validador verde; PR #69 aberta via `gh` com `Closes #65`
-- `blockers`: checks remotos do HEAD atualizado e "aprovo o merge da PR #69" depois de todos verdes; depois, a ação externa
+- `evidence`: "aprovo o plano do ciclo 006" em 2026-10-18, posterior ao veredito da rodada 4; SHA-256 do corpo conferido (ver "Aprovação da `v4` e publicação documental"); validador e `git diff --check` verdes
+- `blockers`: checks remotos e "aprovo o merge da PR #N"; depois, a confirmação do payload da issue D
 
 ## Revisão crítica
 
@@ -517,6 +610,63 @@ Nenhum achado foi contestado. As regras financeiras alteradas (M5 e M7) seguem c
 - `evidence`: solicitação humana desta revisão; resposta do autor à rodada 2; conferência de R2-1/R2-2 e das regras, critérios, testes e funções referenciados acima; 39/39 testes de governança; validador sem erros/avisos; corpo da v3 e histórico de revisão preservados.
 - `blockers`: nenhum achado de revisão em aberto. Aguarda manifestação humana posterior ao veredito, "aprovo o plano do ciclo 006", antes da promoção do plano e da preparação/publicação documental.
 
+### Abertura da `v4` (autor)
+
+- **Autor:** Claude Code (Claude Opus 5.5).
+- **Data e autorização:** 2026-10-18. A instrução do responsável está no cabeçalho (`Autorização da revisão v4`). Ela decide a alternativa A e as regras 1 a 4 e pede esta revisão; não aprova a `v4`.
+- **Motivo:** caso não coberto revelado pela primeira simulação real (ver "Contexto e baseline"), condição de parada prevista neste plano. A `v3` foi aprovada e entregue nas issues A, B e C; a `v4` não reabre essas entregas.
+- **Base:** `main` em `b580334`, com o plano `v3` integrado. O diff da `v4` contra essa base é o objeto da rodada 4.
+- **O que muda:** cabeçalho; contexto (semântica do trânsito na origem e resultado da simulação, só com contagem); escopo (uma migração aditiva); "Decisões do responsável (revisão v4 de M6)"; M6, precedência das recusas e a exceção à K12; mecanismo (operação nova, sonda antes da primeira escrita); pontos de aprovação da `v4`; G1 a G4; testes; item 4 (D); arquivos; decomposição; dependências; riscos; sequência; rastreabilidade; próximo passo e handoff.
+- **O que não muda:** M1 a M5 e M7 a M10, o mecanismo de gravação aprovado e as entregas integradas.
+- **Teto de rodadas:** a revisão da `v4` é a rodada 4; o teto de `_project/README.md` é 5. Se a rodada 4 não for apta e a 5 também não, o ciclo vai a "Parado".
+- **Validação do rascunho:** `node --test scripts/validate-governance.test.mjs` (39/39, com `TEMP`/`TMP` em `local/`); `node scripts/validate-governance.mjs` (0 erros, 0 avisos, 4 verificações manuais); `git diff --check` limpo. Nenhum código, migração ou dado real foi alterado ou lido para esta versão.
+
+### Rodada 4
+
+- **Autor:** Claude Code (Claude Opus 5.5), conforme "Abertura da `v4` (autor)".
+- **Revisor:** Codex (GPT-6).
+- **Data e autorização:** 2026-10-18; solicitação humana "revise o plano do ciclo 006". Autoriza a revisão formal da `v4` e o registro local do parecer.
+- **Base e reconciliação:** branch `chore/cycle-006-plan-v4`, HEAD `b5803344b6ff04b41ce1527794762d1f6e0b6bf8`, igual à `main` remota observada. Plano local `v4` em `Em Revisão`, revisão/veredito/aprovação pendentes para esta versão; situação `Aguardando revisão (rodada 4)`. Ciclo `006` em `Em execução`, próximo ciclo `007`, task #65 `Bloqueada`. Não havia rodada 4 nem resultado com esta chave lógica. O GitHub confirmou os merges das PRs #66, #68, #69 e #71 e a issue #65 fechada; não havia PR aberta da `v4` nem issue com o título proposto para D. A ausência de gravação real é relato registrado pelo autor, não uma nova conferência do destino nesta revisão.
+- **Autoridades e template no ponto de uso:** `.agent/ai_behavior.md`, `_project/README.md`, `_project/cycles.md`, `.agent/workflows/revisar_plano.md`, `.agent/templates/plano_implementacao.md`, checklist `.agent/skills/governance-check/governance-check.md`, ADR-002, ADR-003 e KB-001 a KB-004. A autorização histórica e a decisão financeira de 2026-10-18 foram conferidas como registros do plano; as mensagens originais não foram novamente fornecidas nesta conversa.
+- **Objeto:** o escopo acrescentado pela `v4`, sua compatibilidade com as entregas A/B/C integradas e a preservação das correções das rodadas anteriores. Esta rodada não reabre a aprovação da `v3` nem executa a simulação real pré-autorizada para depois do merge de D.
+
+#### Ressalvas
+
+1. **R4-1 — Ressalva: explicitar a atualização do teste de permissões existente na issue D.** `supabase/tests/database/03_funcoes.test.sql` contém listas fechadas de assinaturas executáveis por `authenticated`, além da conferência de `security definer`. A assinatura `lancar_migracao_transito(date,bigint)` ainda não está nelas; conceder a permissão prevista na `v4` fará a asserção de funções permitidas falhar, mesmo que o teste novo da issue D passe. O item D e os arquivos afetados destacam um teste novo, sem nomear essa adaptação. **Encaminhamento:** incluir no payload/execução de D a nova assinatura nas listas aplicáveis e na conferência de `security definer`, mantendo a detecção de função fora da lista e as recusas para `PUBLIC`/`anon`. É manutenção necessária do teste G2 dentro do escopo já autorizado à futura issue, sem ampliar permissões genéricas. Não bloqueia a aprovação do plano: o gate obrigatório `supabase test db` já impede integrar D sem resolver essa incompatibilidade.
+
+2. **R4-2 — Ressalva: o hash do conteúdo não invalida por si só o formato anterior do plano de operações.** O item D afirma que "o hash do plano já impede usar um plano antigo". Em `src/lib/migracao/tipos.ts`, o formato atual é `versao: 1`; `hashDoPlano` em `gravar.ts` recalcula o hash dos campos do próprio artefato, e o preflight aceita a versão 1 com esse hash válido. Um plano antigo intacto continua passando nessa conferência; mudar a lista de operações gerada por uma simulação nova não altera o hash já salvo no antigo. **Encaminhamento:** explicitar na issue D a versão aceita do formato após a mudança e a recusa de versões anteriores antes de qualquer escrita, com teste; manter a regeneração pela nova simulação como caminho operacional, sem conversor. Isso concretiza a mudança de formato já prevista. A ressalva não bloqueia esta revisão porque, conforme o histórico registrado, a simulação real recusou e nenhum plano real válido foi produzido ou aplicado; não há compatibilidade de carga real a preservar. O hash continua sendo uma garantia de integridade, não evidência da versão das regras usadas para gerar o plano.
+
+#### Itens atendidos e limites
+
+- **Bloqueadores:** nenhum. As ressalvas acima tratam de compatibilidade dos testes e do formato de artefato; não exigem nova interpretação financeira nem alteram a alternativa A decidida pelo responsável.
+- M6 distingue par único, ausência de candidato e ambiguidade nos dois sentidos, preserva consumo único e data do par e mantém o trânsito fora de M7. A recusa de saldo negativo tem contagem por mês e precedência própria. M5 continua recusando estorno ligado ao trânsito ou a evento consumido por M6; M7 preserva as transferências e sua fórmula anterior. Não reapareceu achado corrigido nas rodadas anteriores.
+- No código da origem fixado em `1b13b033ce4335c09df80237c8c31b96b37e3797`, consultado por `gh api`, `materializar_fechamento_event_sourcing` acrescenta o trânsito ao patrimônio, sem acrescentá-lo aos totais de fluxo/rendimento; `_saldo_transferencia_pendente` soma o tipo literal e `_popular_eventos_transferencia` gera saldo inicial e variações. Isso sustenta o diagnóstico sem atribuir contrapartida desconhecida nem consultar dados reais.
+- Na migração existente `20261014185205_carteira.sql`, `private.apurar_mes` já soma todos os eventos do trânsito, usa o saldo calculado como final e não produz ajuste; `fechar_mes` já agrega `migracao` por tipo efetivo, independentemente do ativo, e verifica a identidade. Portanto, a função dedicada proposta é compatível com preservar essas funções e `lancar_evento` inalterados. `estornar_evento` já permite estornar uma migração; o migrador continua sem gerar estorno de trânsito, conforme M5.
+- G2 está delimitada por `auth.uid()`, trava por carteira, ausência de parâmetro de ativo, `search_path` vazio e execução apenas por `authenticated`, com testes A/B e `anon`. O alcance da função pela API do próprio usuário está explicitado nos riscos. G4 limita a entrega a uma migração nova e aditiva, sem editar as existentes.
+- A sonda de valor zero precede a primeira escrita e deve observar exatamente `recusado_sinal`, inclusive sem trânsito criado. A ordem das recusas, a data, a faixa, a resposta perdida da nova operação, sua retomada e a comparação por efeitos estão especificadas. A implementação deve provar essas garantias; esta revisão não as dá por implementadas.
+- A/B/C permanecem integradas. A sequência da `v4` exige aprovação posterior ao parecer, merge documental próprio, confirmação do payload e autorização da implementação de D. Depois de D integrada, a simulação local pré-autorizada continua sem Supabase; `db push` é do responsável, e `gravar` continua na ação externa de C. Outra recusa para a cadeia. A simulação real, a gravação e a verificação de produção não foram antecipadas.
+- Os riscos aceitos estão visíveis: retorno `N/D` nos meses migrados e nos acumulados aplicáveis, pareamento por coincidência, ausência de bloqueio de gravador em outra máquina e parada em operação desconhecida sem efeito comprovado. As regras de período existentes (K1/K8) permanecem aplicáveis.
+
+#### Evidências, validação e preservação
+
+- Diagnóstico fictício, somente em memória, com as funções existentes `previaFechamento`, `dietz`, `acumulado` e `criarTransferencia`: **7 fechamentos conferidos**, cobrindo A (entrada/saída sem par), B (saída parcial), C (saldo mantido) e D (duas transferências), além de migrações opostas no mesmo mês com componente líquido zero e retorno ainda `N/D`. Saldos, componentes, ajuste zero no trânsito, patrimônio e acumulado coincidiram com os valores esperados calculados independentemente. Isso verifica a compatibilidade aritmética; não substitui os futuros testes do simulador revisado, da função SQL e da integração `gravar`/`conferir`.
+- `node --test scripts/validate-governance.test.mjs`, com `TEMP`/`TMP` em `local/cycle-006-review-v4-temp/`: **39/39 passaram**. `node scripts/validate-governance.mjs`: **0 erros, 0 avisos e 4 itens manuais**. `git diff --check`: limpo. Não foram executados gates da aplicação/banco como se a issue D já existisse.
+- Corpo da `v4`, de `## Problema e contexto` até antes de `## Próximo passo`, preservado: SHA-256 `cc508a74e4df16826eee1a2131713e358ad1e9729933138d714edd3b678792c8`. As rodadas 1 a 3, respostas do autor e abertura da `v4` foram preservadas. O handoff do rascunho permanece como registro da entrada; o handoff desta revisão está abaixo.
+- Somente os campos de revisão/veredito, o próximo passo do plano e esta rodada foram alterados. As mudanças preexistentes em `cycles.md` e na task #65 foram preservadas. Nenhum código, migração, aprovação, issue, PR, commit ou merge foi produzido. Nenhum SQLite real, relatório privado, sessão ou backend de produção foi acessado.
+
+**Veredito: `APTO COM RESSALVAS`.** Sem bloqueadores; R4-1 e R4-2 devem acompanhar a preparação e a execução da issue D. O plano `v4` permanece em `Em Revisão`, com revisão concluída e aprovação humana pendente; o ciclo permanece `Em execução`. Não há oscilação, contestação persistente nem retorno de achado corrigido: a rodada avalia a ampliação explícita da `v4`, sem ultrapassar o teto de cinco rodadas. A situação passa a `Aguardando aprovação do plano`. O parecer não aprova o plano nem autoriza implementação ou publicação.
+
+#### Handoff da revisão
+
+- `handoff_schema_version: 2`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 006 + revisar_plano + 006_plan/rodada-4 + v4 (base b580334)`
+- `effect_class`: `local_mutation`
+- `state_before`: ciclo `006` `Em execução`; plano `v4` `Em Revisão`; revisão/veredito/aprovação `Pendente (v4)`; situação `Aguardando revisão (rodada 4)`; task #65 `Bloqueada`; D ainda sem issue.
+- `state_after`: ciclo `006` `Em execução`; plano `v4` `Em Revisão`; revisão `Concluída`; veredito `APTO COM RESSALVAS`; aprovação da `v4` pendente; situação `Aguardando aprovação do plano`; task #65 e demais artefatos preservados.
+- `result`: `executed`
+- `evidence`: pedido humano desta revisão; rodada 4 e ressalvas R4-1/R4-2; fatos do código/DDL local e da origem fixada; estados de PRs e issue conferidos por `gh`; diagnóstico fictício de 7 fechamentos; 39/39 testes de governança; validador e diff sem erros.
+- `blockers`: nenhum bloqueador de revisão; aguarda manifestação humana posterior ao parecer, "aprovo o plano do ciclo 006", considerando as ressalvas. Nada aciona o workflow seguinte automaticamente.
+
 ## Aprovação e publicação documental
 
 - **Manifestação humana posterior ao parecer:** "aprovo o plano do ciclo 006", recebida em 2026-10-17, depois do veredito `APTO PARA APROVAÇÃO` da rodada 3 sobre a `v3`.
@@ -560,6 +710,19 @@ Nenhum achado foi contestado. As regras financeiras alteradas (M5 e M7) seguem c
 - **Escopo:** simulação somente leitura do SQLite, regras M1 a M10, replay em memória, plano determinístico e relatório local. Nenhum SQLite real foi aberto; nenhum acesso ou gravação no Supabase foi incluído.
 - **Validação:** testes Vitest (237), typecheck, lint, build webpack, E2E sem backend, validador e `git diff --check`; resultados e limites estão na task da issue #63.
 - **Estado:** plano `Em Execução`, ciclo `Em execução`; PR #66 aberta em `main`, fora de draft. Após o push documental `d20eee0`, Governance está em andamento, CI e Vercel pendentes e Vercel Preview Comments aprovado; novo push requer reconferência dos checks. A integração exige checks verdes e "aprovo o merge da PR #66".
+
+## Aprovação da `v4` e publicação documental
+
+- **Manifestação humana posterior ao parecer:** "aprovo o plano do ciclo 006", recebida em 2026-10-18, depois do veredito `APTO COM RESSALVAS` da rodada 4 sobre a `v4`.
+- **Integridade:** antes da promoção, o corpo de `## Problema e contexto` até antes de `## Próximo passo` conferiu com o SHA-256 `cc508a74e4df16826eee1a2131713e358ad1e9729933138d714edd3b678792c8`, registrado pelo revisor. A `v4` aprovada é exatamente a revisada; o corpo não foi alterado depois.
+- **O que a aprovação decide:** M6 revisado (casos a, b e c, a recusa de saldo negativo e os códigos novos); a exceção à K12 e o contrato de `lancar_migracao_transito`; a migração SQL aditiva da issue D; o efeito `N/D` aceito nos meses com `migracao` no trânsito.
+- **Ressalvas da rodada 4, levadas ao payload e à execução da issue D, sem alterar o corpo aprovado:**
+  - R4-1: incluir `lancar_migracao_transito(date, bigint)` nas listas fechadas de funções executáveis por `authenticated` e na conferência de `security definer` de `supabase/tests/database/03_funcoes.test.sql`, mantendo a detecção de função fora da lista e as recusas para `PUBLIC` e `anon`;
+  - R4-2: subir a versão do formato do plano de operações e fazer `gravar` recusar, antes de qualquer escrita e com teste, um plano de versão anterior. A regeneração por uma simulação nova é o caminho, sem conversor.
+- **O que a aprovação cobre:** preparar e publicar a PR documental da `v4` (plano, task da issue #65 e `cycles.md`) e preparar e apresentar o payload da issue D.
+- **O que fica de fora:** o merge da PR documental, que exige "aprovo o merge da PR #N" com checks verdes; a criação da issue D, que exige a confirmação do payload depois do merge; implementação, `db push`, simulação real e `gravar`.
+- **Branch de publicação:** `chore/cycle-006-plan-v4`. O nome convencional `chore/cycle-006-plan` ainda existe no remoto, integrado pela PR #62; reaproveitá-lo exigiria apagar ou forçar essa branch. O sufixo é o único desvio da convenção e fica registrado aqui.
+- **Estado:** plano `Aprovado`, ciclo `Em execução`, próximo ciclo `007`.
 
 ## Pós-mortem
 
