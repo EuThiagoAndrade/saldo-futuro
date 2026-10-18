@@ -1,7 +1,7 @@
 # Plano de Implementação — Migração única dos dados e virada
 
 > **Ciclo:** `006`
-> **Status:** `Em Execução`
+> **Status:** `Concluído`
 > **Versão:** `v5`
 > **Data de criação:** 2026-10-17
 > **Última atualização:** 2026-10-18
@@ -466,22 +466,22 @@ Uma PR por issue, cada uma com aprovação própria do merge. O encerramento vai
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 006 (completo)
-Quem: Responsável
-Conferir: [PR #77](https://github.com/EuThiagoAndrade/saldo-futuro/pull/77), checks remotos, diff e barreiras G1 a G4
-Diga: "aprovo o merge da PR #77"
+Situação: Concluído — ciclo 006 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 006 + implementar_issue + 76/E + base 3afd8907ca296a58b2d77a82dd841551f23c1646`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 006 + atualizar_docs + encerramento + 1a1e870c6700690144ec9a432ad8140669d572aa`
 - `effect_class`: `remote_mutation`
-- `state_before`: plano `v5` `Aprovado`; issue #76 criada (`OPEN`, corpo com SHA-256 `54fdc871aadf2bed5e6820002d2a3271c1f3b184e8df617d2818661ab9515781`), sem branch nem task
-- `state_after`: plano `Em Execução`; branch `feature/issue-76`, task `006_task_issue-76.md` `Aguardando integração`, PR #77 aberta contra `main`
+- `state_before`: plano `Em Execução`; entregas A a E e correções #70 e #78 integradas; ações externas e verificação em produção concluídas
+- `state_after`: plano `Concluído` em `executed/`, ciclo `Concluído`, virada em 2026-10-18, de forma prospectiva até o merge da PR de encerramento
 - `result`: `executed`
-- `evidence`: "autorizo a implementação da issue #76" em 2026-10-18; gates e conferência independente na task da issue #76
-- `blockers`: checks remotos e "aprovo o merge da PR #77"; depois, simulação local pelo agente (coberta pela aprovação da `v5`); `db push` da issue #73 e `gravar` nas ações externas
+- `evidence`: task de encerramento `006_task_closure.md` e relato na task da issue #65
+- `blockers`: nenhum depois do merge da PR de encerramento
 
 ## Revisão crítica
 
@@ -850,8 +850,16 @@ Nenhum achado foi contestado. As regras financeiras alteradas (M5 e M7) seguem c
 - **Branch de publicação:** `chore/cycle-006-plan-v5`, pelo mesmo motivo da `v4`.
 - **Estado:** plano `Aprovado`, ciclo `Em execução`, próximo ciclo `007`.
 
+## Verificação em produção e encerramento
+
+- **Autorização:** "autorizo a verificação em produção do ciclo 006", em 2026-10-18, depois de "concluí a ação externa da issue #65".
+- **Resultado:** relato do responsável: as telas abrem normalmente, sem erro; o filtro de período do Início funciona como especificado (P17, K1), conferido com o "Intervalo escolhido" de um único mês calculado e com "Desde o início". Nenhum dado registrado.
+- **Virada:** 2026-10-18. A partir dela, o Saldo Futuro é a fonte de verdade e o `Meus-Investimentos` não recebe lançamentos.
+- **Encerramento:** PR `chore/cycle-006-closure`, autorizada pela aprovação do plano, com merge aprovado à parte. Registro em `006_task_closure.md`.
+
 ## Pós-mortem
 
-- **Data de conclusão:** —
-- **Desvios:** —
-- **Lições comprovadas:** —
+- **Data de conclusão:** 2026-10-18, efetiva com o merge da PR de encerramento. Virada em 2026-10-18.
+- **Resultado:** carteira da origem reconstruída em produção: 30 ativos, 20 meses fechados, 463 operações, conferência sem diferença em consolidados, posições, patrimônio com o trânsito, rentabilidade, acumulado e meses `N/D`. Verificação em produção aprovada pelo responsável.
+- **Desvios:** a primeira simulação real revelou o trânsito sem contrapartida (`v4`, issue D, com migração SQL aditiva e exceção à K12) e a segunda, as posições de saldo zero que a origem não grava (`v5`, issue E); a leitura da tabela de consolidação (#70) e a comparação de nomes com NBSP (#78) foram corrigidas pela trilha curta; a revisão formal usou as cinco rodadas permitidas; uma queda intermitente do Node no Windows interrompeu uma execução do `gravar`, retomada sem perda pelo diário.
+- **Lições comprovadas:** uma simulação que para na primeira categoria de recusa esconde as seguintes; normalizações feitas no código precisam reproduzir as do banco (`.agent/lessons_learned.md`).

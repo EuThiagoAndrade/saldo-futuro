@@ -6,7 +6,7 @@ tags:
   - referência
 author: "Thiago Andrade e Claude"
 module: "Produto"
-last_updated: "2026-10-17"
+last_updated: "2026-10-18"
 origin_cycle: "002"
 ---
 
@@ -47,9 +47,14 @@ O Saldo Futuro é um sistema web de gestão de investimentos pessoais, multiusu�
   - logo à esquerda no cabeçalho mobile, com link para o Início;
   - leitura coerente que vai ao banco em cada fase dentro do servidor Next e marcas lidas em paralelo, reduzindo a espera ao voltar ao Início.
 
+- migração e virada (ciclo `006`):
+  - a carteira do `Meus-Investimentos` foi reconstruída em produção por uma migração única (simular, gravar e conferir, em `src/lib/migracao/` e `npm run migracao`), com conferência sem diferença mês a mês;
+  - **virada em 2026-10-18:** a partir dessa data, o Saldo Futuro é a fonte de verdade e a origem não recebe lançamentos; a cópia congelada da origem fica fora do repositório;
+  - os meses importados da planilha da origem e os 2 meses do trânsito sem contrapartida têm rentabilidade `N/D` (P15); todo período que os inclui também é `N/D` (K1), e o Início mostra à parte o trecho calculável;
+  - a função `lancar_migracao_transito` é a exceção à K12 que permite `migracao` no trânsito, só usada pelo migrador.
+
 Permanecem fora da entrega:
 
-- migração dos dados do `Meus-Investimentos`;
 - troca do papel ou revogação de uma conta pela tela (continuam em P3/P4 da KB-002).
 
 O encerramento do `004` foi determinado pelo responsável com essas pendências e com conferência autenticada parcial em produção. As 22 verificações públicas passaram; os testes locais/CI não equivalem à conferência autenticada completa, e a medição local de 175 ms não mede a latência Vercel–Supabase. Evidências, diagnóstico e decisão ficam em `_project/executed/004_telas_produto/004_task_issue-42.md` e `004_task_closure.md`. O ciclo `005` tratou o logo e a lentidão; a conferência autenticada do `005` passou nos seis itens do roteiro (`_project/executed/005_logo_mobile_desempenho_navegacao/005_task_closure.md`). Os ganhos de desempenho foram medidos localmente, com atraso artificial por chamada, e não são medida de produção (`005_validation_desempenho.md`).
@@ -193,3 +198,4 @@ O plano executado do ciclo `001` (`_project/executed/001_fundacao_aplicacao/001_
 | 2026-10-14 | `003` | Regras financeiras: carteira, benchmarks, KB-004, módulos em `src/lib/` e versão `0.2.0` |
 | 2026-10-15 | `004` | Telas do produto e versão `0.3.0`; acesso por ponto de entrada, leitura completa/coerente, gráficos e pendências conhecidas de mobile/desempenho e verificação autenticada parcial |
 | 2026-10-17 | `005` | Logo no cabeçalho mobile; leitura coerente fresca no Next (#57) e marcas em paralelo (#54); conferência autenticada em produção aprovada |
+| 2026-10-18 | `006` | Migração única dos dados e virada em 2026-10-18; migração no trânsito (exceção à K12) e posição implícita zero; pendência de migração retirada |

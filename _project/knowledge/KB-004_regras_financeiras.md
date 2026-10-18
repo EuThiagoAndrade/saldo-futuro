@@ -106,7 +106,7 @@ Valor zero e sinal contrário ao do tipo são recusados.
 
 #### 4.5 Migração histórica (P15)
 
-Eventos do tipo `migracao` representam variações de meses importados da origem cuja decomposição em aportes, resgates e rendimento é desconhecida (ciclo `005`). Qualquer evento de migração num mês torna a rentabilidade desse mês `N/D`. A variação do patrimônio continua calculável.
+Eventos do tipo `migracao` representam variações de meses importados da origem cuja decomposição em aportes, resgates e rendimento é desconhecida (ciclo `006`). Qualquer evento de migração num mês torna a rentabilidade desse mês `N/D`. A variação do patrimônio continua calculável.
 
 #### 4.6 Datas aceitas e início da carteira (P8, K7, K13)
 
@@ -1172,3 +1172,4 @@ Estas regras foram aprovadas no plano do ciclo `006` e implementadas na simulaç
 | 2026-10-17 | `006` | Issue #63: seção 16, regras M1 a M10 e casos CR-M01 a CR-M03 |
 | 2026-10-18 | `006` | Issue #73: M6 revisada (`v4` do plano), exceção à K12 (seção 4.4 e decisão K12), precedência das recusas e casos CR-M04 a CR-M07 |
 | 2026-10-18 | `006` | Issue #76: M10 revisada (`v5` do plano), posição implícita zero, e caso CR-M08 |
+| 2026-10-18 | `006` | Encerramento: a seção 4.5 passa a citar o ciclo `006`, que fez a migração (antes, `005`) |

@@ -2,10 +2,10 @@
 
 > **Ciclo:** `006`
 > **Trilha:** `normal`
-> **Estado:** `Bloqueada`
+> **Estado:** `Concluída`
 > **Tipo:** `chore`
 > **Issue:** `#65`
-> **Plano:** `_project/drafts/006_migracao_dados_virada/006_plan.md`
+> **Plano:** `_project/executed/006_migracao_dados_virada/006_plan.md`
 > **Branch:** `chore/issue-65`
 > **PR:** [#69](https://github.com/EuThiagoAndrade/saldo-futuro/pull/69)
 > **Integração:** `Integrada` (PR #69, 2026-10-18; issue #65 fechada pelo merge)
@@ -44,7 +44,7 @@ Não se aplica; esta é a issue C do ciclo completo 006.
 - [x] Trecho de leitura do cookie testado contra um cookie fragmentado simulado no formato de `@supabase/ssr` (`base64-` e partes `.0`, `.1`).
 - [x] Reconciliar a task da issue #64 (integrada) e `cycles.md`.
 - [x] Gates documentais e PR #69.
-- [ ] **Execução da ação externa: bloqueada antes de `gravar`.** A simulação real recusou por M6 (ver "Evidências"). Retoma depois da `v4` do plano, da issue D e do `db push` dela. Nenhum resultado presumido.
+- [x] **Execução da ação externa:** concluída pelo responsável em 2026-10-18, depois das issues D e E e do `db push` da issue D (relato abaixo).
 
 ## Evidências
 
@@ -69,26 +69,40 @@ Não se aplica; issue normal do ciclo completo.
 
 Não se aplica; o encerramento do ciclo vai em PR própria, depois da verificação em produção.
 
-## Bloqueio
+## Relato da ação externa (só contagens)
 
-A recusa de M6 é um caso não coberto pela `v3` (parada prevista no plano). O responsável decidiu, em 2026-10-18, a alternativa A (migração no trânsito) e as regras complementares 1 a 4, registradas na `v4` do plano, aprovada em 2026-10-18 depois do veredito `APTO COM RESSALVAS` da rodada 4. A ação externa desta issue continua depois da issue D.
+Executada pelo responsável, na própria máquina, seguindo M0 a M8 da KB-002. O agente rodou só `simular`, com autorização, e consultas somente leitura na cópia do SQLite que devolveram só contagens. Nenhum valor, nome de ativo, mês real, UUID ou sessão foi registrado.
 
+| Etapa | Resultado |
+| :-- | :-- |
+| Congelamento e cópia | Origem congelada depois do fechamento do último mês; cópia do SQLite em `local/`, sem arquivo `-wal` |
+| `simular`, 1ª | Recusa `M6_TRANSITO_SEM_PAR_UNICO`, quantidade 2 → `v4` do plano e issue D |
+| `simular`, 2ª | Recusa `M10_COBERTURA_OU_CONSISTENCIA`, quantidade 12 (posições ausentes depois de saldo zero, sem evento) → `v5` e issue E |
+| `simular`, 3ª | Aceita: 30 ativos, 491 eventos de origem, 20 meses migrados, 14 meses com migração (`N/D`), 2 eventos de trânsito como migração no trânsito, 132 posições implícitas zero, 9 ativos desativados, 0 em M7, 98 meses antigos só com consolidado não migrados |
+| Relatório local (M2) | Conferido pelo responsável: patrimônio do destino igual ao da origem nos 20 meses, nenhum ativo em M7, meses `N/D` iguais aos meses com migração |
+| `db push` da issue D | Concluído pelo responsável |
+| `gravar`, 1ª | Parou em `estado_divergente` (`ativos: 4`) com 54 de 463 operações: comparação de nomes com NBSP → correção #78 (PR #79) |
+| `gravar`, 2ª | O processo do Node caiu no Windows sem saída, com 125 de 463 confirmadas, nenhuma pendente; a trava ficou e foi removida depois de confirmar que não havia processo do migrador |
+| `gravar`, 3ª | `executed` / `concluida`: 463 de 463 confirmadas, 338 enviadas nesta execução, nenhuma duplicada |
+| `conferir` | `ok: true`, 20 meses, `diferencas: {}` |
+| Sessão | Arquivo da sessão apagado depois da conferência |
+| Virada | 2026-10-18 |
 ## Próximo passo
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 006 (completo)
-Quem: Responsável
-Conferir: [PR #77](https://github.com/EuThiagoAndrade/saldo-futuro/pull/77), checks remotos, diff e barreiras G1 a G4
-Diga: "aprovo o merge da PR #77"
+Situação: Concluído — ciclo 006 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 006 + aprovar_plano + 006_plan + v4 (base b580334)`
-- `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: task `Aguardando integração`, PR #69 registrada como aberta / task `Bloqueada`, PR #69 integrada, ação externa parada na simulação por M6; `v4` do plano aprovada em 2026-10-18 e em publicação
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 006 + atualizar_docs + encerramento + 1a1e870c6700690144ec9a432ad8140669d572aa`
+- `effect_class`: `local_mutation`
+- `state_before` / `state_after`: task `Bloqueada`, ação externa parada na simulação / task `Concluída`, ação externa concluída com conferência sem diferença
 - `result`: `executed`
-- `evidence`: estado da PR #69 e da issue #65 lido no GitHub (`MERGED` e `CLOSED`); recusa da simulação relatada pelo responsável, só com código e contagem
-- `blockers`: `db push` da issue D ([#73](https://github.com/EuThiagoAndrade/saldo-futuro/issues/73), integrada pela PR #74) e a `v5` do plano, com a issue E, por causa da recusa de M10 na simulação
+- `evidence`: linhas de saída de `simular`, `gravar` e `conferir` relatadas pelo responsável, só com estado, motivo e contagens
+- `blockers`: nenhum

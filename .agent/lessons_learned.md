@@ -74,6 +74,14 @@ Origem: ciclo `003`, issue #27. A limpeza do teste de concorrência (`delete fro
 
 Origem: ciclo `003`, issue #26. Outro modelo recebeu só as regras e as entradas dos casos, sem os valores esperados. Não achou nenhum erro de cálculo, mas expôs um caso sem saldo real informado, em que o componente de rendimento dependia de uma suposição, e um motivo de recusa diferente do que a KB nomeava. Ao validar casos de referência, entregue ao recalculador só as regras e as entradas, e trate cada divergência como possível lacuna da especificação antes de supor erro de quem recalculou.
 
+### 2026-10-18 — Uma validação que para na primeira categoria de recusa esconde as seguintes
+
+Origem: ciclo `006`, simulação da migração. A simulação devolvia só a primeira categoria da precedência de recusas. A primeira execução real parou no trânsito (M6); depois da `v4` e da issue D, a segunda revelou as posições de saldo zero (M10), que já existiam, mas estavam escondidas; cada uma exigiu revisão de plano, issue e PR próprias. Quando uma validação sobre dados reais pode recusar por vários motivos, faça-a reportar todas as categorias com contagens numa só execução, mantendo a recusa integral, para que as decisões sejam tomadas juntas.
+
+### 2026-10-18 — Normalizações no código precisam reproduzir as do banco
+
+Origem: ciclo `006`, correção #78. A comparação da gravação limpava o nome do ativo com `trim()` do JavaScript, que remove NBSP, tabulação e quebras de linha; o banco grava com `btrim`, que remove só o espaço comum. Dois nomes reais com NBSP nas pontas pararam a carga em `estado_divergente`, sem dano, porque a comparação era conservadora. Quando o código compara ou prevê um valor que o banco transforma, use a mesma semântica do banco numa função única e teste com caracteres de borda (NBSP, tabulação, quebra de linha, BOM).
+
 ### 2026-10-17 — Toda saída de workflow precisa declarar o próximo passo
 
 Origem: ciclo `005`, merge da PR #56. A resposta confirmou a integração da issue #53, mas omitiu o bloco `PRÓXIMO PASSO`; o responsável precisou perguntar qual era a próxima ação. Ao encerrar uma solicitação regida por workflow, determine a situação efetiva pelo artefato, pelo plano e pelo estado atual do GitHub, especialmente depois de um merge, e apresente o bloco canônico completo: situação e alvo, quem age, o que conferir com link e a frase exata. Não repita a situação que acabou de ser superada nem deixe o próximo passo implícito. A frase do bloco indica o próximo ponto de aprovação e não autoriza por si só a mutação seguinte; após integrar a issue #53, por exemplo, o ciclo aguarda autorização própria para a #54.
