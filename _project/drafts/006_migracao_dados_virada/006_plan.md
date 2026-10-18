@@ -307,7 +307,7 @@ Uma PR por issue, cada uma com aprovação própria do merge. O encerramento vai
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | A [#63](https://github.com/EuThiagoAndrade/saldo-futuro/issues/63), B [#64](https://github.com/EuThiagoAndrade/saldo-futuro/issues/64) e C [#65](https://github.com/EuThiagoAndrade/saldo-futuro/issues/65) |
-| PR(s) | [#62](https://github.com/EuThiagoAndrade/saldo-futuro/pull/62) (plano, integrada) |
+| PR(s) | [#62](https://github.com/EuThiagoAndrade/saldo-futuro/pull/62) (plano, integrada); [#66](https://github.com/EuThiagoAndrade/saldo-futuro/pull/66) (issue A, integrada) |
 | Branch(es) | `chore/cycle-006-ideation` (rascunho local); `chore/cycle-006-plan` depois da aprovação |
 | Destino após conclusão | `_project/executed/006_migracao_dados_virada/006_plan.md` |
 
