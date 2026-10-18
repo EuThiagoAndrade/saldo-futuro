@@ -52,7 +52,7 @@ Fora: gravação ou qualquer conexão com o Supabase; leitura do SQLite real pel
 
 ### Ciclo e plano relacionados
 
-Ciclo 006 — `_project/drafts/006_migracao_dados_virada/006_plan.md`, v3, item 1 (A); PR #62 integrada.
+Ciclo 006 — `_project/executed/006_migracao_dados_virada/006_plan.md`, v3, item 1 (A); PR #62 integrada.
 
 ### Dependências, riscos e autorizações
 
@@ -97,7 +97,7 @@ Fora: `service_role`; `corrigir_transferencia`; reenvio automático; mudança de
 
 ### Ciclo e plano relacionados
 
-Ciclo 006 — `_project/drafts/006_migracao_dados_virada/006_plan.md`, v3, item 2 (B); PR #62 integrada.
+Ciclo 006 — `_project/executed/006_migracao_dados_virada/006_plan.md`, v3, item 2 (B); PR #62 integrada.
 
 ### Dependências, riscos e autorizações
 
@@ -145,7 +145,7 @@ Depende da issue B (#64) integrada. Exige "autorizo a implementação da issue #
 
 ### Ciclo e plano relacionados
 
-Ciclo 006 — `_project/drafts/006_migracao_dados_virada/006_plan.md`, v3, item 3 (C); PR #62 integrada.
+Ciclo 006 — `_project/executed/006_migracao_dados_virada/006_plan.md`, v3, item 3 (C); PR #62 integrada.
 
 <!-- logical_key: EuThiagoAndrade/saldo-futuro + 006 + criar_issues + chore/C_roteiro_virada + v3@9cfb2efdde5efa2ebf9dbd054abb21f4b77e1c9f -->
 
@@ -185,7 +185,7 @@ Fora: mudança em `lancar_evento`, `transferir`, `fechar_mes` ou nas políticas;
 
 ### Ciclo e plano relacionados
 
-Ciclo 006 — `_project/drafts/006_migracao_dados_virada/006_plan.md`, `v4`, item 4 (D); PR #72.
+Ciclo 006 — `_project/executed/006_migracao_dados_virada/006_plan.md`, `v4`, item 4 (D); PR #72.
 
 ### Dependências, riscos e autorizações
 
@@ -224,7 +224,7 @@ Fora: mudança de banco, de `gravar`, de `conferir` ou de outra regra (M1 a M9, 
 
 ### Ciclo e plano relacionados
 
-Ciclo 006 — `_project/drafts/006_migracao_dados_virada/006_plan.md`, `v5`, item 5 (E); PR #75.
+Ciclo 006 — `_project/executed/006_migracao_dados_virada/006_plan.md`, `v5`, item 5 (E); PR #75.
 
 ### Dependências, riscos e autorizações
 

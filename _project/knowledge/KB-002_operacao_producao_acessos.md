@@ -337,7 +337,7 @@ Depois, entre de novo na aplicação com o Google: o hook recria a conta com o p
 
 #### M8. Data de virada
 
-A data de virada é o dia em que a conferência M5 termina sem diferença. A partir dela, o Saldo Futuro é a fonte de verdade e a origem não recebe lançamentos. A data é registrada na verificação em produção do ciclo 006 ("autorizo a verificação em produção do ciclo 006") e entra na KB-003 pela PR de encerramento.
+A data de virada é o dia em que a conferência M5 termina sem diferença. A partir dela, o Saldo Futuro é a fonte de verdade e a origem não recebe lançamentos. A data é registrada na verificação em produção do ciclo 006 ("autorizo a verificação em produção do ciclo 006") e entra na KB-003 pela PR de encerramento. **A virada ocorreu em 2026-10-18.**
 
 ## Fontes
 
@@ -362,3 +362,4 @@ Consultadas em 2026-10-12 e conferidas na execução de 2026-10-13. São documen
 | 2026-10-18 | `006` | Seção "Migração e virada": roteiro da ação externa da issue #65 (M0 a M8) |
 | 2026-10-18 | `006` | Issue #73: `db push` da função `lancar_migracao_transito` antes de gravar, códigos de recusa de M6 revisada, contagens de trânsito no resumo e o motivo `funcao_ausente` |
 | 2026-10-18 | `006` | Issue #76: contagem `posicoesImplicitasZero` no resumo da simulação (M10 revisada) |
+| 2026-10-18 | `006` | Encerramento: virada registrada em 2026-10-18 |

@@ -14,7 +14,9 @@ O Saldo Futuro substitui o [Meus-Investimentos](https://github.com/EuThiagoAndra
 
 O ciclo `004` entregou as telas do produto: Início, ativos, lançamentos, transferências, fechamento mensal, benchmarks e comparação, sincronização com o SGS e administração de acessos. A versão `0.3.0` reúne essas telas sobre as regras financeiras do ciclo `003`, especificadas na [KB-004](_project/knowledge/KB-004_regras_financeiras.md). A fundação inclui login Google restrito a e-mails autorizados, perfis `admin` e `user`, RLS por usuário e PWA instalável.
 
-O ciclo `005` resolveu as pendências deixadas pelo `004`: o logo aparece à esquerda no cabeçalho mobile, e a volta ao Início ficou cerca de 40% mais rápida na simulação local com atraso por chamada, porque as consultas da conferência de coerência passaram a ser feitas em paralelo. No caminho, o ciclo corrigiu pela trilha curta (#57) uma falha em que o Next reaproveitava a leitura da marca final e anulava essa conferência. A conferência autenticada em produção passou nos seis itens do roteiro. O [registro de encerramento](_project/executed/005_logo_mobile_desempenho_navegacao/005_task_closure.md) traz as evidências e os limites. A migração dos dados da origem continua fora das entregas realizadas.
+O ciclo `005` resolveu as pendências deixadas pelo `004`: o logo aparece à esquerda no cabeçalho mobile, e a volta ao Início ficou cerca de 40% mais rápida na simulação local com atraso por chamada, porque as consultas da conferência de coerência passaram a ser feitas em paralelo. No caminho, o ciclo corrigiu pela trilha curta (#57) uma falha em que o Next reaproveitava a leitura da marca final e anulava essa conferência. A conferência autenticada em produção passou nos seis itens do roteiro. O [registro de encerramento](_project/executed/005_logo_mobile_desempenho_navegacao/005_task_closure.md) traz as evidências e os limites.
+
+O ciclo `006` migrou a carteira do `Meus-Investimentos` para o Saldo Futuro por uma migração única, simulada, gravada e conferida sem diferença mês a mês. A **virada ocorreu em 2026-10-18**: desde então, o Saldo Futuro é a fonte de verdade. Os meses importados da planilha da origem ficam com rentabilidade `N/D`. O [registro de encerramento](_project/executed/006_migracao_dados_virada/006_task_closure.md) traz o relato só com contagens.
 
 ## Mapa de ciclos
 
@@ -26,9 +28,9 @@ O ciclo `005` resolveu as pendências deixadas pelo `004`: o logo aparece à esq
 | `003` | Regras financeiras: eventos, fechamento, consolidação, Modified Dietz e benchmarks, com casos de referência | Concluído |
 | `004` | Telas pensadas primeiro para o celular | Concluído com pendências registradas |
 | `005` | Logo no cabeçalho mobile e desempenho de navegação | Concluído |
-| — | Migração única dos dados e virada | A replanejar |
+| `006` | Migração única dos dados e virada | Concluído |
 
-O registro oficial dos ciclos é [`_project/cycles.md`](_project/cycles.md). Os planos do `004` e do `005` estão em `executed/`. A migração era uma intenção do roteiro anterior, sem reserva de ciclo. Até o ciclo `001`, os documentos numeravam os ciclos de regras, telas e migração como `002` a `004`; o glossário de `_project/README.md` registra o mapeamento histórico.
+O registro oficial dos ciclos é [`_project/cycles.md`](_project/cycles.md). Os planos do `004` ao `006` estão em `executed/`. Até o ciclo `001`, os documentos numeravam os ciclos de regras, telas e migração como `002` a `004`; o glossário de `_project/README.md` registra o mapeamento histórico.
 
 ## Stack decidida
 

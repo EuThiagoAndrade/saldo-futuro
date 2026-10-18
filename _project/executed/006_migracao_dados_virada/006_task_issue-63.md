@@ -5,7 +5,7 @@
 > **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#63`
-> **Plano:** `_project/drafts/006_migracao_dados_virada/006_plan.md`
+> **Plano:** `_project/executed/006_migracao_dados_virada/006_plan.md`
 > **Branch:** `feature/issue-63`
 > **PR:** [#66](https://github.com/EuThiagoAndrade/saldo-futuro/pull/66)
 > **Integração:** `Integrada em 2026-10-18 por squash, commit `ce84e66466876c93dafd8fc852fbfd8f39ff2edf``
@@ -77,10 +77,10 @@ Não se aplica; esta não é a última issue do ciclo.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando autorização de implementação — ciclo 006 (completo)
-Quem: Responsável
-Conferir: [issue #64](https://github.com/EuThiagoAndrade/saldo-futuro/issues/64) e seu escopo
-Diga: "autorizo a implementação da issue #64"
+Situação: Concluído — ciclo 006 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída

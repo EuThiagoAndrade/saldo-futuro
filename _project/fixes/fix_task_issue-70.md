@@ -28,7 +28,7 @@ Fazer o leitor da simulação reconhecer a tabela de consolidação da origem co
 
 ## Elegibilidade da trilha curta
 
-- Correção de comportamento já especificado: o plano aprovado do ciclo 006 define `consolidado_mensal` em `_project/drafts/006_migracao_dados_virada/006_plan.md` (M10 também o usa como fonte de mês fechado).
+- Correção de comportamento já especificado: o plano aprovado do ciclo 006 define `consolidado_mensal` em `_project/executed/006_migracao_dados_virada/006_plan.md` (M10 também o usa como fonte de mês fechado).
 - Sem mudança de escopo: apenas alinhar o nome usado pelo leitor ao contrato já aprovado.
 - Sem mudança de schema que altere semântica: nenhuma tabela, coluna, dado ou semântica de origem ou destino será alterada.
 - Sem mudança de contrato visual: a correção é interna à leitura do SQLite.

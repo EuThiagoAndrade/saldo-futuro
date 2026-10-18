@@ -2,13 +2,13 @@
 
 > **Ciclo:** `006`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#76`
-> **Plano:** `_project/drafts/006_migracao_dados_virada/006_plan.md` (`v5`, item 5 — E)
+> **Plano:** `_project/executed/006_migracao_dados_virada/006_plan.md` (`v5`, item 5 — E)
 > **Branch:** `feature/issue-76`
 > **PR:** [#77](https://github.com/EuThiagoAndrade/saldo-futuro/pull/77)
-> **Integração:** `Pendente`
+> **Integração:** `Integrada` (PR #77, squash em 2026-10-18; issue #76 fechada pelo merge)
 > **Autorização inicial:** "autorizo a implementação da issue #76" em 2026-10-18
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-18
@@ -45,7 +45,7 @@ Não se aplica.
 - [x] Integração `gravar` + `conferir`.
 - [x] KB-004 e KB-002.
 - [x] Gates locais, PR.
-- [ ] Depois do merge: simulação local só com códigos e contagens (coberta pela aprovação da `v5`).
+- [x] Depois do merge: simulação local só com códigos e contagens (coberta pela aprovação da `v5`): aceita, com 132 posições implícitas zero.
 
 ## Evidências
 
@@ -58,7 +58,7 @@ Não se aplica.
 | `npm run test:e2e` completo | 101 verdes e 9 ignorados (sem as variáveis opcionais), sem falha nem queda de processo. |
 | Validador | `node --test scripts/validate-governance.test.mjs` 39/39; `node scripts/validate-governance.mjs` 0 erros, 0 avisos, 4 itens manuais |
 | `git diff --check` | Limpo |
-| Checks remotos | Conferir no HEAD da PR #77 |
+| Checks remotos | Os cinco checks verdes no HEAD aprovado da PR #77 antes do merge. |
 
 ## Revisão da correção
 
@@ -76,10 +76,10 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 006 (completo)
-Quem: Responsável
-Conferir: [PR #77](https://github.com/EuThiagoAndrade/saldo-futuro/pull/77), checks remotos, diff e barreiras G1 a G4
-Diga: "aprovo o merge da PR #77"
+Situação: Concluído — ciclo 006 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída

@@ -5,7 +5,7 @@
 > **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#73`
-> **Plano:** `_project/drafts/006_migracao_dados_virada/006_plan.md` (`v4`, item 4 — D)
+> **Plano:** `_project/executed/006_migracao_dados_virada/006_plan.md` (`v4`, item 4 — D)
 > **Branch:** `feature/issue-73`
 > **PR:** [#74](https://github.com/EuThiagoAndrade/saldo-futuro/pull/74)
 > **Integração:** `Integrada` (PR #74, squash em 2026-10-18; issue #73 fechada pelo merge)
@@ -51,7 +51,7 @@ Não se aplica.
 - [x] KB-004, JSON de casos e KB-002.
 - [x] Gates locais, PR.
 - [x] Depois do merge: simulação local só com códigos e contagens (ver "Evidências").
-- [ ] Ação externa (`db push` da migração da issue D): pendente, pelo responsável.
+- [x] Ação externa (`db push` da migração da issue D): concluída pelo responsável em 2026-10-18 ("concluí a ação externa da issue #73").
 
 ## Evidências
 
@@ -85,10 +85,10 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 006 (completo)
-Quem: Responsável
-Conferir: [PR #77](https://github.com/EuThiagoAndrade/saldo-futuro/pull/77), checks remotos, diff e barreiras G1 a G4
-Diga: "aprovo o merge da PR #77"
+Situação: Concluído — ciclo 006 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída

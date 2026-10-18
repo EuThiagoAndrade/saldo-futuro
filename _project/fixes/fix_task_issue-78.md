@@ -2,13 +2,13 @@
 
 > **Ciclo:** `—`
 > **Trilha:** `curta`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `fix`
 > **Issue:** `#78`
 > **Plano:** `—`
 > **Branch:** `fix/issue-78`
 > **PR:** [#79](https://github.com/EuThiagoAndrade/saldo-futuro/pull/79)
-> **Integração:** `Pendente`
+> **Integração:** `Integrada` (PR #79, squash em 2026-10-18; issue #78 fechada pelo merge)
 > **Autorização inicial:** "confirmo a trilha curta e autorizo abrir e corrigir a issue [FIX] Comparação de nomes na gravação da migração diverge do btrim do banco" em 2026-10-18
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-18
@@ -64,7 +64,8 @@ Fazer a comparação da gravação e a conferência da migração tratarem o nom
 | `npm run test:e2e` completo | 102 verdes e 9 ignorados (sem as variáveis opcionais), sem falha nem queda de processo. |
 | Validador | `node --test scripts/validate-governance.test.mjs` 39/39; `node scripts/validate-governance.mjs` 0 erros, 0 avisos, 4 itens manuais |
 | `git diff --check` | Limpo |
-| Checks remotos | Conferir no HEAD da PR #79 |
+| Checks remotos | Os cinco checks verdes no HEAD aprovado da PR #79 antes do merge. |
+| Retomada da carga real | Depois do merge, a retomada do `gravar` pelo responsável concluiu 463 de 463 operações e a conferência saiu sem diferença (relato na task da issue #65). |
 
 ## Revisão da correção
 
@@ -127,10 +128,10 @@ Não se aplica — correção pela trilha curta.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — correção da issue #78
-Quem: Responsável
-Conferir: [PR #79](https://github.com/EuThiagoAndrade/saldo-futuro/pull/79), checks remotos e diff
-Diga: "aprovo o merge da PR #79"
+Situação: Concluído — correção da issue #78
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
