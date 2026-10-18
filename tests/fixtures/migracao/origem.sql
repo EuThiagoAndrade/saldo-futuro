@@ -51,7 +51,7 @@ CREATE TABLE posicoes_mensais (
   CONSTRAINT uq_posicao UNIQUE (ativo_id, ano, mes)
 );
 
-CREATE TABLE consolidado_mensual (
+CREATE TABLE consolidado_mensal (
   id INTEGER PRIMARY KEY,
   ano INTEGER NOT NULL,
   mes INTEGER NOT NULL,
@@ -67,4 +67,4 @@ CREATE TABLE consolidado_mensual (
   CONSTRAINT uq_consolidado_ano_mes UNIQUE (ano, mes)
 );
 
-CREATE INDEX idx_consolidado_ano_mes ON consolidado_mensual(ano, mes);
+CREATE INDEX idx_consolidado_ano_mes ON consolidado_mensal(ano, mes);

@@ -7,7 +7,7 @@ const COLUNAS_OBRIGATORIAS: Record<string, string[]> = {
   ativos: ["id", "descricao", "classificacao", "ativo"],
   eventos: ["id", "ativo_id", "data_evento", "ano", "mes", "tipo_evento", "valor", "evento_referencia_id", "origem", "observacao"],
   posicoes_mensais: ["ativo_id", "ano", "mes", "saldo_inicio", "saldo_fim"],
-  consolidado_mensual: ["ano", "mes", "valor_total", "status", "fechado"],
+  consolidado_mensal: ["ano", "mes", "valor_total", "status", "fechado"],
 };
 
 function citar(identificador: string): string {
@@ -137,13 +137,13 @@ export function lerOrigem(db: DatabaseSync): DadosOrigem {
 
   const consolidados = linhas(
     db,
-    `SELECT ano, mes, valor_total, status, fechado FROM ${citar(tabelas.get("consolidado_mensual")!)}`,
+    `SELECT ano, mes, valor_total, status, fechado FROM ${citar(tabelas.get("consolidado_mensal")!)}`,
   ).map((linha) => ({
-    ano: inteiro(linha.ano, "consolidado_mensual.ano"),
-    mes: inteiro(linha.mes, "consolidado_mensual.mes"),
-    valorTotal: monetario(linha.valor_total, "consolidado_mensual.valor_total"),
-    status: texto(linha.status, "consolidado_mensual.status"),
-    fechado: booleano(linha.fechado, "consolidado_mensual.fechado"),
+    ano: inteiro(linha.ano, "consolidado_mensal.ano"),
+    mes: inteiro(linha.mes, "consolidado_mensal.mes"),
+    valorTotal: monetario(linha.valor_total, "consolidado_mensal.valor_total"),
+    status: texto(linha.status, "consolidado_mensal.status"),
+    fechado: booleano(linha.fechado, "consolidado_mensal.fechado"),
   }));
 
   return { ativos, eventos, posicoes, consolidados, indicadoresUsuario: detectarIndicadoresDeUsuario(db, tabelas) };
