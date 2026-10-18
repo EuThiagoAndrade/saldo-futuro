@@ -2,12 +2,12 @@
 
 > **Ciclo:** `006`
 > **Trilha:** `normal`
-> **Estado:** `Em andamento`
+> **Estado:** `Aguardando integração`
 > **Tipo:** `chore`
 > **Issue:** `#65`
 > **Plano:** `_project/drafts/006_migracao_dados_virada/006_plan.md`
 > **Branch:** `chore/issue-65`
-> **PR:** —
+> **PR:** [#69](https://github.com/EuThiagoAndrade/saldo-futuro/pull/69)
 > **Integração:** `Pendente`
 > **Autorização inicial:** "autorizo a implementação da issue #65" em 2026-10-18
 > **Modo contínuo:** `—`
@@ -43,16 +43,16 @@ Não se aplica; esta é a issue C do ciclo completo 006.
 - [x] Conferir cada saída do roteiro contra `src/lib/migracao/gravar.ts`, `scripts/migracao-cli.mjs` e `scripts/migracao-gravacao.mjs`.
 - [x] Trecho de leitura do cookie testado contra um cookie fragmentado simulado no formato de `@supabase/ssr` (`base64-` e partes `.0`, `.1`).
 - [x] Reconciliar a task da issue #64 (integrada) e `cycles.md`.
-- [ ] Gates documentais e PR.
+- [x] Gates documentais e PR #69.
 - [ ] **Execução da ação externa: pendente**, depois do merge, pelo responsável. Nenhum resultado presumido.
 
 ## Evidências
 
 | Validação | Resultado |
 | :-- | :-- |
-| Validador | Pendente |
-| `git diff --check` | Pendente |
-| Checks remotos | Pendente |
+| Validador | `node scripts/validate-governance.mjs`: 0 erros, 0 avisos, 4 verificações manuais. |
+| `git diff --check` | Passou. |
+| Checks remotos | PR #69 aberta; conferir os checks no HEAD depois deste push documental. |
 | Ação externa | Pendente (depois do merge) |
 
 ## Revisão da correção
@@ -75,8 +75,8 @@ Não se aplica; o encerramento do ciclo vai em PR própria, depois da verificaç
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 006 (completo)
 Quem: Responsável
-Conferir: PR da issue #65, checks remotos e o roteiro M0 a M8 da KB-002
-Diga: "aprovo o merge da PR #N"
+Conferir: [PR #69](https://github.com/EuThiagoAndrade/saldo-futuro/pull/69), checks remotos e o roteiro M0 a M8 da KB-002
+Diga: "aprovo o merge da PR #69"
 ```
 
 ## Handoff de saída
@@ -84,7 +84,7 @@ Diga: "aprovo o merge da PR #N"
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 006 + implementar_issue + 65/C + base 114da00e250ae73ef79ad8a9f46e4e73b4c8af99`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: issue #65 `OPEN`, sem branch nem task; task da #64 `Aguardando integração` / branch `chore/issue-65`, task `Em andamento`; task da #64 `Concluída`
+- `state_before` / `state_after`: issue #65 `OPEN`, sem branch nem task; task da #64 `Aguardando integração` / branch `chore/issue-65`, task `Aguardando integração`, PR #69 `OPEN` contra `main`; task da #64 `Concluída`
 - `result`: `executed`
-- `evidence`: pendente
-- `blockers`: pendente
+- `evidence`: autorização do responsável em 2026-10-18; validador e `git diff --check` verdes; PR #69 aberta via `gh` com `Closes #65`
+- `blockers`: checks remotos do HEAD e "aprovo o merge da PR #69"; depois do merge, a ação externa do responsável
