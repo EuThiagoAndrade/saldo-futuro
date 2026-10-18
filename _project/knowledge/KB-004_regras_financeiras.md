@@ -6,7 +6,7 @@ tags:
   - referência
 author: "Thiago Andrade e Claude"
 module: "Regras financeiras"
-last_updated: "2026-10-14"
+last_updated: "2026-10-18"
 origin_cycle: "003"
 ---
 
@@ -101,7 +101,7 @@ Valor zero e sinal contrário ao do tipo são recusados.
 - É criada numa só operação, com um valor positivo, um ativo de origem e um de destino diferentes, e gera exatamente duas pernas na mesma data: o oposto do valor na origem e o valor no destino. A soma das pernas é zero.
 - O destino pode ser o ativo "Em trânsito", que guarda o dinheiro entre a saída de uma instituição e a chegada em outra. Depois, outra transferência leva o valor do trânsito ao destino final. Uma diferença na chegada (por exemplo, uma tarifa) é lançada como evento no ativo de destino (K12).
 - A correção é sempre da transferência inteira (K6): uma operação estorna as duas pernas juntas, na mesma data (igual ou posterior à da transferência), mantendo a soma zero. Uma segunda correção da mesma transferência é recusada.
-- O trânsito só recebe pernas de transferência: nenhum lançamento comum é feito nele (K12).
+- O trânsito só recebe pernas de transferência: nenhum lançamento comum é feito nele (K12). A única exceção é a migração da origem (ciclo `006`, plano `v4`): eventos `migracao` lançados exclusivamente pela função `lancar_migracao_transito`, que representam a variação do trânsito cuja origem e destino são desconhecidos (M6, seção 16). Eles tornam a rentabilidade do mês `N/D` (P15); no fechamento, o trânsito continua sem saldo real nem ajuste, e a migração entra no componente `migracao`.
 - O patrimônio é a soma dos saldos de todos os ativos, trânsito incluído (O10).
 
 #### 4.5 Migração histórica (P15)
@@ -300,7 +300,7 @@ Levadas ao responsável em 2026-10-14, com as alternativas e os exemplos fictíc
 | K9 | Empate na taxa de acerto | Carteira 0,90%, 0,70%, 0,80% contra benchmark 0,80% nos três meses. (a) só estritamente maior: 33,33%; (b) maior ou igual: 66,67% | (a) estritamente maior |
 | K10 | Meio-para-cima em negativos | −0,125% com 2 casas. (a) −0,13%, afastando do zero; (b) −0,12%, em direção a +∞ | (a) simétrico |
 | K11 | Parser de quantias | "1234.56", "1.234" e "12,345". (a) pt-BR estrito: recusado, 123.400 centavos e recusado; (b) heurístico: 123.456, 123.400 e 1.234.500 centavos | (a) pt-BR estrito |
-| K12 | Trânsito no fechamento | (a) sem saldo real nem ajuste; diferenças lançadas no destino; (b) saldo real e ajuste como os demais | (a) sem saldo real nem ajuste |
+| K12 | Trânsito no fechamento | (a) sem saldo real nem ajuste; diferenças lançadas no destino; (b) saldo real e ajuste como os demais | (a) sem saldo real nem ajuste. Exceção decidida no ciclo `006` (plano `v4`, 2026-10-18): `migracao` no trânsito só pela função de migração (seção 4.4, M6) |
 | K13 | Datas futuras | Hoje 14/out: aporte de 20/out e fechamento de outubro. (a) recusar lançamento futuro e fechar só mês terminado; (b) permitir; (c) só recusar o fechamento | (a) recusar |
 
 ### 14. Casos de referência
@@ -1001,22 +1001,22 @@ Todo período passa pelo período efetivo (K8) e pela regra do `N/D` (K1) da se�
 
 ### 16. Migração da origem (M1 a M10 do ciclo `006`)
 
-Estas regras foram aprovadas no plano do ciclo `006` e implementadas na simulação da issue #63. A simulação é somente leitura: o detalhe fica em `local/`, o plano só é produzido se todos os critérios forem aceitos, e a saída compartilhável contém contagens.
+Estas regras foram aprovadas no plano do ciclo `006` e implementadas na simulação da issue #63. M6 foi revisada na `v4` do plano (2026-10-18) e implementada na issue #73. A simulação é somente leitura: o detalhe fica em `local/`, o plano só é produzido se todos os critérios forem aceitos, e a saída compartilhável contém contagens.
 
 - **M1 — Tipo de ajuste.** Classificação contendo `cripto` ou `vari` (sem distinguir maiúsculas) mapeia para ajuste `marcacao`; as demais mapeiam para `rendimento`.
 - **M2 — Sinais e conversão.** `RESGATE` recebe sinal negativo; nos tipos direcionais, `observacao` contendo `negativo` também torna o valor negativo. `INTEGER` representa unidades monetárias e é convertido para centavos; `REAL` usa a representação decimal mais curta de JavaScript; `TEXT` precisa corresponder a `^\d+(\.\d{1,2})?$`. A conversão pelos dígitos não arredonda. Expoente, mais de duas casas, valor de evento negativo ou mais de 15 algarismos significativos recusa a simulação inteira. Saldos e totais de fechamento preservam o sinal da origem.
 - **M3 — Ajustes calculados.** Eventos `origem='calculado'` não viram eventos no destino. O fechamento recalcula o ajuste usando o saldo final da origem. Se o ajuste do destino divergir da soma dos ajustes calculados de origem no ativo e mês, esse ativo e mês entram em M7.
 - **M4 — Tipos manuais.** `APORTE`, `RESGATE`, `RENDIMENTO`, `CORRECAO_MARCACAO`, `CAMBIO` e `MIGRACAO_HISTORICA` mapeiam, respectivamente, para `aporte`, `resgate`, `rendimento`, `marcacao`, `cambio` e `migracao`. Câmbio passa a componente próprio. Evento de valor zero não tem efeito, é descartado e contado.
 - **M5 — Estorno.** `ESTORNO` vira estorno do evento mapeado na data de origem. Se o evento referenciado cair em M7, o estorno também cai em M7. Estorno que referencia `TRANSFERENCIA_PENDENTE` ou evento consumido por M6 recusa toda a simulação: na origem ele não reduz o saldo de trânsito, efeito que o destino não pode reproduzir.
-- **M6 — Trânsito.** Cada `TRANSFERENCIA_PENDENTE` positivo pareia com um `RESGATE`; negativo, com `APORTE`, pelo mesmo valor absoluto e no mesmo mês. O pareamento deve ser único nos dois sentidos, e cada evento é consumido uma vez. O par vira uma transferência para/de `Em trânsito`, na data mais tardia dos dois eventos. Trânsito sem par único recusa toda a simulação; o trânsito não recebe fallback M7.
+- **M6 — Trânsito (revisada na `v4`).** Cada `TRANSFERENCIA_PENDENTE` é uma variação do saldo acumulado de `Em trânsito`: positiva aumenta, negativa reduz, com a direção lida de `observacao` (M2), nunca do sinal de `valor`. Candidato a par de um trânsito positivo é um `RESGATE` não calculado do mesmo valor absoluto e do mesmo mês; de um negativo, um `APORTE` nas mesmas condições. Cada evento de trânsito cai em um caso: **(a)** um único candidato, que só serve a ele → transferência para/de `Em trânsito` na data mais tardia dos dois, com os dois eventos consumidos uma vez; **(b)** nenhum candidato → evento `migracao` no trânsito, com o valor assinado e a data da origem, pela função `lancar_migracao_transito`, sem criar aporte, resgate, ativo ou contrapartida; o mês fica `N/D` (P15) e o período que o inclui também (K1); **(c)** dois ou mais candidatos, ou candidato que serve a mais de um trânsito → recusa toda a simulação (`M6_TRANSITO_PAR_AMBIGUO`, contagem de eventos). O saldo acumulado do trânsito no fim de cada mês, do primeiro trânsito ao último mês fechado, não pode ser negativo: recusa toda a simulação (`M6_TRANSITO_SALDO_NEGATIVO`, contagem de meses), sem corrigir nem limitar. Um saldo positivo no último mês fechado continua no trânsito. O trânsito não recebe fallback M7.
 - **M7 — Fallback.** As transferências M6 são preservadas por inteiro. Os demais eventos do ativo no mês, inclusive estornos, são substituídos por um único evento `migracao` no último dia do mês. O valor é `saldo_fim` da origem − saldo final do ativo no destino no mês anterior − soma das pernas de transferência do ativo naquele mês. O ajuste do ativo fica zero. As causas admitidas são: saldo inicial divergente do saldo final do mês anterior; ajuste calculado divergente (M3); referência de estorno substituída, inclusive em cascata (M5); saldo final diferente de zero sem histórico de evento no destino no mês; ou replay com saldo calculado divergente. Migração de valor zero recusa toda a simulação para que o mês não receba retorno calculável em vez de `N/D`.
 - **M8 — Benchmarks.** Catálogo e séries não migram; os benchmarks públicos usam a sincronização já existente no destino.
 - **M9 — Ativos desativados.** Ativos desativados na origem são criados como ativos comuns e desativados no destino depois do último fechamento somente se o saldo final for zero. Caso contrário, permanecem ativos e são contados.
 - **M10 — Cobertura e consistência.** Mês fechado exige `status='fechado'` e `fechado=1`. O intervalo vai da primeira posição mensal ao último mês fechado; cada mês deve ter fechamento, o saldo inicial de todas as posições no primeiro mês deve ser zero e deve haver evento não calculado nesse mês. Todo ativo com posição no mês anterior ou evento no mês precisa de posição no mês. Em cada mês, `valor_total` deve igualar a soma dos saldos finais mais o trânsito acumulado. Consolidados anteriores sem posições não migram e sua quantidade é relatada. Qualquer evento ou posição depois do último fechamento recusa.
 
-**Precedência das recusas.** A simulação inteira recusa, sem plano, na ordem: M2 conversão inválida; M5 estorno ligado a trânsito; M6 trânsito sem par único; M7 migração de valor zero; M10 cobertura ou consistência; nome acima de 100 caracteres; indício de mais de um usuário. Só as cinco causas listadas em M7 admitem fallback, sem sobreposição com as recusas.
+**Precedência das recusas.** A simulação inteira recusa, sem plano, na ordem: M2 conversão inválida; M5 estorno ligado a trânsito; M6 par ambíguo e, depois, saldo de trânsito negativo; M7 migração de valor zero; M10 cobertura ou consistência; nome acima de 100 caracteres; indício de mais de um usuário. Só as cinco causas listadas em M7 admitem fallback, sem sobreposição com as recusas.
 
-**Casos fictícios (issue #63).** Os mesmos valores estão em `tests/fixtures/financeiro/casos_referencia.json` e são conferidos pelo teste de paridade.
+**Casos fictícios (issues #63 e #73).** Os mesmos valores estão em `tests/fixtures/financeiro/casos_referencia.json` e são conferidos pelo teste de paridade. Nas chaves, `X` é o primeiro ativo comum, outra letra é o ativo cujo nome termina nela, e `operacoes.<tipo>` conta as operações do plano daquele tipo.
 
 #### CR-M01 — Replay exato, câmbio separado e ajuste da origem
 
@@ -1061,6 +1061,75 @@ Estas regras foram aprovadas no plano do ciclo `006` e implementadas na simulaç
   - `mar2025.retorno`: `0`
   - `m7`: `Fundo de Longo Prazo@2025-02`
 
+#### CR-M04 — Trânsito sem contrapartida: entrada e saída como migração no trânsito
+
+- **Entrega:** ciclo `006` (issue #73). **Regras:** M2, M6, M10, P15 e K1.
+- **Entrada:** X com aporte de 10.000,00 em jan/2025; trânsito +1.000,00 (`observacao` positivo) em 10/02 e −1.000,00 (negativo) em 15/03, sem nenhum `RESGATE` ou `APORTE`; X com saldo de 10.000,00 em todos os meses; `valor_total` 10.000,00, 11.000,00 e 10.000,00.
+- **Passo a passo:** nenhum candidato a par → duas `migracao` no trânsito, nas datas da origem. Fev: Vi = 1.000.000, Vf = 1.000.000 + 100.000 = 1.100.000, migração +100.000, sem aporte nem resgate; retorno `N/D` (P15). Mar: migração −100.000, trânsito 0, Vf = 1.000.000, retorno `N/D`; o acumulado que inclui fev e mar é `N/D` (K1). Nenhum ativo, aporte, resgate ou transferência é criado.
+- **Esperado:**
+  - `fev2025.X.saldo_fim`: `1000000`
+  - `fev2025.Em_trânsito.saldo_fim`: `100000`
+  - `fev2025.patrimonio`: `1100000`
+  - `fev2025.aportes`: `0`
+  - `fev2025.resgates`: `0`
+  - `fev2025.migracao`: `100000`
+  - `fev2025.retorno`: `N/D`
+  - `mar2025.Em_trânsito.saldo_fim`: `0`
+  - `mar2025.patrimonio`: `1000000`
+  - `mar2025.migracao`: `-100000`
+  - `mar2025.retorno`: `N/D`
+  - `mar2025.acumulado`: `N/D`
+  - `operacoes.lancar_migracao_transito`: `2`
+  - `operacoes.transferir`: `0`
+
+#### CR-M05 — Trânsito sem contrapartida com saída parcial
+
+- **Entrega:** ciclo `006` (issue #73). **Regras:** M2, M6, M10 e P15.
+- **Entrada:** a do CR-M04, com a saída de mar de 400,00; `valor_total` de mar 10.600,00.
+- **Passo a passo:** fev como no CR-M04. Mar: migração −40.000; trânsito 100.000 − 40.000 = 60.000; Vf = 1.000.000 + 60.000 = 1.060.000, igual ao `valor_total` (M10).
+- **Esperado:**
+  - `fev2025.Em_trânsito.saldo_fim`: `100000`
+  - `mar2025.Em_trânsito.saldo_fim`: `60000`
+  - `mar2025.patrimonio`: `1060000`
+  - `mar2025.migracao`: `-40000`
+  - `mar2025.retorno`: `N/D`
+  - `operacoes.lancar_migracao_transito`: `2`
+
+#### CR-M06 — Trânsito ainda aberto no último mês fechado
+
+- **Entrega:** ciclo `006` (issue #73). **Regras:** M6, M10, P15 e K1.
+- **Entrada:** a do CR-M04, sem a saída de mar; `valor_total` de mar 11.000,00; mar é o último mês fechado.
+- **Passo a passo:** só a migração de fev. Mar não tem evento: o trânsito continua com 100.000 como saldo de fechamento, sem destino inventado. Vi = Vf = 1.100.000, retorno de mar 0; o acumulado desde o início inclui fev e é `N/D`.
+- **Esperado:**
+  - `fev2025.Em_trânsito.saldo_fim`: `100000`
+  - `fev2025.retorno`: `N/D`
+  - `mar2025.Em_trânsito.saldo_fim`: `100000`
+  - `mar2025.patrimonio`: `1100000`
+  - `mar2025.migracao`: `0`
+  - `mar2025.retorno`: `0`
+  - `mar2025.acumulado`: `N/D`
+  - `operacoes.lancar_migracao_transito`: `1`
+
+#### CR-M07 — Pares reais no mesmo mês, sem migração nem contagem dupla
+
+- **Entrega:** ciclo `006` (issue #73). **Regras:** M2, M6, M10 e P6.
+- **Entrada:** X com aporte de 10.000,00 e Y com 5.000,00 em jan/2025; fev: `RESGATE` de 1.000,00 de X em 05/02 e trânsito +1.000,00 em 06/02; mar: trânsito −1.000,00 em 10/03 e `APORTE` de 1.000,00 em Y em 12/03; `valor_total` 15.000,00 nos três meses.
+- **Passo a passo:** cada trânsito tem um único candidato, que só serve a ele → duas transferências (X → trânsito em 06/02; trânsito → Y em 12/03). O resgate e o aporte deixam de ser fluxo externo; nada é contado duas vezes. Fev: X 900.000, trânsito 100.000, Vf = 1.500.000, retorno 0. Mar: Y 600.000, trânsito 0, sem aporte, retorno 0.
+- **Esperado:**
+  - `fev2025.X.saldo_fim`: `900000`
+  - `fev2025.Em_trânsito.saldo_fim`: `100000`
+  - `fev2025.patrimonio`: `1500000`
+  - `fev2025.resgates`: `0`
+  - `fev2025.migracao`: `0`
+  - `fev2025.retorno`: `0`
+  - `mar2025.Y.saldo_fim`: `600000`
+  - `mar2025.Em_trânsito.saldo_fim`: `0`
+  - `mar2025.aportes`: `0`
+  - `mar2025.migracao`: `0`
+  - `mar2025.retorno`: `0`
+  - `operacoes.transferir`: `2`
+  - `operacoes.lancar_migracao_transito`: `0`
+
 ## Fontes
 
 | Fonte | Função | Versão fixada | Limite de autoridade |
@@ -1069,7 +1138,7 @@ Estas regras foram aprovadas no plano do ciclo `006` e implementadas na simulaç
 | SGS do Banco Central, <https://api.bcb.gov.br/dados/serie/bcdata.sgs.{codigo}/dados> | Formato, janelas e séries 12 e 433 | Verificação de 2026-10-13, registrada no plano do ciclo `003` (V1 a V5) | Serviço externo; a disponibilidade não foi medida |
 | Plano do ciclo `003` | Decisões P1 a P18 e D1 a D14 | `_project/executed/003_regras_financeiras/003_plan.md`, `v3` aprovada em 2026-10-14 | Autoridade das decisões; esta KB as especifica |
 | Plano do ciclo `004` | Decisões P17 a P19 (apresentação do Início) | `_project/executed/004_telas_produto/004_plan.md`, `v4` aprovada em 2026-10-14 | Autoridade das decisões; a seção 15 as especifica |
-| Plano do ciclo `006` | Regras M1 a M10 da simulação da migração (issue #63) | `_project/executed/006_migracao_dados_virada/006_plan.md`, `v3` aprovada em 2026-10-17 | Autoridade das decisões; a seção 16 as especifica |
+| Plano do ciclo `006` | Regras M1 a M10 da simulação da migração (issue #63) e M6 revisada com a exceção à K12 (issue #73) | `_project/executed/006_migracao_dados_virada/006_plan.md`, `v3` aprovada em 2026-10-17 e `v4` aprovada em 2026-10-18 | Autoridade das decisões; a seção 16 as especifica |
 | `design-system/DESIGN.md`, seções 6.3 a 6.5 | Formato brasileiro, sinal e `N/D` | Versão vigente em `main` | Contrato visual |
 
 ## Histórico
@@ -1080,3 +1149,4 @@ Estas regras foram aprovadas no plano do ciclo `006` e implementadas na simulaç
 | 2026-10-14 | `003` | Issue #27: datas mínimas do estorno e da correção, trânsito sem lançamento comum e escopo da pendência (ativo com histórico no mês) e saldo atual na desativação, explicitados na implementação do banco |
 | 2026-10-14 | `004` | Issue #40: seção 15, apresentação do Início (P17 a P19), e os casos CR-51 e CR-52 |
 | 2026-10-17 | `006` | Issue #63: seção 16, regras M1 a M10 e casos CR-M01 a CR-M03 |
+| 2026-10-18 | `006` | Issue #73: M6 revisada (`v4` do plano), exceção à K12 (seção 4.4 e decisão K12), precedência das recusas e casos CR-M04 a CR-M07 |

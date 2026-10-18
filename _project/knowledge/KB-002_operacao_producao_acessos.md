@@ -214,7 +214,7 @@ Roteiro da ação externa da issue #65. Ele leva a carteira do `Meus-Investiment
 | :-- | :-- |
 | `main` atualizada, com as issues #63 e #64 integradas | `git checkout main`, `git pull` e `npm ci` |
 | Node.js 24 ou mais recente | `node --version` |
-| Produção com todas as migrações | `npx supabase migration list`: local e remoto alinhados (S12) |
+| Produção com todas as migrações | `npx supabase migration list`: local e remoto alinhados (S12). Inclui a migração da issue #73 (`lancar_migracao_transito`), cujo `db push` é a ação externa daquela issue. Sem ela, o M4 para antes de gravar com `funcao_ausente` |
 | Conta de destino do responsável vazia | A conta já entrou na aplicação, mas não tem nenhum ativo, lançamento ou mês fechado. O migrador confere e recusa se não estiver vazia |
 | UUID do usuário de destino | Painel do Supabase, Authentication, Users, coluna do identificador da conta do responsável. Ele é usado só no comando, não é registrado |
 | Regime de gravador único | **Uma máquina e um processo.** Ninguém usa a aplicação durante a carga, nem o responsável em outra aba ou no celular. O migrador impede um segundo processo na mesma pasta com a trava, mas não impede escrita de outra máquina ou da aplicação; essa escrita é detectada na conferência seguinte e para a carga |
@@ -239,13 +239,14 @@ npm run migracao -- simular --db local\migracao-006\meus-investimentos.sqlite --
 ```
 
 - `"estado":"simulada"`: o plano de operações foi gravado em `local\migracao-006\plano-<...>.json`; anote o caminho que a saída mostra em `"plano"`.
-- `"estado":"recusada"`: nada foi gerado para gravar. A saída lista os códigos das recusas (por exemplo, `M6_TRANSITO_SEM_PAR_UNICO`, `M10_COBERTURA_OU_CONSISTENCIA`) com as quantidades. **Pare aqui** e informe ao agente só os códigos e as quantidades; a decisão sobre o caso volta ao plano, com exemplos fictícios.
+- `"estado":"recusada"`: nada foi gerado para gravar. A saída lista os códigos das recusas (por exemplo, `M6_TRANSITO_PAR_AMBIGUO`, `M6_TRANSITO_SALDO_NEGATIVO`, `M10_COBERTURA_OU_CONSISTENCIA`) com as quantidades. **Pare aqui** e informe ao agente só os códigos e as quantidades; a decisão sobre o caso volta ao plano, com exemplos fictícios.
 
 Com a simulação aceita, abra o relatório detalhado (`relatorio-<...>.json`, na mesma pasta) e confira, sem copiá-lo para lugar nenhum:
 
 - a lista de meses e, em cada mês, o patrimônio do destino (`vf`) contra o da origem (`patrimonioOrigem`);
 - `ativosEmM7`: os ativos e meses cujo histórico vira um único evento de migração, com o motivo; esses meses ficam com rentabilidade `N/D`;
-- no resumo, os meses só com consolidado que não migram e os ativos que serão desativados.
+- no resumo, os meses só com consolidado que não migram e os ativos que serão desativados;
+- no resumo, `transitoComoTransferencia` e `transitoComoMigracao`: quantos eventos de trânsito viraram transferência com um resgate ou aporte real e quantos viraram migração no próprio trânsito (M6, plano `v4`). Os meses com migração no trânsito ficam com rentabilidade `N/D`.
 
 Se algo no relatório não corresponder ao que você conhece da carteira, pare e descreva ao agente só a natureza da dúvida (por exemplo, "um ativo em M7 que eu não esperava"), sem valores nem nomes.
 
@@ -299,7 +300,8 @@ O migrador confere que o plano corresponde à cópia do SQLite e à conta da ses
 | `already_executed_and_reconciled` / `ja_concluida` | O plano inteiro já estava aplicado; nada foi gravado | Siga para M5 |
 | `not_executed` / `destino_nao_vazio` | A conta de destino tem dados e não há retomada comprovada | Pare; nada foi gravado. Decisão do responsável, com o agente, antes de qualquer limpeza |
 | `not_executed` / `trava_presente` | Existe `gravacao.trava` na pasta | Confira no Gerenciador de Tarefas que nenhum outro `node` do migrador está rodando. Só então, se a trava sobrou de um processo interrompido, apague `local\migracao-006\gravacao.trava` e repita M4 |
-| `not_executed` / `plano_invalido`, `usuario_divergente` ou `diario_divergente` | O plano foi alterado, a sessão é de outra conta ou o diário é de outro plano ou outra conta | Pare e informe o motivo ao agente |
+| `not_executed` / `plano_invalido`, `usuario_divergente` ou `diario_divergente` | O plano foi alterado ou é de uma versão anterior do migrador, a sessão é de outra conta ou o diário é de outro plano ou outra conta | Pare e informe o motivo ao agente. Um plano gerado antes da issue #73 não é aceito: simule de novo (M2) |
+| `not_executed` / `funcao_ausente` | O plano usa `lancar_migracao_transito` e a função não respondeu à sonda sem efeito (falta o `db push` da issue #73, ou a rede falhou) | Nada foi gravado. Confira `npx supabase migration list` (S12) e repita M4 |
 | `ambiguous_human_intervention_required` / `desconhecida` | A resposta de uma chamada se perdeu (rede ou tempo esgotado). O efeito dela é desconhecido e **ela não é reenviada** | Espere alguns minutos e repita o mesmo comando M4. O migrador relê o destino: se o efeito aparece exatamente uma vez, ele o reconhece e continua |
 | `ambiguous_human_intervention_required` / `desconhecida_sem_efeito` | Na retomada, o efeito da operação desconhecida ainda não aparece | A chamada original pode ainda estar em execução. Espere e repita M4 mais tarde. Se continuar assim, pare: a decisão é esperar mais ou desfazer a carga (M7). Nunca reenvie à mão |
 | `ambiguous_human_intervention_required` / `estado_divergente` | O destino não é um prefixo exato do plano: houve escrita de fora ou um efeito parcial ou duplicado | Pare. Informe ao agente o motivo e as contagens de `diferencas`. O caminho provável é M7 |
@@ -357,3 +359,4 @@ Consultadas em 2026-10-12 e conferidas na execução de 2026-10-13. São documen
 | 2026-10-12 | `001` | Criação |
 | 2026-10-13 | `001` | Correções depois da execução do Gate H-C: um único `db push`, tela do Google em modo Testando (GC2, GC4 e armadilha 7), rótulo "Project ID", Redirect URL sem `localhost`, alerta de senhas vazadas aceito, integração Cron não instalada, ordem das variáveis na Vercel, teste direto do keepalive e limitação dos logs |
 | 2026-10-18 | `006` | Seção "Migração e virada": roteiro da ação externa da issue #65 (M0 a M8) |
+| 2026-10-18 | `006` | Issue #73: `db push` da função `lancar_migracao_transito` antes de gravar, códigos de recusa de M6 revisada, contagens de trânsito no resumo e o motivo `funcao_ausente` |

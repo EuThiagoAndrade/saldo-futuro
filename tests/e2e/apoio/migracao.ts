@@ -125,6 +125,53 @@ export function carteiraCompleta(): EntradaOrigem {
   };
 }
 
+/**
+ * Carteira fictícia do plano v4 (M6 revisado), janeiro a maio de 2025:
+ * - fevereiro: trânsito +100,00 sem contrapartida → migração no trânsito (exemplo A);
+ * - março: trânsito −40,00 sem contrapartida → migração no trânsito, saldo 60,00 (exemplo B);
+ * - abril: resgate de 300,00 de Beta e trânsito +300,00 → transferência (exemplo D);
+ * - maio: trânsito −300,00 e aporte de 300,00 em Alfa → transferência (exemplo D);
+ * - o trânsito termina maio com 60,00, sem destino inventado (exemplo C).
+ * Patrimônio da origem: jan 1.300,00; fev 1.400,00; mar a mai 1.360,00.
+ */
+export function carteiraComTransitoSemPar(): EntradaOrigem {
+  return {
+    ativos: [
+      { id: 1, descricao: "Fundo Fictício Alfa", classificacao: "Pós-fixado", ativo: true },
+      { id: 2, descricao: "Fundo Fictício Beta", classificacao: "Pós-fixado", ativo: true },
+    ],
+    eventos: [
+      { id: 1, ativo_id: 1, data: "2025-01-05", tipo: "APORTE", valor: 1000 },
+      { id: 2, ativo_id: 2, data: "2025-01-06", tipo: "APORTE", valor: 300 },
+      { id: 3, ativo_id: null, data: "2025-02-10", tipo: "TRANSFERENCIA_PENDENTE", valor: 100, observacao: "positivo" },
+      { id: 4, ativo_id: null, data: "2025-03-15", tipo: "TRANSFERENCIA_PENDENTE", valor: 40, observacao: "negativo" },
+      { id: 5, ativo_id: 2, data: "2025-04-05", tipo: "RESGATE", valor: 300 },
+      { id: 6, ativo_id: null, data: "2025-04-06", tipo: "TRANSFERENCIA_PENDENTE", valor: 300, observacao: "positivo" },
+      { id: 7, ativo_id: null, data: "2025-05-03", tipo: "TRANSFERENCIA_PENDENTE", valor: 300, observacao: "negativo" },
+      { id: 8, ativo_id: 1, data: "2025-05-04", tipo: "APORTE", valor: 300 },
+    ],
+    posicoes: [
+      { ativo_id: 1, ano: 2025, mes: 1, saldo_inicio: 0, saldo_fim: 1000 },
+      { ativo_id: 2, ano: 2025, mes: 1, saldo_inicio: 0, saldo_fim: 300 },
+      { ativo_id: 1, ano: 2025, mes: 2, saldo_inicio: 1000, saldo_fim: 1000 },
+      { ativo_id: 2, ano: 2025, mes: 2, saldo_inicio: 300, saldo_fim: 300 },
+      { ativo_id: 1, ano: 2025, mes: 3, saldo_inicio: 1000, saldo_fim: 1000 },
+      { ativo_id: 2, ano: 2025, mes: 3, saldo_inicio: 300, saldo_fim: 300 },
+      { ativo_id: 1, ano: 2025, mes: 4, saldo_inicio: 1000, saldo_fim: 1000 },
+      { ativo_id: 2, ano: 2025, mes: 4, saldo_inicio: 300, saldo_fim: 0 },
+      { ativo_id: 1, ano: 2025, mes: 5, saldo_inicio: 1000, saldo_fim: 1300 },
+      { ativo_id: 2, ano: 2025, mes: 5, saldo_inicio: 0, saldo_fim: 0 },
+    ],
+    consolidados: [
+      { ano: 2025, mes: 1, valor_total: 1300 },
+      { ano: 2025, mes: 2, valor_total: 1400 },
+      { ano: 2025, mes: 3, valor_total: 1360 },
+      { ano: 2025, mes: 4, valor_total: 1360 },
+      { ano: 2025, mes: 5, valor_total: 1360 },
+    ],
+  };
+}
+
 /** Um ativo fictício com aportes de 1,00 por dia útil fictício: mais de 1.000 eventos em 2024. */
 export function carteiraGrande(eventosPorMes = 100, meses = 11): EntradaOrigem {
   const entrada: EntradaOrigem = {
@@ -153,8 +200,12 @@ export type ModoFalha = "antes" | "depois";
 export interface Falhas {
   rpc?: string;
   modo?: ModoFalha;
+  /** Quantas chamadas de `rpc` passam antes da falha (por exemplo, a sonda da gravação). */
+  pular?: number;
   /** Executado antes de enviar a n-ésima chamada de função (contagem de todas as funções). */
   antesDaChamada?: { n: number; fn: () => Promise<void> };
+  /** Responde a esta função como o PostgREST responde a uma função inexistente (404). */
+  semFuncao?: string;
   /** Falha a página de uma tabela que começa no deslocamento dado. */
   pagina?: { tabela: string; de: number };
 }
@@ -167,8 +218,14 @@ export async function clienteComFalhas(usuario: UsuarioDeTeste, falhas: Falhas):
     const rpc = /\/rest\/v1\/rpc\/([a-z_]+)/.exec(url)?.[1];
     if (rpc) {
       chamadas++;
+      if (falhas.semFuncao === rpc) {
+        const corpo = { code: "PGRST202", message: `Could not find the function public.${rpc}`, details: null, hint: null };
+        return new Response(JSON.stringify(corpo), { status: 404, headers: { "content-type": "application/json" } });
+      }
       if (falhas.antesDaChamada?.n === chamadas) await falhas.antesDaChamada.fn();
-      if (falhas.rpc === rpc && falhas.modo) {
+      if (falhas.rpc === rpc && falhas.modo && (falhas.pular ?? 0) > 0) {
+        falhas.pular! -= 1;
+      } else if (falhas.rpc === rpc && falhas.modo) {
         const modo = falhas.modo;
         falhas.rpc = undefined;
         if (modo === "antes") throw new TypeError("fetch failed");

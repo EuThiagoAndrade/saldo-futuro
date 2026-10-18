@@ -9,6 +9,8 @@
 // - resposta perdida nunca é reenviada: a operação fica "desconhecida" e a carga para. Na
 //   retomada, o efeito completo que aparece exatamente uma vez é reconhecido; ausente, parcial ou
 //   duplicado, a carga continua parada, sem escrita;
+// - a função lancar_migracao_transito (plano v4, exceção à K12) é sondada antes da primeira
+//   escrita quando o plano a usa: sem ela no banco, a carga não começa;
 // - comparação por efeitos completos (src/lib/migracao/destino.ts) no início, antes de cada
 //   fechamento e no fim; antes das demais escritas, a marca da carteira (contagens, meses e
 //   última desativação) precisa ser exatamente a esperada. Como eventos e transferências só
@@ -36,7 +38,7 @@ import {
   TRANSITO,
 } from "./destino";
 import { serializarEstavel, sha256 } from "./quantias";
-import type { OperacaoMigracao, PlanoMigracao, RelatorioSimulacao } from "./tipos";
+import { type OperacaoMigracao, type PlanoMigracao, type RelatorioSimulacao, VERSAO_PLANO } from "./tipos";
 
 export type ClienteGravacao = Cliente & Pick<SupabaseClient, "rpc">;
 
@@ -58,7 +60,8 @@ export type MotivoGravacao =
   | "desconhecida_sem_efeito"
   | "recusada"
   | "leitura_falhou"
-  | "trava_presente";
+  | "trava_presente"
+  | "funcao_ausente";
 
 export interface ResultadoGravacao {
   result: ResultadoHandoff;
@@ -134,7 +137,7 @@ function mapaDeAtivos(plano: PlanoMigracao, ids: ReadonlyMap<number, string | nu
 function idDoEfeito(operacao: OperacaoMigracao, estado: EstadoDestino, conhecidos: Set<string>): string | null | undefined {
   let candidatos: string[];
   if (operacao.tipo === "criar_ativo") candidatos = estado.ativos.filter((a) => a.sistema === null).map((a) => a.id);
-  else if (operacao.tipo === "lancar_evento" || operacao.tipo === "estornar_evento")
+  else if (operacao.tipo === "lancar_evento" || operacao.tipo === "lancar_migracao_transito" || operacao.tipo === "estornar_evento")
     candidatos = estado.eventos.filter((e) => !e.transferencia_id).map((e) => e.id);
   else if (operacao.tipo === "transferir") candidatos = estado.transferencias.map((t) => t.id);
   else return null;
@@ -145,6 +148,22 @@ function idDoEfeito(operacao: OperacaoMigracao, estado: EstadoDestino, conhecido
 /** Só um SQLSTATE devolvido pelo banco prova que nada foi gravado; aborto, rede e gateway, não. */
 function erroDeChamada(error: { code?: unknown } | null): "recusada" | "desconhecida" {
   return typeof error?.code === "string" && RECUSA_CERTA.test(error.code) ? "recusada" : "desconhecida";
+}
+
+/**
+ * Sonda sem efeito (plano v4): chamar lancar_migracao_transito com valor zero só pode responder a
+ * recusa recusado_sinal, que não grava nada. Qualquer outra resposta (função ausente, sem
+ * permissão, rede) significa que a função não está disponível.
+ */
+async function migracaoNoTransitoDisponivel(cliente: ClienteGravacao, data: string, tempoLimite: number): Promise<boolean> {
+  try {
+    const { error } = await cliente
+      .rpc("lancar_migracao_transito", { p_data: data, p_valor: 0 })
+      .abortSignal(AbortSignal.timeout(tempoLimite));
+    return error?.message === "recusado_sinal";
+  } catch {
+    return false;
+  }
 }
 
 function inteiro(valor: unknown): number {
@@ -171,7 +190,7 @@ export async function gravar(
     ...extra,
   });
 
-  if (plano.versao !== 1 || hashDoPlano(plano) !== plano.sha256Plano || plano.operacoes.some((o, i) => o.sequencia !== i + 1)) {
+  if (plano.versao !== VERSAO_PLANO || hashDoPlano(plano) !== plano.sha256Plano || plano.operacoes.some((o, i) => o.sequencia !== i + 1)) {
     return parar("not_executed", "plano_invalido", 0);
   }
   if (plano.usuarioDestino !== usuarioSessao) return parar("not_executed", "usuario_divergente", 0);
@@ -232,6 +251,12 @@ export async function gravar(
     }
   }
 
+  const tempoLimite = opcoes.tempoLimiteMs ?? TEMPO_LIMITE_PADRAO;
+  const migracaoNoTransito = plano.operacoes.slice(ids.size).find((o) => o.tipo === "lancar_migracao_transito");
+  if (migracaoNoTransito && !(await migracaoNoTransitoDisponivel(cliente, String(migracaoNoTransito.data), tempoLimite))) {
+    return parar("not_executed", "funcao_ausente", ids.size);
+  }
+
   if (!cabecalho) {
     await diario.acrescentar({
       tipo: "cabecalho",
@@ -253,7 +278,6 @@ export async function gravar(
   const idPorChave = new Map<string, string | null>();
   for (const [sequencia, id] of ids) idPorChave.set(plano.operacoes[sequencia - 1].chave, id);
   const porChave = new Map(plano.operacoes.map((o) => [o.chave, o]));
-  const tempoLimite = opcoes.tempoLimiteMs ?? TEMPO_LIMITE_PADRAO;
 
   const uuidAtivo = (id: string): string => {
     const uuid = id === TRANSITO ? transito : idPorChave.get(id);
@@ -303,6 +327,10 @@ export async function gravar(
       case "lancar_evento":
         funcao = "lancar_evento";
         argumentos = { p_ativo: uuidAtivo(String(p.ativo)), p_data: p.data, p_tipo: p.tipo, p_valor: inteiro(p.valorCentavos) };
+        break;
+      case "lancar_migracao_transito":
+        funcao = "lancar_migracao_transito";
+        argumentos = { p_data: p.data, p_valor: inteiro(p.valorCentavos) };
         break;
       case "estornar_evento": {
         const referencia = idPorChave.get(referenciaDoEstorno(operacao, porChave).chave);
@@ -377,6 +405,7 @@ export async function gravar(
         }
         break;
       case "lancar_evento":
+      case "lancar_migracao_transito":
       case "estornar_evento":
         contagens.eventos += 1;
         break;
