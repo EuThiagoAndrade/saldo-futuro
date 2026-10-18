@@ -2828,6 +2828,50 @@
         "operacoes.transferir": "2",
         "operacoes.lancar_migracao_transito": "0"
       }
+    },
+    {
+      "id": "CR-M08",
+      "titulo": "Posição implícita zero depois de saldo zero sem evento",
+      "entrega": "006",
+      "regras": ["M9", "M10"],
+      "entrada": {
+        "ativos": [{"id": 1, "descricao": "Fundo Fictício X", "classificacao": "Pós-fixado", "ativo": true}, {"id": 2, "descricao": "Fundo Fictício Z", "classificacao": "Pós-fixado", "ativo": false}],
+        "eventos": [
+          {"id": 1, "ativo_id": 1, "data_evento": "2025-01-05", "ano": 2025, "mes": 1, "tipo_evento": "APORTE", "valor": 10000.00, "origem": "manual"},
+          {"id": 2, "ativo_id": 2, "data_evento": "2025-01-06", "ano": 2025, "mes": 1, "tipo_evento": "APORTE", "valor": 2000.00, "origem": "manual"},
+          {"id": 3, "ativo_id": 2, "data_evento": "2025-02-10", "ano": 2025, "mes": 2, "tipo_evento": "RESGATE", "valor": 2000.00, "origem": "manual"}
+        ],
+        "posicoes": [
+          {"ativo_id": 1, "ano": 2025, "mes": 1, "saldo_inicio": 0, "saldo_fim": 10000.00},
+          {"ativo_id": 2, "ano": 2025, "mes": 1, "saldo_inicio": 0, "saldo_fim": 2000.00},
+          {"ativo_id": 1, "ano": 2025, "mes": 2, "saldo_inicio": 10000.00, "saldo_fim": 10000.00},
+          {"ativo_id": 2, "ano": 2025, "mes": 2, "saldo_inicio": 2000.00, "saldo_fim": 0},
+          {"ativo_id": 1, "ano": 2025, "mes": 3, "saldo_inicio": 10000.00, "saldo_fim": 10000.00},
+          {"ativo_id": 1, "ano": 2025, "mes": 4, "saldo_inicio": 10000.00, "saldo_fim": 10000.00}
+        ],
+        "consolidados": [
+          {"ano": 2025, "mes": 1, "valor_total": 12000.00, "status": "fechado", "fechado": true},
+          {"ano": 2025, "mes": 2, "valor_total": 10000.00, "status": "fechado", "fechado": true},
+          {"ano": 2025, "mes": 3, "valor_total": 10000.00, "status": "fechado", "fechado": true},
+          {"ano": 2025, "mes": 4, "valor_total": 10000.00, "status": "fechado", "fechado": true}
+        ]
+      },
+      "esperado": {
+        "fev2025.Z.saldo_fim": "0",
+        "fev2025.resgates": "-200000",
+        "fev2025.retorno": "0",
+        "mar2025.Z.saldo_fim": "0",
+        "mar2025.patrimonio": "1000000",
+        "mar2025.retorno": "0",
+        "abr2025.Z.saldo_fim": "0",
+        "abr2025.X.saldo_fim": "1000000",
+        "abr2025.patrimonio": "1000000",
+        "abr2025.migracao": "0",
+        "abr2025.retorno": "0",
+        "abr2025.acumulado": "0",
+        "posicoes_implicitas_zero": "2",
+        "operacoes.desativar_ativo": "1"
+      }
     }
   ]
 }

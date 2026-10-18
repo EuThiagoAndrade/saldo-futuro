@@ -1001,7 +1001,7 @@ Todo período passa pelo período efetivo (K8) e pela regra do `N/D` (K1) da se�
 
 ### 16. Migração da origem (M1 a M10 do ciclo `006`)
 
-Estas regras foram aprovadas no plano do ciclo `006` e implementadas na simulação da issue #63. M6 foi revisada na `v4` do plano (2026-10-18) e implementada na issue #73. A simulação é somente leitura: o detalhe fica em `local/`, o plano só é produzido se todos os critérios forem aceitos, e a saída compartilhável contém contagens.
+Estas regras foram aprovadas no plano do ciclo `006` e implementadas na simulação da issue #63. M6 foi revisada na `v4` do plano (2026-10-18) e implementada na issue #73; M10, na `v5` (2026-10-18), implementada na issue #76. A simulação é somente leitura: o detalhe fica em `local/`, o plano só é produzido se todos os critérios forem aceitos, e a saída compartilhável contém contagens.
 
 - **M1 — Tipo de ajuste.** Classificação contendo `cripto` ou `vari` (sem distinguir maiúsculas) mapeia para ajuste `marcacao`; as demais mapeiam para `rendimento`.
 - **M2 — Sinais e conversão.** `RESGATE` recebe sinal negativo; nos tipos direcionais, `observacao` contendo `negativo` também torna o valor negativo. `INTEGER` representa unidades monetárias e é convertido para centavos; `REAL` usa a representação decimal mais curta de JavaScript; `TEXT` precisa corresponder a `^\d+(\.\d{1,2})?$`. A conversão pelos dígitos não arredonda. Expoente, mais de duas casas, valor de evento negativo ou mais de 15 algarismos significativos recusa a simulação inteira. Saldos e totais de fechamento preservam o sinal da origem.
@@ -1012,7 +1012,7 @@ Estas regras foram aprovadas no plano do ciclo `006` e implementadas na simulaç
 - **M7 — Fallback.** As transferências M6 são preservadas por inteiro. Os demais eventos do ativo no mês, inclusive estornos, são substituídos por um único evento `migracao` no último dia do mês. O valor é `saldo_fim` da origem − saldo final do ativo no destino no mês anterior − soma das pernas de transferência do ativo naquele mês. O ajuste do ativo fica zero. As causas admitidas são: saldo inicial divergente do saldo final do mês anterior; ajuste calculado divergente (M3); referência de estorno substituída, inclusive em cascata (M5); saldo final diferente de zero sem histórico de evento no destino no mês; ou replay com saldo calculado divergente. Migração de valor zero recusa toda a simulação para que o mês não receba retorno calculável em vez de `N/D`.
 - **M8 — Benchmarks.** Catálogo e séries não migram; os benchmarks públicos usam a sincronização já existente no destino.
 - **M9 — Ativos desativados.** Ativos desativados na origem são criados como ativos comuns e desativados no destino depois do último fechamento somente se o saldo final for zero. Caso contrário, permanecem ativos e são contados.
-- **M10 — Cobertura e consistência.** Mês fechado exige `status='fechado'` e `fechado=1`. O intervalo vai da primeira posição mensal ao último mês fechado; cada mês deve ter fechamento, o saldo inicial de todas as posições no primeiro mês deve ser zero e deve haver evento não calculado nesse mês. Todo ativo com posição no mês anterior ou evento no mês precisa de posição no mês. Em cada mês, `valor_total` deve igualar a soma dos saldos finais mais o trânsito acumulado. Consolidados anteriores sem posições não migram e sua quantidade é relatada. Qualquer evento ou posição depois do último fechamento recusa.
+- **M10 — Cobertura e consistência.** Mês fechado exige `status='fechado'` e `fechado=1`. O intervalo vai da primeira posição mensal ao último mês fechado; cada mês deve ter fechamento, o saldo inicial de todas as posições no primeiro mês deve ser zero e deve haver evento não calculado nesse mês. Todo ativo com posição no mês anterior ou evento no mês precisa de posição no mês. **Exceção (`v5`):** se a posição anterior, real ou implícita, terminou com saldo zero e o ativo não tem nenhum evento no mês na origem, inclusive calculado ou de valor zero, a ausência vira uma posição implícita com saldo inicial e final zero, aplicada mês a mês dentro do intervalo; o fechamento recebe saldo real zero para ela, e o resumo conta as posições implícitas (`posicoesImplicitasZero`). Qualquer outra ausência recusa. Em cada mês, `valor_total` deve igualar a soma dos saldos finais mais o trânsito acumulado. Consolidados anteriores sem posições não migram e sua quantidade é relatada. Qualquer evento ou posição depois do último fechamento recusa.
 
 **Precedência das recusas.** A simulação inteira recusa, sem plano, na ordem: M2 conversão inválida; M5 estorno ligado a trânsito; M6 par ambíguo e, depois, saldo de trânsito negativo; M7 migração de valor zero; M10 cobertura ou consistência; nome acima de 100 caracteres; indício de mais de um usuário. Só as cinco causas listadas em M7 admitem fallback, sem sobreposição com as recusas.
 
@@ -1130,6 +1130,27 @@ Estas regras foram aprovadas no plano do ciclo `006` e implementadas na simulaç
   - `operacoes.transferir`: `2`
   - `operacoes.lancar_migracao_transito`: `0`
 
+#### CR-M08 — Posição implícita zero depois de saldo zero sem evento
+
+- **Entrega:** ciclo `006` (issue #76). **Regras:** M9 e M10.
+- **Entrada:** X (ativo) com aporte de 10.000,00 em 05/01/2025 e saldo de 10.000,00 em jan a abr; Z (desativado na origem) com aporte de 2.000,00 em 06/01 e resgate total em 10/02, com posições só em jan (2.000,00) e fev (0); nenhum evento de Z em mar e abr; `valor_total` 12.000,00, 10.000,00, 10.000,00 e 10.000,00.
+- **Passo a passo:** em mar, Z tem posição anterior de saldo zero e nenhum evento → posição implícita 0 → 0; em abr, o mesmo a partir da implícita de mar. O fechamento recebe saldo real 0 para Z. Fev: Vi = 1.200.000, resgate −200.000, Vf = 1.000.000, retorno 0. Mar e abr: Vi = Vf = 1.000.000, retorno 0; o acumulado desde o início (a partir de fev, K8) é 0. M9 desativa Z depois do último mês, com saldo zero.
+- **Esperado:**
+  - `fev2025.Z.saldo_fim`: `0`
+  - `fev2025.resgates`: `-200000`
+  - `fev2025.retorno`: `0`
+  - `mar2025.Z.saldo_fim`: `0`
+  - `mar2025.patrimonio`: `1000000`
+  - `mar2025.retorno`: `0`
+  - `abr2025.Z.saldo_fim`: `0`
+  - `abr2025.X.saldo_fim`: `1000000`
+  - `abr2025.patrimonio`: `1000000`
+  - `abr2025.migracao`: `0`
+  - `abr2025.retorno`: `0`
+  - `abr2025.acumulado`: `0`
+  - `posicoes_implicitas_zero`: `2`
+  - `operacoes.desativar_ativo`: `1`
+
 ## Fontes
 
 | Fonte | Função | Versão fixada | Limite de autoridade |
@@ -1138,7 +1159,7 @@ Estas regras foram aprovadas no plano do ciclo `006` e implementadas na simulaç
 | SGS do Banco Central, <https://api.bcb.gov.br/dados/serie/bcdata.sgs.{codigo}/dados> | Formato, janelas e séries 12 e 433 | Verificação de 2026-10-13, registrada no plano do ciclo `003` (V1 a V5) | Serviço externo; a disponibilidade não foi medida |
 | Plano do ciclo `003` | Decisões P1 a P18 e D1 a D14 | `_project/executed/003_regras_financeiras/003_plan.md`, `v3` aprovada em 2026-10-14 | Autoridade das decisões; esta KB as especifica |
 | Plano do ciclo `004` | Decisões P17 a P19 (apresentação do Início) | `_project/executed/004_telas_produto/004_plan.md`, `v4` aprovada em 2026-10-14 | Autoridade das decisões; a seção 15 as especifica |
-| Plano do ciclo `006` | Regras M1 a M10 da simulação da migração (issue #63) e M6 revisada com a exceção à K12 (issue #73) | `_project/executed/006_migracao_dados_virada/006_plan.md`, `v3` aprovada em 2026-10-17 e `v4` aprovada em 2026-10-18 | Autoridade das decisões; a seção 16 as especifica |
+| Plano do ciclo `006` | Regras M1 a M10 da simulação da migração (issue #63) M6 revisada com a exceção à K12 (issue #73) e M10 revisada com a posição implícita zero (issue #76) | `_project/executed/006_migracao_dados_virada/006_plan.md`, `v3` aprovada em 2026-10-17, `v4` e `v5` aprovadas em 2026-10-18 | Autoridade das decisões; a seção 16 as especifica |
 | `design-system/DESIGN.md`, seções 6.3 a 6.5 | Formato brasileiro, sinal e `N/D` | Versão vigente em `main` | Contrato visual |
 
 ## Histórico
@@ -1150,3 +1171,4 @@ Estas regras foram aprovadas no plano do ciclo `006` e implementadas na simulaç
 | 2026-10-14 | `004` | Issue #40: seção 15, apresentação do Início (P17 a P19), e os casos CR-51 e CR-52 |
 | 2026-10-17 | `006` | Issue #63: seção 16, regras M1 a M10 e casos CR-M01 a CR-M03 |
 | 2026-10-18 | `006` | Issue #73: M6 revisada (`v4` do plano), exceção à K12 (seção 4.4 e decisão K12), precedência das recusas e casos CR-M04 a CR-M07 |
+| 2026-10-18 | `006` | Issue #76: M10 revisada (`v5` do plano), posição implícita zero, e caso CR-M08 |

@@ -1,7 +1,7 @@
 # Plano de Implementação — Migração única dos dados e virada
 
 > **Ciclo:** `006`
-> **Status:** `Aprovado`
+> **Status:** `Em Execução`
 > **Versão:** `v5`
 > **Data de criação:** 2026-10-17
 > **Última atualização:** 2026-10-18
@@ -457,7 +457,7 @@ Uma PR por issue, cada uma com aprovação própria do merge. O encerramento vai
 
 | Campo | Valor |
 | :-- | :-- |
-| Issue(s) | A [#63](https://github.com/EuThiagoAndrade/saldo-futuro/issues/63), B [#64](https://github.com/EuThiagoAndrade/saldo-futuro/issues/64) e C [#65](https://github.com/EuThiagoAndrade/saldo-futuro/issues/65), fechadas pelos merges (a ação externa de C segue pendente); correção pela trilha curta [#70](https://github.com/EuThiagoAndrade/saldo-futuro/issues/70); D [#73](https://github.com/EuThiagoAndrade/saldo-futuro/issues/73), fechada pelo merge (ação externa de D pendente); E a criar depois da aprovação da `v5` |
+| Issue(s) | A [#63](https://github.com/EuThiagoAndrade/saldo-futuro/issues/63), B [#64](https://github.com/EuThiagoAndrade/saldo-futuro/issues/64) e C [#65](https://github.com/EuThiagoAndrade/saldo-futuro/issues/65), fechadas pelos merges (a ação externa de C segue pendente); correção pela trilha curta [#70](https://github.com/EuThiagoAndrade/saldo-futuro/issues/70); D [#73](https://github.com/EuThiagoAndrade/saldo-futuro/issues/73), fechada pelo merge (ação externa de D pendente); E [#76](https://github.com/EuThiagoAndrade/saldo-futuro/issues/76) |
 | PR(s) | [#62](https://github.com/EuThiagoAndrade/saldo-futuro/pull/62) (plano, integrada); [#66](https://github.com/EuThiagoAndrade/saldo-futuro/pull/66) (issue A, integrada); [#68](https://github.com/EuThiagoAndrade/saldo-futuro/pull/68) (issue B, integrada); [#69](https://github.com/EuThiagoAndrade/saldo-futuro/pull/69) (issue C, integrada); [#71](https://github.com/EuThiagoAndrade/saldo-futuro/pull/71) (issue #70, integrada); [#72](https://github.com/EuThiagoAndrade/saldo-futuro/pull/72) (`v4`, integrada); [#74](https://github.com/EuThiagoAndrade/saldo-futuro/pull/74) (issue D, integrada) |
 | Branch(es) | `chore/cycle-006-ideation` (rascunho local da `v1` a `v3`); `chore/cycle-006-plan` (PR #62); `chore/cycle-006-plan-v4` (PR #72); `feature/issue-73` (PR #74); `chore/cycle-006-plan-v5` (rascunho local da `v5`, sem commit) |
 | Destino após conclusão | `_project/executed/006_migracao_dados_virada/006_plan.md` |
@@ -468,20 +468,20 @@ Uma PR por issue, cada uma com aprovação própria do merge. O encerramento vai
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 006 (completo)
 Quem: Responsável
-Conferir: [PR #75](https://github.com/EuThiagoAndrade/saldo-futuro/pull/75), checks remotos e o diff limitado ao plano, às tasks #65 e #73 e a `cycles.md`
-Diga: "aprovo o merge da PR #75"
+Conferir: [PR #77](https://github.com/EuThiagoAndrade/saldo-futuro/pull/77), checks remotos, diff e barreiras G1 a G4
+Diga: "aprovo o merge da PR #77"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 006 + aprovar_plano + 006_plan + v5 (base 2470a26)`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 006 + implementar_issue + 76/E + base 3afd8907ca296a58b2d77a82dd841551f23c1646`
 - `effect_class`: `remote_mutation`
-- `state_before`: plano `v5` `Em Revisão`, revisão `Concluída`, veredito `APTO COM RESSALVAS` (rodada 5), aprovação `Pendente (v5)`; rascunho local sem commit
-- `state_after`: plano `v5` `Aprovado` (`Aprovada em 2026-10-18`); PR documental da `v5` aberta contra `main`; payload da issue E preparado, sem issue criada
+- `state_before`: plano `v5` `Aprovado`; issue #76 criada (`OPEN`, corpo com SHA-256 `54fdc871aadf2bed5e6820002d2a3271c1f3b184e8df617d2818661ab9515781`), sem branch nem task
+- `state_after`: plano `Em Execução`; branch `feature/issue-76`, task `006_task_issue-76.md` `Aguardando integração`, PR #77 aberta contra `main`
 - `result`: `executed`
-- `evidence`: "aprovo o plano do ciclo 006" em 2026-10-18, posterior ao veredito da rodada 5; SHA-256 do corpo conferido (ver "Aprovação da `v5` e publicação documental"); validador e `git diff --check` verdes
-- `blockers`: checks remotos e "aprovo o merge da PR #75"; depois, a confirmação do payload da issue E
+- `evidence`: "autorizo a implementação da issue #76" em 2026-10-18; gates e conferência independente na task da issue #76
+- `blockers`: checks remotos e "aprovo o merge da PR #77"; depois, simulação local pelo agente (coberta pela aprovação da `v5`); `db push` da issue #73 e `gravar` nas ações externas
 
 ## Revisão crítica
 

@@ -246,7 +246,8 @@ Com a simulação aceita, abra o relatório detalhado (`relatorio-<...>.json`, n
 - a lista de meses e, em cada mês, o patrimônio do destino (`vf`) contra o da origem (`patrimonioOrigem`);
 - `ativosEmM7`: os ativos e meses cujo histórico vira um único evento de migração, com o motivo; esses meses ficam com rentabilidade `N/D`;
 - no resumo, os meses só com consolidado que não migram e os ativos que serão desativados;
-- no resumo, `transitoComoTransferencia` e `transitoComoMigracao`: quantos eventos de trânsito viraram transferência com um resgate ou aporte real e quantos viraram migração no próprio trânsito (M6, plano `v4`). Os meses com migração no trânsito ficam com rentabilidade `N/D`.
+- no resumo, `transitoComoTransferencia` e `transitoComoMigracao`: quantos eventos de trânsito viraram transferência com um resgate ou aporte real e quantos viraram migração no próprio trânsito (M6, plano `v4`). Os meses com migração no trânsito ficam com rentabilidade `N/D`;
+- no resumo, `posicoesImplicitasZero`: quantas posições de saldo zero a simulação acrescentou para ativos que zeraram num mês e não tiveram nenhum evento depois (M10, plano `v5`). Elas entram no fechamento com saldo real zero e não mudam patrimônio nem rentabilidade.
 
 Se algo no relatório não corresponder ao que você conhece da carteira, pare e descreva ao agente só a natureza da dúvida (por exemplo, "um ativo em M7 que eu não esperava"), sem valores nem nomes.
 
@@ -360,3 +361,4 @@ Consultadas em 2026-10-12 e conferidas na execução de 2026-10-13. São documen
 | 2026-10-13 | `001` | Correções depois da execução do Gate H-C: um único `db push`, tela do Google em modo Testando (GC2, GC4 e armadilha 7), rótulo "Project ID", Redirect URL sem `localhost`, alerta de senhas vazadas aceito, integração Cron não instalada, ordem das variáveis na Vercel, teste direto do keepalive e limitação dos logs |
 | 2026-10-18 | `006` | Seção "Migração e virada": roteiro da ação externa da issue #65 (M0 a M8) |
 | 2026-10-18 | `006` | Issue #73: `db push` da função `lancar_migracao_transito` antes de gravar, códigos de recusa de M6 revisada, contagens de trânsito no resumo e o motivo `funcao_ausente` |
+| 2026-10-18 | `006` | Issue #76: contagem `posicoesImplicitasZero` no resumo da simulação (M10 revisada) |
