@@ -112,6 +112,8 @@ export interface ResumoSimulacao {
   transitoComoTransferencia: number;
   /** M6, caso b: eventos de trânsito sem candidato, migrados como `migracao` no trânsito. */
   transitoComoMigracao: number;
+  /** M10 (plano v5): posições 0 → 0 acrescentadas depois de saldo zero, sem evento do ativo no mês. */
+  posicoesImplicitasZero: number;
 }
 
 export interface PosicaoSimulada {

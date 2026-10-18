@@ -172,6 +172,17 @@ export function carteiraComTransitoSemPar(): EntradaOrigem {
   };
 }
 
+/**
+ * A carteira completa sem as posições de Gama em março e abril (plano v5, M10): Gama zera em
+ * fevereiro, não tem eventos depois e a origem não grava posição de saldo zero. A simulação cria
+ * duas posições implícitas 0 → 0; patrimônio e consolidados não mudam.
+ */
+export function carteiraComPosicaoImplicita(): EntradaOrigem {
+  const entrada = carteiraCompleta();
+  entrada.posicoes = entrada.posicoes.filter((p) => !(p.ativo_id === 3 && p.mes >= 3));
+  return entrada;
+}
+
 /** Um ativo fictício com aportes de 1,00 por dia útil fictício: mais de 1.000 eventos em 2024. */
 export function carteiraGrande(eventosPorMes = 100, meses = 11): EntradaOrigem {
   const entrada: EntradaOrigem = {

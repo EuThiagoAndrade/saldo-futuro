@@ -87,8 +87,8 @@ Não se aplica.
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 006 (completo)
 Quem: Responsável
-Conferir: [PR #75](https://github.com/EuThiagoAndrade/saldo-futuro/pull/75), checks remotos e o diff limitado ao plano, às tasks #65 e #73 e a `cycles.md`
-Diga: "aprovo o merge da PR #75"
+Conferir: [PR #77](https://github.com/EuThiagoAndrade/saldo-futuro/pull/77), checks remotos, diff e barreiras G1 a G4
+Diga: "aprovo o merge da PR #77"
 ```
 
 ## Handoff de saída

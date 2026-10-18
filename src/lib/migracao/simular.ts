@@ -120,6 +120,7 @@ function resumoVazio(dados?: { ativos?: readonly unknown[]; eventos?: readonly {
     ativosComSaldoQuePermanecemAtivos: 0,
     transitoComoTransferencia: 0,
     transitoComoMigracao: 0,
+    posicoesImplicitasZero: 0,
   };
 }
 
@@ -407,6 +408,46 @@ function adicionarCausa(mapa: Map<string, Set<string>>, ativo: string, mes: stri
   causas.add(motivo);
   mapa.set(chave, causas);
   return causas.size !== antes;
+}
+
+/**
+ * M10 (plano v5): a origem não grava posição de saldo zero. Dentro do intervalo, mês a mês, o ativo
+ * cuja posição anterior (real ou implícita) terminou em zero e que não tem nenhum evento no mês
+ * na origem, inclusive calculado ou de valor zero, ganha uma posição implícita 0 → 0. Qualquer
+ * outra ausência continua para M10, que a recusa.
+ */
+function preencherPosicoesImplicitas(dados: DadosNormalizados): { dados: DadosNormalizados; quantidade: number } {
+  const porMes = mapearPosicoes(dados);
+  const primeiroMes = [...porMes.keys()].sort()[0];
+  const ultimoMes = dados.consolidados
+    .filter((item) => item.status === "fechado" && item.fechado)
+    .map((item) => item.mesChave)
+    .sort()
+    .at(-1);
+  if (!primeiroMes || !ultimoMes) return { dados, quantidade: 0 };
+
+  const comEvento = new Set(dados.eventos.filter((evento) => evento.ativoId !== null).map((evento) => chaveAtivoMes(evento.ativoId!, mesDe(evento.data))));
+  const implicitas: PosicaoNormalizada[] = [];
+  for (let mes = mesSeguinte(primeiroMes as Mes); mes <= ultimoMes; mes = mesSeguinte(mes)) {
+    const anteriores = porMes.get(anteriorDe(mes));
+    if (!anteriores) continue;
+    for (const [ativoId, anterior] of anteriores) {
+      if (anterior.saldoFim !== 0n || porMes.get(mes)?.has(ativoId) || comEvento.has(chaveAtivoMes(ativoId, mes))) continue;
+      const [ano, numeroMes] = mes.split("-").map(Number);
+      const posicao: PosicaoNormalizada = { ativoId, ano, mes: numeroMes, saldoInicio: 0n, saldoFim: 0n, mesChave: mes };
+      const doMes = porMes.get(mes) ?? new Map<string, PosicaoNormalizada>();
+      doMes.set(ativoId, posicao);
+      porMes.set(mes, doMes);
+      implicitas.push(posicao);
+    }
+  }
+  if (implicitas.length === 0) return { dados, quantidade: 0 };
+  return { dados: { ...dados, posicoes: [...dados.posicoes, ...implicitas] }, quantidade: implicitas.length };
+}
+
+function anteriorDe(mes: string): string {
+  const [ano, numeroMes] = mes.split("-").map(Number);
+  return numeroMes === 1 ? `${ano - 1}-12` : `${ano}-${String(numeroMes - 1).padStart(2, "0")}`;
 }
 
 function validarM10(dados: DadosNormalizados): CoberturaM10 {
@@ -852,7 +893,8 @@ function finalizar(
   sha256Origem: string,
 ): ResultadoSimulacao {
   const resumo = resumoVazio(dados);
-  const normalizados = dados;
+  const implicitas = preencherPosicoesImplicitas(dados);
+  const normalizados = implicitas.dados;
 
   const transito = classificarTransito(normalizados.eventos);
   const estornosTransito = verificarEstornosLigadosAoTransito(normalizados.eventos, transito.pares);
@@ -967,6 +1009,7 @@ function finalizar(
   resumo.eventosZeroDescartados = contarZeros(normalizados);
   resumo.transitoComoTransferencia = transito.pares.length;
   resumo.transitoComoMigracao = transito.semPar.length;
+  resumo.posicoesImplicitasZero = implicitas.quantidade;
   const ultimoMes = cobertura.ultimoMes;
   for (const ativo of normalizados.ativos.filter((item) => !item.ativo)) {
     const saldoFinal = ultimoMes ? replayFinal.posicoesPorMes.get(ultimoMes)?.get(ativo.id)?.saldoFinal ?? 0n : 0n;

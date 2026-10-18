@@ -15,6 +15,7 @@ Payloads derivados dos itens 1 a 3 (A, B e C) do plano integrado. Os corpos segu
 | B | [#64](https://github.com/EuThiagoAndrade/saldo-futuro/issues/64) | `afb315d97e6f10c668b379e321196e1937c1a80f5e39f9a210f6a9111cc7286c` |
 | C | [#65](https://github.com/EuThiagoAndrade/saldo-futuro/issues/65) | `fabedb23d5e5172930ae2f2788356b45e8be2bbb0e7e33ae088d26cafdb6cc7a` |
 | D (`v4`) | [#73](https://github.com/EuThiagoAndrade/saldo-futuro/issues/73) | `3d9e010b14621b5ad72c8c6b39b9cfedb3a6211c9fbac77ff7e8d310b3796edd` |
+| E (`v5`) | [#76](https://github.com/EuThiagoAndrade/saldo-futuro/issues/76) | `54fdc871aadf2bed5e6820002d2a3271c1f3b184e8df617d2818661ab9515781` |
 
 O hash é do corpo sem espaços nas pontas, igual ao lido de volta no GitHub.
 
@@ -191,3 +192,42 @@ Ciclo 006 — `_project/drafts/006_migracao_dados_virada/006_plan.md`, `v4`, ite
 Depende da `v4` integrada (PR #72) e das issues #63, #64 e #65, integradas. A criação não inicia a execução: exige "autorizo a implementação da issue #N". Branch `feature/issue-N`, task persistente, uma PR e merge próprio. Sem modo contínuo. G1, G2, G3 e G4 aplicam-se. Depois do merge: simulação local pelo agente só com códigos e contagens (autorizada em 2026-10-18) e `db push` do responsável como ação externa desta issue; `gravar` continua na ação externa da issue #65. Risco aceito: meses com `migracao` no trânsito ficam com rentabilidade `N/D` (P15/K1).
 
 <!-- logical_key: EuThiagoAndrade/saldo-futuro + 006 + criar_issues + feature/D_migracao_transito + v4@114da383c101211136a77b04b14b0823dc9e8adf -->
+
+## Unidade E (`v5`)
+
+> **Preparado em:** 2026-10-18, a partir do item 5 da `v5` aprovada e integrada pela PR #75. **Situação:** criada como [#76](https://github.com/EuThiagoAndrade/saldo-futuro/issues/76), `OPEN`, depois da confirmação "confirmo a criação da issue E com o payload de 006_handoff_issues.md" em 2026-10-18; título e corpo relidos no GitHub, idênticos ao payload. A busca por issues com "Posição implícita zero" no título, em todos os estados, não encontrou correspondência.
+
+**Título:** `[FEATURE] Posição implícita zero na cobertura da migração`
+
+### Contexto
+
+Depois da issue #73, a simulação real da migração recusou por `M10_COBERTURA_OU_CONSISTENCIA` (quantidade 12): todas posições ausentes depois de um mês com saldo zero, sem nenhum evento do ativo no mês, porque a origem não grava posição de saldo zero. A `v5` do plano decidiu tratar só esse caso como posição implícita zero; qualquer outra ausência continua recusando.
+
+### Escopo
+
+Dentro:
+
+- `src/lib/migracao/simular.ts`: antes de M10, criar posições implícitas zero (saldo inicial e final zero), mês a mês dentro do intervalo, para o ativo cuja posição anterior, real ou implícita, terminou em zero e que não tem nenhum evento no mês na origem — inclusive calculado ou de valor zero, que M4 descarta depois; as posições implícitas ficam disponíveis para M10, o replay, M9, o plano e o relatório;
+- resumo com a contagem `posicoesImplicitasZero` (posições acrescentadas, não ativos);
+- KB-004: M10 revisado e o caso `CR-M08`, com paridade em `tests/fixtures/financeiro/casos_referencia.json`;
+- KB-002: a contagem nova no que conferir em M2;
+- teste de integração `gravar` + `conferir` numa carteira fictícia com posição implícita zero.
+
+Fora: mudança de banco, de `gravar`, de `conferir` ou de outra regra (M1 a M9, demais partes de M10); simulação real, `db push` e `gravar`.
+
+### Critérios de aceite
+
+- [ ] Testes de unidade do M10 revisado: ativo que fica ativo, ativo desativado por M9, meses consecutivos, contagem, saldos, patrimônio, componentes e retorno; recusa mantida para ausência com evento no mês (inclusive calculado e de valor zero) e para ausência depois de saldo diferente de zero.
+- [ ] `CR-M08` na KB-004 e no JSON, com conferência independente registrada na task.
+- [ ] Integração `gravar` + `conferir` sem diferença no Supabase local, com saldo real `"0"` no fechamento.
+- [ ] Gates mínimos e da aplicação, inclusive `npx supabase test db`; nenhum dado real em código, fixtures ou textos.
+
+### Ciclo e plano relacionados
+
+Ciclo 006 — `_project/drafts/006_migracao_dados_virada/006_plan.md`, `v5`, item 5 (E); PR #75.
+
+### Dependências, riscos e autorizações
+
+Depende da `v5` integrada (PR #75) e da issue #73, integrada. A criação não inicia a execução: exige "autorizo a implementação da issue #N". Branch `feature/issue-N`, task persistente, uma PR e merge próprio. Sem modo contínuo. G1 e G3 aplicam-se; G2 e G4 não (sem mudança de banco nem migração). Depois do merge: simulação local pelo agente, coberta pela aprovação da `v5`, só com códigos e contagens; `db push` da issue #73 e `gravar` continuam nas ações externas. Risco aceito: posições 0 → 0 mensais desses ativos no destino, sem efeito em patrimônio, componentes ou retorno.
+
+<!-- logical_key: EuThiagoAndrade/saldo-futuro + 006 + criar_issues + feature/E_posicao_implicita_zero + v5@3afd8907ca296a58b2d77a82dd841551f23c1646 -->

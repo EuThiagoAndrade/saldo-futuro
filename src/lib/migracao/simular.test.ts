@@ -85,6 +85,7 @@ function obterEsperado(resultado: Extract<ReturnType<typeof simularBanco>, { ok:
   if (chave === "m7") {
     return resultado.relatorio.ativosEmM7.map((item) => `${item.ativo}@${item.mes}`).join(",");
   }
+  if (chave === "posicoes_implicitas_zero") return String(resultado.resumo.posicoesImplicitasZero);
   const operacao = /^operacoes\.(.+)$/.exec(chave);
   if (operacao) return String(resultado.plano.operacoes.filter((item) => item.tipo === operacao[1]).length);
   if (chave === "operacao_fev") {
@@ -266,6 +267,52 @@ describe("simulação de migração da origem", () => {
     const semEntrada = criarBanco(caso("CR-M04").entrada);
     semEntrada.prepare("DELETE FROM eventos WHERE id = 2").run();
     recusa(semEntrada, "M6_TRANSITO_SALDO_NEGATIVO", 1);
+  });
+
+  it("M10 (v5): posição implícita zero em meses seguidos, com saldo real 0 no fechamento e M9 no fim", () => {
+    const resultado = simular(caso("CR-M08"));
+    expect(resultado.ok, JSON.stringify(resultado)).toBe(true);
+    if (!resultado.ok) return;
+    expect(resultado.resumo).toMatchObject({ posicoesImplicitasZero: 2, ativosDesativados: 1, mesesMigrados: 4 });
+    const fechamento = (mes: string) => resultado.plano.operacoes.find((operacao) => operacao.chave === `fechamento:${mes}`)!;
+    expect((fechamento("2025-03").payload.saldosReais as Record<string, string>)["ativo:2"]).toBe("0");
+    expect((fechamento("2025-04").payload.saldosReais as Record<string, string>)["ativo:2"]).toBe("0");
+    const desativar = resultado.plano.operacoes.findIndex((operacao) => operacao.tipo === "desativar_ativo");
+    expect(desativar).toBeGreaterThan(resultado.plano.operacoes.findIndex((operacao) => operacao.chave === "fechamento:2025-04"));
+    for (const mes of resultado.relatorio.meses) {
+      const componentes = ["aportes", "resgates", "rendimento", "marcacao", "cambio", "migracao"] as const;
+      expect(BigInt(mes.vf) - BigInt(mes.vi), mes.mes).toBe(componentes.reduce((total, campo) => total + BigInt(mes[campo]), 0n));
+      expect(mes.vf, mes.mes).toBe(mes.patrimonioOrigem);
+    }
+  });
+
+  it("M10 (v5): o ativo que continua ativo também recebe a posição implícita e não é desativado", () => {
+    const entrada = structuredClone(caso("CR-M08").entrada);
+    entrada.ativos[1].ativo = true;
+    const resultado = simular({ ...caso("CR-M08"), entrada });
+    expect(resultado.ok, JSON.stringify(resultado)).toBe(true);
+    if (resultado.ok) {
+      expect(resultado.resumo).toMatchObject({ posicoesImplicitasZero: 2, ativosDesativados: 0 });
+      expect(resultado.plano.operacoes.some((operacao) => operacao.tipo === "desativar_ativo")).toBe(false);
+    }
+  });
+
+  it.each([
+    ["evento manual no mês", "INSERT INTO eventos (id, ativo_id, data_evento, ano, mes, tipo_evento, valor, origem) VALUES (9, 2, '2025-03-05', 2025, 3, 'APORTE', 10, 'manual')"],
+    ["evento calculado no mês", "INSERT INTO eventos (id, ativo_id, data_evento, ano, mes, tipo_evento, valor, origem) VALUES (9, 2, '2025-03-31', 2025, 3, 'RENDIMENTO', 1, 'calculado')"],
+    ["evento de valor zero no mês", "INSERT INTO eventos (id, ativo_id, data_evento, ano, mes, tipo_evento, valor, origem) VALUES (9, 2, '2025-03-05', 2025, 3, 'RENDIMENTO', 0, 'manual')"],
+  ])("M10 (v5) mantém a recusa da posição ausente com %s", (_nome, sql) => {
+    const db = criarBanco(caso("CR-M08").entrada);
+    db.prepare(sql).run();
+    recusa(db, "M10_COBERTURA_OU_CONSISTENCIA");
+  });
+
+  it("M10 (v5) mantém a recusa da posição ausente depois de saldo diferente de zero", () => {
+    const db = criarBanco(caso("CR-M08").entrada);
+    db.prepare("DELETE FROM eventos WHERE id = 3").run();
+    db.prepare("UPDATE posicoes_mensais SET saldo_fim = 2000 WHERE ativo_id = 2 AND mes = 2").run();
+    db.prepare("UPDATE consolidado_mensal SET valor_total = 12000 WHERE mes = 2").run();
+    recusa(db, "M10_COBERTURA_OU_CONSISTENCIA", 1);
   });
 
   it("M6 (v4): a direção vem de observacao, com o valor sempre positivo na origem", () => {

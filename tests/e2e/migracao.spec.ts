@@ -10,6 +10,7 @@ import { estadoAbstrato, lerEstadoDestino } from "../../src/lib/migracao/destino
 import { conferir, gravarNoDiretorio, type ResultadoGravacao } from "../../src/lib/migracao/gravar";
 import { prepararCenario } from "./apoio/cenarios";
 import {
+  carteiraComPosicaoImplicita,
   carteiraComTransitoSemPar,
   carteiraCompleta,
   carteiraGrande,
@@ -51,6 +52,7 @@ test.describe("migração: gravar e conferir", () => {
       cli: "user",
       transito: "user",
       semfuncao: "user",
+      implicita: "user",
       "pos-lancar_migracao_transito": "user",
     });
     pasta = mkdtempSync(join(tmpdir(), "saldo-futuro-migracao-64-"));
@@ -151,6 +153,22 @@ test.describe("migração: gravar e conferir", () => {
     expect(nd).toEqual(expect.arrayContaining(["2025-02", "2025-03"]));
     expect(nd).not.toContain("2025-04");
     expect(nd).not.toContain("2025-05");
+  });
+
+  test("posição implícita zero (plano v5): gravar e conferir sem diferença, com saldo real 0 no fechamento", async () => {
+    const arquivo = criarOrigem(pasta, "implicita", carteiraComPosicaoImplicita());
+    const { relatorio: comPosicoes } = simularOrigem(origem, u.implicita.id);
+    const dir = diretorio("implicita");
+    const { cliente, plano, relatorio, resultado } = await gravarComo(u.implicita, dir, {}, undefined, arquivo);
+    expect(relatorio.resumo.posicoesImplicitasZero).toBe(2);
+    expect(resultado).toMatchObject({ result: "executed", motivo: "concluida", confirmadas: plano.operacoes.length });
+    expect(await conferir(cliente, plano, relatorio)).toEqual({ ok: true, meses: 4, diferencas: {} });
+    // Os meses e consolidados são os mesmos da origem com as posições zeradas gravadas.
+    expect(relatorio.meses).toEqual(comPosicoes.meses);
+    const gama = plano.operacoes.find((o) => o.tipo === "desativar_ativo")!.payload.ativo as string;
+    const saldos = (mes: string) => plano.operacoes.find((o) => o.chave === `fechamento:${mes}`)!.payload.saldosReais as Record<string, string>;
+    expect([saldos("2025-03")[gama], saldos("2025-04")[gama]]).toEqual(["0", "0"]);
+    expect((await contagens(cliente)).meses).toBe(4);
   });
 
   test("sem a função lancar_migracao_transito no banco, a sonda impede a carga, sem escrita nem diário", async () => {
