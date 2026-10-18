@@ -14,6 +14,7 @@ Payloads derivados dos itens 1 a 3 (A, B e C) do plano integrado. Os corpos segu
 | A | [#63](https://github.com/EuThiagoAndrade/saldo-futuro/issues/63) | `b7ea2b25328f3908cbb37c497d277f39c315f151bbf1f1446903b7d3a98732e8` |
 | B | [#64](https://github.com/EuThiagoAndrade/saldo-futuro/issues/64) | `afb315d97e6f10c668b379e321196e1937c1a80f5e39f9a210f6a9111cc7286c` |
 | C | [#65](https://github.com/EuThiagoAndrade/saldo-futuro/issues/65) | `fabedb23d5e5172930ae2f2788356b45e8be2bbb0e7e33ae088d26cafdb6cc7a` |
+| D (`v4`) | [#73](https://github.com/EuThiagoAndrade/saldo-futuro/issues/73) | `3d9e010b14621b5ad72c8c6b39b9cfedb3a6211c9fbac77ff7e8d310b3796edd` |
 
 O hash é do corpo sem espaços nas pontas, igual ao lido de volta no GitHub.
 
@@ -146,3 +147,47 @@ Depende da issue B (#64) integrada. Exige "autorizo a implementação da issue #
 Ciclo 006 — `_project/drafts/006_migracao_dados_virada/006_plan.md`, v3, item 3 (C); PR #62 integrada.
 
 <!-- logical_key: EuThiagoAndrade/saldo-futuro + 006 + criar_issues + chore/C_roteiro_virada + v3@9cfb2efdde5efa2ebf9dbd054abb21f4b77e1c9f -->
+
+## Unidade D (`v4`)
+
+> **Preparado em:** 2026-10-18, a partir do item 4 da `v4` aprovada e integrada pela PR #72 (squash `114da38`). **Situação:** criada como [#73](https://github.com/EuThiagoAndrade/saldo-futuro/issues/73), `OPEN`, depois da confirmação "confirmo a criação da issue D com o payload de 006_handoff_issues.md" em 2026-10-18; título e corpo relidos no GitHub, idênticos ao payload. A busca por issues com "trânsito" no título, em todos os estados, não encontrou correspondência.
+
+**Título:** `[FEATURE] Migrar o trânsito sem contrapartida como migração no trânsito`
+
+### Contexto
+
+A primeira simulação real da migração recusou por `M6_TRANSITO_SEM_PAR_UNICO` (quantidade 2): variações do saldo de trânsito sem `RESGATE` ou `APORTE` correspondente, com origem e destino desconhecidos. A `v4` do plano decidiu tratar cada `TRANSFERENCIA_PENDENTE` como variação do saldo acumulado do trânsito e representar a variação sem par como `migracao` no próprio trânsito, o que o banco atual não permite (K12).
+
+### Escopo
+
+Dentro:
+
+- migração nova `supabase/migrations/AAAAMMDDHHMMSS_migracao_transito.sql` com `public.lancar_migracao_transito(p_data date, p_valor bigint) returns uuid`, conforme o contrato da `v4`: `security definer`, `search_path` vazio, trava da carteira, só o trânsito do próprio usuário, só o tipo `migracao`, recusas na ordem sinal → faixa → trânsito inexistente, conferência de data de `lancar_evento`; execução só para `authenticated`;
+- teste de banco novo da função (gravação, recusas, mês fechado, `anon`, isolamento A/B, `lancar_evento` ainda recusando o trânsito, `fechar_mes` com a migração no componente `migracao`);
+- **R4-1:** incluir `lancar_migracao_transito(date, bigint)` nas listas fechadas de funções executáveis por `authenticated` e na conferência de `security definer` de `supabase/tests/database/03_funcoes.test.sql`, mantendo a detecção de função fora da lista e as recusas para `PUBLIC` e `anon`;
+- `src/lib/migracao/simular.ts`: M6 revisado (par único → transferência; sem candidato → `migracao` no trânsito com a data da origem; ambíguo → `M6_TRANSITO_PAR_AMBIGUO`; saldo negativo no fim de um mês → `M6_TRANSITO_SALDO_NEGATIVO`), substituindo `M6_TRANSITO_SEM_PAR_UNICO`;
+- `tipos.ts`, `gravar.ts` e a conferência: a operação `lancar_migracao_transito`, a sonda com valor zero antes da primeira escrita, a resposta perdida e a comparação por efeitos;
+- **R4-2:** nova versão do formato do plano de operações; `gravar` recusa, antes de qualquer escrita e com teste, um plano de versão anterior, sem conversor;
+- KB-004 (M6, seção 4.4, decisão K12 e casos `CR-M04` a `CR-M07`) e `tests/fixtures/financeiro/casos_referencia.json` com paridade;
+- KB-002: `db push` da issue D antes de `gravar` no roteiro e os novos códigos de recusa.
+
+Fora: mudança em `lancar_evento`, `transferir`, `fechar_mes` ou nas políticas; interface para lançar `migracao` no trânsito; simulação real, `db push` e `gravar`; outra mudança de schema.
+
+### Critérios de aceite
+
+- [ ] Exemplos A a D do plano e as duas recusas novas com teste de unidade, conferindo saldo do trânsito por mês, componentes, identidade, retorno do mês, acumulado e a consistência de M10.
+- [ ] `CR-M04` a `CR-M07` na KB-004 e no JSON, com conferência independente registrada na task.
+- [ ] Teste de banco da função nova verde, com isolamento A/B, e `03_funcoes.test.sql` atualizado (R4-1).
+- [ ] Plano de operações de versão anterior recusado antes de qualquer escrita, com teste (R4-2).
+- [ ] Integração `gravar` + `conferir` sem diferença na carteira fictícia com trânsito sem par e com par real; sonda que para sem escrita quando a função falta.
+- [ ] Gates mínimos e da aplicação, inclusive `npx supabase test db`; nenhum dado real em código, fixtures ou textos.
+
+### Ciclo e plano relacionados
+
+Ciclo 006 — `_project/drafts/006_migracao_dados_virada/006_plan.md`, `v4`, item 4 (D); PR #72.
+
+### Dependências, riscos e autorizações
+
+Depende da `v4` integrada (PR #72) e das issues #63, #64 e #65, integradas. A criação não inicia a execução: exige "autorizo a implementação da issue #N". Branch `feature/issue-N`, task persistente, uma PR e merge próprio. Sem modo contínuo. G1, G2, G3 e G4 aplicam-se. Depois do merge: simulação local pelo agente só com códigos e contagens (autorizada em 2026-10-18) e `db push` do responsável como ação externa desta issue; `gravar` continua na ação externa da issue #65. Risco aceito: meses com `migracao` no trânsito ficam com rentabilidade `N/D` (P15/K1).
+
+<!-- logical_key: EuThiagoAndrade/saldo-futuro + 006 + criar_issues + feature/D_migracao_transito + v4@114da383c101211136a77b04b14b0823dc9e8adf -->

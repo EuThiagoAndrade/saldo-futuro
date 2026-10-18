@@ -10,6 +10,7 @@ import { estadoAbstrato, lerEstadoDestino } from "../../src/lib/migracao/destino
 import { conferir, gravarNoDiretorio, type ResultadoGravacao } from "../../src/lib/migracao/gravar";
 import { prepararCenario } from "./apoio/cenarios";
 import {
+  carteiraComTransitoSemPar,
   carteiraCompleta,
   carteiraGrande,
   clienteComFalhas,
@@ -33,6 +34,7 @@ test.describe("migração: gravar e conferir", () => {
   let u: Record<string, UsuarioDeTeste>;
   let pasta: string;
   let origem: string;
+  let origemTransito: string;
 
   test.beforeAll(async () => {
     u = await criarUsuarios("migracao", {
@@ -47,9 +49,13 @@ test.describe("migração: gravar e conferir", () => {
       reexecucao: "user",
       volume: "user",
       cli: "user",
+      transito: "user",
+      semfuncao: "user",
+      "pos-lancar_migracao_transito": "user",
     });
     pasta = mkdtempSync(join(tmpdir(), "saldo-futuro-migracao-64-"));
     origem = criarOrigem(pasta, "completa", carteiraCompleta());
+    origemTransito = criarOrigem(pasta, "transito", carteiraComTransitoSemPar());
   });
   test.afterAll(async () => {
     await removerUsuarios(u);
@@ -60,9 +66,9 @@ test.describe("migração: gravar e conferir", () => {
     return mkdtempSync(join(pasta, `${nome}-`));
   }
 
-  async function gravarComo(usuario: UsuarioDeTeste, dir: string, falhas: Falhas = {}, tempoLimiteMs?: number) {
+  async function gravarComo(usuario: UsuarioDeTeste, dir: string, falhas: Falhas = {}, tempoLimiteMs?: number, arquivo = origem) {
     const cliente = await clienteComFalhas(usuario, falhas);
-    const { plano, relatorio } = simularOrigem(origem, usuario.id);
+    const { plano, relatorio } = simularOrigem(arquivo, usuario.id);
     const resultado = await gravarNoDiretorio(dir, cliente, plano, usuario.id, { tempoLimiteMs });
     return { cliente, plano, relatorio, resultado };
   }
@@ -112,6 +118,62 @@ test.describe("migração: gravar e conferir", () => {
     expect(diario.filter((l) => l.tipo === "resultado")).toHaveLength(plano.operacoes.length);
     expect(JSON.stringify(diario)).not.toContain("Fictício");
     expect(JSON.stringify(diario)).not.toContain("valorCentavos");
+  });
+
+  test("trânsito sem contrapartida (plano v4): migração no trânsito e pares reais; gravar e conferir sem diferença", async () => {
+    const dir = diretorio("transito");
+    const { cliente, plano, relatorio, resultado } = await gravarComo(u.transito, dir, {}, undefined, origemTransito);
+    expect(resultado).toMatchObject({ result: "executed", motivo: "concluida", confirmadas: plano.operacoes.length });
+    expect(plano.versao).toBe(2);
+    expect(plano.operacoes.filter((o) => o.tipo === "lancar_migracao_transito")).toHaveLength(2);
+    expect(plano.operacoes.filter((o) => o.tipo === "transferir")).toHaveLength(2);
+    expect(plano.operacoes.filter((o) => o.tipo === "criar_ativo")).toHaveLength(2);
+    expect(await conferir(cliente, plano, relatorio)).toEqual({ ok: true, meses: 5, diferencas: {} });
+
+    const { data } = await cliente.from("consolidados_mensais").select("mes, vf, aportes, resgates, migracao").order("mes");
+    expect(data!.map((c) => [c.mes.slice(0, 7), c.vf, c.aportes, c.resgates, c.migracao])).toEqual([
+      ["2025-01", 130000, 130000, 0, 0],
+      ["2025-02", 140000, 0, 0, 10000],
+      ["2025-03", 136000, 0, 0, -4000],
+      ["2025-04", 136000, 0, 0, 0],
+      ["2025-05", 136000, 0, 0, 0],
+    ]);
+    // O trânsito fecha cada mês com o saldo acumulado da origem, sem ajuste.
+    const transito = (await cliente.from("ativos").select("id").eq("sistema", "transito")).data![0].id;
+    const { data: posicoes } = await cliente.from("posicoes_mensais").select("mes, saldo_final, ajuste").eq("ativo_id", transito).order("mes");
+    expect(posicoes!.map((p) => [p.mes.slice(0, 7), p.saldo_final, p.ajuste])).toEqual([
+      ["2025-02", 10000, 0],
+      ["2025-03", 6000, 0],
+      ["2025-04", 36000, 0],
+      ["2025-05", 6000, 0],
+    ]);
+    const nd = relatorio.meses.filter((m) => m.retorno === "N/D").map((m) => m.mes);
+    expect(nd).toEqual(expect.arrayContaining(["2025-02", "2025-03"]));
+    expect(nd).not.toContain("2025-04");
+    expect(nd).not.toContain("2025-05");
+  });
+
+  test("sem a função lancar_migracao_transito no banco, a sonda impede a carga, sem escrita nem diário", async () => {
+    const dir = diretorio("semfuncao");
+    const { cliente, plano, resultado } = await gravarComo(u.semfuncao, dir, { semFuncao: "lancar_migracao_transito" }, undefined, origemTransito);
+    expect(resultado).toMatchObject({ result: "not_executed", motivo: "funcao_ausente", enviadas: 0, confirmadas: 0 });
+    expect(await contagens(cliente)).toEqual({ ativos: 0, eventos: 0, transferencias: 0, meses: 0 });
+    expect(() => readFileSync(join(dir, `diario-${plano.sha256Plano}.jsonl`))).toThrow();
+  });
+
+  test("resposta perdida depois do commit de lancar_migracao_transito: para sem reenviar e a retomada reconhece o efeito uma vez", async () => {
+    const usuario = u["pos-lancar_migracao_transito"];
+    const dir = diretorio("pos-lancar_migracao_transito");
+    const primeira = await gravarComo(usuario, dir, { rpc: "lancar_migracao_transito", modo: "depois", pular: 1 }, undefined, origemTransito);
+    expect(primeira.resultado).toMatchObject({ result: "ambiguous_human_intervention_required", motivo: "desconhecida" });
+    const segunda = await gravarComo(usuario, dir, {}, undefined, origemTransito);
+    expect(segunda.resultado).toMatchObject({ result: "executed", motivo: "concluida" });
+    const diario = linhasDoDiario(dir, segunda.plano.sha256Plano);
+    const desconhecida = diario.find((l) => l.tipo === "desconhecida");
+    expect(segunda.plano.operacoes[desconhecida.sequencia - 1].tipo).toBe("lancar_migracao_transito");
+    expect(diario.filter((l) => l.tipo === "reconhecida")).toEqual([expect.objectContaining({ sequencia: desconhecida.sequencia })]);
+    expect(diario.filter((l) => l.tipo === "intencao" && l.sequencia === desconhecida.sequencia)).toHaveLength(1);
+    expect(await conferir(segunda.cliente, segunda.plano, segunda.relatorio)).toEqual({ ok: true, meses: 5, diferencas: {} });
   });
 
   test("reexecução depois de concluído reconhece o plano inteiro e não grava", async () => {

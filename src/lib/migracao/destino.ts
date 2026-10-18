@@ -121,6 +121,7 @@ export function estadoEsperado(plano: PlanoMigracao, k: number): EstadoAbstrato 
         ativos.set(operacao.chave, { nome: String(p.nome).trim(), tipo: String(p.tipoAjuste), ativo: true });
         break;
       case "lancar_evento":
+      case "lancar_migracao_transito":
         eventos.push(`${descritor(String(p.ativo), String(p.data), String(p.tipo), String(p.valorCentavos))}|`);
         break;
       case "estornar_evento": {

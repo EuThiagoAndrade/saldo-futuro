@@ -2678,6 +2678,156 @@
         "mar2025.retorno": "0",
         "m7": "Fundo de Longo Prazo@2025-02"
       }
+    },
+    {
+      "id": "CR-M04",
+      "titulo": "Trânsito sem contrapartida: entrada e saída como migração no trânsito",
+      "entrega": "006",
+      "regras": ["M2", "M6", "M10", "P15", "K1"],
+      "entrada": {
+        "ativos": [{"id": 1, "descricao": "Fundo Fictício X", "classificacao": "Pós-fixado", "ativo": true}],
+        "eventos": [
+          {"id": 1, "ativo_id": 1, "data_evento": "2025-01-05", "ano": 2025, "mes": 1, "tipo_evento": "APORTE", "valor": 10000.00, "origem": "manual"},
+          {"id": 2, "ativo_id": null, "data_evento": "2025-02-10", "ano": 2025, "mes": 2, "tipo_evento": "TRANSFERENCIA_PENDENTE", "valor": 1000.00, "origem": "manual", "observacao": "positivo"},
+          {"id": 3, "ativo_id": null, "data_evento": "2025-03-15", "ano": 2025, "mes": 3, "tipo_evento": "TRANSFERENCIA_PENDENTE", "valor": 1000.00, "origem": "manual", "observacao": "negativo"}
+        ],
+        "posicoes": [
+          {"ativo_id": 1, "ano": 2025, "mes": 1, "saldo_inicio": 0, "saldo_fim": 10000.00},
+          {"ativo_id": 1, "ano": 2025, "mes": 2, "saldo_inicio": 10000.00, "saldo_fim": 10000.00},
+          {"ativo_id": 1, "ano": 2025, "mes": 3, "saldo_inicio": 10000.00, "saldo_fim": 10000.00}
+        ],
+        "consolidados": [
+          {"ano": 2025, "mes": 1, "valor_total": 10000.00, "status": "fechado", "fechado": true},
+          {"ano": 2025, "mes": 2, "valor_total": 11000.00, "status": "fechado", "fechado": true},
+          {"ano": 2025, "mes": 3, "valor_total": 10000.00, "status": "fechado", "fechado": true}
+        ]
+      },
+      "esperado": {
+        "fev2025.X.saldo_fim": "1000000",
+        "fev2025.Em_trânsito.saldo_fim": "100000",
+        "fev2025.patrimonio": "1100000",
+        "fev2025.aportes": "0",
+        "fev2025.resgates": "0",
+        "fev2025.migracao": "100000",
+        "fev2025.retorno": "N/D",
+        "mar2025.Em_trânsito.saldo_fim": "0",
+        "mar2025.patrimonio": "1000000",
+        "mar2025.migracao": "-100000",
+        "mar2025.retorno": "N/D",
+        "mar2025.acumulado": "N/D",
+        "operacoes.lancar_migracao_transito": "2",
+        "operacoes.transferir": "0"
+      }
+    },
+    {
+      "id": "CR-M05",
+      "titulo": "Trânsito sem contrapartida com saída parcial",
+      "entrega": "006",
+      "regras": ["M2", "M6", "M10", "P15"],
+      "entrada": {
+        "ativos": [{"id": 1, "descricao": "Fundo Fictício X", "classificacao": "Pós-fixado", "ativo": true}],
+        "eventos": [
+          {"id": 1, "ativo_id": 1, "data_evento": "2025-01-05", "ano": 2025, "mes": 1, "tipo_evento": "APORTE", "valor": 10000.00, "origem": "manual"},
+          {"id": 2, "ativo_id": null, "data_evento": "2025-02-10", "ano": 2025, "mes": 2, "tipo_evento": "TRANSFERENCIA_PENDENTE", "valor": 1000.00, "origem": "manual", "observacao": "positivo"},
+          {"id": 3, "ativo_id": null, "data_evento": "2025-03-15", "ano": 2025, "mes": 3, "tipo_evento": "TRANSFERENCIA_PENDENTE", "valor": 400.00, "origem": "manual", "observacao": "negativo"}
+        ],
+        "posicoes": [
+          {"ativo_id": 1, "ano": 2025, "mes": 1, "saldo_inicio": 0, "saldo_fim": 10000.00},
+          {"ativo_id": 1, "ano": 2025, "mes": 2, "saldo_inicio": 10000.00, "saldo_fim": 10000.00},
+          {"ativo_id": 1, "ano": 2025, "mes": 3, "saldo_inicio": 10000.00, "saldo_fim": 10000.00}
+        ],
+        "consolidados": [
+          {"ano": 2025, "mes": 1, "valor_total": 10000.00, "status": "fechado", "fechado": true},
+          {"ano": 2025, "mes": 2, "valor_total": 11000.00, "status": "fechado", "fechado": true},
+          {"ano": 2025, "mes": 3, "valor_total": 10600.00, "status": "fechado", "fechado": true}
+        ]
+      },
+      "esperado": {
+        "fev2025.Em_trânsito.saldo_fim": "100000",
+        "mar2025.Em_trânsito.saldo_fim": "60000",
+        "mar2025.patrimonio": "1060000",
+        "mar2025.migracao": "-40000",
+        "mar2025.retorno": "N/D",
+        "operacoes.lancar_migracao_transito": "2"
+      }
+    },
+    {
+      "id": "CR-M06",
+      "titulo": "Trânsito ainda aberto no último mês fechado",
+      "entrega": "006",
+      "regras": ["M6", "M10", "P15", "K1"],
+      "entrada": {
+        "ativos": [{"id": 1, "descricao": "Fundo Fictício X", "classificacao": "Pós-fixado", "ativo": true}],
+        "eventos": [
+          {"id": 1, "ativo_id": 1, "data_evento": "2025-01-05", "ano": 2025, "mes": 1, "tipo_evento": "APORTE", "valor": 10000.00, "origem": "manual"},
+          {"id": 2, "ativo_id": null, "data_evento": "2025-02-10", "ano": 2025, "mes": 2, "tipo_evento": "TRANSFERENCIA_PENDENTE", "valor": 1000.00, "origem": "manual", "observacao": "positivo"}
+        ],
+        "posicoes": [
+          {"ativo_id": 1, "ano": 2025, "mes": 1, "saldo_inicio": 0, "saldo_fim": 10000.00},
+          {"ativo_id": 1, "ano": 2025, "mes": 2, "saldo_inicio": 10000.00, "saldo_fim": 10000.00},
+          {"ativo_id": 1, "ano": 2025, "mes": 3, "saldo_inicio": 10000.00, "saldo_fim": 10000.00}
+        ],
+        "consolidados": [
+          {"ano": 2025, "mes": 1, "valor_total": 10000.00, "status": "fechado", "fechado": true},
+          {"ano": 2025, "mes": 2, "valor_total": 11000.00, "status": "fechado", "fechado": true},
+          {"ano": 2025, "mes": 3, "valor_total": 11000.00, "status": "fechado", "fechado": true}
+        ]
+      },
+      "esperado": {
+        "fev2025.Em_trânsito.saldo_fim": "100000",
+        "fev2025.retorno": "N/D",
+        "mar2025.Em_trânsito.saldo_fim": "100000",
+        "mar2025.patrimonio": "1100000",
+        "mar2025.migracao": "0",
+        "mar2025.retorno": "0",
+        "mar2025.acumulado": "N/D",
+        "operacoes.lancar_migracao_transito": "1"
+      }
+    },
+    {
+      "id": "CR-M07",
+      "titulo": "Pares reais no mesmo mês, sem migração nem contagem dupla",
+      "entrega": "006",
+      "regras": ["M2", "M6", "M10", "P6"],
+      "entrada": {
+        "ativos": [{"id": 1, "descricao": "Fundo Fictício X", "classificacao": "Pós-fixado", "ativo": true}, {"id": 2, "descricao": "Fundo Fictício Y", "classificacao": "Pós-fixado", "ativo": true}],
+        "eventos": [
+          {"id": 1, "ativo_id": 1, "data_evento": "2025-01-05", "ano": 2025, "mes": 1, "tipo_evento": "APORTE", "valor": 10000.00, "origem": "manual"},
+          {"id": 2, "ativo_id": 2, "data_evento": "2025-01-06", "ano": 2025, "mes": 1, "tipo_evento": "APORTE", "valor": 5000.00, "origem": "manual"},
+          {"id": 3, "ativo_id": 1, "data_evento": "2025-02-05", "ano": 2025, "mes": 2, "tipo_evento": "RESGATE", "valor": 1000.00, "origem": "manual"},
+          {"id": 4, "ativo_id": null, "data_evento": "2025-02-06", "ano": 2025, "mes": 2, "tipo_evento": "TRANSFERENCIA_PENDENTE", "valor": 1000.00, "origem": "manual", "observacao": "positivo"},
+          {"id": 5, "ativo_id": null, "data_evento": "2025-03-10", "ano": 2025, "mes": 3, "tipo_evento": "TRANSFERENCIA_PENDENTE", "valor": 1000.00, "origem": "manual", "observacao": "negativo"},
+          {"id": 6, "ativo_id": 2, "data_evento": "2025-03-12", "ano": 2025, "mes": 3, "tipo_evento": "APORTE", "valor": 1000.00, "origem": "manual"}
+        ],
+        "posicoes": [
+          {"ativo_id": 1, "ano": 2025, "mes": 1, "saldo_inicio": 0, "saldo_fim": 10000.00},
+          {"ativo_id": 2, "ano": 2025, "mes": 1, "saldo_inicio": 0, "saldo_fim": 5000.00},
+          {"ativo_id": 1, "ano": 2025, "mes": 2, "saldo_inicio": 10000.00, "saldo_fim": 9000.00},
+          {"ativo_id": 2, "ano": 2025, "mes": 2, "saldo_inicio": 5000.00, "saldo_fim": 5000.00},
+          {"ativo_id": 1, "ano": 2025, "mes": 3, "saldo_inicio": 9000.00, "saldo_fim": 9000.00},
+          {"ativo_id": 2, "ano": 2025, "mes": 3, "saldo_inicio": 5000.00, "saldo_fim": 6000.00}
+        ],
+        "consolidados": [
+          {"ano": 2025, "mes": 1, "valor_total": 15000.00, "status": "fechado", "fechado": true},
+          {"ano": 2025, "mes": 2, "valor_total": 15000.00, "status": "fechado", "fechado": true},
+          {"ano": 2025, "mes": 3, "valor_total": 15000.00, "status": "fechado", "fechado": true}
+        ]
+      },
+      "esperado": {
+        "fev2025.X.saldo_fim": "900000",
+        "fev2025.Em_trânsito.saldo_fim": "100000",
+        "fev2025.patrimonio": "1500000",
+        "fev2025.resgates": "0",
+        "fev2025.migracao": "0",
+        "fev2025.retorno": "0",
+        "mar2025.Y.saldo_fim": "600000",
+        "mar2025.Em_trânsito.saldo_fim": "0",
+        "mar2025.aportes": "0",
+        "mar2025.migracao": "0",
+        "mar2025.retorno": "0",
+        "operacoes.transferir": "2",
+        "operacoes.lancar_migracao_transito": "0"
+      }
     }
   ]
 }

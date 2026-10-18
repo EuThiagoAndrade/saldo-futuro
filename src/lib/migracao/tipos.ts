@@ -80,7 +80,8 @@ export interface DadosNormalizados {
 export type CodigoRecusa =
   | "M2_CONVERSAO_INVALIDA"
   | "M5_ESTORNO_LIGADO_A_TRANSFERENCIA"
-  | "M6_TRANSITO_SEM_PAR_UNICO"
+  | "M6_TRANSITO_PAR_AMBIGUO"
+  | "M6_TRANSITO_SALDO_NEGATIVO"
   | "M7_MIGRACAO_ZERO"
   | "M10_COBERTURA_OU_CONSISTENCIA"
   | "NOME_COM_MAIS_DE_100_CARACTERES"
@@ -107,6 +108,10 @@ export interface ResumoSimulacao {
   mesesConsolidadosAntigosIgnorados: number;
   ativosDesativados: number;
   ativosComSaldoQuePermanecemAtivos: number;
+  /** M6, caso a: eventos de trânsito pareados com resgate ou aporte e migrados como transferência. */
+  transitoComoTransferencia: number;
+  /** M6, caso b: eventos de trânsito sem candidato, migrados como `migracao` no trânsito. */
+  transitoComoMigracao: number;
 }
 
 export interface PosicaoSimulada {
@@ -137,7 +142,14 @@ export interface MesSimulado {
 export interface OperacaoMigracao {
   sequencia: number;
   chave: string;
-  tipo: "criar_ativo" | "lancar_evento" | "estornar_evento" | "transferir" | "fechar_mes" | "desativar_ativo";
+  tipo:
+    | "criar_ativo"
+    | "lancar_evento"
+    | "lancar_migracao_transito"
+    | "estornar_evento"
+    | "transferir"
+    | "fechar_mes"
+    | "desativar_ativo";
   data?: string;
   mes?: string;
   origemId?: number;
@@ -145,8 +157,11 @@ export interface OperacaoMigracao {
   payload: Record<string, unknown>;
 }
 
+/** Versão do formato do plano de operações; a 2 traz `lancar_migracao_transito` (plano v4, R4-2). */
+export const VERSAO_PLANO = 2 as const;
+
 export interface PlanoMigracao {
-  versao: 1;
+  versao: typeof VERSAO_PLANO;
   sha256Origem: string;
   sha256Plano: string;
   usuarioDestino: string;

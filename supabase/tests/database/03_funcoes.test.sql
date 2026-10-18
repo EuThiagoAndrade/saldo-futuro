@@ -29,6 +29,7 @@ select is_empty(
            'criar_ativo(text,tipo_ajuste)',
            'desativar_ativo(uuid)',
            'lancar_evento(uuid,date,tipo_evento,bigint)',
+           'lancar_migracao_transito(date,bigint)',
            'estornar_evento(uuid,date)',
            'transferir(uuid,uuid,date,bigint)',
            'corrigir_transferencia(uuid,date)',
@@ -48,8 +49,9 @@ select isnt_empty(
        and has_function_privilege('authenticated', p.oid, 'EXECUTE')
        and p.oid::regprocedure::text <> all (array[
          'criar_ativo(text,tipo_ajuste)', 'desativar_ativo(uuid)', 'lancar_evento(uuid,date,tipo_evento,bigint)',
-         'estornar_evento(uuid,date)', 'transferir(uuid,uuid,date,bigint)', 'corrigir_transferencia(uuid,date)',
-         'fechar_mes(date,jsonb)', 'reabrir_mes(date)', 'carregar_benchmark(uuid,date,date,jsonb)']) $$,
+         'lancar_migracao_transito(date,bigint)', 'estornar_evento(uuid,date)', 'transferir(uuid,uuid,date,bigint)',
+         'corrigir_transferencia(uuid,date)', 'fechar_mes(date,jsonb)', 'reabrir_mes(date)',
+         'carregar_benchmark(uuid,date,date,jsonb)']) $$,
   'uma função fora da lista executável por authenticated é detectada');
 drop function public.funcao_nao_listada();
 
@@ -59,6 +61,7 @@ select is_empty(
      where p.oid in ('public.criar_ativo(text,public.tipo_ajuste)'::regprocedure,
        'public.desativar_ativo(uuid)'::regprocedure,
        'public.lancar_evento(uuid,date,public.tipo_evento,bigint)'::regprocedure,
+       'public.lancar_migracao_transito(date,bigint)'::regprocedure,
        'public.estornar_evento(uuid,date)'::regprocedure, 'public.transferir(uuid,uuid,date,bigint)'::regprocedure,
        'public.corrigir_transferencia(uuid,date)'::regprocedure, 'public.fechar_mes(date,jsonb)'::regprocedure,
        'public.reabrir_mes(date)'::regprocedure, 'public.carregar_benchmark(uuid,date,date,jsonb)'::regprocedure)

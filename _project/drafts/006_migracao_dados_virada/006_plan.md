@@ -1,7 +1,7 @@
 # Plano de Implementação — Migração única dos dados e virada
 
 > **Ciclo:** `006`
-> **Status:** `Aprovado`
+> **Status:** `Em Execução`
 > **Versão:** `v4`
 > **Data de criação:** 2026-10-17
 > **Última atualização:** 2026-10-18
@@ -398,7 +398,7 @@ Uma PR por issue, cada uma com aprovação própria do merge. O encerramento vai
 
 | Campo | Valor |
 | :-- | :-- |
-| Issue(s) | A [#63](https://github.com/EuThiagoAndrade/saldo-futuro/issues/63), B [#64](https://github.com/EuThiagoAndrade/saldo-futuro/issues/64) e C [#65](https://github.com/EuThiagoAndrade/saldo-futuro/issues/65), fechadas pelos merges (a ação externa de C segue pendente); correção pela trilha curta [#70](https://github.com/EuThiagoAndrade/saldo-futuro/issues/70); D a criar depois da aprovação da `v4` |
+| Issue(s) | A [#63](https://github.com/EuThiagoAndrade/saldo-futuro/issues/63), B [#64](https://github.com/EuThiagoAndrade/saldo-futuro/issues/64) e C [#65](https://github.com/EuThiagoAndrade/saldo-futuro/issues/65), fechadas pelos merges (a ação externa de C segue pendente); correção pela trilha curta [#70](https://github.com/EuThiagoAndrade/saldo-futuro/issues/70); D [#73](https://github.com/EuThiagoAndrade/saldo-futuro/issues/73) |
 | PR(s) | [#62](https://github.com/EuThiagoAndrade/saldo-futuro/pull/62) (plano, integrada); [#66](https://github.com/EuThiagoAndrade/saldo-futuro/pull/66) (issue A, integrada); [#68](https://github.com/EuThiagoAndrade/saldo-futuro/pull/68) (issue B, integrada); [#69](https://github.com/EuThiagoAndrade/saldo-futuro/pull/69) (issue C, integrada); [#71](https://github.com/EuThiagoAndrade/saldo-futuro/pull/71) (issue #70, integrada) |
 | Branch(es) | `chore/cycle-006-ideation` (rascunho local da `v1` a `v3`); `chore/cycle-006-plan` (PR #62); `chore/cycle-006-plan-v4` (rascunho local da `v4`, sem commit). O nome da branch de publicação da `v4` é conferido na publicação: `chore/cycle-006-plan` ainda existe no remoto, integrada pela PR #62 |
 | Destino após conclusão | `_project/executed/006_migracao_dados_virada/006_plan.md` |
@@ -409,20 +409,20 @@ Uma PR por issue, cada uma com aprovação própria do merge. O encerramento vai
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 006 (completo)
 Quem: Responsável
-Conferir: [PR #72](https://github.com/EuThiagoAndrade/saldo-futuro/pull/72), checks remotos e o diff limitado ao plano, à task da issue #65 e a `cycles.md`
-Diga: "aprovo o merge da PR #72"
+Conferir: [PR #74](https://github.com/EuThiagoAndrade/saldo-futuro/pull/74), checks remotos, diff e barreiras G1 a G4
+Diga: "aprovo o merge da PR #74"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 006 + aprovar_plano + 006_plan + v4 (base b580334)`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 006 + implementar_issue + 73/D + base 114da383c101211136a77b04b14b0823dc9e8adf`
 - `effect_class`: `remote_mutation`
-- `state_before`: plano `v4` `Em Revisão`, revisão `Concluída`, veredito `APTO COM RESSALVAS` (rodada 4), aprovação `Pendente (v4)`; rascunho local sem commit
-- `state_after`: plano `v4` `Aprovado` (`Aprovada em 2026-10-18`); PR documental da `v4` aberta contra `main`; payload da issue D apresentado, sem issue criada
+- `state_before`: plano `v4` `Aprovado`; issue #73 criada (`OPEN`, corpo com SHA-256 `3d9e010b14621b5ad72c8c6b39b9cfedb3a6211c9fbac77ff7e8d310b3796edd`), sem branch nem task
+- `state_after`: plano `Em Execução`; branch `feature/issue-73`, task `006_task_issue-73.md` `Aguardando integração`, PR #74 aberta contra `main`
 - `result`: `executed`
-- `evidence`: "aprovo o plano do ciclo 006" em 2026-10-18, posterior ao veredito da rodada 4; SHA-256 do corpo conferido (ver "Aprovação da `v4` e publicação documental"); validador e `git diff --check` verdes
-- `blockers`: checks remotos e "aprovo o merge da PR #N"; depois, a confirmação do payload da issue D
+- `evidence`: "autorizo a implementação da issue #73" em 2026-10-18; gates e conferência independente na task da issue #73
+- `blockers`: checks remotos e "aprovo o merge da PR #74"; depois, simulação local pelo agente e `db push` do responsável (ação externa da issue #73)
 
 ## Revisão crítica
 

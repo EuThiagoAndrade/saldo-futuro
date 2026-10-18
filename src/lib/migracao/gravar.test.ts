@@ -6,7 +6,7 @@ import { comTrava, diarioEmArquivo, NOME_TRAVA, TravaPresente } from "./diario";
 import { contagensEsperadas, diferencas, type EstadoDestino, estadoAbstrato, estadoEsperado, iguais, TRANSITO } from "./destino";
 import { gravar, hashDoPlano } from "./gravar";
 import { serializarEstavel, sha256 } from "./quantias";
-import type { OperacaoMigracao, PlanoMigracao } from "./tipos";
+import { type OperacaoMigracao, type PlanoMigracao, VERSAO_PLANO } from "./tipos";
 
 // Comparação por efeitos completos, diário e trava da gravação (issue #64). Plano e destino
 // fictícios; os cenários contra o banco estão em tests/e2e/migracao.spec.ts.
@@ -14,11 +14,11 @@ import type { OperacaoMigracao, PlanoMigracao } from "./tipos";
 const USUARIO = "00000000-0000-4000-8000-000000000064";
 
 function plano(operacoes: Omit<OperacaoMigracao, "sequencia">[]): PlanoMigracao {
-  const base = { versao: 1 as const, sha256Origem: "a".repeat(64), usuarioDestino: USUARIO, operacoes: operacoes.map((o, i) => ({ sequencia: i + 1, ...o })) };
+  const base = { versao: VERSAO_PLANO, sha256Origem: "a".repeat(64), usuarioDestino: USUARIO, operacoes: operacoes.map((o, i) => ({ sequencia: i + 1, ...o })) };
   return { ...base, sha256Plano: sha256(serializarEstavel(base)) };
 }
 
-const PLANO = plano([
+const OPERACOES: Omit<OperacaoMigracao, "sequencia">[] = [
   { chave: "ativo:1", tipo: "criar_ativo", payload: { nome: "Fundo Fictício X", tipoAjuste: "rendimento" } },
   { chave: "ativo:2", tipo: "criar_ativo", payload: { nome: "Fundo Fictício Y", tipoAjuste: "marcacao" } },
   { chave: "evento:1", tipo: "lancar_evento", data: "2025-01-05", payload: { ativo: "ativo:1", data: "2025-01-05", tipo: "aporte", valorCentavos: "10000" } },
@@ -32,7 +32,8 @@ const PLANO = plano([
   },
   { chave: "fechamento:2025-01", tipo: "fechar_mes", mes: "2025-01", payload: { mes: "2025-01", saldosReais: { "ativo:1": "7000", "ativo:2": "0", [TRANSITO]: "3000" } } },
   { chave: "desativar:2", tipo: "desativar_ativo", payload: { ativo: "ativo:2" } },
-]);
+];
+const PLANO = plano(OPERACOES);
 
 /** O destino como o banco o teria depois do plano inteiro, com UUIDs fictícios. */
 function destinoCompleto(): EstadoDestino {
@@ -112,6 +113,30 @@ describe("comparação por efeitos completos", () => {
     expect(diferencas(estadoAbstrato(outro, MAPA), estadoEsperado(PLANO, 8))).toEqual({ eventos: 2 });
   });
 
+  it("a migração no trânsito (plano v4) é comparada como evento do trânsito, com tipo e valor", () => {
+    const comMigracao = plano([
+      ...OPERACOES.slice(0, 6),
+      {
+        chave: "transito:9",
+        tipo: "lancar_migracao_transito",
+        data: "2025-01-20",
+        payload: { ativo: TRANSITO, data: "2025-01-20", tipo: "migracao", valorCentavos: "-1000" },
+      },
+    ]);
+    const destino = destinoCompleto();
+    destino.consolidados = [];
+    destino.posicoes = [];
+    destino.ativos[2] = { ...destino.ativos[2], ativo: true };
+    const evento = { id: "e-9", ativo_id: "u-t", data: "2025-01-20", tipo: "migracao" as const, valor: -1000, estorno_de: null, transferencia_id: null };
+    expect(diferencas(estadoAbstrato(destino, MAPA), estadoEsperado(comMigracao, 7))).toEqual({ eventos: 1 });
+    destino.eventos.push(evento);
+    expect(iguais(estadoAbstrato(destino, MAPA), estadoEsperado(comMigracao, 7))).toBe(true);
+    // No ativo comum, o mesmo evento é outra coisa.
+    destino.eventos[destino.eventos.length - 1] = { ...evento, ativo_id: "u-1" };
+    expect(diferencas(estadoAbstrato(destino, MAPA), estadoEsperado(comMigracao, 7))).toEqual({ eventos: 2 });
+    expect(contagensEsperadas(estadoEsperado(comMigracao, 7))).toMatchObject({ eventos: 6 });
+  });
+
   it("contagens esperadas da marca contam as duas pernas e o trânsito", () => {
     expect(contagensEsperadas(estadoEsperado(PLANO, 8))).toEqual({ ativos: 3, eventos: 5, transferencias: 1, meses: ["2025-01"] });
   });
@@ -152,6 +177,12 @@ describe("pré-condições da gravação", () => {
       result: "not_executed",
       motivo: "usuario_divergente",
     });
+  });
+
+  it("recusa plano de versão anterior, mesmo com hash íntegro, antes de qualquer acesso (R4-2)", async () => {
+    const antigo = { ...PLANO, versao: 1 } as unknown as PlanoMigracao;
+    antigo.sha256Plano = hashDoPlano(antigo);
+    expect(await gravar(semCliente, antigo, USUARIO, diarioVazio)).toMatchObject({ result: "not_executed", motivo: "plano_invalido", enviadas: 0 });
   });
 
   it("recusa diário de outro plano e diário fora de sequência", async () => {

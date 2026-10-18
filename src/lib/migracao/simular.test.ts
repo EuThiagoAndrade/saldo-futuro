@@ -85,15 +85,17 @@ function obterEsperado(resultado: Extract<ReturnType<typeof simularBanco>, { ok:
   if (chave === "m7") {
     return resultado.relatorio.ativosEmM7.map((item) => `${item.ativo}@${item.mes}`).join(",");
   }
+  const operacao = /^operacoes\.(.+)$/.exec(chave);
+  if (operacao) return String(resultado.plano.operacoes.filter((item) => item.tipo === operacao[1]).length);
   if (chave === "operacao_fev") {
     return resultado.plano.operacoes.some((operacao) => operacao.tipo === "transferir" && operacao.data?.startsWith("2025-02"))
       ? "transferir"
       : "nenhuma";
   }
 
-  const correspondencia = /^(jan|fev|mar)2025\.(.+)$/.exec(chave);
+  const correspondencia = /^(jan|fev|mar|abr)2025\.(.+)$/.exec(chave);
   if (!correspondencia) throw new Error(`chave esperada desconhecida: ${chave}`);
-  const mes = { jan: "2025-01", fev: "2025-02", mar: "2025-03" }[correspondencia[1]];
+  const mes = { jan: "2025-01", fev: "2025-02", mar: "2025-03", abr: "2025-04" }[correspondencia[1]];
   const resultadoMes = resultado.relatorio.meses.find((item) => item.mes === mes);
   if (!resultadoMes) throw new Error(`mês ausente: ${mes}`);
   const campo = correspondencia[2];
@@ -104,20 +106,25 @@ function obterEsperado(resultado: Extract<ReturnType<typeof simularBanco>, { ok:
   if (campo === "aportes" || campo === "resgates" || campo === "rendimento" || campo === "marcacao" || campo === "cambio") {
     return resultadoMes[campo];
   }
-  const nomeAtivo = campo.startsWith("Em_trânsito") ? "Em trânsito" : null;
-  const posicao = nomeAtivo
-    ? resultadoMes.posicoes.find((item) => item.ativo === nomeAtivo)
-    : resultadoMes.posicoes.find((item) => item.ativo !== "Em trânsito");
+  // "Em_trânsito" é o trânsito; "X" é o primeiro ativo comum; outra letra é o ativo cujo nome termina nela.
+  const rotulo = campo.split(".")[0];
+  const posicao =
+    rotulo === "Em_trânsito"
+      ? resultadoMes.posicoes.find((item) => item.ativo === "Em trânsito")
+      : rotulo === "X"
+        ? resultadoMes.posicoes.find((item) => item.ativo !== "Em trânsito")
+        : resultadoMes.posicoes.find((item) => item.ativo.endsWith(` ${rotulo}`));
   if (!posicao) throw new Error(`posição ausente: ${campo} em ${mes}`);
   if (campo.endsWith(".saldo_fim")) return posicao.saldoFinal;
   throw new Error(`campo esperado desconhecido: ${campo}`);
 }
 
-function recusa(db: DatabaseSync, codigo: string): void {
+function recusa(db: DatabaseSync, codigo: string, quantidade?: number): void {
   const resultado = simularBanco(db, { usuarioDestino: USER_ID, sha256Origem: HASH_ORIGEM });
   expect(resultado.ok).toBe(false);
   if (resultado.ok) throw new Error("esperava recusa");
   expect(resultado.recusas[0]?.codigo).toBe(codigo);
+  if (quantidade !== undefined) expect(resultado.recusas[0]?.quantidade).toBe(quantidade);
   expect("plano" in resultado).toBe(false);
   expect("operacoes" in resultado.relatorio).toBe(false);
 }
@@ -190,10 +197,87 @@ describe("simulação de migração da origem", () => {
     recusa(db, "M5_ESTORNO_LIGADO_A_TRANSFERENCIA");
   });
 
-  it("M6 recusa trânsito sem par único", () => {
-    const db = criarBanco(caso("CR-M02").entrada);
-    db.prepare("DELETE FROM eventos WHERE id = 2").run();
-    recusa(db, "M6_TRANSITO_SEM_PAR_UNICO");
+  it("M6 (v4): trânsito sem par vira migração no trânsito, sem aporte, resgate, ativo ou transferência", () => {
+    const resultado = simular(caso("CR-M04"));
+    expect(resultado.ok, JSON.stringify(resultado)).toBe(true);
+    if (!resultado.ok) return;
+    expect(resultado.resumo).toMatchObject({ ativos: 1, transitoComoMigracao: 2, transitoComoTransferencia: 0 });
+    const tipos = resultado.plano.operacoes.map((operacao) => operacao.tipo);
+    expect(tipos.filter((tipo) => tipo === "criar_ativo")).toHaveLength(1);
+    expect(tipos).not.toContain("transferir");
+    const migracoes = resultado.plano.operacoes.filter((operacao) => operacao.tipo === "lancar_migracao_transito");
+    expect(migracoes.map((operacao) => operacao.payload)).toEqual([
+      { ativo: "sistema:em-transito", data: "2025-02-10", tipo: "migracao", valorCentavos: "100000" },
+      { ativo: "sistema:em-transito", data: "2025-03-15", tipo: "migracao", valorCentavos: "-100000" },
+    ]);
+    const lancamentos = resultado.plano.operacoes.filter((operacao) => operacao.tipo === "lancar_evento");
+    expect(lancamentos.map((operacao) => operacao.payload.tipo)).toEqual(["aporte"]);
+    // A migração do mês vem antes do fechamento desse mês.
+    const indice = (chave: string) => resultado.plano.operacoes.findIndex((operacao) => operacao.chave === chave);
+    expect(indice("transito:2")).toBeLessThan(indice("fechamento:2025-02"));
+    expect(indice("fechamento:2025-01")).toBeLessThan(indice("transito:2"));
+    expect(indice("transito:3")).toBeLessThan(indice("fechamento:2025-03"));
+    // Identidade: Vf − Vi = componentes, com a migração no componente próprio.
+    for (const mes of resultado.relatorio.meses) {
+      const componentes = ["aportes", "resgates", "rendimento", "marcacao", "cambio", "migracao"] as const;
+      const soma = componentes.reduce((total, campo) => total + BigInt(mes[campo]), 0n);
+      expect(BigInt(mes.vf) - BigInt(mes.vi), mes.mes).toBe(soma);
+      expect(mes.vf, mes.mes).toBe(mes.patrimonioOrigem);
+    }
+    expect(resultado.plano.versao).toBe(2);
+  });
+
+  it("M6 (v4): par em outro mês não pareia; o resgate fica fluxo do seu mês e o trânsito vira migração", () => {
+    const entrada = structuredClone(caso("CR-M02").entrada);
+    const transito = entrada.eventos.find((evento) => evento.id === 3)!;
+    Object.assign(transito, { data_evento: "2025-03-06", mes: 3 });
+    entrada.posicoes.push({ ativo_id: 1, ano: 2025, mes: 3, saldo_inicio: 70.0, saldo_fim: 70.0 });
+    entrada.consolidados[1].valor_total = 70.0;
+    entrada.consolidados.push({ ano: 2025, mes: 3, valor_total: 100.0, status: "fechado", fechado: true });
+    const resultado = simular({ ...caso("CR-M02"), entrada });
+    expect(resultado.ok, JSON.stringify(resultado)).toBe(true);
+    if (!resultado.ok) return;
+    const fev = resultado.relatorio.meses.find((mes) => mes.mes === "2025-02")!;
+    const mar = resultado.relatorio.meses.find((mes) => mes.mes === "2025-03")!;
+    expect(fev).toMatchObject({ resgates: "-3000", migracao: "0", vf: "7000" });
+    expect(mar).toMatchObject({ resgates: "0", migracao: "3000", vf: "10000", retorno: "N/D" });
+    expect(resultado.plano.operacoes.some((operacao) => operacao.tipo === "transferir")).toBe(false);
+  });
+
+  it("M6 (v4) recusa par ambíguo com a contagem de eventos de trânsito", () => {
+    const doisCandidatos = criarBanco(caso("CR-M02").entrada);
+    doisCandidatos.prepare(
+      "INSERT INTO eventos (id, ativo_id, data_evento, ano, mes, tipo_evento, valor, origem) VALUES (4, 1, '2025-02-07', 2025, 2, 'RESGATE', 30, 'manual')",
+    ).run();
+    recusa(doisCandidatos, "M6_TRANSITO_PAR_AMBIGUO", 1);
+
+    const candidatoCompartilhado = criarBanco(caso("CR-M02").entrada);
+    candidatoCompartilhado.prepare(
+      "INSERT INTO eventos (id, ativo_id, data_evento, ano, mes, tipo_evento, valor, origem) VALUES (4, NULL, '2025-02-08', 2025, 2, 'TRANSFERENCIA_PENDENTE', 30, 'manual')",
+    ).run();
+    recusa(candidatoCompartilhado, "M6_TRANSITO_PAR_AMBIGUO", 2);
+  });
+
+  it("M6 (v4) recusa saldo de trânsito negativo no fim do mês, com a contagem de meses", () => {
+    const db = criarBanco(caso("CR-M04").entrada);
+    db.prepare("UPDATE eventos SET valor = 1500 WHERE id = 3").run();
+    recusa(db, "M6_TRANSITO_SALDO_NEGATIVO", 1);
+
+    const semEntrada = criarBanco(caso("CR-M04").entrada);
+    semEntrada.prepare("DELETE FROM eventos WHERE id = 2").run();
+    recusa(semEntrada, "M6_TRANSITO_SALDO_NEGATIVO", 1);
+  });
+
+  it("M6 (v4): a direção vem de observacao, com o valor sempre positivo na origem", () => {
+    const db = criarBanco(caso("CR-M05").entrada);
+    const valores = db.prepare("SELECT valor, observacao FROM eventos WHERE tipo_evento = 'TRANSFERENCIA_PENDENTE' ORDER BY id").all();
+    expect(valores).toEqual([
+      { valor: 1000, observacao: "positivo" },
+      { valor: 400, observacao: "negativo" },
+    ]);
+    const resultado = simularBanco(db, { usuarioDestino: USER_ID, sha256Origem: HASH_ORIGEM });
+    expect(resultado.ok).toBe(true);
+    if (resultado.ok) expect(resultado.relatorio.meses.map((mes) => mes.migracao)).toEqual(["0", "100000", "-40000"]);
   });
 
   it("M7 recusa migração calculada em zero antes de emitir operações", () => {

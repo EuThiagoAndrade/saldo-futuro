@@ -24,6 +24,7 @@ import type {
   ResultadoSimulacao,
   ResumoSimulacao,
 } from "./tipos";
+import { VERSAO_PLANO } from "./tipos";
 
 const TRANSITO_ID = "sistema:em-transito";
 const EVENTOS_COM_DIRECAO = new Set(["RENDIMENTO", "CORRECAO_MARCACAO", "CAMBIO", "TRANSFERENCIA_PENDENTE", "MIGRACAO_HISTORICA"]);
@@ -45,6 +46,16 @@ interface ParTransito {
   destinoId: string;
   data: string;
   valor: bigint;
+}
+
+/** Classificação de M6 (plano v4): cada evento de trânsito cai em exatamente um caso. */
+interface ClassificacaoTransito {
+  /** Caso a: par único, migrado como transferência. */
+  pares: ParTransito[];
+  /** Caso b: sem candidato, migrado como `migracao` no trânsito. */
+  semPar: EventoNormalizado[];
+  /** Caso c: dois ou mais candidatos, ou candidato que serve a mais de um trânsito. */
+  ambiguos: string[];
 }
 
 interface EventoPlanejado {
@@ -107,6 +118,8 @@ function resumoVazio(dados?: { ativos?: readonly unknown[]; eventos?: readonly {
     mesesConsolidadosAntigosIgnorados: 0,
     ativosDesativados: 0,
     ativosComSaldoQuePermanecemAtivos: 0,
+    transitoComoTransferencia: 0,
+    transitoComoMigracao: 0,
   };
 }
 
@@ -245,7 +258,12 @@ function normalizarDados(dados: DadosOrigem): { dados?: DadosNormalizados; erros
   };
 }
 
-function paresDeTransito(eventos: EventoNormalizado[]): { pares: ParTransito[]; errors: string[] } {
+/**
+ * M6 (plano v4). Cada `TRANSFERENCIA_PENDENTE` é uma variação do saldo acumulado do trânsito, com a
+ * direção lida por M2. Candidato a par de um trânsito positivo é um `RESGATE` não calculado do
+ * mesmo valor absoluto e do mesmo mês; de um negativo, um `APORTE` nas mesmas condições.
+ */
+function classificarTransito(eventos: EventoNormalizado[]): ClassificacaoTransito {
   const naoCalculados = eventos.filter((evento) => evento.origem !== "calculado" && evento.valor !== 0n);
   const transitos = eventos.filter((evento) => evento.tipo === "TRANSFERENCIA_PENDENTE" && evento.valor !== 0n);
   const paresCandidatos = new Map<number, EventoNormalizado[]>();
@@ -261,22 +279,49 @@ function paresDeTransito(eventos: EventoNormalizado[]): { pares: ParTransito[]; 
     for (const candidato of candidatos) usadosComoPar.set(candidato.id, (usadosComoPar.get(candidato.id) ?? 0) + 1);
   }
 
-  const errors: string[] = [];
-  for (const transito of transitos) {
-    const candidatos = paresCandidatos.get(transito.id) ?? [];
-    if (candidatos.length !== 1 || usadosComoPar.get(candidatos[0]?.id ?? -1) !== 1) errors.push(`evento de trânsito #${transito.id}`);
-  }
-
-  if (errors.length > 0) return { pares: [], errors };
-  const pares = transitos.map((eventoTransito) => {
-    const eventoAtivo = (paresCandidatos.get(eventoTransito.id) ?? [])[0];
+  const pares: ParTransito[] = [];
+  const semPar: EventoNormalizado[] = [];
+  const ambiguos: string[] = [];
+  for (const eventoTransito of transitos) {
+    const candidatos = paresCandidatos.get(eventoTransito.id) ?? [];
+    if (candidatos.length === 0) {
+      semPar.push(eventoTransito);
+      continue;
+    }
+    const eventoAtivo = candidatos[0];
+    if (candidatos.length !== 1 || usadosComoPar.get(eventoAtivo.id) !== 1) {
+      ambiguos.push(`evento de trânsito #${eventoTransito.id}`);
+      continue;
+    }
     const data = eventoAtivo.data > eventoTransito.data ? eventoAtivo.data : eventoTransito.data;
-    const valor = eventoTransito.valor;
     const origemId = eventoTransito.valorAssinado > 0n ? eventoAtivo.ativoId! : TRANSITO_ID;
     const destinoId = eventoTransito.valorAssinado > 0n ? TRANSITO_ID : eventoAtivo.ativoId!;
-    return { eventoTransito, eventoAtivo, origemId, destinoId, data, valor };
-  });
-  return { pares, errors };
+    pares.push({ eventoTransito, eventoAtivo, origemId, destinoId, data, valor: eventoTransito.valor });
+  }
+  return { pares, semPar, ambiguos };
+}
+
+/**
+ * M6 (plano v4): o saldo acumulado do trânsito no fim de cada mês, do primeiro mês com trânsito ao
+ * último mês fechado, nunca pode ser negativo. Devolve os meses negativos, sem corrigir nada.
+ */
+function mesesComTransitoNegativo(eventos: EventoNormalizado[], ultimoMes: Mes | null): string[] {
+  const variacoes = new Map<string, bigint>();
+  for (const evento of eventos) {
+    if (evento.tipo !== "TRANSFERENCIA_PENDENTE" || evento.valor === 0n) continue;
+    const mes = mesDe(evento.data);
+    variacoes.set(mes, (variacoes.get(mes) ?? 0n) + evento.valorAssinado);
+  }
+  const meses = [...variacoes.keys()].sort();
+  if (meses.length === 0) return [];
+  const fim = ultimoMes && ultimoMes > meses.at(-1)! ? ultimoMes : meses.at(-1)!;
+  const negativos: string[] = [];
+  let saldo = 0n;
+  for (let mes = meses[0] as Mes; mes <= fim; mes = mesSeguinte(mes)) {
+    saldo += variacoes.get(mes) ?? 0n;
+    if (saldo < 0n) negativos.push(`mês ${mes}`);
+  }
+  return negativos;
 }
 
 function verificarEstornosLigadosAoTransito(eventos: EventoNormalizado[], pares: ParTransito[]): string[] {
@@ -514,6 +559,7 @@ function replay(
   dados: DadosNormalizados,
   cobertura: CoberturaM10,
   pares: ParTransito[],
+  semPar: EventoNormalizado[],
   causas: Map<string, Set<string>>,
 ): ExecucaoReplay {
   const ativosFin: AtivoFinanceiro[] = dados.ativos.map((ativo) => ({ id: ativo.id, tipoAjuste: ativo.tipoAjuste, ativo: true }));
@@ -521,6 +567,7 @@ function replay(
   const posicoesOrigem = mapearPosicoes(dados);
   const eventosOrigemPorMes = indexar(dados.eventos, (evento) => mesDe(evento.data));
   const paresPorMes = indexar(pares, (par) => mesDe(par.data));
+  const semParPorMes = indexar(semPar, (evento) => mesDe(evento.data));
   const eventosDestino: Evento[] = [];
   const destinoPorIdOrigem = new Map<number, Evento>();
   const posicoesPorMes = new Map<string, Map<string, Posicao>>();
@@ -558,6 +605,32 @@ function replay(
       planejados.push({ origem: null, evento: pernaDestino, ordem: Math.min(par.eventoTransito.id, par.eventoAtivo.id), operacao: { ...planejados.at(-1)!.operacao } });
       eventosDestino.push(pernaOrigem, pernaDestino);
       eventosParaRelatorio.push(pernaOrigem, pernaDestino);
+    }
+
+    // M6, caso b: a variação sem contrapartida vira `migracao` no próprio trânsito, na data da
+    // origem, pela função lancar_migracao_transito (exceção à K12). Nada mais é criado.
+    for (const eventoTransito of semParPorMes.get(mes) ?? []) {
+      const evento: Evento = {
+        id: `transito:${eventoTransito.id}`,
+        ativo: TRANSITO_ID,
+        data: eventoTransito.data,
+        tipo: "migracao",
+        valor: exigirFaixa(eventoTransito.valorAssinado),
+      };
+      planejados.push({
+        origem: null,
+        evento,
+        ordem: eventoTransito.id,
+        operacao: {
+          chave: `transito:${eventoTransito.id}`,
+          tipo: "lancar_migracao_transito",
+          data: evento.data,
+          origemId: eventoTransito.id,
+          payload: { ativo: TRANSITO_ID, data: evento.data, tipo: "migracao", valorCentavos: evento.valor.toString() },
+        },
+      });
+      eventosDestino.push(evento);
+      eventosParaRelatorio.push(evento);
     }
 
     for (const eventoOrigem of eventosDoMesOrigem) {
@@ -781,13 +854,18 @@ function finalizar(
   const resumo = resumoVazio(dados);
   const normalizados = dados;
 
-  const paresResultado = paresDeTransito(normalizados.eventos);
-  const estornosTransito = verificarEstornosLigadosAoTransito(normalizados.eventos, paresResultado.pares);
+  const transito = classificarTransito(normalizados.eventos);
+  const estornosTransito = verificarEstornosLigadosAoTransito(normalizados.eventos, transito.pares);
   if (estornosTransito.length > 0) {
     return resultadoRecusado(resumo, sha256Origem, [recusa("M5_ESTORNO_LIGADO_A_TRANSFERENCIA", "M5", estornosTransito)]);
   }
-  if (paresResultado.errors.length > 0) {
-    return resultadoRecusado(resumo, sha256Origem, [recusa("M6_TRANSITO_SEM_PAR_UNICO", "M6", paresResultado.errors)]);
+  if (transito.ambiguos.length > 0) {
+    return resultadoRecusado(resumo, sha256Origem, [recusa("M6_TRANSITO_PAR_AMBIGUO", "M6", transito.ambiguos)]);
+  }
+  const cobertura = validarM10(normalizados);
+  const transitoNegativo = mesesComTransitoNegativo(normalizados.eventos, cobertura.ultimoMes);
+  if (transitoNegativo.length > 0) {
+    return resultadoRecusado(resumo, sha256Origem, [recusa("M6_TRANSITO_SALDO_NEGATIVO", "M6", transitoNegativo)]);
   }
 
   const estornosInvalidos = verificarEstornos(normalizados);
@@ -800,15 +878,14 @@ function finalizar(
     return resultadoRecusado(resumo, sha256Origem, [recusa("TIPO_NAO_COBERTO", "preflight", tiposInvalidos)]);
   }
 
-  const cobertura = validarM10(normalizados);
   resumo.mesesConsolidadosAntigosIgnorados = cobertura.mesesAntigosIgnorados;
   const posicoesPorMes = mapearPosicoes(normalizados);
-  const causas = criarCausasIniciais(normalizados, cobertura.meses, posicoesPorMes, paresResultado.pares);
+  const causas = criarCausasIniciais(normalizados, cobertura.meses, posicoesPorMes, transito.pares);
 
   let replayFinal: ExecucaoReplay | null = null;
   const maxIteracoes = normalizados.posicoes.length + normalizados.eventos.length + 1;
   for (let i = 0; i < maxIteracoes; i += 1) {
-    const atual = replay(normalizados, cobertura, paresResultado.pares, causas);
+    const atual = replay(normalizados, cobertura, transito.pares, transito.semPar, causas);
     let mudou = false;
     for (const causa of atual.novasCausasM7) {
       const [ativo, mes] = causa.chave.split("|");
@@ -860,7 +937,7 @@ function finalizar(
   if (!replayFinal) return resultadoRecusado(resumo, sha256Origem, [recusa("M10_COBERTURA_OU_CONSISTENCIA", "M10", ["nenhum mês simulável"]) ]);
   const operacoesSemHash = montarOperacoes(normalizados, cobertura, replayFinal);
   const hashPayload = {
-    versao: 1 as const,
+    versao: VERSAO_PLANO,
     sha256Origem,
     usuarioDestino,
     operacoes: operacoesSemHash,
@@ -888,6 +965,8 @@ function finalizar(
   resumo.mesesComMigracao = replayFinal.meses.filter((mes) => BigInt(mes.migracao) !== 0n).length;
   resumo.ativosMesesEmM7 = ativosEmM7.length;
   resumo.eventosZeroDescartados = contarZeros(normalizados);
+  resumo.transitoComoTransferencia = transito.pares.length;
+  resumo.transitoComoMigracao = transito.semPar.length;
   const ultimoMes = cobertura.ultimoMes;
   for (const ativo of normalizados.ativos.filter((item) => !item.ativo)) {
     const saldoFinal = ultimoMes ? replayFinal.posicoesPorMes.get(ultimoMes)?.get(ativo.id)?.saldoFinal ?? 0n : 0n;

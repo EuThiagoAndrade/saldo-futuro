@@ -79,8 +79,8 @@ A recusa de M6 é um caso não coberto pela `v3` (parada prevista no plano). O r
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 006 (completo)
 Quem: Responsável
-Conferir: [PR #72](https://github.com/EuThiagoAndrade/saldo-futuro/pull/72), checks remotos e o diff limitado ao plano, a esta task e a `cycles.md`
-Diga: "aprovo o merge da PR #72"
+Conferir: [PR #74](https://github.com/EuThiagoAndrade/saldo-futuro/pull/74), checks remotos, diff e barreiras G1 a G4
+Diga: "aprovo o merge da PR #74"
 ```
 
 ## Handoff de saída
@@ -91,4 +91,4 @@ Diga: "aprovo o merge da PR #72"
 - `state_before` / `state_after`: task `Aguardando integração`, PR #69 registrada como aberta / task `Bloqueada`, PR #69 integrada, ação externa parada na simulação por M6; `v4` do plano aprovada em 2026-10-18 e em publicação
 - `result`: `executed`
 - `evidence`: estado da PR #69 e da issue #65 lido no GitHub (`MERGED` e `CLOSED`); recusa da simulação relatada pelo responsável, só com código e contagem
-- `blockers`: merge da PR documental da `v4`, issue D integrada e `db push` da issue D
+- `blockers`: issue D ([#73](https://github.com/EuThiagoAndrade/saldo-futuro/issues/73)) integrada e seu `db push`; a PR #72 (v4) foi integrada em 2026-10-18
