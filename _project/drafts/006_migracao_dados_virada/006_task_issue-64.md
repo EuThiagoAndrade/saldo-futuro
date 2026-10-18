@@ -2,12 +2,12 @@
 
 > **Ciclo:** `006`
 > **Trilha:** `normal`
-> **Estado:** `Em andamento`
+> **Estado:** `Aguardando integração`
 > **Tipo:** `feature`
 > **Issue:** `#64`
 > **Plano:** `_project/drafts/006_migracao_dados_virada/006_plan.md`
 > **Branch:** `feature/issue-64`
-> **PR:** —
+> **PR:** [#68](https://github.com/EuThiagoAndrade/saldo-futuro/pull/68)
 > **Integração:** `Pendente`
 > **Autorização inicial:** "A próxima etapa é a issue #64. implemente a issue #64" em 2026-10-18
 > **Modo contínuo:** `—`
@@ -48,7 +48,7 @@ Não se aplica; esta é a issue B do ciclo completo 006.
 - [x] Modos `gravar` e `conferir` no ponto de entrada, num módulo carregado só por eles (`scripts/migracao-gravacao.mjs`); `simular` continua sem importar o cliente do Supabase.
 - [x] Testes unitários (Vitest) e de integração no Supabase local (`tests/e2e/migracao.spec.ts`).
 - [x] Gates locais e evidências.
-- [ ] PR.
+- [x] Revisar diff, staging e evidências G1–G4; abrir a PR #68.
 
 ## Evidências
 
@@ -62,7 +62,7 @@ Não se aplica; esta é a issue B do ciclo completo 006.
 | `service_role` | Nenhuma ocorrência no código, testes e CLI da migração. |
 | Validador | Harness: 39/39. `node scripts/validate-governance.mjs` conferido depois do bloco "Aguardando merge". |
 | `git diff --check` | Passou. |
-| Checks remotos | Pendente. |
+| Checks remotos | PR #68 aberta no commit `9f6e2ed`; conferir os checks no HEAD atualizado depois deste push documental. |
 
 ## Revisão da correção
 
@@ -87,18 +87,18 @@ Não se aplica; esta não é a última issue do ciclo.
 
 ```text
 PRÓXIMO PASSO
-Situação: Parado — ciclo 006 (completo)
-Quem: Agente
-Conferir: implementação em andamento na branch feature/issue-64
-Diga: —
+Situação: Aguardando merge — ciclo 006 (completo)
+Quem: Responsável
+Conferir: [PR #68](https://github.com/EuThiagoAndrade/saldo-futuro/pull/68), checks remotos, diff e as decisões incidentais 1 e 2 da task
+Diga: "aprovo o merge da PR #68"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 006 + implementar_issue + 64/B + base ce84e66466876c93dafd8fc852fbfd8f39ff2edf`
-- `effect_class`: `local_mutation`
-- `state_before` / `state_after`: issue #64 `OPEN`, sem branch nem task / branch `feature/issue-64` e task `Em andamento`
+- `effect_class`: `remote_mutation`
+- `state_before` / `state_after`: issue #64 `OPEN`, sem branch nem task; task da #63 `Aguardando integração` / branch `feature/issue-64`, task `Aguardando integração`, PR #68 `OPEN` contra `main`; task da #63 reconciliada como `Concluída`
 - `result`: `executed`
-- `evidence`: pendente
-- `blockers`: pendente
+- `evidence`: autorização do responsável em 2026-10-18; gates locais na tabela de evidências; PR #68 aberta via `gh`, com `Closes #64`
+- `blockers`: checks remotos do HEAD atualizado e "aprovo o merge da PR #68" depois de todos verdes
