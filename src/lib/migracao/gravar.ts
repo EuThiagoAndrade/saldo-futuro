@@ -33,6 +33,7 @@ import {
   iguais,
   lerEstadoDestino,
   mesCurto,
+  nomeComoNoBanco,
   type ParteDoEstado,
   referenciaDoEstorno,
   TRANSITO,
@@ -503,7 +504,7 @@ export async function conferir(
   // Os nomes vêm da descrição da origem, que é única; o mapa não depende do diário.
   const porNome = new Map<string, string>();
   for (const operacao of plano.operacoes) {
-    if (operacao.tipo === "criar_ativo") porNome.set(String((operacao.payload as Record<string, unknown>).nome).trim(), operacao.chave);
+    if (operacao.tipo === "criar_ativo") porNome.set(nomeComoNoBanco(String((operacao.payload as Record<string, unknown>).nome)), operacao.chave);
   }
   const mapa = new Map<string, string>();
   const vistos = new Map<string, number>();

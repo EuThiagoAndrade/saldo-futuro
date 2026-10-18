@@ -137,6 +137,24 @@ describe("comparação por efeitos completos", () => {
     expect(contagensEsperadas(estadoEsperado(comMigracao, 7))).toMatchObject({ eventos: 6 });
   });
 
+  it("nome com NBSP nas pontas é comparado como o btrim do banco grava (issue #78)", () => {
+    // btrim(p_nome) do PostgreSQL remove só o espaço comum; o NBSP (U+00A0) fica no nome gravado.
+    const nome = " Fundo Fictício NBSP   ";
+    const comNbsp = plano([{ chave: "ativo:1", tipo: "criar_ativo", payload: { nome, tipoAjuste: "rendimento" } }]);
+    const destino: EstadoDestino = {
+      ...destinoCompleto(),
+      ativos: [
+        { id: "u-t", nome: "Em trânsito", tipo_ajuste: null, sistema: "transito", ativo: true },
+        { id: "u-1", nome: " Fundo Fictício NBSP  ", tipo_ajuste: "rendimento", sistema: null, ativo: true },
+      ],
+      eventos: [],
+      transferencias: [],
+      consolidados: [],
+      posicoes: [],
+    };
+    expect(diferencas(estadoAbstrato(destino, new Map([["u-1", "ativo:1"]])), estadoEsperado(comNbsp, 1))).toEqual({});
+  });
+
   it("contagens esperadas da marca contam as duas pernas e o trânsito", () => {
     expect(contagensEsperadas(estadoEsperado(PLANO, 8))).toEqual({ ativos: 3, eventos: 5, transferencias: 1, meses: ["2025-01"] });
   });
