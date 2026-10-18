@@ -48,7 +48,7 @@ export function criarOrigem(pasta: string, nome: string, entrada: EntradaOrigem)
     }
     const posicao = db.prepare("INSERT INTO posicoes_mensais (ativo_id, ano, mes, saldo_inicio, saldo_fim) VALUES (?, ?, ?, ?, ?)");
     for (const p of entrada.posicoes) posicao.run(p.ativo_id, p.ano, p.mes, p.saldo_inicio, p.saldo_fim);
-    const consolidado = db.prepare("INSERT INTO consolidado_mensual (ano, mes, valor_total, status, fechado) VALUES (?, ?, ?, 'fechado', 1)");
+    const consolidado = db.prepare("INSERT INTO consolidado_mensal (ano, mes, valor_total, status, fechado) VALUES (?, ?, ?, 'fechado', 1)");
     for (const c of entrada.consolidados) consolidado.run(c.ano, c.mes, c.valor_total);
   } finally {
     db.close();

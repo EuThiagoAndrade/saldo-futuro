@@ -54,7 +54,7 @@ function popularBanco(db: DatabaseSync, entrada: CasoMigracao["entrada"]): void 
   for (const item of entrada.posicoes) posicao.run(Number(item.ativo_id), Number(item.ano), Number(item.mes), item.saldo_inicio as number, item.saldo_fim as number);
 
   const consolidado = db.prepare(
-    "INSERT INTO consolidado_mensual (ano, mes, valor_total, status, fechado) VALUES (?, ?, ?, ?, ?)",
+    "INSERT INTO consolidado_mensal (ano, mes, valor_total, status, fechado) VALUES (?, ?, ?, ?, ?)",
   );
   for (const item of entrada.consolidados) consolidado.run(Number(item.ano), Number(item.mes), item.valor_total as number, String(item.status), Number(Boolean(item.fechado)));
 }
@@ -136,6 +136,11 @@ describe("simulação de migração da origem", () => {
     }
   });
 
+  it("lê a tabela consolidado_mensal definida no contrato da origem", () => {
+    const resultado = simular(caso("CR-M01"));
+    expect(resultado.ok).toBe(true);
+  });
+
   it("gera plano idêntico para os mesmos dados, origem e usuário", () => {
     const casoMigracao = caso("CR-M03");
     const primeira = simular(casoMigracao);
@@ -194,13 +199,13 @@ describe("simulação de migração da origem", () => {
   it("M7 recusa migração calculada em zero antes de emitir operações", () => {
     const db = criarBanco(caso("CR-M03").entrada);
     db.prepare("UPDATE posicoes_mensais SET saldo_fim = 70 WHERE ano = 2025 AND mes = 2").run();
-    db.prepare("UPDATE consolidado_mensual SET valor_total = 100 WHERE ano = 2025 AND mes = 2").run();
+    db.prepare("UPDATE consolidado_mensal SET valor_total = 100 WHERE ano = 2025 AND mes = 2").run();
     recusa(db, "M7_MIGRACAO_ZERO");
   });
 
   it.each([
-    ["status e flag de fechamento divergentes", (db: DatabaseSync) => db.prepare("UPDATE consolidado_mensual SET status = 'aberto', fechado = 0 WHERE ano = 2025 AND mes = 1").run()],
-    ["valor_total incompatível", (db: DatabaseSync) => db.prepare("UPDATE consolidado_mensual SET valor_total = 999 WHERE ano = 2025 AND mes = 1").run()],
+    ["status e flag de fechamento divergentes", (db: DatabaseSync) => db.prepare("UPDATE consolidado_mensal SET status = 'aberto', fechado = 0 WHERE ano = 2025 AND mes = 1").run()],
+    ["valor_total incompatível", (db: DatabaseSync) => db.prepare("UPDATE consolidado_mensal SET valor_total = 999 WHERE ano = 2025 AND mes = 1").run()],
     ["posição ausente apesar do evento", (db: DatabaseSync) => db.prepare("DELETE FROM posicoes_mensais WHERE ano = 2025 AND mes = 1").run()],
     ["evento em mês aberto depois do último fechamento", (db: DatabaseSync) => db.prepare("INSERT INTO eventos (id, ativo_id, data_evento, ano, mes, tipo_evento, valor, origem) VALUES (9, 1, '2025-02-01', 2025, 2, 'RENDIMENTO', 1, 'manual')").run()],
   ])("M10 recusa %s", (_nome, mutar) => {
@@ -212,7 +217,7 @@ describe("simulação de migração da origem", () => {
   it("M10 ignora meses antigos somente com consolidado e informa a contagem", () => {
     const entrada = caso("CR-M01").entrada;
     const db = criarBanco(entrada);
-    db.prepare("INSERT INTO consolidado_mensual (ano, mes, valor_total, status, fechado) VALUES (2024, 12, 50, 'fechado', 1)").run();
+    db.prepare("INSERT INTO consolidado_mensal (ano, mes, valor_total, status, fechado) VALUES (2024, 12, 50, 'fechado', 1)").run();
     const resultado = simularBanco(db, { usuarioDestino: USER_ID, sha256Origem: HASH_ORIGEM });
     expect(resultado.ok).toBe(true);
     if (resultado.ok) expect(resultado.resumo.mesesConsolidadosAntigosIgnorados).toBe(1);
