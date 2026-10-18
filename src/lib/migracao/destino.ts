@@ -96,6 +96,14 @@ function ordenar(lista: string[]): string[] {
   return lista.sort();
 }
 
+/**
+ * O nome como `criar_ativo` o grava: `btrim` do PostgreSQL, que remove só o espaço comum (U+0020)
+ * das pontas. O `trim()` do JavaScript removeria também NBSP, tabulação e quebras de linha.
+ */
+export function nomeComoNoBanco(nome: string): string {
+  return nome.replace(/^ +| +$/g, "");
+}
+
 /** "2025-01" ou "2025-01-01" → "2025-01". */
 export function mesCurto(mes: string): string {
   return mes.slice(0, 7);
@@ -118,7 +126,7 @@ export function estadoEsperado(plano: PlanoMigracao, k: number): EstadoAbstrato 
     const p = operacao.payload as Record<string, unknown>;
     switch (operacao.tipo) {
       case "criar_ativo":
-        ativos.set(operacao.chave, { nome: String(p.nome).trim(), tipo: String(p.tipoAjuste), ativo: true });
+        ativos.set(operacao.chave, { nome: nomeComoNoBanco(String(p.nome)), tipo: String(p.tipoAjuste), ativo: true });
         break;
       case "lancar_evento":
       case "lancar_migracao_transito":

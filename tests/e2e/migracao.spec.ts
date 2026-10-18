@@ -53,6 +53,7 @@ test.describe("migração: gravar e conferir", () => {
       transito: "user",
       semfuncao: "user",
       implicita: "user",
+      nbsp: "user",
       "pos-lancar_migracao_transito": "user",
     });
     pasta = mkdtempSync(join(tmpdir(), "saldo-futuro-migracao-64-"));
@@ -169,6 +170,19 @@ test.describe("migração: gravar e conferir", () => {
     const saldos = (mes: string) => plano.operacoes.find((o) => o.chave === `fechamento:${mes}`)!.payload.saldosReais as Record<string, string>;
     expect([saldos("2025-03")[gama], saldos("2025-04")[gama]]).toEqual(["0", "0"]);
     expect((await contagens(cliente)).meses).toBe(4);
+  });
+
+  test("nome com NBSP nas pontas (issue #78): gravar e conferir sem diferença, com o nome como o banco o grava", async () => {
+    const entrada = carteiraCompleta();
+    entrada.ativos[0].descricao = " Fundo Fictício Alfa ";
+    entrada.ativos[1].descricao = "Ação Fictícia Beta   ";
+    const arquivo = criarOrigem(pasta, "nbsp", entrada);
+    const dir = diretorio("nbsp");
+    const { cliente, plano, relatorio, resultado } = await gravarComo(u.nbsp, dir, {}, undefined, arquivo);
+    expect(resultado).toMatchObject({ result: "executed", motivo: "concluida", confirmadas: plano.operacoes.length });
+    expect(await conferir(cliente, plano, relatorio)).toEqual({ ok: true, meses: 4, diferencas: {} });
+    const { data } = await cliente.from("ativos").select("nome").is("sistema", null).order("nome");
+    expect(data!.map((a) => a.nome)).toEqual(expect.arrayContaining([" Fundo Fictício Alfa ", "Ação Fictícia Beta  "]));
   });
 
   test("sem a função lancar_migracao_transito no banco, a sonda impede a carga, sem escrita nem diário", async () => {
