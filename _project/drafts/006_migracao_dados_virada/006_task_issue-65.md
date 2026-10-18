@@ -2,13 +2,13 @@
 
 > **Ciclo:** `006`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Bloqueada`
 > **Tipo:** `chore`
 > **Issue:** `#65`
 > **Plano:** `_project/drafts/006_migracao_dados_virada/006_plan.md`
 > **Branch:** `chore/issue-65`
 > **PR:** [#69](https://github.com/EuThiagoAndrade/saldo-futuro/pull/69)
-> **Integração:** `Pendente`
+> **Integração:** `Integrada` (PR #69, 2026-10-18; issue #65 fechada pelo merge)
 > **Autorização inicial:** "autorizo a implementação da issue #65" em 2026-10-18
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-18
@@ -44,7 +44,7 @@ Não se aplica; esta é a issue C do ciclo completo 006.
 - [x] Trecho de leitura do cookie testado contra um cookie fragmentado simulado no formato de `@supabase/ssr` (`base64-` e partes `.0`, `.1`).
 - [x] Reconciliar a task da issue #64 (integrada) e `cycles.md`.
 - [x] Gates documentais e PR #69.
-- [ ] **Execução da ação externa: pendente**, depois do merge, pelo responsável. Nenhum resultado presumido.
+- [ ] **Execução da ação externa: bloqueada antes de `gravar`.** A simulação real recusou por M6 (ver "Evidências"). Retoma depois da `v4` do plano, da issue D e do `db push` dela. Nenhum resultado presumido.
 
 ## Evidências
 
@@ -52,8 +52,8 @@ Não se aplica; esta é a issue C do ciclo completo 006.
 | :-- | :-- |
 | Validador | `node scripts/validate-governance.mjs`: 0 erros, 0 avisos, 4 verificações manuais. |
 | `git diff --check` | Passou. |
-| Checks remotos | PR #69 aberta; conferir os checks no HEAD depois deste push documental. |
-| Ação externa | Pendente (depois do merge) |
+| Checks remotos | PR #69 integrada por squash em 2026-10-18 (GitHub). |
+| Ação externa — simulação real (2026-10-18) | Depois da correção da issue #70 (PR #71): recusa `M6_TRANSITO_SEM_PAR_UNICO`, quantidade 2. Destino conferido vazio. `gravar` não executado. Só códigos e contagens registrados. |
 
 ## Revisão da correção
 
@@ -69,22 +69,26 @@ Não se aplica; issue normal do ciclo completo.
 
 Não se aplica; o encerramento do ciclo vai em PR própria, depois da verificação em produção.
 
+## Bloqueio
+
+A recusa de M6 é um caso não coberto pela `v3` (parada prevista no plano). O responsável decidiu, em 2026-10-18, a alternativa A (migração no trânsito) e as regras complementares 1 a 4, registradas na `v4` do plano, aprovada em 2026-10-18 depois do veredito `APTO COM RESSALVAS` da rodada 4. A ação externa desta issue continua depois da issue D.
+
 ## Próximo passo
 
 ```text
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 006 (completo)
 Quem: Responsável
-Conferir: [PR #69](https://github.com/EuThiagoAndrade/saldo-futuro/pull/69), checks remotos e o roteiro M0 a M8 da KB-002
-Diga: "aprovo o merge da PR #69"
+Conferir: [PR #72](https://github.com/EuThiagoAndrade/saldo-futuro/pull/72), checks remotos e o diff limitado ao plano, a esta task e a `cycles.md`
+Diga: "aprovo o merge da PR #72"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 006 + implementar_issue + 65/C + base 114da00e250ae73ef79ad8a9f46e4e73b4c8af99`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 006 + aprovar_plano + 006_plan + v4 (base b580334)`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: issue #65 `OPEN`, sem branch nem task; task da #64 `Aguardando integração` / branch `chore/issue-65`, task `Aguardando integração`, PR #69 `OPEN` contra `main`; task da #64 `Concluída`
+- `state_before` / `state_after`: task `Aguardando integração`, PR #69 registrada como aberta / task `Bloqueada`, PR #69 integrada, ação externa parada na simulação por M6; `v4` do plano aprovada em 2026-10-18 e em publicação
 - `result`: `executed`
-- `evidence`: autorização do responsável em 2026-10-18; validador e `git diff --check` verdes; PR #69 aberta via `gh` com `Closes #65`
-- `blockers`: checks remotos do HEAD e "aprovo o merge da PR #69"; depois do merge, a ação externa do responsável
+- `evidence`: estado da PR #69 e da issue #65 lido no GitHub (`MERGED` e `CLOSED`); recusa da simulação relatada pelo responsável, só com código e contagem
+- `blockers`: merge da PR documental da `v4`, issue D integrada e `db push` da issue D
