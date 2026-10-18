@@ -4,7 +4,7 @@
 > **Status:** `Em Execução`
 > **Versão:** `v3`
 > **Data de criação:** 2026-10-17
-> **Última atualização:** 2026-10-17
+> **Última atualização:** 2026-10-18
 > **Tipo:** `feature`
 > **Prioridade:** `P1`
 > **Nível:** `completo`
@@ -313,14 +313,12 @@ Uma PR por issue, cada uma com aprovação própria do merge. O encerramento vai
 
 ## Próximo passo
 
-Pergunta registrada: Você pode restabelecer a autenticação do GitHub CLI para que a PR da issue #63 seja aberta?
-
 ```text
 PRÓXIMO PASSO
-Situação: Parado — correção da issue #63
+Situação: Aguardando merge — ciclo 006 (completo)
 Quem: Responsável
-Conferir: A pergunta registrada
-Diga: sua resposta à pergunta registrada
+Conferir: [PR #66](https://github.com/EuThiagoAndrade/saldo-futuro/pull/66), checks remotos e diff
+Diga: "aprovo o merge da PR #66"
 ```
 
 ## Handoff de saída
@@ -328,10 +326,10 @@ Diga: sua resposta à pergunta registrada
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 006 + implementar_issue + 63/A + base 9cfb2efdde5efa2ebf9dbd054abb21f4b77e1c9f`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: plano `Aprovado` e integrado; issue #63 `OPEN`, sem branch ou task / plano `Em Execução`; ciclo `Em execução`; issue #63 `OPEN`; branch `feature/issue-63` publicada em `2ea4c3a`; implementação da issue A concluída localmente; PR não aberta porque `gh auth status` indicou token inválido
+- `state_before` / `state_after`: plano `Em Execução`; ciclo `Em execução`; issue #63 `OPEN`; branch `feature/issue-63` em `4a8a8e7`; task bloqueada, sem PR / task `Aguardando integração`; PR #66 `OPEN`, base `main`, fora de draft, HEAD `4a8a8e7e26900870b52ff81d3eacf845ceb8a501`; 2 checks aprovados e 3 pendentes
 - `result`: `executed`
-- `evidence`: autorização humana de implementação em 2026-10-17; issue #63 e plano conferidos; branch e task persistente; resultados reais registrados na task da issue #63
-- `blockers`: autenticação inválida no GitHub CLI; PR e checks remotos pendentes; aprovação específica do merge necessária depois
+- `evidence`: autorização humana de implementação em 2026-10-17; autenticação `gh` confirmada; PR #66 aberta via `gh` e vinculada à issue #63; HEAD e checks registrados na task
+- `blockers`: 3 checks remotos pendentes; merge exige checks verdes e aprovação específica "aprovo o merge da PR #66"
 
 ## Revisão crítica
 
@@ -561,7 +559,7 @@ Nenhum achado foi contestado. As regras financeiras alteradas (M5 e M7) seguem c
 - **Execução:** issue #63 aberta e conferida; plano aprovado e integrado pela PR #62; branch `feature/issue-63` criada a partir de `9cfb2efdde5efa2ebf9dbd054abb21f4b77e1c9f`; task persistente criada em `006_task_issue-63.md`.
 - **Escopo:** simulação somente leitura do SQLite, regras M1 a M10, replay em memória, plano determinístico e relatório local. Nenhum SQLite real foi aberto; nenhum acesso ou gravação no Supabase foi incluído.
 - **Validação:** testes Vitest (237), typecheck, lint, build webpack, E2E sem backend, validador e `git diff --check`; resultados e limites estão na task da issue #63.
-- **Estado:** plano `Em Execução`, ciclo `Em execução`; implementação commitada e branch publicada; task bloqueada antes de abrir a PR porque `gh auth status` indica token inválido. A PR e os checks remotos continuam pendentes. O merge exige "aprovo o merge da PR #N".
+- **Estado:** plano `Em Execução`, ciclo `Em execução`; PR #66 aberta em `main`, fora de draft, com HEAD `4a8a8e7e26900870b52ff81d3eacf845ceb8a501`; 2 checks aprovados e 3 pendentes. A integração exige checks verdes e "aprovo o merge da PR #66".
 
 ## Pós-mortem
 

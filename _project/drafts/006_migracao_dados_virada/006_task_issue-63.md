@@ -2,17 +2,17 @@
 
 > **Ciclo:** `006`
 > **Trilha:** `normal`
-> **Estado:** `Bloqueada`
+> **Estado:** `Aguardando integração`
 > **Tipo:** `feature`
 > **Issue:** `#63`
 > **Plano:** `_project/drafts/006_migracao_dados_virada/006_plan.md`
 > **Branch:** `feature/issue-63`
-> **PR:** —
+> **PR:** [#66](https://github.com/EuThiagoAndrade/saldo-futuro/pull/66)
 > **Integração:** `Pendente`
 > **Autorização inicial:** "Autorizo a implementação da issue #63 (simulação da migração)" em 2026-10-17
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-17
-> **Última atualização:** 2026-10-17
+> **Última atualização:** 2026-10-18
 > **handoff_schema_version:** `2`
 
 ## Objetivo
@@ -46,7 +46,7 @@ Não se aplica; esta é a issue A do ciclo completo 006.
 - [x] Registrar casos de referência fictícios CR-M* na KB-004 e no JSON, com paridade e recálculo independente.
 - [x] Cobrir cada condição da precedência de recusas e cenários positivos do plano com testes.
 - [x] Executar os gates da issue e do plano; registrar resultados reais.
-- [x] Revisar diff, staging e evidências G1–G4 antes de preparar a PR.
+- [x] Revisar diff, staging e evidências G1–G4; abrir e anexar a PR #66.
 
 ## Evidências
 
@@ -59,7 +59,7 @@ Não se aplica; esta é a issue A do ciclo completo 006.
 | E2E | 13 passaram e 75 foram pulados sem backend Supabase. Executado em porta local alternativa por bloqueio de loopback do sandbox. |
 | Validador | Harness de governança: 39/39; `node scripts/validate-governance.mjs`: 0 erros, 0 avisos, 4 verificações manuais. |
 | `git diff --check` | Passou. |
-| Checks remotos | Pendente |
+| Checks remotos | PR #66 no HEAD `4a8a8e7e26900870b52ff81d3eacf845ceb8a501`: 2 aprovados, 3 pendentes. |
 
 ## Revisão da correção
 
@@ -75,14 +75,12 @@ Não se aplica; esta não é a última issue do ciclo.
 
 ## Próximo passo
 
-Pergunta registrada: Você pode restabelecer a autenticação do GitHub CLI para que a PR da issue #63 seja aberta?
-
 ```text
 PRÓXIMO PASSO
-Situação: Parado — correção da issue #63
+Situação: Aguardando merge — ciclo 006 (completo)
 Quem: Responsável
-Conferir: A pergunta registrada
-Diga: sua resposta à pergunta registrada
+Conferir: [PR #66](https://github.com/EuThiagoAndrade/saldo-futuro/pull/66), checks remotos e diff
+Diga: "aprovo o merge da PR #66"
 ```
 
 ## Handoff de saída
@@ -90,7 +88,7 @@ Diga: sua resposta à pergunta registrada
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 006 + implementar_issue + 63/A + base 9cfb2efdde5efa2ebf9dbd054abb21f4b77e1c9f`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: plano `Aprovado`, issue #63 `OPEN`, base `main` em `9cfb2efdde5efa2ebf9dbd054abb21f4b77e1c9f`, sem branch ou task da issue / plano `Em Execução`, ciclo `Em execução`, issue #63 `OPEN`, branch `feature/issue-63` publicada em `2ea4c3a`, implementação local concluída; PR não aberta porque `gh auth status` indicou token inválido
+- `state_before` / `state_after`: plano `Em Execução`, issue #63 `OPEN`, branch `feature/issue-63` em `4a8a8e7`, task bloqueada e sem PR / task `Aguardando integração`; PR #66 `OPEN`, base `main`, fora de draft, HEAD `4a8a8e7e26900870b52ff81d3eacf845ceb8a501`; 2 checks aprovados e 3 pendentes
 - `result`: `executed`
-- `evidence`: issue e corpo conferidos pelo conector GitHub; plano aprovado e PR #62 integrada; `HEAD` igual a `origin/main`; branch e task criadas após a autorização recebida em 2026-10-17; resultados reais na tabela de evidências
-- `blockers`: autenticação inválida no GitHub CLI; PR e checks remotos pendentes; aprovação específica do merge necessária depois
+- `evidence`: autenticação `gh` confirmada (`gh auth status` e `gh api user`); PR #66 criada via `gh`, vinculada à issue #63, base `main`, fora de draft; HEAD e checks registrados na tabela de evidências
+- `blockers`: 3 checks remotos pendentes; merge exige checks verdes e aprovação específica "aprovo o merge da PR #66"
