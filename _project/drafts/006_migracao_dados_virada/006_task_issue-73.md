@@ -2,13 +2,13 @@
 
 > **Ciclo:** `006`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#73`
 > **Plano:** `_project/drafts/006_migracao_dados_virada/006_plan.md` (`v4`, item 4 — D)
 > **Branch:** `feature/issue-73`
 > **PR:** [#74](https://github.com/EuThiagoAndrade/saldo-futuro/pull/74)
-> **Integração:** `Pendente`
+> **Integração:** `Integrada` (PR #74, squash em 2026-10-18; issue #73 fechada pelo merge)
 > **Autorização inicial:** "autorizo a implementação da issue #73" em 2026-10-18
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-18
@@ -50,7 +50,8 @@ Não se aplica.
 - [x] `gravar`/`conferir`: operação nova, sonda, versão do plano (2) e testes.
 - [x] KB-004, JSON de casos e KB-002.
 - [x] Gates locais, PR.
-- [ ] Depois do merge: simulação local só com códigos e contagens.
+- [x] Depois do merge: simulação local só com códigos e contagens (ver "Evidências").
+- [ ] Ação externa (`db push` da migração da issue D): pendente, pelo responsável.
 
 ## Evidências
 
@@ -63,7 +64,8 @@ Não se aplica.
 | `npm run test:e2e` completo | 98 verdes e 9 ignorados (sem `CRON_SECRET` e afins); 2 testes interrompidos por queda do processo do Node no Windows (código 0xC0000409), sem falha de asserção, num de cenários e no de 1.000 eventos. Uma reexecução teve a mesma queda num processo do CLI; duas reexecuções seguintes de `migracao.spec.ts` e `cenarios.spec.ts` passaram inteiras (26 de 26 cada). Tratado como instabilidade do ambiente local; o CI em Linux confere |
 | Validador | `node --test scripts/validate-governance.test.mjs` 39/39; `node scripts/validate-governance.mjs` 0 erros, 0 avisos, 4 itens manuais |
 | `git diff --check` | Limpo |
-| Checks remotos | Conferir no HEAD da PR #74 |
+| Checks remotos | Os cinco checks verdes no HEAD aprovado da PR #74 antes do merge. |
+| Simulação local pós-merge (2026-10-18, pelo agente, com autorização) | M6 não recusa mais. Recusa `M10_COBERTURA_OU_CONSISTENCIA`, quantidade 12, todas "posição ausente para ativo com histórico" (11 ativos, 6 meses). Consulta somente leitura autorizada, só contagens: nas 12, posição anterior com saldo zero e nenhum evento no mês; 9 ativos desativados e 3 ativos na origem. Leva à `v5` do plano. |
 
 ## Revisão da correção
 
@@ -85,8 +87,8 @@ Não se aplica.
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 006 (completo)
 Quem: Responsável
-Conferir: [PR #74](https://github.com/EuThiagoAndrade/saldo-futuro/pull/74), checks remotos, diff e barreiras G1 a G4
-Diga: "aprovo o merge da PR #74"
+Conferir: [PR #75](https://github.com/EuThiagoAndrade/saldo-futuro/pull/75), checks remotos e o diff limitado ao plano, às tasks #65 e #73 e a `cycles.md`
+Diga: "aprovo o merge da PR #75"
 ```
 
 ## Handoff de saída
@@ -97,4 +99,4 @@ Diga: "aprovo o merge da PR #74"
 - `state_before` / `state_after`: issue #73 `OPEN`, sem branch nem task / branch `feature/issue-73`, task `Aguardando integração`, PR #74 aberta contra `main`; plano `Em Execução`
 - `result`: `executed`
 - `evidence`: autorização do responsável em 2026-10-18; gates locais e conferência independente registrados em "Evidências" e G1
-- `blockers`: checks remotos e "aprovo o merge da PR #74"; depois do merge, a simulação local e o `db push` (ação externa da issue #73)
+- `blockers`: PR #74 integrada; restam o `db push` (ação externa desta issue) e a `v5` do plano, por causa da recusa de M10 na simulação
