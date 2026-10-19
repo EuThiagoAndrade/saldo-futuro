@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.5.0](https://github.com/EuThiagoAndrade/saldo-futuro/compare/v0.4.0...v0.5.0) (2026-10-18)
+
+
+### Features
+
+* **issue-63:** simular a migração da origem sem gravar ([#66](https://github.com/EuThiagoAndrade/saldo-futuro/issues/66)) ([ce84e66](https://github.com/EuThiagoAndrade/saldo-futuro/commit/ce84e66466876c93dafd8fc852fbfd8f39ff2edf))
+* **issue-64:** gravar e conferir a migração pela sessão do responsável ([#68](https://github.com/EuThiagoAndrade/saldo-futuro/issues/68)) ([114da00](https://github.com/EuThiagoAndrade/saldo-futuro/commit/114da00e250ae73ef79ad8a9f46e4e73b4c8af99))
+* **issue-73:** migra o trânsito sem contrapartida como migração no trânsito ([#74](https://github.com/EuThiagoAndrade/saldo-futuro/issues/74)) ([2470a26](https://github.com/EuThiagoAndrade/saldo-futuro/commit/2470a26d393a71d374c5ae44153de15c301c3af4)), closes [#73](https://github.com/EuThiagoAndrade/saldo-futuro/issues/73)
+* **issue-76:** posição implícita zero na cobertura da migração ([#77](https://github.com/EuThiagoAndrade/saldo-futuro/issues/77)) ([cad9f2f](https://github.com/EuThiagoAndrade/saldo-futuro/commit/cad9f2f7a0478738c514f55dee062c5813fb7e18)), closes [#76](https://github.com/EuThiagoAndrade/saldo-futuro/issues/76)
+
+
+### Bug Fixes
+
+* **issue-70:** alinha nome da tabela de consolidação ([#71](https://github.com/EuThiagoAndrade/saldo-futuro/issues/71)) ([b580334](https://github.com/EuThiagoAndrade/saldo-futuro/commit/b5803344b6ff04b41ce1527794762d1f6e0b6bf8))
+* **issue-78:** compara nomes da migração como o btrim do banco ([#79](https://github.com/EuThiagoAndrade/saldo-futuro/issues/79)) ([1a1e870](https://github.com/EuThiagoAndrade/saldo-futuro/commit/1a1e870c6700690144ec9a432ad8140669d572aa)), closes [#78](https://github.com/EuThiagoAndrade/saldo-futuro/issues/78)
+
 ## [0.4.0](https://github.com/EuThiagoAndrade/saldo-futuro/compare/v0.3.0...v0.4.0) (2026-10-17)
 
 
