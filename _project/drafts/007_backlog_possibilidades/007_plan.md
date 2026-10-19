@@ -403,22 +403,22 @@ Antes de integrar, descartar ou corrigir somente o diff autorizado, preservando 
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 007 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 007"
+Situação: Aguardando merge — ciclo 007 (completo)
+Quem: Responsável
+Conferir: Checks e diff da [PR #81](https://github.com/EuThiagoAndrade/saldo-futuro/pull/81); aprovação específica do merge ainda não recebida
+Diga: "aprovo o merge da PR #81"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 007 + atualizar_docs + aprovacao_plano_v3 + 1d2f36773b7d90a269be5f27dbbcc85e3ca10672`
-- `effect_class`: `local_mutation`
-- `state_before`: ciclo 007 em Planejamento; plano v3 em Em Revisão, com revisão concluída e veredito APTO COM RESSALVAS da rodada 3; aprovação humana ainda não registrada; próximo ciclo 008.
-- `state_after`: plano v3 Aprovado por manifestação humana posterior à revisão; ciclo segue em Planejamento; publicação documental autorizada e ainda pendente; próximo ciclo 008; implementação e merge não autorizados.
+- `effect_class`: `remote_mutation`
+- `state_before`: ciclo 007 em Planejamento; plano v3 em Em Revisão, com revisão concluída e veredito APTO COM RESSALVAS da rodada 3; aprovação humana ainda não registrada; próximo ciclo 008; nenhuma PR da branch do plano no GitHub.
+- `state_after`: plano v3 Aprovado por manifestação humana posterior à revisão e publicado pela PR 81; ciclo segue em Planejamento, próximo ciclo 008; merge e implementação não autorizados.
 - `result`: `executed`
-- `evidence`: manifestação humana literal no registro de aprovação; cabeçalho e rodada 3; trecho revisado de Problema e contexto até antes de Próximo passo com SHA-256 LF `c5c5019ec2337847ce00c4f4e8ea06e7d27b949ba30e89eb45f22fa11927f70a`, igual ao registrado pelo revisor; estado remoto de main conferido em 1d2f367 e ausência de PR da branch de plano antes da publicação.
-- `blockers`: nenhum para registrar a aprovação e preparar a PR documental; integração exige aprovação específica do merge, e a implementação depende das etapas próprias.
+- `evidence`: manifestação humana literal no registro de aprovação; cabeçalho e rodada 3; trecho revisado de Problema e contexto até antes de Próximo passo com SHA-256 LF `c5c5019ec2337847ce00c4f4e8ea06e7d27b949ba30e89eb45f22fa11927f70a`, igual ao registrado pelo revisor; [PR #81](https://github.com/EuThiagoAndrade/saldo-futuro/pull/81), branch chore/cycle-007-plan, para main; testes locais e publicação no registro abaixo. O estado efetivo de checks é conferido no GitHub.
+- `blockers`: integração depende de checks verdes e aprovação humana específica do merge da PR 81; a implementação depende das etapas próprias.
 
 ## Revisão crítica
 
@@ -621,7 +621,14 @@ As respostas indicam o tratamento pelo autor e precisam de conferência na rodad
 - **R3-1 na implementação:** workflow deve parar e orientar o responsável se faltar permissão para o diretório externo; avaliar e registrar esse atrito na task, sem usar uma localização interna como fallback.
 - **R3-2 como evidência:** preservar a ressalva histórica sobre o hash da v3; em registros futuros, declarar trecho, limites e normalização exatos. O hash desta aprovação verifica o corpo efetivamente revisado e não reutiliza o hash questionado do histórico.
 - **R3-3 na implementação:** explicitar na seção `Branches, commits e migrações` do README as convenções `chore/backlog`, `chore/backlog-lote-<SHA>` e `docs(backlog):`; conferir/registrar que esses commits documentais não geram versão pelo release-please. Essas regras de uso futuro não são implementadas pela publicação do plano.
-- **Pendências:** PR documental e seus checks, aprovação específica de merge, integração, apresentação/confirmação do payload da issue e autorização de implementação. Nenhuma issue foi criada por esta aprovação.
+- **Pendências na aprovação:** PR documental e seus checks, aprovação específica de merge, integração, apresentação/confirmação do payload da issue e autorização de implementação. Nenhuma issue foi criada por esta aprovação.
+
+### Publicação documental — 2026-10-19
+
+- **PR:** [#81 — docs(cycle-007): registrar plano v3 aprovado do backlog](https://github.com/EuThiagoAndrade/saldo-futuro/pull/81), de `chore/cycle-007-plan` para `main`, criada sob a cobertura da aprovação do plano.
+- **Escopo publicado:** somente `_project/cycles.md`, a ideação 007 e este plano; commit inicial de publicação `d546734`. Nenhuma regra canônica ou implementação do backlog foi alterada.
+- **Validação local:** 39/39 testes de governança passaram; validador com 0 erros e 0 avisos; quatro itens manuais conferidos no escopo documental; diff e staging sem erro de whitespace e limitados aos três arquivos. Corpo revisado e histórico das rodadas comparados e preservados.
+- **Estado:** PR aberta; checks e diff devem ser conferidos no GitHub. Não há aprovação de merge, integração, issue de entrega ou autorização de implementação registrada nesta publicação. A recomendação do bloco Próximo passo não concede essas autorizações.
 
 ## Pós-mortem
 
