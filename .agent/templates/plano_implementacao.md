@@ -21,6 +21,10 @@ No ciclo leve, esta seção substitui a ideação: problema, evidências, decis�
 
 ## Objetivo
 
+## Origem no backlog
+
+Opcional para artefatos novos: `Não se aplica` sem origem. No completo, herdar o snapshot da ideação; no leve, registrar IDs, síntese/parcela e `_project/backlog.md` no commit da fila, sinalizando local/não publicado. Destino em preparação não altera item. IDs devem estar em main antes de integrar destino; retorno somente após integração comprovada, por `ciclo NNN`. Não atualizar o snapshot quando o item mudar.
+
 ## Contexto e baseline
 
 ## Escopo

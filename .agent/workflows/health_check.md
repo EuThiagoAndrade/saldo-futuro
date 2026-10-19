@@ -23,6 +23,7 @@ description: "Executar o gate mínimo de saúde do repositório, inclusive antes
 3. Executar `node --test scripts/validate-governance.test.mjs` quando disponível.
 4. Executar `node scripts/validate-governance.mjs` e `git diff --check`.
 5. Classificar achados por severidade e mostrar o bloco da situação corrente do ciclo ativo, sem gravá-lo.
+6. Observar separadamente o backlog pela seção própria de `retomar`: fila canônica, base, commits locais, lote/PR/checks e integração. Não procurar bloco persistido no backlog nem executar mutação/despacho. Mostrar situação do alvo backlog sem substituir a do ciclo; distinguir estado não verificável de fila vazia sincronizada.
 
 ## Saída estruturada reduzida
 
@@ -36,6 +37,7 @@ description: "Executar o gate mínimo de saúde do repositório, inclusive antes
 Repete a situação efetiva do ciclo ativo, sem alterá-la:
 
 - Triagem proposta
+- Backlog atualizado
 - Ideação registrada
 - Aguardando revisão (rodada N)
 - Aguardando correções (rodada N)

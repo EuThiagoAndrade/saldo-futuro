@@ -139,6 +139,7 @@ async function fixture() {
       content = content.replace(`${readmeSection}\n`, `${readmeSection}\n\n${situationsTable()}\n`);
     }
     if (file === '.gitignore') content = `${manifest.gitignoreRequired.join('\n')}\n`;
+    if (file === manifest.backlog.file) content = '# Backlog de possibilidades\n\nNenhum item registrado.\n';
     if (file === manifest.designSystem.file) content = designDoc(manifest.designSystem.sectionKeywords);
     await put(root, file, content);
   }
@@ -182,6 +183,120 @@ async function snapshot(root, dir = root) {
 }
 
 test('1. fixture válida passa sem erros', () => withFixture(expectValid));
+
+function backlogItem(id = 'BL-001', state = 'Disponível', destinations = '—', reason = '') {
+  return [
+    `## ${id} — Necessidade fictícia`, '',
+    heading({ 'Criado em': '2026-10-19', 'Atualizado em': '2026-10-19', Estado: state }), '',
+    '### Problema e benefício esperado', '', 'Guardar uma possibilidade fictícia para decisão futura.', '',
+    '### Contexto', '', '—', '',
+    '### Encaminhamentos', '', destinations, '',
+    '### Restante', '', '—', '',
+    '### Registro', '', '- 2026-10-19 — Pedido fictício de captura.', '',
+    ...(reason ? ['### Motivo do arquivamento', '', reason, ''] : []),
+  ].join('\n');
+}
+
+test('backlog: vazio sem handoff e item mínimo são válidos; arquivo é obrigatório', () =>
+  withFixture(async (root) => {
+    await expectValid(root);
+    await put(root, manifest.backlog.file, backlogItem());
+    await expectValid(root);
+    await rm(path.join(root, manifest.backlog.file));
+    await expectError(root, /Arquivo obrigatório ausente: _project\/backlog.md/);
+  }));
+
+test('backlog: IDs duplicados, malformados e título ausente falham', () =>
+  withFixture(async (root) => {
+    await put(root, manifest.backlog.file, backlogItem() + backlogItem());
+    await expectError(root, /ID duplicado BL-001/);
+    for (const id of ['BL-1', 'BL-xyz', 'BL_002']) {
+      await put(root, manifest.backlog.file, backlogItem(id));
+      await expectError(root, /ID inválido/);
+    }
+    await put(root, manifest.backlog.file, backlogItem().replace(' — Necessidade fictícia', ' título sem separador'));
+    await expectError(root, /título obrigatório vazio/);
+  }));
+
+test('backlog: campos e seções obrigatórios não podem desaparecer ou ficar vazios', () =>
+  withFixture(async (root) => {
+    for (const field of manifest.backlog.headers) {
+      await put(root, manifest.backlog.file, backlogItem().replace(new RegExp(`^> \\*\\*${field}:\\*\\*.*$`, 'm'), ''));
+      await expectError(root, new RegExp(`campo obrigatório "${field}"`));
+    }
+    for (const name of manifest.backlog.sections) {
+      await put(root, manifest.backlog.file, backlogItem().replace(`### ${name}`, '### Outra seção'));
+      await expectError(root, new RegExp(`seção obrigatória "${name}"`));
+    }
+    await put(root, manifest.backlog.file, backlogItem().replace('Guardar uma possibilidade fictícia para decisão futura.', '—'));
+    await expectError(root, /seção obrigatória "Problema e benefício esperado"/);
+  }));
+
+test('backlog: estados fechados e motivo de arquivamento', () =>
+  withFixture(async (root) => {
+    await put(root, manifest.backlog.file, backlogItem('BL-001', 'Concluído'));
+    await expectError(root, /estado inválido "Concluído"/);
+    await put(root, manifest.backlog.file, backlogItem('BL-001', 'Arquivado'));
+    await expectError(root, /Arquivado exige motivo/);
+    await put(root, manifest.backlog.file, backlogItem('BL-001', 'Arquivado', '—', 'Descarte solicitado no cenário fictício.'));
+    await expectValid(root);
+  }));
+
+test('backlog: Encaminhado exige destino e referências estáveis precisam existir', () =>
+  withFixture(async (root) => {
+    await put(root, manifest.backlog.file, backlogItem('BL-001', 'Encaminhado'));
+    await expectError(root, /Encaminhado exige destino existente/);
+    await put(root, manifest.backlog.file, backlogItem('BL-001', 'Encaminhado', '- ciclo 999 — 2026-10-19 — necessidade integral'));
+    await expectError(root, /destino ciclo 999 inexistente/);
+    await put(root, manifest.backlog.file, backlogItem('BL-001', 'Encaminhado', '- issue #9 — 2026-10-19 — necessidade integral'));
+    await expectError(root, /destino issue #9 inexistente/);
+    await put(root, '_project/fixes/fix_task_issue-9.md', shortTask(9));
+    await put(root, manifest.backlog.file, backlogItem('BL-001', 'Encaminhado', '- ciclo 000 — 2026-10-19 — parte A\n- issue #9 — 2026-10-19 — parte B'));
+    await expectValid(root);
+    // O mesmo ID de ciclo continua resolvendo depois da movimentação prospectiva.
+    await mkdir(path.join(root, '_project/executed'), { recursive: true });
+    await rename(path.join(root, CYCLE_DIR), path.join(root, '_project/executed/000_exemplo'));
+    await put(root, '_project/executed/000_exemplo/000_plan.md', plan('Concluído'));
+    await put(root, '_project/executed/000_exemplo/000_task_issue-1.md', task('000', 'Concluída'));
+    await put(root, '_project/cycles.md', cycles([['000', 'Concluído']], '001'));
+    await expectValid(root);
+  }));
+
+test('backlog: referência interna ausente falha; combinação preserva IDs', () =>
+  withFixture(async (root) => {
+    const archived = backlogItem('BL-001', 'Arquivado', '—', 'Combinado em BL-002 por pedido fictício.');
+    await put(root, manifest.backlog.file, archived);
+    await expectError(root, /referência interna inexistente BL-002/);
+    await put(root, manifest.backlog.file, archived + backlogItem('BL-002'));
+    await expectValid(root);
+  }));
+
+test('backlog: exemplos cercados não viram itens, campos nem referências', () =>
+  withFixture(async (root) => {
+    await put(root, manifest.backlog.file, `# Backlog\n\n\`\`\`markdown\n${backlogItem('BL-exemplo', 'Inválido')}\`\`\`\n~~~md\n${backlogItem()}~~~\n${backlogItem()}\n`);
+    await expectValid(root);
+  }));
+
+test('backlog: situações permitidas e exclusividade não ampliam alvos de ciclos', () =>
+  withFixture(async (root) => {
+    const updated = ['Backlog atualizado', 'backlog', 'IDs, síntese e alterações locais do backlog', '"publique as alterações do backlog"'];
+    for (const next of [updated, ['Aguardando merge', 'backlog', 'Checks e diff da PR', '"aprovo o merge da PR #1"'], ['Parado', 'backlog', 'Liberação de caminho externo', 'sua resposta à pergunta registrada'], ['Concluído', 'backlog', '—', '—']]) {
+      await put(root, `${CYCLE_DIR}/000_plan.md`, plan('Em Execução', {}, next));
+      await expectValid(root);
+    }
+    await put(root, `${CYCLE_DIR}/000_plan.md`, plan('Em Execução', {}, [updated[0], 'ciclo 000 (completo)', ...updated.slice(2)]));
+    await expectError(root, /não permitida para "ciclo 000/);
+    await put(root, `${CYCLE_DIR}/000_plan.md`, plan('Em Execução', {}, ['Ideação registrada', 'backlog', 'Perguntas', '"autorizo o rascunho do plano do ciclo 000"']));
+    await expectError(root, /não permitida para backlog/);
+  }));
+
+test('backlog: validação de conteúdo também permanece somente leitura', () =>
+  withFixture(async (root) => {
+    await put(root, manifest.backlog.file, backlogItem());
+    const before = await snapshot(root);
+    await expectValid(root);
+    assert.deepEqual(await snapshot(root), before);
+  }));
 
 test('2. arquivo obrigatório ausente', () =>
   withFixture(async (root) => {

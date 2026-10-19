@@ -1,7 +1,7 @@
 # Plano de Implementação — Backlog de possibilidades e entrada nos ciclos
 
 > **Ciclo:** `007`
-> **Status:** `Aprovado`
+> **Status:** `Em Execução`
 > **Versão:** `v3`
 > **Data de criação:** 2026-10-19
 > **Última atualização:** 2026-10-19
@@ -403,22 +403,22 @@ Antes de integrar, descartar ou corrigir somente o diff autorizado, preservando 
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 007 (completo)
-Quem: Responsável
-Conferir: Checks e diff da [PR #81](https://github.com/EuThiagoAndrade/saldo-futuro/pull/81); aprovação específica do merge ainda não recebida
-Diga: "aprovo o merge da PR #81"
+Situação: Pronto para continuar — ciclo 007 (completo)
+Quem: Qualquer ferramenta, a pedido do responsável
+Conferir: —
+Diga: "continue o ciclo 007"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 007 + atualizar_docs + aprovacao_plano_v3 + 1d2f36773b7d90a269be5f27dbbcc85e3ca10672`
-- `effect_class`: `remote_mutation`
-- `state_before`: ciclo 007 em Planejamento; plano v3 em Em Revisão, com revisão concluída e veredito APTO COM RESSALVAS da rodada 3; aprovação humana ainda não registrada; próximo ciclo 008; nenhuma PR da branch do plano no GitHub.
-- `state_after`: plano v3 Aprovado por manifestação humana posterior à revisão e publicado pela PR 81; ciclo segue em Planejamento, próximo ciclo 008; merge e implementação não autorizados.
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 007 + implementar_issue + 82 + 687427e3fe21eddda0171e9e9c80a35a49a26303`
+- `effect_class`: `local_mutation`
+- `state_before`: plano v3 Aprovado e integrado pela PR 81; ciclo 007 em Planejamento; issue 82 aberta e autorização específica de implementação recebida.
+- `state_after`: plano Em Execução, ciclo Em execução e task 007_task_issue-82.md em chore/issue-82; acompanhamento da execução e evidências na task.
 - `result`: `executed`
-- `evidence`: manifestação humana literal no registro de aprovação; cabeçalho e rodada 3; trecho revisado de Problema e contexto até antes de Próximo passo com SHA-256 LF `c5c5019ec2337847ce00c4f4e8ea06e7d27b949ba30e89eb45f22fa11927f70a`, igual ao registrado pelo revisor; [PR #81](https://github.com/EuThiagoAndrade/saldo-futuro/pull/81), branch chore/cycle-007-plan, para main; testes locais e publicação no registro abaixo. O estado efetivo de checks é conferido no GitHub.
-- `blockers`: integração depende de checks verdes e aprovação humana específica do merge da PR 81; a implementação depende das etapas próprias.
+- `evidence`: "autorizo a implementação da issue #82" em 2026-10-19; issue OPEN e base conferidas; registros abaixo preservam criação e integração documental; evidências atuais na task.
+- `blockers`: nenhum para implementar; merge exige checks verdes e autorização própria da PR.
 
 ## Revisão crítica
 
@@ -629,6 +629,69 @@ As respostas indicam o tratamento pelo autor e precisam de conferência na rodad
 - **Escopo publicado:** somente `_project/cycles.md`, a ideação 007 e este plano; commit inicial de publicação `d546734`. Nenhuma regra canônica ou implementação do backlog foi alterada.
 - **Validação local:** 39/39 testes de governança passaram; validador com 0 erros e 0 avisos; quatro itens manuais conferidos no escopo documental; diff e staging sem erro de whitespace e limitados aos três arquivos. Corpo revisado e histórico das rodadas comparados e preservados.
 - **Estado:** PR aberta; checks e diff devem ser conferidos no GitHub. Não há aprovação de merge, integração, issue de entrega ou autorização de implementação registrada nesta publicação. A recomendação do bloco Próximo passo não concede essas autorizações.
+
+### Integração documental — 2026-10-19
+
+- **Autorização recebida:** "aprovo o merge da PR #81".
+- **Precondições conferidas:** PR aberta e mergeable, base main, tip `41408e850932279c8c05e0b986dc33111ea2b681`, somente os três documentos previstos e todos os checks verdes (governança, CI de aplicação, CI de banco/autenticação e Vercel).
+- **Resultado:** squash merge da [PR #81](https://github.com/EuThiagoAndrade/saldo-futuro/pull/81) no commit `687427e3fe21eddda0171e9e9c80a35a49a26303`, confirmado pelo GitHub e por fetch. Checkout local em main atualizado por fast-forward; comparação com a árvore do tip aprovado sem diferenças.
+- **Limite:** o ciclo continua em Planejamento; nenhum backlog operacional, workflow, validador ou código foi implementado. Esta reconciliação e o payload ficam locais para a próxima entrega autorizada, sem push direto em main ou PR documental recursiva.
+
+### Criação da issue de implementação — 2026-10-19
+
+- **Confirmação recebida:** "Aprovado", em resposta à pergunta de criação do payload apresentado acima. Cobre somente a criação da issue, conforme explicitado na pergunta e em `.agent/workflows/criar_issues.md`.
+- **Precondições conferidas:** plano v3 Aprovado, revisão APTO COM RESSALVAS e PR #81 integrada pelo commit `687427e3fe21eddda0171e9e9c80a35a49a26303`; consulta de duplicidade pelo título sem resultado antes da criação; Issue Form `.github/ISSUE_TEMPLATE/chore.yml` lido no ponto de uso.
+- **Resultado:** [#82 — [CHORE] Instituir backlog de possibilidades na governança](https://github.com/EuThiagoAndrade/saldo-futuro/issues/82), criada via gh e conferida como OPEN. Nenhuma outra issue criada.
+- **Payload efetivo:** mesmos cinco campos e conteúdo técnico do payload aprovado acima, na ordem do Issue Form. A única atualização de metadado substituiu "A criação aguarda confirmação deste payload" pela confirmação efetivamente recebida, sem alterar escopo ou critérios. O corpo remoto foi relido e comparado ao enviado, ambos normalizados para UTF-8/LF com whitespace externo removido, SHA-256 `a8ee03a9a20a9b5b383ee4b212f266d1f65e19620080da49a169ccdfd9a794e1`.
+- **Rastreabilidade atual:** issue de entrega #82; PR documental #81 integrada; nenhuma PR, branch ou task de implementação. A tabela Rastreabilidade dentro do trecho revisado permanece como snapshot anterior à criação, preservando o hash do corpo aprovado; este registro e o GitHub contêm o estado efetivo.
+- **Próximo ponto:** "autorizo a implementação da issue #82". Plano continua Aprovado e ciclo em Planejamento até o início autorizado da entrega; modo contínuo ausente. Registros desta criação ficam locais para integrar na próxima entrega autorizada, sem push direto em main.
+
+### Início autorizado da implementação — 2026-10-19
+
+- **Manifestação recebida:** "autorizo a implementação da issue #82".
+- **Precondições:** main local e remota em `687427e3fe21eddda0171e9e9c80a35a49a26303`; issue #82 OPEN; plano v3 aprovado; nenhuma branch ou PR anterior da entrega.
+- **Resultado:** branch `chore/issue-82` e task `007_task_issue-82.md` criadas; plano Em Execução e ciclo Em execução. Handoff corrente da execução na task; o handoff de criação de issue acima permanece histórico. Corpo aprovado preservado.
+- **Limite:** autorização cobre implementação, validação e PR; merge e encerramento seguem os pontos próprios.
+
+## Payload da issue de implementação
+
+Preparado pelo Issue Form `.github/ISSUE_TEMPLATE/chore.yml`, com os campos na ordem desse template. Consulta no GitHub pelo título não encontrou issue existente antes desta preparação. A criação deve reconferir duplicidade e o estado integrado; não há número reservado ou inventado.
+
+**Pergunta ao responsável:** confirma a criação da issue com o título e o corpo abaixo? A confirmação cobre somente a criação; a implementação terá autorização própria depois de existir o número real.
+
+**Título:** `[CHORE] Instituir backlog de possibilidades na governança`
+
+### Contexto
+
+O ciclo 007 institui um registro de possibilidades para decisão futura. "Coloque no backlog" significa guardar para decidir depois, sem prioridade, promessa de entrega ou autorização de implementação. O plano v3 foi aprovado após veredito APTO COM RESSALVAS e integrado pela PR #81. Esta é a única unidade de implementação prevista, reunindo os itens 1 a 3 para manter contrato, consumidores e enforcement coerentes.
+
+### Mudanças previstas
+
+- Consolidar formato, IDs permanentes, estados Disponível/Encaminhado/Arquivado e limites de captura/publicação nas autoridades corretas; harmonizar o trecho de Fluxo por nível do README sobre aprovação própria de merge documental.
+- Criar backlog vazio, template de item e workflow de gestão. Usar fila única em worktree externo do mesmo Git, trava local e commit local de captura após G3. Push/PR continuam dependendo da autorização do lote; cada merge exige aprovação própria.
+- Publicar lotes em branches por SHA de base e reconciliar após squash por rebase apenas dos commits posteriores ao tip publicado, abortando em conflito e preservando IDs.
+- Integrar seleção por IDs à triagem e aos artefatos dos três níveis, preservando síntese e recorte; registrar retorno na fila após integração comprovada do destino. Retomada e health check observam a situação sem bloco persistido no backlog.
+- Estender manifesto, validador e testes somente ao enforcement essencial: arquivo, campos, IDs, estados, motivo de arquivamento, destino e referências existentes. Ajustar templates e auditoria necessários, sem interface, banco, automação recorrente, nova dependência ou população com exemplos.
+
+### Critérios de aceite
+
+- [ ] Pedidos inequívocos capturam somente a necessidade solicitada, com ID permanente, síntese abstrata e commit local; reexecução não duplica item, registro ou commit.
+- [ ] Fila externa e Git comum conferidos; capturas durante outra issue/ciclo preservam branch, índice, diff e gates do trabalho principal. Lote pendente entra na alocação de IDs.
+- [ ] Captura, push/PR e merge têm coberturas separadas. Commits posteriores ao lote publicado não entram na PR sem autorização de publicação.
+- [ ] Estados, seleção múltipla/parcial, origem e destinos estáveis seguem P1 a P6; inclusão ou encaminhamento não equivale a entrega. Não há bloco de situação persistido no backlog.
+- [ ] Enforcement essencial e regressões passam, sem reescrever artefatos históricos, adicionar dependências ou executar workflows pelo validador. Gates de governança e ensaios fictícios do plano têm evidências reais na task.
+- [ ] R3-1: ausência de permissão ao worktree externo produz Parado com orientação; registrar o atrito no ensaio, sem fallback para diretório interno.
+- [ ] R3-2: evidências de integridade declaram conteúdo, limites exatos e normalização do trecho verificado; não reutilizar o hash histórico questionado como prova de outro trecho.
+- [ ] R3-3: registrar convenções de backlog em Branches, commits e migrações do README e conferir que docs(backlog) não gera versão pelo release-please.
+- [ ] G3 é conferida antes de gravar e em cada commit/publicação; não entram dados privados ou exemplos reais. G1, G2 e G4 não se aplicam ao escopo documental proposto, com justificativa na task/PR.
+
+### Dependências e autorizações
+
+Plano v3 aprovado e integrado em main pelo commit `687427e3fe21eddda0171e9e9c80a35a49a26303` da PR #81. A criação aguarda confirmação deste payload. Após criar e conferir o número real, obter "autorizo a implementação da issue #N"; só então criar branch chore/issue-N e task 007_task_issue-N.md. Uma PR de implementação reúne os três itens e exige aprovação própria de merge. Encerramento em PR própria, sem issue recursiva, conforme o plano. Modo contínuo ausente.
+
+### Ciclo e plano relacionados
+
+Ciclo 007 — `_project/drafts/007_backlog_possibilidades/007_plan.md`, v3. Referência integrada: [plano no commit do merge](https://github.com/EuThiagoAndrade/saldo-futuro/blob/687427e3fe21eddda0171e9e9c80a35a49a26303/_project/drafts/007_backlog_possibilidades/007_plan.md). Escopo e critérios detalhados dos itens 1 a 3 permanecem nesse plano; esta issue não os amplia.
 
 ## Pós-mortem
 

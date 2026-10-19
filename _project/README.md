@@ -7,6 +7,7 @@ Este diretório organiza decisões, conhecimento, ciclos e correções do `saldo
 - comportamento, autorização, handoff e privacidade: `.agent/ai_behavior.md`;
 - ciclo de vida, níveis, situações, modo contínuo, convenções, trilha curta, barreiras de domínio e glossário: este documento;
 - estado e próxima numeração: `_project/cycles.md`;
+- possibilidades para decidir depois: `_project/backlog.md` (conteúdo, sem autorização de entrega);
 - escopo de implementação: plano aprovado ou, na trilha curta, a issue `[FIX]` elegível;
 - unidade de entrega: issue;
 - registro local de execução e do próximo passo: task persistente;
@@ -20,6 +21,7 @@ Este diretório organiza decisões, conhecimento, ciclos e correções do `saldo
 _project/
 ├── README.md
 ├── cycles.md
+├── backlog.md
 ├── ideations/
 ├── drafts/
 ├── executed/
@@ -96,7 +98,7 @@ Na curta sem issue, o alvo do bloco da triagem é o título proposto, nunca um n
   - a última PR atualiza a documentação viva e traz o encerramento prospectivo. A task da última issue ganha a seção `## Encerramento`.
 - **Ciclo completo:**
   - entrada → ideação → autorizar rascunho do plano → plano → revisão formal → aprovar plano;
-  - a aprovação do plano cobre a PR documental do plano, seu merge com checks verdes e a criação das issues depois da apresentação do payload;
+  - a aprovação do plano cobre a publicação da PR documental do plano e a criação das issues depois da integração documental e da apresentação/confirmação do payload; o merge documental exige aprovação própria e checks verdes;
   - por issue: autorizar implementação → PR → aprovar merge;
   - ação humana externa e verificação em produção, quando o plano as exigir;
   - release, se houver, e encerramento, cada um em sua PR, com aprovar merge. O encerramento é autorizado pela aprovação do plano, consolida a documentação viva e é prospectivo.
@@ -125,7 +127,7 @@ Conferir: <o que conferir, com links; "—" só onde a tabela traz "—">
 Diga: <uma das frases da situação>
 ```
 
-O alvo é `ciclo NNN (leve)`, `ciclo NNN (completo)` ou `correção da issue #N`. Na "Triagem proposta" da curta sem issue, é `correção "[FIX] <título>" (sem issue)`.
+O alvo é `ciclo NNN (leve)`, `ciclo NNN (completo)`, `correção da issue #N` ou `backlog`. Na "Triagem proposta" da curta sem issue, é `correção "[FIX] <título>" (sem issue)`. O alvo `backlog` só admite Backlog atualizado, Aguardando merge, Parado e Concluído. Backlog atualizado é exclusivo desse alvo; as combinações dos demais alvos não mudam.
 
 | Situação | Quem age | Conferir | Frases |
 | :-- | :-- | :-- | :-- |
@@ -135,6 +137,7 @@ O alvo é `ciclo NNN (leve)`, `ciclo NNN (completo)` ou `correção da issue #N`
 | Aguardando correções (rodada N) | O responsável leva a vez ao autor | Achados da rodada | "corrija o plano do ciclo NNN"; "ajuste a correção da issue #N" |
 | Aguardando aprovação do plano | Responsável | Veredito e ressalvas na seção de revisão | "aprovo o plano do ciclo NNN" |
 | Aguardando autorização de implementação | Responsável | Issue e escopo | "autorizo a implementação da issue #N" |
+| Backlog atualizado | Responsável | IDs, síntese e alterações locais do backlog | "publique as alterações do backlog" |
 | Aguardando merge | Responsável | Checks e diff da PR | "aprovo o merge da PR #N" |
 | Aguardando ação externa | Responsável | Roteiro indicado no plano | "concluí a ação externa da issue #N" |
 | Aguardando verificação em produção | Responsável | Itens de verificação do plano | "autorizo a verificação em produção do ciclo NNN" |
@@ -148,12 +151,13 @@ No bloco, a linha `Diga:` traz a frase entre aspas. As exceções são "Parado" 
 
 - **"continue o ciclo NNN" é sempre aceito.** O agente executa `.agent/workflows/retomar.md`. Se a vez for do responsável, ele só reapresenta o bloco.
 - **"concluí a ação externa"** não dispensa a conferência por leitura do que for acessível ao agente.
-- **Persistência:** só workflows mutantes gravam o bloco, na seção `## Próximo passo` do artefato ativo. Os somente leitura (`triar`, `retomar`, `health_check` e `listar_issues`) só o mostram. A confirmação da triagem é gravada pelo workflow consumidor da "Entrada".
+- **Persistência:** só workflows mutantes gravam o bloco, na seção `## Próximo passo` do artefato ativo. Os somente leitura (`triar`, `retomar`, `health_check` e `listar_issues`) só o mostram. A confirmação da triagem é gravada pelo workflow consumidor da "Entrada". Exceção: operações de conteúdo do backlog mostram bloco e handoff somente na saída, como determina `.agent/ai_behavior.md`.
 - **Artefato ativo:**
   - a ideação, no estado `Ideação`;
   - o plano, em `Planejamento` ou antes da primeira task;
   - a task da issue em curso, em `Em execução`;
   - a task da trilha curta.
+  O backlog é um registro de possibilidades; não é artefato ativo de ciclo e não substitui seu próximo passo.
 - **"Pronto para continuar"** só é gravada quando a autorização do próximo passo mutante já está registrada no artefato: pelo modo contínuo ativo ou por uma aprovação anterior que cubra esse passo.
 
 **Retomada (`retomar`):** a observação é somente leitura. Ela lê `cycles.md`, consulta no GitHub as PRs abertas ou recém-fechadas do ciclo e lê o artefato ativo (na branch da PR aberta, se houver; senão, em `main` ou na branch local). A situação efetiva é dada pela primeira regra que se aplicar:
@@ -166,6 +170,63 @@ No bloco, a linha `Diga:` traz a frase entre aspas. As exceções são "Parado" 
 6. nos demais casos → a situação gravada. Num ciclo em `executed/`, o merge é conferido no GitHub antes de apresentar "Concluído".
 
 O despacho só ocorre quando a situação efetiva é "Pronto para continuar" e a autorização está registrada. Ele executa o workflow mutante indicado, com handoff próprio. Sem acesso ao GitHub, a situação é "Parado".
+
+"Continue o backlog" executa somente a observação de `retomar`, sem despacho. Health check observa o backlog separadamente do ciclo. As regras de situação do backlog estão na seção seguinte.
+
+## Backlog de possibilidades
+
+"Coloque no backlog" significa **"quero guardar para decidir depois"**. Inclusão não define prioridade, prazo, compromisso de entrega ou autorização de implementação. A manutenção explícita de conteúdo é a exceção à abertura de ciclo/issue; alteração das regras exige triagem e ciclo completo. Autorizações e G3 são regidas por `.agent/ai_behavior.md`.
+
+### Identidade e campos
+
+O único registro é `_project/backlog.md`, inicialmente vazio. Cada item segue `.agent/templates/backlog_item.md`: título de nível 2 `BL-001 — título`, datas `Criado em` e `Atualizado em` (AAAA-MM-DD), `Estado` e seções de nível 3 `Problema e benefício esperado`, `Contexto`, `Encaminhamentos`, `Restante` e `Registro`. O problema/benefício e o registro são obrigatórios; as demais seções aceitam `—` quando nada se aplica. Arquivado exige também `Motivo do arquivamento` preenchido.
+
+IDs têm prefixo BL e número positivo com no mínimo três dígitos (001 até 999; depois 1000 etc.), sem zeros extras. São permanentes e independentes de ciclos/issues. Sob a trava da fila, alocar o maior número existente, incluindo arquivados e lote local pendente, mais um; não há contador paralelo. Nunca excluir, reutilizar ou renumerar IDs. Antes de criar, conferir necessidade equivalente e Registro na fila real. Repetir pedido já atendido não altera data, Registro ou commit. Colisão com outro clone ou pedido ambíguo exige decisão; não há coordenação offline global.
+
+Contexto preserva sugestões, dúvidas e origem em síntese sanitizada, sem transcrição da conversa. Registro contém data, pedido humano resumido e resultado das mudanças. Toda mudança efetiva atualiza `Atualizado em`. Não exigir estimativa, prioridade ou critérios de implementação.
+
+### Estados e seleção
+
+- **Disponível:** necessidade guardada para decidir. Seleção parcial mantém esse estado e explicita em Restante o que não foi encaminhado.
+- **Encaminhado:** necessidade integralmente destinada a um ou mais destinos existentes e integrados. Encaminhado não significa entregue; não existe estado Concluído para item.
+- **Arquivado:** descarte explícito com motivo e pedido humano; preserva identidade e vínculos. Combinar itens exige decisão explícita: preservar o ID de destino e arquivar os demais com motivo e referência ao ID mantido. Reabrir exige pedido explícito e uma necessidade ainda válida, sem ampliar escopo de destino em andamento.
+
+"Quero idear BL-001 e BL-002" inicia a triagem, somente leitura. Ler a fila canônica, inclusive commits locais, e apresentar IDs, títulos, parcelas e proposta de agrupamento. Não agrupar automaticamente nem reservar ciclo. ID ausente, arquivado, integralmente encaminhado ou recorte duvidoso exige esclarecimento antes de mutar. A classificação e as frases de entrada dos três níveis continuam obrigatórias.
+
+No destino novo, preencher `## Origem no backlog`: por ID, síntese da necessidade, parcela selecionada e referência a `_project/backlog.md` com commit da fila. Sinalizar se esse commit ainda é local/não publicado. O completo registra na ideação e o plano herda; o leve registra no plano; a curta registra na task. Sem origem, escrever `Não se aplica`. Não reescrever históricos nem a síntese depois de editar o item. O destino não pode ser integrado enquanto os IDs de origem ainda não existirem em main; integrar primeiro o lote correspondente do backlog.
+
+Selecionar não muda o estado do item. Antes da integração, informar destino em preparação no artefato de destino. Somente depois de comprovar no GitHub/main sua integração, registrar o retorno na fila, sob a autorização da seleção original: `- ciclo NNN — AAAA-MM-DD — parcela` ou `- issue #N — AAAA-MM-DD — parcela`. Ciclo resolve por `cycles.md`; issue curta resolve por `_project/fixes/fix_task_issue-N.md`. Referências estáveis dispensam atualizar caminhos quando o ciclo muda de pasta. Atualizar estado/Restante conforme cobertura real; publicar esse retorno exige autorização separada. Conclusão, cancelamento ou substituição do destino não reabre nem arquiva automaticamente o item; relatar e pedir decisão.
+
+### Fila local e isolamento
+
+Operar por `.agent/workflows/gerenciar_backlog.md`. Há uma única fila local: branch `chore/backlog`, em worktree externo do mesmo Git. Descobrir o checkout principal por `git worktree list --porcelain`. Se não houver fila, criar como diretório irmão `<nome-do-checkout-principal>-backlog`, após resolver o caminho absoluto; base main conferida, incorporando eventual lote remoto pendente. A localização deve ficar fora de **todos** os checkouts, sem junction/symlink que a reinsira neles. Conferir mesmo `git-common-dir` resolvido e registro do worktree; outro repositório/clone não serve.
+
+Reutilizar somente fila única, registrada e segura. Diretório ocupado, branch incompatível, fila interna, múltiplas filas, estado sujo desconhecido ou histórico divergente levam a Parado; não resetar, limpar ou excluir para prosseguir. Sem permissão para criar/escrever fora do checkout, explicar a necessidade e orientar liberação pela ferramenta ou ajuste de configuração; não usar diretório interno como fallback. Não copiar `local/`, dependências ou dados ignorados. A cópia externa não entra nos globs de lint, tipos ou build do principal; não ampliar exclusões da aplicação.
+
+Serializar a preparação/mutação com criação **atômica e exclusiva** do diretório `local/backlog.lock/` no principal, ignorado pelo Git, antes de ler para alocar IDs. Não usar criação recursiva que aceite trava existente. Sessão concorrente aguarda e relê após adquirir; trava abandonada ou de autoria incerta exige decisão, sem remoção automática. Liberar em finally somente a trava adquirida pela própria operação. A trava não é identidade do pedido.
+
+No worktree da fila, alterar e fazer staging seletivo **somente** de `_project/backlog.md`. Após G3/diff, fazer commit local `docs(backlog): <operação e IDs>` **antes** de devolver o ID e liberar a trava. Preservar branch, índice, diff e gates do trabalho principal. Sem mudança, não criar commit vazio. Falha de commit ou estado parcial exige reconciliação antes de nova captura. A captura não faz push: commits posteriores a um lote publicado permanecem locais. Atualização por fast-forward só é aceita se preservar todos os commits locais.
+
+### Publicação e reconciliação
+
+"Publique as alterações do backlog" cobre somente o intervalo de commits apresentado, com base, tip e diff; conferir autoria/autorizações de cada alteração, G3 e estado remoto via gh. Não incluir mudanças de outras conversas ou posteriores ao tip sem nova autorização. Um lote por vez em PR aberta: branch remota `chore/backlog-lote-<SHA-completo-da-base>`, com base em main conferida. Atualizar lote aberto só com autorização explícita; após sua integração, novo SHA de base gera outra branch. Colisão de branch remota ou divergência leva a Parado; nunca force-push. Push pode apontar ao tip autorizado, sem avançar até capturas locais posteriores.
+
+A PR avulsa altera somente `_project/backlog.md`, não inventa ciclo/issue/task. No template, preencher "Não se aplica — manutenção de conteúdo do backlog" para esses vínculos, declarando lote e autorização; checks, G3 e aprovação própria de merge continuam obrigatórios. Alterações de política ou de destino usam a própria PR do ciclo/correção.
+
+Após squash, comprovar pela PR o último tip publicado **P** e o commit de merge **M**, com conteúdo de P para o backlog integrado em M. Conferir fila limpa, P ancestral do tip local e main atualizada/conferida. Sob a trava, executar `git rebase --onto <main-conferida> <P> chore/backlog` no worktree da fila: reaplica somente os commits posteriores a P. Sem commits posteriores, a fila passa à base conferida. Em conflito, `git rebase --abort`, preservar commits e IDs e parar para decisão. Não copiar diffs manualmente, criar branches auxiliares, resetar ou limpar. SHA reescrito pelo rebase não cria novo item. Reconciliação local não autoriza push.
+
+### Observação e limites de verificação
+
+O backlog não guarda bloco de situação ou handoff. Observar Git (worktrees, branch, índice, diff e intervalo local) e GitHub (lote, PR, checks e integração), nunca usar a última conversa como autoridade de estado. A primeira regra aplicável define a situação do alvo `backlog`:
+
+1. Conflito, fila ambígua, PR fechada sem merge, checks falhos/pendentes, alterações pedidas ou falta de acesso remoto necessário: **Parado**, com a pendência e a decisão necessária.
+2. PR aberta em que só falta integrar: **Aguardando merge**, informando também capturas locais posteriores, se houver, fora do lote.
+3. Sem PR bloqueando e com commits/diff locais pendentes: **Backlog atualizado**, com IDs, síntese e alterações locais. A frase de publicação é uma possibilidade, não uma obrigação.
+4. Sem pendências e com integração em main comprovada: **Concluído**, somente para a operação. Backlog inicialmente vazio e sem lote é apresentado como base sincronizada, sem alegar captura ou merge inexistente.
+
+Retomada não publica, não reconcilia por rebase e não despacha mutação. Health check relata fila e ciclo separadamente. Revisão/limpeza semântica é sob demanda; não há scheduler.
+
+O validador cobre somente arquivo presente, formato/unicidade de IDs, campos obrigatórios, estados, motivo de Arquivado, destino existente de Encaminhado e referências internas existentes. Ignora exemplos em blocos de código. Situações de saída continuam sincronizadas com esta tabela. Equivalência, cobertura/Restante, coerência das combinações, síntese de origem, reciprocidade, G3 e autorização/estado remoto são conferências manuais; o parser não executa workflows nem prova aprovação.
 
 ## Modo contínuo
 
@@ -370,6 +431,8 @@ Uma única convenção, nomeada pelo tipo semântico e sem prefixo de ferramenta
 - ciclo documental (só no completo): `chore/cycle-NNN-ideation`, `chore/cycle-NNN-plan` ou `chore/cycle-NNN-closure`;
 - commits de issue: `feat(issue-N):`, `fix(issue-N):` ou `chore(issue-N):`;
 - documentação de ciclo: `docs(cycle-NNN):` ou `chore(cycle-NNN):`;
+- fila local do backlog: `chore/backlog`; lote remoto: `chore/backlog-lote-<SHA-completo-da-base>`;
+- manutenção de conteúdo do backlog: `docs(backlog): <operação e IDs>`; não gera versão pelo release-please no release-type node vigente (sem breaking change);
 - prefixos de issue: `[FEATURE]`, `[FIX]` e `[CHORE]`;
 - migrações: `supabase/migrations/AAAAMMDDHHMMSS_assunto.sql`.
 
@@ -417,6 +480,7 @@ O contrato de handoff (versão 2) e suas regras universais estão em `.agent/ai_
 | Ponto de aprovação | Momento em que o responsável autoriza ou aprova algo com uma frase fixa |
 | Situação | Estado de espera nomeado na tabela de "Situações e próximo passo" |
 | Artefato ativo | Ideação, plano ou task que guarda o bloco "Próximo passo" corrente |
+| Backlog | Registro de possibilidades para decidir depois, com IDs permanentes e sem promessa de entrega |
 | Modo contínuo | Pré-autorização da trilha curta ou do ciclo leve até a PR, sem cobrir merges |
 | Encerramento prospectivo | PR cujos arquivos descrevem o estado depois do próprio merge |
 | Artefato legado | Ideação, plano ou task anterior à versão 2 do handoff, listado no manifesto do validador |

@@ -30,6 +30,12 @@ description: "Transformar uma ideia em plano rastreável (documento único no ci
 
 ## Saída
 
+### Origem no backlog
+
+No leve, registrar a seleção da triagem em `## Origem no backlog`: IDs, síntese, recorte e commit da fila canônica; sinalizar se local/não publicado. No completo, herdar o snapshot da ideação sem reescrevê-lo pela versão atual do item. Sem origem, `Não se aplica`. A seleção mantém o item Disponível enquanto o destino estiver em preparação. IDs devem existir em main antes de integrar o destino. Depois da integração comprovada, retorno pela fila em `gerenciar_backlog`, sob autorização da seleção, com referência estável `ciclo NNN`, cobertura e Restante; publicar retorno continua separado.
+
+### Efeito
+
 - Mutação: `local_mutation` no plano e, no leve, em `cycles.md`.
 - A recomendação de revisão não autoriza issue nem implementação.
 
