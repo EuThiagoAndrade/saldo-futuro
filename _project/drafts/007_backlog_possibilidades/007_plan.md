@@ -403,22 +403,22 @@ Antes de integrar, descartar ou corrigir somente o diff autorizado, preservando 
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 007 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 007"
+Situação: Aguardando merge — ciclo 007 (completo)
+Quem: Responsável
+Conferir: Checks e diff da [PR #83](https://github.com/EuThiagoAndrade/saldo-futuro/pull/83); execução e evidências na task 007_task_issue-82.md
+Diga: "aprovo o merge da PR #83"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 007 + implementar_issue + 82 + 687427e3fe21eddda0171e9e9c80a35a49a26303`
-- `effect_class`: `local_mutation`
+- `effect_class`: `remote_mutation`
 - `state_before`: plano v3 Aprovado e integrado pela PR 81; ciclo 007 em Planejamento; issue 82 aberta e autorização específica de implementação recebida.
-- `state_after`: plano Em Execução, ciclo Em execução e task 007_task_issue-82.md em chore/issue-82; acompanhamento da execução e evidências na task.
+- `state_after`: plano Em Execução, ciclo Em execução e task 007_task_issue-82.md Aguardando integração da PR #83 em chore/issue-82; acompanhamento da execução e evidências na task.
 - `result`: `executed`
 - `evidence`: "autorizo a implementação da issue #82" em 2026-10-19; issue OPEN e base conferidas; registros abaixo preservam criação e integração documental; evidências atuais na task.
-- `blockers`: nenhum para implementar; merge exige checks verdes e autorização própria da PR.
+- `blockers`: merge da PR #83 exige checks verdes no tip atual e autorização própria; encerramento documental só depois da integração.
 
 ## Revisão crítica
 

@@ -2,12 +2,12 @@
 
 > **Ciclo:** `007`
 > **Trilha:** `normal`
-> **Estado:** `Em andamento`
+> **Estado:** `Aguardando integração`
 > **Tipo:** `chore`
 > **Issue:** `#82`
 > **Plano:** `_project/drafts/007_backlog_possibilidades/007_plan.md`
 > **Branch:** `chore/issue-82`
-> **PR:** —
+> **PR:** [#83](https://github.com/EuThiagoAndrade/saldo-futuro/pull/83)
 > **Integração:** `Pendente`
 > **Autorização inicial:** "autorizo a implementação da issue #82" em 2026-10-19
 > **Modo contínuo:** `—`
@@ -47,7 +47,7 @@ Não se aplica: ciclo completo de mudança de governança.
 - [x] Instituir contrato, backlog vazio, template e workflow.
 - [x] Integrar seleção, origens, retomada e auditoria.
 - [x] Estender enforcement essencial e executar regressões e ensaios fictícios.
-- [ ] Conferir G3, diff e gates; publicar PR e observar checks.
+- [x] Conferir G3, diff e gates; publicar PR e iniciar observação dos checks.
 
 ## Evidências
 
@@ -57,7 +57,7 @@ Não se aplica: ciclo completo de mudança de governança.
 | Validador | `node scripts/validate-governance.mjs`: 0 erros, 0 avisos, 5 itens manuais. |
 | Ensaios fictícios e ressalvas | Resultados e limites abaixo. |
 | `git diff --check` | Passou antes da publicação. |
-| Checks remotos | Pendente |
+| Checks remotos | Em andamento na publicação; [PR #83 / checks](https://github.com/EuThiagoAndrade/saldo-futuro/pull/83/checks). Conferir tip final no GitHub antes do merge; esta linha registra a abertura, não antecipa resultado. |
 
 ### Ensaios executados em 2026-10-19
 
@@ -96,6 +96,10 @@ Não se aplica: trilha normal, plano revisado em três rodadas e aprovado.
 
 Nenhum desvio autorizado. Alterações locais de metadados da integração documental e criação da issue acompanham esta entrega, como registrado no plano.
 
+### Publicação
+
+Commit inicial `e9871d77a19b9115f388e13295eef74823e03ef4`, branch chore/issue-82, PR #83 para main. Arquivos remotos conferidos: somente os 22 previstos de governança/templates/validação e registros do ciclo. Este registro de PR e próximo passo é o complemento documental da entrega; checks do tip atual são conferidos no GitHub. Nenhum merge autorizado ou realizado.
+
 ## Encerramento
 
 Não se aplica: ciclo completo terá encerramento documental separado após integração da implementação.
@@ -104,19 +108,19 @@ Não se aplica: ciclo completo terá encerramento documental separado após inte
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 007 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 007"
+Situação: Aguardando merge — ciclo 007 (completo)
+Quem: Responsável
+Conferir: Checks e diff da [PR #83](https://github.com/EuThiagoAndrade/saldo-futuro/pull/83); conferir o tip atual e aguardar checks verdes antes do merge
+Diga: "aprovo o merge da PR #83"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 007 + implementar_issue + 82 + 687427e3fe21eddda0171e9e9c80a35a49a26303`
-- `effect_class`: `local_mutation`
+- `effect_class`: `remote_mutation`
 - `state_before`: plano Aprovado; ciclo Planejamento; issue #82 aberta; sem implementação.
-- `state_after`: branch chore/issue-82; task Em andamento; plano Em Execução; ciclo Em execução.
+- `state_after`: implementação em chore/issue-82 publicada na PR #83; task Aguardando integração; plano Em Execução; ciclo Em execução; sem merge.
 - `result`: `executed`
-- `evidence`: autorização humana literal acima; main local e remota conferidas; issue e duplicidade de branch/PR conferidas antes da criação.
-- `blockers`: nenhum no início; merge futuro exige autorização própria.
+- `evidence`: autorização humana literal acima; base e issue conferidas; 48/48 testes e validador sem erros; ensaios acima; PR #83 e seu diff conferidos, checks observáveis no GitHub.
+- `blockers`: merge exige checks verdes no tip final e "aprovo o merge da PR #83"; aprovação ainda não recebida.
