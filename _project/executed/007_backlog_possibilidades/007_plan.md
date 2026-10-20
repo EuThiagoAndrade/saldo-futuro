@@ -1,7 +1,7 @@
 # Plano de Implementação — Backlog de possibilidades e entrada nos ciclos
 
 > **Ciclo:** `007`
-> **Status:** `Em Execução`
+> **Status:** `Concluído`
 > **Versão:** `v3`
 > **Data de criação:** 2026-10-19
 > **Última atualização:** 2026-10-19
@@ -403,22 +403,22 @@ Antes de integrar, descartar ou corrigir somente o diff autorizado, preservando 
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 007 (completo)
-Quem: Responsável
-Conferir: Checks e diff da [PR #83](https://github.com/EuThiagoAndrade/saldo-futuro/pull/83); execução e evidências na task 007_task_issue-82.md
-Diga: "aprovo o merge da PR #83"
+Situação: Concluído — ciclo 007 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 007 + implementar_issue + 82 + 687427e3fe21eddda0171e9e9c80a35a49a26303`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 007 + atualizar_docs + encerramento + f62a9dc7e971aed7a9e359a5cf22348809f98820`
 - `effect_class`: `remote_mutation`
-- `state_before`: plano v3 Aprovado e integrado pela PR 81; ciclo 007 em Planejamento; issue 82 aberta e autorização específica de implementação recebida.
-- `state_after`: plano Em Execução, ciclo Em execução e task 007_task_issue-82.md Aguardando integração da PR #83 em chore/issue-82; acompanhamento da execução e evidências na task.
+- `state_before`: plano v3 Em Execução; issue 82 integrada pela PR #83 com merge aprovado e checks verdes; ciclo 007 Em execução em drafts/.
+- `state_after`: entrega integrada pela PR #83 e task da issue Concluída; plano/ciclo Concluído em executed/ de forma prospectiva até o merge do encerramento, acompanhado pela task 007_task_closure.md.
 - `result`: `executed`
-- `evidence`: "autorizo a implementação da issue #82" em 2026-10-19; issue OPEN e base conferidas; registros abaixo preservam criação e integração documental; evidências atuais na task.
-- `blockers`: merge da PR #83 exige checks verdes no tip atual e autorização própria; encerramento documental só depois da integração.
+- `evidence`: aprovação da v3 cobre encerramento; "aprovo o merge da PR #83" recebido e integração conferida no GitHub; issue #82 CLOSED; documentação viva integrada; task de encerramento registra validações e situação da PR própria.
+- `blockers`: entrega integrada sem pendências; PR de encerramento exige checks verdes e aprovação própria, conforme task de encerramento.
 
 ## Revisão crítica
 
@@ -693,8 +693,15 @@ Plano v3 aprovado e integrado em main pelo commit `687427e3fe21eddda0171e9e9c80a
 
 Ciclo 007 — `_project/drafts/007_backlog_possibilidades/007_plan.md`, v3. Referência integrada: [plano no commit do merge](https://github.com/EuThiagoAndrade/saldo-futuro/blob/687427e3fe21eddda0171e9e9c80a35a49a26303/_project/drafts/007_backlog_possibilidades/007_plan.md). Escopo e critérios detalhados dos itens 1 a 3 permanecem nesse plano; esta issue não os amplia.
 
+## Reconciliação e encerramento prospectivo — 2026-10-19
+
+- Autorização recebida: "aprovo o merge da PR #83". Todos os checks verdes no tip 74acaaec6151b51c7217f29469a18762a309c443 e escopo conferido antes do squash. [PR #83](https://github.com/EuThiagoAndrade/saldo-futuro/pull/83) integrada em main no commit f62a9dc7e971aed7a9e359a5cf22348809f98820; [issue #82](https://github.com/EuThiagoAndrade/saldo-futuro/issues/82) fechada. Árvore integrada igual à aprovada.
+- Itens 1 a 3 e P1 a P6 entregues na mesma PR; evidências dos critérios na task da issue. R3-1 a R3-3 tratadas ali. Corpo de Problema e contexto até antes de Próximo passo preservado em UTF-8/LF, SHA-256 reproduzível 969ac2941f09fb081d9ab0a985e49c999b94295ebf3b7d6847847835cccbbb11; divergência histórica documentada sem reescrever rodadas.
+- A documentação viva já foi consolidada na PR #83: autoridades, workflow, templates, consumidores e auditoria. Não há alteração adicional de regras, ADR ou KB necessária. Backlog permanece vazio; não foi criada fila operacional ou item sem pedido.
+- Task da entrega reconciliada; plano, tasks, cycles.md e movimentação para executed/ descrevem o estado prospectivo do encerramento. A situação efetiva antes desse merge é Aguardando merge, conforme PR e checks. Preparação coberta pela aprovação da v3; merge próprio ainda necessário. Rastreabilidade do corpo aprovado permanece snapshot histórico; números efetivos estão neste registro e no GitHub.
+
 ## Pós-mortem
 
-- **Data de conclusão:** —
-- **Desvios:** —
-- **Lições comprovadas:** —
+- **Data de conclusão:** 2026-10-19, prospectiva até o merge da PR de encerramento.
+- **Desvios:** nenhum de escopo; comparação de hashes históricos teve limites explicitados e evidência corrigida na task.
+- **Lições comprovadas:** isolamento por worktree externo, lote por base e rebase somente dos posteriores foram demonstrados com Git fictício. A verificação estrutural não substitui equivalência, cobertura, privacidade e autorização manuais. Detalhes e limites dos ensaios permanecem na task, sem nova política paralela.

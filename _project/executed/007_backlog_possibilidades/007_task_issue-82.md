@@ -2,13 +2,13 @@
 
 > **Ciclo:** `007`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `chore`
 > **Issue:** `#82`
-> **Plano:** `_project/drafts/007_backlog_possibilidades/007_plan.md`
+> **Plano:** `_project/executed/007_backlog_possibilidades/007_plan.md`
 > **Branch:** `chore/issue-82`
 > **PR:** [#83](https://github.com/EuThiagoAndrade/saldo-futuro/pull/83)
-> **Integração:** `Pendente`
+> **Integração:** integrada pela PR #83; confirmação no GitHub
 > **Autorização inicial:** "autorizo a implementação da issue #82" em 2026-10-19
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-19
@@ -57,7 +57,7 @@ Não se aplica: ciclo completo de mudança de governança.
 | Validador | `node scripts/validate-governance.mjs`: 0 erros, 0 avisos, 5 itens manuais. |
 | Ensaios fictícios e ressalvas | Resultados e limites abaixo. |
 | `git diff --check` | Passou antes da publicação. |
-| Checks remotos | Em andamento na publicação; [PR #83 / checks](https://github.com/EuThiagoAndrade/saldo-futuro/pull/83/checks). Conferir tip final no GitHub antes do merge; esta linha registra a abertura, não antecipa resultado. |
+| Checks remotos | Todos verdes no tip aprovado 74acaaec6151b51c7217f29469a18762a309c443: governança, aplicação, banco/autenticação e Vercel. Reconferidos antes do merge; [PR #83 / checks](https://github.com/EuThiagoAndrade/saldo-futuro/pull/83/checks). |
 
 ### Ensaios executados em 2026-10-19
 
@@ -100,6 +100,13 @@ Nenhum desvio autorizado. Alterações locais de metadados da integração docum
 
 Commit inicial `e9871d77a19b9115f388e13295eef74823e03ef4`, branch chore/issue-82, PR #83 para main. Arquivos remotos conferidos: somente os 22 previstos de governança/templates/validação e registros do ciclo. Este registro de PR e próximo passo é o complemento documental da entrega; checks do tip atual são conferidos no GitHub. Nenhum merge autorizado ou realizado.
 
+### Integração da entrega — 2026-10-19
+
+- Autorização recebida: "aprovo o merge da PR #83".
+- PR #83 MERGED, base main e tip aprovado conferidos; assunto do squash: chore(issue-82): instituir backlog de possibilidades. Issue #82 CLOSED automaticamente.
+- Merge confirmado pelo GitHub em 2026-10-20T00:39:01Z (2026-10-19 em America/Cuiaba). Árvore integrada igual ao tip aprovado; nenhum conteúdo adicional. O SHA do próprio merge não é registrado nesta task.
+- Entrega concluída; encerramento do ciclo registrado na task 007_task_closure.md, em PR própria e prospectivo até seu merge.
+
 ## Encerramento
 
 Não se aplica: ciclo completo terá encerramento documental separado após integração da implementação.
@@ -108,10 +115,10 @@ Não se aplica: ciclo completo terá encerramento documental separado após inte
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 007 (completo)
-Quem: Responsável
-Conferir: Checks e diff da [PR #83](https://github.com/EuThiagoAndrade/saldo-futuro/pull/83); conferir o tip atual e aguardar checks verdes antes do merge
-Diga: "aprovo o merge da PR #83"
+Situação: Concluído — ciclo 007 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
@@ -120,7 +127,7 @@ Diga: "aprovo o merge da PR #83"
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 007 + implementar_issue + 82 + 687427e3fe21eddda0171e9e9c80a35a49a26303`
 - `effect_class`: `remote_mutation`
 - `state_before`: plano Aprovado; ciclo Planejamento; issue #82 aberta; sem implementação.
-- `state_after`: implementação em chore/issue-82 publicada na PR #83; task Aguardando integração; plano Em Execução; ciclo Em execução; sem merge.
+- `state_after`: entrega da issue #82 integrada pela PR #83; task Concluída. Encerramento do ciclo em task própria, prospectivo até o merge daquela PR.
 - `result`: `executed`
-- `evidence`: autorização humana literal acima; base e issue conferidas; 48/48 testes e validador sem erros; ensaios acima; PR #83 e seu diff conferidos, checks observáveis no GitHub.
-- `blockers`: merge exige checks verdes no tip final e "aprovo o merge da PR #83"; aprovação ainda não recebida.
+- `evidence`: autorizações de implementação e merge acima; 48/48 testes, validador e ensaios; PR #83 integrada com checks verdes e issue #82 fechada, conferidas no GitHub.
+- `blockers`: nenhum para a entrega integrada; encerramento possui checks e aprovação de merge próprios.
