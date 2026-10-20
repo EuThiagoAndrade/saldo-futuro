@@ -106,6 +106,7 @@ export async function validate(root) {
 
   // Cenários 5 a 11: ciclos, planos e tasks.
   const rows = await validateCycles(root, manifest, errors);
+  if (manifest.backlog) await validateBacklog(root, manifest, rows, errors);
 
   // Cenários 20 a 25 e 27 a 30: artefatos, próximo passo e modo contínuo.
   if (manifest.artifacts && manifest.nextStep) {
@@ -176,6 +177,82 @@ export async function validate(root) {
   }
   manual.push(...manifest.manualChecks);
   return { errors, warnings, manual };
+}
+
+// Backlog é dado, não artefato de ciclo: vazio é válido e não exige handoff.
+async function validateBacklog(root, manifest, rows, errors) {
+  const config = manifest.backlog;
+  const file = path.join(root, config.file);
+  if (!(await exists(file))) return; // Presença é conferida em requiredFiles.
+  const content = withoutFencedCode(await text(file)).replace(/<!--[\s\S]*?-->/g, '');
+  const headings = [...content.matchAll(/^##[ \t]+(BL[^ \t\n]*)([^\n]*)$/gm)];
+  const items = headings.map((match, index) => ({
+    id: match[1],
+    title: match[2].match(/^[ \t]+—[ \t]*(.*)$/)?.[1].trim(),
+    body: content.slice(match.index + match[0].length, headings[index + 1]?.index ?? content.length),
+  }));
+  const ids = new Set();
+  const idPattern = new RegExp(config.idPattern);
+  for (const item of items) {
+    if (!idPattern.test(item.id)) errors.push(`Backlog: ID inválido "${item.id}".`);
+    if (ids.has(item.id)) errors.push(`Backlog: ID duplicado ${item.id}.`);
+    ids.add(item.id);
+  }
+  for (const { id, title, body } of items) {
+    const fail = (reason) => errors.push(`Backlog ${id}: ${reason}.`);
+    if (!title) fail('título obrigatório vazio');
+    for (const field of config.headers) {
+      const value = header(body, escape(field));
+      if (!value || value === '—') fail(`campo obrigatório "${field}" vazio ou ausente`);
+    }
+    for (const name of config.sections) {
+      const value = headedSection(body, `### ${name}`)?.trim();
+      if (!value || (config.nonEmptySections.includes(name) && value === '—')) fail(`seção obrigatória "${name}" vazia ou ausente`);
+    }
+    const state = header(body, 'Estado');
+    if (!config.states.includes(state)) fail(`estado inválido "${state}"`);
+    const reason = headedSection(body, `### ${config.archiveReason}`)?.trim();
+    if (state === config.archivedState && (!reason || reason === '—')) fail('Arquivado exige motivo do arquivamento');
+
+    const destinations = headedSection(body, `### ${config.destinationsSection}`) ?? '';
+    const refs = [...destinations.matchAll(/^-\s+(?:ciclo (\d{3})|issue #(\d+))\s+—\s+\S.*$/gm)];
+    if (state === config.forwardedState && !refs.length) fail('Encaminhado exige destino existente');
+    for (const ref of refs) {
+      if (ref[1]) {
+        // O registro resolve o ciclo, e um artefato confirma sua existência local.
+        const cycle = ref[1];
+        let found = false;
+        if (rows.some((row) => row.cycle === cycle)) {
+          found = (await listFiles(path.join(root, '_project/ideations'))).some((entry) => path.basename(entry).startsWith(`${cycle}_`));
+          for (const location of ['drafts', 'executed', 'archived']) {
+            for (const dir of await listDirs(path.join(root, '_project', location))) {
+              if (path.basename(dir).startsWith(`${cycle}_`) && await exists(path.join(dir, `${cycle}_plan.md`))) found = true;
+            }
+          }
+        }
+        if (!found) fail(`destino ciclo ${cycle} inexistente`);
+      } else if (!(await exists(path.join(root, manifest.shortTrack.dir, `fix_task_issue-${ref[2]}.md`)))) {
+        fail(`destino issue #${ref[2]} inexistente`);
+      }
+    }
+    for (const ref of body.matchAll(/\bBL-[\p{L}\p{N}_]+\b/gu)) {
+      if (!ids.has(ref[0])) fail(`referência interna inexistente ${ref[0]}`);
+    }
+  }
+}
+
+// Exemplos cercados por crases ou tils não são itens, campos ou referências.
+function withoutFencedCode(content) {
+  let fence = null;
+  return content.split(/\r?\n/).map((line) => {
+    const match = line.match(/^ {0,3}(`{3,}|~{3,})(.*)$/);
+    if (fence) {
+      if (match && match[1][0] === fence[0] && match[1].length >= fence.length && !match[2].trim()) fence = null;
+      return '';
+    }
+    if (match) { fence = match[1]; return ''; }
+    return line;
+  }).join('\n');
 }
 
 async function validateCycles(root, manifest, errors) {
@@ -441,6 +518,8 @@ function checkBlock(lines, config, where, errors) {
   const targets = config.targets.map(template);
   if (situation.name === config.situations[0].name) targets.push(template(config.triageTarget));
   if (!targets.some((pattern) => new RegExp(`^${pattern}$`).test(match[2]))) fail(`alvo "${match[2]}" fora do padrão`);
+  if (situation.targets && !situation.targets.includes(match[2])) fail(`situação "${situation.name}" não permitida para "${match[2]}"`);
+  if (match[2] === config.backlogTarget && !config.backlogSituations.includes(situation.name)) fail(`situação "${situation.name}" não permitida para backlog`);
   if (lines[2] !== `Quem: ${situation.who}`) fail(`"Quem" diferente da tabela para "${situation.name}"`);
   const check = lines[3].startsWith('Conferir: ') ? lines[3].slice(10).trim() : null;
   if (check === null || !check) fail('"Conferir" ausente');

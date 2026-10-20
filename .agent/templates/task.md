@@ -19,6 +19,10 @@
 
 ## Escopo autorizado
 
+## Origem no backlog
+
+Opcional para artefatos novos: `Não se aplica` sem origem; na trilha normal, herdar o snapshot do plano. Na curta, IDs selecionados, síntese, parcela e `_project/backlog.md` no commit da fila, sinalizando local/não publicado. Destino em preparação não altera item. IDs devem existir em main antes de integrar destino; retorno após integração comprovada usa `issue #N` na curta e `ciclo NNN` na normal. Não reescrever a síntese por edições futuras do backlog.
+
 ## Elegibilidade da trilha curta
 
 Preencha somente na trilha curta; na trilha normal, escreva `Não se aplica`. Justifique cada critério de `_project/README.md`:

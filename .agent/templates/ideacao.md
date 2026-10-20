@@ -10,6 +10,10 @@
 
 ## Problema
 
+## Origem no backlog
+
+Opcional para artefatos novos: `Não se aplica` quando não houver origem. Por ID selecionado, preservar síntese, parcela e referência a `_project/backlog.md` no commit da fila; sinalizar local/não publicado e destino em preparação. Não alterar o snapshot por edições futuras. Integrar os IDs em main antes do destino; retorno na fila só após integração comprovada do destino, usando `ciclo NNN`.
+
 ## Contexto e evidências
 
 ## Resultado desejado

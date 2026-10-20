@@ -64,10 +64,12 @@ Regras universais, que nenhum artefato precisa repetir:
 
 Workflows somente leitura usam saída reduzida (`context`, `findings`, `blockers`, `mutation: none`) e terminam com o bloco. Artefatos anteriores à versão 2 permanecem na versão 1 e estão listados no manifesto do validador.
 
+**Exceção restrita ao backlog:** manutenção de conteúdo por `gerenciar_backlog` mostra o handoff versão 2 e o bloco somente na saída. `_project/backlog.md` guarda dados e referência à política, sem `## Próximo passo`, `## Handoff de saída` ou cabeçalho de versão de handoff. O pedido autorizado fica sintetizado no Registro do item; publicação e integração são comprovadas no GitHub. O backlog não substitui o artefato ativo do ciclo. Consultas ao backlog continuam somente leitura.
+
 ## Autorizações e pontos de aprovação
 
 - Inspeção, análise ou diagnóstico autorizam somente leitura e os registros pedidos explicitamente.
-- Toda demanda começa pela triagem (`.agent/workflows/triar.md`). O agente propõe o nível e o responsável o confirma com uma frase de entrada de `_project/README.md`.
+- Toda demanda de trabalho começa pela triagem (`.agent/workflows/triar.md`). O agente propõe o nível e o responsável o confirma com uma frase de entrada de `_project/README.md`. A exceção de manutenção de conteúdo do backlog está delimitada abaixo.
 - Redigir ou revisar plano não autoriza implementação. Todo plano passa pela revisão formal, e a correção da trilha curta passa pela revisão da correção.
 - A aprovação do plano é uma manifestação humana posterior a um veredito apto. Uma manifestação anterior ao veredito não vale como aprovação.
 - **Exceção delimitada:** no ciclo leve em modo contínuo, a autorização inicial cobre a promoção do plano, somente com veredito `APTO PARA APROVAÇÃO`. A promoção é registrada como `Coberta pelo modo contínuo`, nunca como `Aprovada em`.
@@ -76,6 +78,14 @@ Workflows somente leitura usam saída reduzida (`context`, `findings`, `blockers
 - Ação humana externa, verificação em produção e decisões de regra financeira nunca são cobertas pelo modo contínuo.
 - O encerramento é autorizado pela aprovação do plano e ocorre depois da integração das entregas, sem issue recursiva.
 - **Concessão não é verificação:** uma concessão não dispensa a conferência da precondição. Quando faltar autorização material ou a precondição não puder ser verificada, pare na situação "Parado" com uma pergunta. Silêncio não é aprovação.
+
+### Manutenção de conteúdo do backlog
+
+- "Coloque no backlog" significa "quero guardar para decidir depois". Um pedido explícito e inequívoco autoriza sintetizar somente a necessidade solicitada e fazer seu commit local na fila canônica, após G3; não requer reconfirmação rotineira. Sugestões do agente não autorizam captura. Não autoriza entrega, prioridade, push, PR ou merge.
+- Pedidos explícitos de editar, arquivar, combinar ou reabrir IDs autorizam somente a operação de conteúdo e seu commit local. Não precisam de ciclo ou issue. Mudanças das regras, template ou workflow seguem triagem e ciclo completo.
+- "Publique as alterações do backlog" autoriza push e PR somente do lote apresentado e delimitado por commits, sem incluir alterações de outras conversas ou capturas posteriores. Cada merge continua exigindo aprovação específica e checks verdes.
+- Selecionar IDs para um destino autoriza registrar o retorno dessa seleção no backlog somente depois de comprovar a integração do destino em main; a publicação desse retorno continua separada. Seleção não dispensa triagem, nível, escopo e frases de entrada.
+- Conferir identidade, equivalência e estado antes de mutar. Reexecução compatível reutiliza ID, sem novo Registro, data ou commit. Ambiguidade, colisão ou privacidade não resolvida leva a "Parado" antes de gravar.
 
 ## Conduta de execução
 
@@ -117,6 +127,8 @@ Workflows somente leitura usam saída reduzida (`context`, `findings`, `blockers
 - Não transforme recomendações externas em decisões locais sem plano ou ADR aprovado.
 - Dependências entre repositórios devem ser documentais e fixadas por URL e commit; nenhum fluxo operacional pode depender de checkout irmão.
 
+O worktree externo e exclusivo do backlog é uma segunda árvore do mesmo repositório Git, não uma dependência entre repositórios. Exige mesmo `git-common-dir` resolvido e registro em `git worktree list`; a localização externa, a fila única e a trava seguem `_project/README.md`. Não copiar dados ignorados nem usar outro clone como fila.
+
 ## Privacidade de dados financeiros
 
 O repositório é privado até a estabilização e depois se torna público (ADR-003). O histórico do Git é permanente: um dado que entra em qualquer commit deve ser tratado como publicado.
@@ -127,6 +139,8 @@ O repositório é privado até a estabilização e depois se torna público (ADR
 - Dados reais de trabalho local ficam somente em `local/`, ignorado pelo Git. Ao ler esses dados para uma tarefa autorizada, não os reproduza em respostas, documentos ou evidências; relate apenas contagens, totais verificados quando pedidos e resultados de validação.
 - Previews e ambientes de teste nunca usam dados reais.
 - Na dúvida sobre se um valor é dado do usuário, trate-o como dado do usuário.
+
+Na captura do backlog, G3 é conferida **antes de qualquer gravação** e novamente antes de cada commit e publicação. Abstrair a necessidade sem valores, posições, ativos detidos, instituições, e-mails ou prints reais. Se a abstração não puder ser feita com segurança, esclarecer antes de escrever; não guardar a conversa bruta como contexto.
 
 As regras de enforcement desta política (barreira G3) estão em `_project/README.md`.
 

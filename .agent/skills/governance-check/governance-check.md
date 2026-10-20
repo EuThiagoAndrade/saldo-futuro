@@ -19,6 +19,8 @@ Pode ser usado diretamente para uma auditoria ou chamado por outro workflow. Em 
    - semântica das barreiras;
    - autenticidade das frases de autorização registradas.
 8. Relate separadamente erros bloqueantes, avisos e julgamentos manuais; não altere arquivos durante a auditoria sem pedido explícito.
+9. Para backlog, aplicar "Backlog de possibilidades" do README e observação de `retomar`, separadamente do artefato ativo: arquivo vazio é válido e não guarda bloco/handoff. Conferir fila externa única, Git comum, índice/diff, commits locais, lote/PR e integração; não adquirir trava ou reconciliar durante auditoria. Revisar manualmente equivalência, cobertura/Restante, síntese preservada no destino, reciprocidade e existência dos IDs em main antes de integrar destino; nenhum parser prova esses aspectos.
+10. Conferir G3 desde antes da captura, pedido explícito de manutenção/commit local, autorização separada do intervalo publicado e aprovação própria de merge. Não inferir efeitos pela última conversa nem autoria de trava desconhecida. Relatar falha de capacidade/permissão externa com orientação, sem fallback interno. Não ler outros dados privados de `local/`.
 
 ## Handoff estruturado
 

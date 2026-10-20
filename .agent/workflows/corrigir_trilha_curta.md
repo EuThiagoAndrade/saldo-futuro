@@ -39,6 +39,12 @@ description: "Corrigir um defeito elegível pela trilha curta, com issue, task, 
 
 ## Saída
 
+### Origem no backlog
+
+Quando houver seleção na triagem, preencher na task nova `## Origem no backlog` com IDs, síntese, parcela e commit da fila canônica, sinalizando conteúdo local/não publicado. Senão, `Não se aplica`. A seleção não torna a demanda elegível nem amplia a correção. Preservar snapshot e deixar destino em preparação sem alterar item. Os IDs precisam existir em main antes do merge da correção. Após integração comprovada, `gerenciar_backlog` registra retorno com `issue #N` (task existente em `_project/fixes/fix_task_issue-N.md`), cobertura/Restante e autorização da seleção. Publicação do retorno é separada; cancelamento não reabre item automaticamente.
+
+### Efeito
+
 - Mutação: `local_mutation` e `remote_mutation` (issue, branch, PR e merge aprovado).
 - A trilha curta não altera `_project/cycles.md` nem cria plano.
 

@@ -32,6 +32,9 @@
     ".agent/skills/design-system-check/design-system-check.md",
     "_project/README.md",
     "_project/cycles.md",
+    "_project/backlog.md",
+    ".agent/templates/backlog_item.md",
+    ".agent/workflows/gerenciar_backlog.md",
     "_project/decisions/ADR-001_governanca_agnostica_adapters.md",
     "_project/decisions/ADR-002_stack_infraestrutura.md",
     "_project/decisions/ADR-003_acesso_privacidade_publicacao.md",
@@ -69,6 +72,7 @@
     "_project/README.md": [
       "## Níveis e triagem",
       "## Entrada",
+      "## Backlog de possibilidades",
       "## Fluxo por nível",
       "## Pontos de aprovação",
       "## Situações e próximo passo",
@@ -175,7 +179,8 @@
       "criar_issues",
       "implementar_issue",
       "atualizar_docs",
-      "corrigir_trilha_curta"
+      "corrigir_trilha_curta",
+      "gerenciar_backlog"
     ],
     "mutatingText": [
       "handoff_schema_version: 2",
@@ -286,7 +291,8 @@
     "targets": [
       "ciclo NNN (leve)",
       "ciclo NNN (completo)",
-      "correção da issue #N"
+      "correção da issue #N",
+      "backlog"
     ],
     "triageTarget": "correção \"[FIX] <título>\" (sem issue)",
     "continuousSuffixes": [
@@ -294,6 +300,8 @@
       " em modo contínuo"
     ],
     "doneSituation": "Concluído",
+    "backlogTarget": "backlog",
+    "backlogSituations": ["Backlog atualizado", "Aguardando merge", "Parado", "Concluído"],
     "situations": [
       {
         "name": "Triagem proposta",
@@ -374,6 +382,13 @@
         ]
       },
       {
+        "name": "Backlog atualizado",
+        "who": "Responsável",
+        "check": "IDs, síntese e alterações locais do backlog",
+        "targets": ["backlog"],
+        "say": [{ "text": "publique as alterações do backlog" }]
+      },
+      {
         "name": "Aguardando merge",
         "who": "Responsável",
         "check": "Checks e diff da PR",
@@ -439,6 +454,18 @@
         ]
       }
     ]
+  },
+  "backlog": {
+    "file": "_project/backlog.md",
+    "idPattern": "^BL-(?:00[1-9]|0[1-9]\\d|[1-9]\\d{2,})$",
+    "headers": ["Criado em", "Atualizado em", "Estado"],
+    "sections": ["Problema e benefício esperado", "Contexto", "Encaminhamentos", "Restante", "Registro"],
+    "nonEmptySections": ["Problema e benefício esperado", "Registro"],
+    "states": ["Disponível", "Encaminhado", "Arquivado"],
+    "archivedState": "Arquivado",
+    "archiveReason": "Motivo do arquivamento",
+    "forwardedState": "Encaminhado",
+    "destinationsSection": "Encaminhamentos"
   },
   "naming": {
     "cycleDir": "^\\d{3}_[a-z0-9_]+$",
@@ -549,6 +576,7 @@
     "Referências documentais em _project/ (fora do escopo do cenário 12) citam fontes por URL e commit, sem caminho local.",
     "Textos, fixtures e prints não contêm dados do usuário (G3).",
     "Semântica das barreiras declaradas nas tasks e PRs.",
-    "Frases de autorização registradas nos artefatos foram de fato ditas pelo responsável."
+    "Frases de autorização registradas nos artefatos foram de fato ditas pelo responsável.",
+    "Backlog: equivalência, cobertura/Restante, origem, reciprocidade, fila externa e limites entre captura, publicação e merge são conferidos manualmente."
   ]
 }

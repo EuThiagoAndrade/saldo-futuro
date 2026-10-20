@@ -27,6 +27,14 @@ description: "Responder a \"continue o ciclo NNN\" ou \"continue a correção da
 
 ## Saída estruturada reduzida
 
+### Continue o backlog
+
+Aceitar também "continue o backlog" como alvo independente. Observar somente: worktrees, caminho real externo/Git comum, branch chore/backlog, índice/diff, commits locais e lote/PR/checks/merge via gh. Sem fila, observar a base integrada. Não criar fila/trava, editar arquivo, commitar, publicar ou executar rebase. Aplicar as quatro regras ordenadas de "Observação e limites de verificação" do README; relatar commits locais posteriores a lote publicado sem incluí-los na PR. Falta de acesso remoto necessário ou checks pendentes implica Parado. Sem pendências e main comprovada, Concluído refere-se à operação; fila inicialmente vazia é base sincronizada, sem efeito inventado. Não há bloco persistido a reconciliar nem despacho mutante para backlog. Mostrar seu bloco separado do ciclo ativo.
+
+### Resultado da observação
+
+Na consulta do backlog, conferir também destinos estáveis em main e snapshots de origem acessíveis: apontar retorno ainda ausente e destinos concluídos/cancelados/substituídos, sem alterar estados. Não garantir exclusividade de seleção entre clones. Gravar retorno exige autorização de seleção/atualização verificável; a última mensagem de chat não substitui essa evidência.
+
 - `context`: ciclo ou correção, revisão, PRs consultadas.
 - `findings`: situação gravada, situação efetiva e a regra que a determinou.
 - `blockers`: acesso ausente, conflito ou divergência entre artefato e GitHub.
@@ -35,6 +43,7 @@ description: "Responder a \"continue o ciclo NNN\" ou \"continue a correção da
 ## Situações de saída
 
 - Triagem proposta
+- Backlog atualizado
 - Ideação registrada
 - Aguardando revisão (rodada N)
 - Aguardando correções (rodada N)

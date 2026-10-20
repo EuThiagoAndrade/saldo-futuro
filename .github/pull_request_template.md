@@ -10,7 +10,11 @@
 - Encerramento documental sem issue: `Não se aplica — closure do ciclo NNN`
 - Task persistente:
 
+Exceção restrita: PR avulsa que altera somente `_project/backlog.md` usa `Não se aplica — manutenção de conteúdo do backlog` para ciclo, nível, plano, issue e task (sem `Closes #` artificial). Modo contínuo: `—`. Informar base/tip do lote e pedido explícito de publicação. Checks, G3 e aprovação própria de merge continuam obrigatórios. Mudanças de política não usam esta exceção.
+
 ## Mudanças
+
+Se houver origem no backlog, declarar IDs e parcela, referência ao snapshot do destino e dependência: os IDs devem existir em main antes do merge desta PR. Não incluir o lote do backlog na branch do destino.
 
 ## Fora do escopo
 

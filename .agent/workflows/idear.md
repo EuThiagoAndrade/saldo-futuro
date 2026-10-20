@@ -28,6 +28,12 @@ description: "Explorar a ideia de um ciclo completo sem convertê-la automaticam
 
 ## Saída
 
+### Origem no backlog
+
+Se houver seleção confirmada na triagem, ler fila canônica e registrar `## Origem no backlog` conforme README/template: IDs, síntese e parcela por item, commit de origem e condição local/não publicada. Senão, `Não se aplica`. Preservar o snapshot; mudanças futuras no backlog não o reescrevem. Destino ainda em preparação não altera o item. Somente após integração comprovada da ideação/destino em main, `gerenciar_backlog` registra o retorno autorizado pela seleção, usando `ciclo NNN`; publicação desse retorno exige autorização separada. IDs precisam estar em main antes da integração do destino.
+
+### Efeito
+
 - Mutação: `local_mutation` somente nos artefatos de ideação.
 - A saída não autoriza o rascunho do plano; ele exige "autorizo o rascunho do plano do ciclo NNN".
 
