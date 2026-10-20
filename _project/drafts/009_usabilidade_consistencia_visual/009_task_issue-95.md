@@ -7,7 +7,7 @@
 > **Issue:** `#95`
 > **Plano:** `_project/drafts/009_usabilidade_consistencia_visual/009_plan.md`
 > **Branch:** `fix/issue-95`
-> **PR:** —
+> **PR:** [#99](https://github.com/EuThiagoAndrade/saldo-futuro/pull/99)
 > **Integração:** `Pendente`
 > **Autorização inicial:** "autorizo a implementação da issue #95" em 2026-10-20
 > **Modo contínuo:** `—`
@@ -51,7 +51,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 - [x] DESIGN.md §6.9 (hover, pressão, exceção R2-1, controles com classes próprias) e §2.2 (razões novas; destrutivo com a cor computada no navegador).
 - [x] Testes unitários das classes das variantes (`botoes.test.ts`) e e2e `botoes.spec.ts`: cursor computado em todo `button` visível (login e telas autenticadas, 360 e 1280, diálogo de confirmação e folha Mais); hover e pressão de principal, secundário, destrutivo, "Ocultar valores", "Mais" e "Fechar", com e sem `prefers-reduced-motion`; desabilitado sem reação; contraste de texto em todos os estados.
 - [x] Suíte completa e governança.
-- [ ] Publicar a PR e conferir o estado.
+- [x] Publicar a PR #99 e conferir o estado OPEN.
 
 ## Evidências
 
@@ -90,8 +90,8 @@ Não se aplica: a #96 e a #97 exigem autorização própria; a última PR do cic
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 009 (leve)
 Quem: Responsável
-Conferir: checks e diff da PR da issue #95
-Diga: "aprovo o merge da PR #N"
+Conferir: checks e diff da [PR #99](https://github.com/EuThiagoAndrade/saldo-futuro/pull/99)
+Diga: "aprovo o merge da PR #99"
 ```
 
 ## Handoff de saída
@@ -99,7 +99,7 @@ Diga: "aprovo o merge da PR #N"
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 009 + implementar_issue + 95/Item-2-BL-004 + b303d26e8136c6b1b01b2c8a272f4e7f907308f3`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: plano `v2` Em Execução, #94 integrada, #95 aberta, sem branch nem PR / branch `fix/issue-95` publicada com a PR aberta
+- `state_before` / `state_after`: plano `v2` Em Execução, #94 integrada, #95 aberta, sem branch nem PR / branch `fix/issue-95` publicada com a PR #99 aberta
 - `result`: `executed`
 - `evidence`: autorização desta task; validações da tabela de evidências; `git fetch` com `main` igual a `origin/main` em `b303d26`; consulta prévia sem PR da #95
 - `blockers`: nenhum; o merge depende de checks verdes e de "aprovo o merge da PR #N"
