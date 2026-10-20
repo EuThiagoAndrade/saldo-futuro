@@ -31,7 +31,7 @@ export default async function AppLayout({ children }: Readonly<{ children: React
             <button
               type="submit"
               aria-pressed={oculto}
-              className="inline-flex min-h-11 items-center gap-2 rounded-md px-3 text-sm/5 font-medium text-primary hover:bg-surface"
+              className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-md px-3 text-sm/5 font-medium text-primary hover:bg-surface active:bg-primary-subtle motion-safe:active:translate-y-px"
             >
               {oculto ? <IconeOlhoFechado className="size-5" /> : <IconeOlho className="size-5" />}
               Ocultar valores

@@ -2,13 +2,13 @@
 
 > **Ciclo:** `009`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `fix`
 > **Issue:** `#94`
 > **Plano:** `_project/drafts/009_usabilidade_consistencia_visual/009_plan.md`
 > **Branch:** `fix/issue-94`
 > **PR:** [#98](https://github.com/EuThiagoAndrade/saldo-futuro/pull/98)
-> **Integração:** `Pendente`
+> **Integração:** `Conferida no GitHub — PR #98 MERGED em 2026-10-20`
 > **Autorização inicial:** "autorizo a implementação da issue #94" em 2026-10-20
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-20
@@ -66,7 +66,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 | E2e completo | Backend local: 109 passaram e 8 pulados (preview sem backend e suítes opt-in) |
 | Governança | `node --test scripts/validate-governance.test.mjs` 48/48; `node scripts/validate-governance.mjs` com 0 erros, 0 avisos e cinco itens manuais |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos | Todos verdes no head `4dfc20f788c76281050126fd40e21f70dbc66004`: lint, tipos, testes, build e e2e de preview; Supabase local, testes de banco e e2e de autenticação; governança; Vercel |
 
 Medidas reais do e2e (largura da caixa em unidades do viewBox, medida / estimada): `R$ 1,2x mi` 53,94 / 57,31; `R$ 90.071.992,547x mi` 119,32 / 124,30; `0,00%` 33,80 / 34,98; `100,00` 36,73 / 36,85 (antes da folga na tabela; a estimativa final é maior). Capturas e dados reais não foram usados; cenários fictícios no Supabase local, sem produção.
 
@@ -84,14 +84,18 @@ Não se aplica (trilha normal).
 
 Não se aplica: primeira entrega do ciclo; #95, #96 e #97 exigem autorização própria.
 
+## Reconciliação da integração
+
+Em 2026-10-20, o responsável declarou "aprovo o merge da PR #98". Os cinco checks estavam verdes no head `4dfc20f788c76281050126fd40e21f70dbc66004`; o merge por squash foi conferido no GitHub, com o assunto `fix(issue-94): alinhar a margem do gráfico patrimonial aos gráficos vizinhos (#98)`, e a issue #94 foi fechada. Reconciliação feita na implementação autorizada da #95; não registra o SHA do próprio merge.
+
 ## Próximo passo
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 009 (leve)
+Situação: Aguardando autorização de implementação — ciclo 009 (leve)
 Quem: Responsável
-Conferir: checks e diff da [PR #98](https://github.com/EuThiagoAndrade/saldo-futuro/pull/98)
-Diga: "aprovo o merge da PR #98"
+Conferir: issue #95 (BL-004) e o Item 2 do plano
+Diga: "autorizo a implementação da issue #95"
 ```
 
 ## Handoff de saída
@@ -100,6 +104,6 @@ Diga: "aprovo o merge da PR #98"
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 009 + implementar_issue + 94/Item-1-BL-013 + 811ff840a51da200bdff8f0591e11d9d95fd103f`
 - `effect_class`: `remote_mutation`
 - `state_before` / `state_after`: plano `v2` Aprovado, ciclo Planejamento, #94 aberta, sem branch nem PR / branch `fix/issue-94` publicada com a PR #98 aberta, plano e ciclo em Em execução
-- `result`: `executed`
+- `result`: `already_executed_and_reconciled`
 - `evidence`: autorização desta task; validações da tabela de evidências; `git fetch` com `main` igual a `origin/main` em `811ff84`; consulta prévia sem PR da #94
 - `blockers`: nenhum; o merge depende de checks verdes e de "aprovo o merge da PR #N"

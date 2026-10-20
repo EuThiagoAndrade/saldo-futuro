@@ -69,6 +69,8 @@ Razões calculadas pela fórmula de luminância relativa da WCAG 2.2. Mínimos: 
 | `primary` | `surface` | 14,22 | 4,5 |
 | `primary` | `surface-subtle` | 13,14 | 4,5 |
 | `primary` | `primary-subtle` | 12,08 | 4,5 |
+| `text-secondary` | `primary-subtle` | 6,69 | 4,5 |
+| `on-primary` | `loss` a 90% sobre `surface` (`#AF4D49`, cor computada no navegador) | 5,28 | 4,5 |
 | `gain` | `surface` | 6,46 | 4,5 |
 | `gain` | `surface-subtle` | 5,96 | 4,5 |
 | `gain` | `gain-subtle` | 5,62 | 4,5 |
@@ -80,6 +82,8 @@ Razões calculadas pela fórmula de luminância relativa da WCAG 2.2. Mínimos: 
 | `warning` | `surface` | 5,93 | 4,5 |
 | `warning` | `warning-subtle` | 5,28 | 4,5 |
 | `border-strong` | `surface` | 3,55 | 3 |
+| `border-strong` | `surface-subtle` | 3,27 | 3 |
+| `border-strong` | `primary-subtle` | 3,01 | 3 |
 | `focus` | `surface` | 4,97 | 3 |
 | `focus` | `surface-subtle` | 4,60 | 3 |
 | `chart-1` | `surface` | 14,22 | 3 |
@@ -322,14 +326,18 @@ A variação sempre combina **sinal**, **ícone** e **cor**; a cor sozinha nunca
 
 ### 6.9 Botões
 
-| Variante | Fundo | Texto | Uso |
-| :-- | :-- | :-- | :-- |
-| Principal | `primary` (`primary-hover` em hover) | `on-primary` | Uma única ação principal por tela |
-| Secundário | `surface` com contorno `border-strong` | `primary` | Ações alternativas |
-| Destrutivo | `loss` | `on-primary` | Só dentro da confirmação de ação destrutiva |
-| Texto | Transparente | `primary` | Ações de baixa ênfase |
+| Variante | Fundo | Texto | Hover | Pressionado | Uso |
+| :-- | :-- | :-- | :-- | :-- | :-- |
+| Principal | `primary` | `on-primary` | fundo `primary-hover` | fundo `primary-hover` | Uma única ação principal por tela |
+| Secundário | `surface` com contorno `border-strong` | `primary` | fundo `surface-subtle` | fundo `primary-subtle` | Ações alternativas |
+| Destrutivo | `loss` | `on-primary` | sem mudança de cor | fundo `loss` a 90% de opacidade | Só dentro da confirmação de ação destrutiva |
+| Texto | Transparente | `primary` | fundo `surface-subtle` | fundo `primary-subtle` | Ações de baixa ênfase |
 
 Altura mínima de 44 px, raio `radius-md` e rótulo `label`. Um botão desabilitado mantém o contraste do texto e explica, por perto, por que está desabilitado.
+
+Todo botão habilitado mostra o cursor de ponteiro; o desabilitado mostra `not-allowed` e não reage a hover nem a pressão. O estado pressionado, em todas as variantes, também desloca o botão 1 px para baixo, só quando o usuário não pediu movimento reduzido (`prefers-reduced-motion`). Com movimento reduzido, o sinal de pressão é a cor de fundo, que difere da de repouso em todas as variantes. Exceção declarada: no botão principal, com mouse e movimento reduzido, a cor pressionada é a mesma do hover (`primary-hover` é, por definição, "hover e pressionada"); no toque, que não tem hover, o sinal sempre aparece.
+
+Os controles com classes próprias seguem a mesma regra: "Ocultar valores", "Mais" e "Fechar" mostram ponteiro e fundo `primary-subtle` ao serem pressionados; "Mais" e "Fechar" mostram `surface-subtle` em hover, e "Ocultar valores" mostra `surface`.
 
 ### 6.10 Confirmação de ação destrutiva
 
