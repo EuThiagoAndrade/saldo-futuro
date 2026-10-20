@@ -2,12 +2,12 @@
 
 > **Ciclo:** `008`
 > **Trilha:** `normal`
-> **Estado:** `Em andamento`
+> **Estado:** `Aguardando integração`
 > **Tipo:** `fix`
 > **Issue:** `#88`
 > **Plano:** `_project/drafts/008_legibilidade_patrimonio_resumo/008_plan.md`
 > **Branch:** `fix/issue-88`
-> **PR:** —
+> **PR:** [#90](https://github.com/EuThiagoAndrade/saldo-futuro/pull/90)
 > **Integração:** `Pendente`
 > **Autorização inicial:** "autorizo a implementação da issue #88" em 2026-10-20
 > **Modo contínuo:** `—`
@@ -52,7 +52,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 - [x] Casos unitários de valor/coordenada, tabela exata, lacuna, ponto único, ocultação, índices, barras e traços.
 - [x] E2e da aplicação autenticada com 22 cenários fictícios positivos/negativos em 360 e 1280; fonte real carregada; medição de todas as caixas de texto monetário e ausência de sobreposição vertical.
 - [x] Concluir suíte completa e governança.
-- [ ] Publicar PR.
+- [x] Publicar PR #90 e conferir estado OPEN.
 
 ## Evidências
 
@@ -67,7 +67,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 | E2e completo | Backend local: 104 passaram e 8 pulados (preview sem backend e suítes opt-in). Sem backend: 13 passaram e 99 pulados por configuração. Regressão de comparação com linha contínua/tracejada e índice 100,00 passou |
 | Governança | Testes 48/48; validador com 0 erros, 0 avisos e cinco itens manuais conferidos no escopo |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos | Publicação conferida; resultado corrente verificável na [PR #90](https://github.com/EuThiagoAndrade/saldo-futuro/pull/90/checks), sem antecipar conclusão da CI |
 
 O teste `tests/e2e/eixo-patrimonio.spec.ts` confere numericamente as caixas com `getBBox`, exige x ≥ 0 e extremo direito < 144, ausência de sobreposição vertical e área de 160. Conferência de um ponto fictício abaixo de R$ 1,22 mi: ordenada maior que a linha da marca, como esperado em SVG. Tabela compara os textos originais em centavos, inclusive no extremo seguro. O cenário oculto exige ausência de quantias em todo HTML.
 
@@ -92,19 +92,19 @@ Não se aplica: primeira entrega; #89 requer integração desta PR e autorizaç�
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 008 (leve)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 008"
+Situação: Aguardando merge — ciclo 008 (leve)
+Quem: Responsável
+Conferir: Checks e diff da PR #90 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/90)
+Diga: "aprovo o merge da PR #90"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 008 + implementar_issue + 88/Item-1-BL-001 + 7c78d1dff5cbd41358e64b45933c685c033020e1`
-- `effect_class`: `local_mutation`
+- `effect_class`: `remote_mutation`
 - `state_before`: plano v3 Aprovado; ciclo Planejamento; issues #88/#89 abertas; sem branch/task da implementação; autorização explícita da #88 recebida em 2026-10-20.
-- `state_after`: branch fix/issue-88, implementação e task presentes; plano Em Execução, ciclo Em execução; validações finais em andamento, PR pendente.
+- `state_after`: branch fix/issue-88 publicada; PR #90 aberta; implementação validada e task Aguardando integração; plano Em Execução, ciclo Em execução; Aguardando merge, sem integração.
 - `result`: `executed`
-- `evidence`: autorização inicial desta task; diff local e testes descritos acima; sem PR preexistente da #88 na consulta GitHub.
-- `blockers`: nenhum observado; conclusão das validações antes da publicação.
+- `evidence`: autorização inicial desta task; validações acima; commit de implementação `5e89898`; gh pr view 90 confirma OPEN e head fix/issue-88; https://github.com/EuThiagoAndrade/saldo-futuro/pull/90; consulta prévia sem PR preexistente da #88.
+- `blockers`: nenhum técnico local; integração depende de checks remotos verdes e aprovação específica do merge.

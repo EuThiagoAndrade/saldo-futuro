@@ -212,7 +212,7 @@ Nenhuma dependência externa nova. IDs de origem já existem em main. Implementa
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | [#88 — BL-001](https://github.com/EuThiagoAndrade/saldo-futuro/issues/88) e [#89 — BL-002](https://github.com/EuThiagoAndrade/saldo-futuro/issues/89), abertas e conferidas |
-| PR(s) | — |
+| PR(s) | [#90 — issue #88](https://github.com/EuThiagoAndrade/saldo-futuro/pull/90), aberta |
 | Branch(es) | `fix/issue-88` |
 | Destino após conclusão | `_project/executed/008_legibilidade_patrimonio_resumo/008_plan.md` |
 
@@ -305,10 +305,10 @@ Artefato ativo: `008_task_issue-88.md`. Implementação autorizada em 2026-10-20
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 008 (leve)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 008"
+Situação: Aguardando merge — ciclo 008 (leve)
+Quem: Responsável
+Conferir: Checks e diff da PR #90 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/90)
+Diga: "aprovo o merge da PR #90"
 ```
 
 ## Handoff de saída
