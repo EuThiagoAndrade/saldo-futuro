@@ -290,3 +290,29 @@ Observado na navegação (`src/components/navegacao.tsx`). A proposta prevê um 
 ### Registro
 
 - 2026-10-20 — Pedido explícito de guardar a necessidade; captura local.
+
+## BL-012 — Páginas públicas de privacidade e termos para transição da tela de consentimento Google OAuth para produção
+
+> **Criado em:** `2026-10-20`
+> **Atualizado em:** `2026-10-20`
+> **Estado:** `Disponível`
+
+### Problema e benefício esperado
+
+A tela de consentimento OAuth do Google Cloud opera em modo "Testando", exigindo que todo novo e-mail autorizado no sistema também seja cadastrado manualmente como usuário de teste no console do Google (limitado a 100 contas), sob pena de bloqueio com erro de acesso antes de atingir a aplicação. A mudança para o status "Em produção" no Google Cloud é bloqueada pela ausência de páginas públicas de Política de Privacidade e Termos de Serviço no domínio do aplicativo. O benefício esperado é eliminar a dependência de cadastro duplicado de usuários de teste no Google Cloud e centralizar a autorização de acessos exclusivamente no sistema, disponibilizando rotas públicas com os termos legais exigidos pelo provedor e compatíveis com a LGPD.
+
+### Contexto
+
+Registrado em `_project/knowledge/KB-002_operacao_producao_acessos.md` (passo GC2 e armadilha 7). A aplicação solicita somente escopos de identidade básicos (`openid`, `email`, `profile`), não exigindo processo de verificação restrita do Google. A necessidade compreende criar rotas estáticas públicas (`/privacidade` e `/termos`) com links acessíveis na tela de login (`/entrar`) e nos menus, viabilizando a publicação definitiva da tela de consentimento OAuth no console do Google Cloud.
+
+### Encaminhamentos
+
+—
+
+### Restante
+
+—
+
+### Registro
+
+- 2026-10-20 — Pedido explícito de guardar a necessidade; captura local.
