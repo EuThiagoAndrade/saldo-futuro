@@ -163,7 +163,7 @@ async function Resumo({
     ...(outros.length ? [{ nome: "Outros", valor: outros.reduce((s, p) => s + p.saldo_final, 0), cor: COR_OUTROS }] : []),
   ];
   const dinheiro = (centavos: bigint | number) => (oculto ? <ValorOculto /> : textoDinheiro(BigInt(centavos)));
-  const eixoDinheiro = (reais: number) => (oculto ? "••••" : textoEixoDinheiro(reais));
+  const eixoDinheiro = (reais: number, marcas: number[]) => (oculto ? "••••" : textoEixoDinheiro(reais, marcas));
 
   return (
     <>
@@ -248,6 +248,7 @@ async function Resumo({
             },
           ]}
           rotularY={eixoDinheiro}
+          margemEsquerda={144}
           colunasTabela={["Mês", "Patrimônio"]}
           linhasTabela={mesesDoGrafico.map((m) => ({
             rotulo: mesBr(m),

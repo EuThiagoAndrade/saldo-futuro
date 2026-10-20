@@ -1,7 +1,7 @@
 # Registro de ciclos
 
-> **Próximo ciclo:** `008`
-> **Última atualização:** 2026-10-19
+> **Próximo ciclo:** `009`
+> **Última atualização:** 2026-10-20
 
 | Ciclo | Assunto | Estado | Ideação | Plano | Issues | Encerramento |
 | :-- | :-- | :-- | :-- | :-- | :-- | :-- |
@@ -14,5 +14,7 @@
 | `005` | Logo no cabeçalho mobile e desempenho de navegação | `Concluído` | `_project/ideations/005_logo_mobile_desempenho_navegacao.md` | `_project/executed/005_logo_mobile_desempenho_navegacao/005_plan.md` | [#52](https://github.com/EuThiagoAndrade/saldo-futuro/issues/52), [#53](https://github.com/EuThiagoAndrade/saldo-futuro/issues/53) e [#54](https://github.com/EuThiagoAndrade/saldo-futuro/issues/54) — fechadas como concluídas; correção pela trilha curta: [#57](https://github.com/EuThiagoAndrade/saldo-futuro/issues/57) | PR de encerramento documental (`chore/cycle-005-closure`); release pela PR do release-please após o encerramento |
 | `006` | Migração única dos dados e virada | `Concluído` | `_project/ideations/006_migracao_dados_virada.md` | `_project/executed/006_migracao_dados_virada/006_plan.md` | [#63](https://github.com/EuThiagoAndrade/saldo-futuro/issues/63), [#64](https://github.com/EuThiagoAndrade/saldo-futuro/issues/64), [#65](https://github.com/EuThiagoAndrade/saldo-futuro/issues/65), [#73](https://github.com/EuThiagoAndrade/saldo-futuro/issues/73) e [#76](https://github.com/EuThiagoAndrade/saldo-futuro/issues/76) — fechadas como concluídas; correções pela trilha curta: [#70](https://github.com/EuThiagoAndrade/saldo-futuro/issues/70) e [#78](https://github.com/EuThiagoAndrade/saldo-futuro/issues/78) | PR de encerramento documental (`chore/cycle-006-closure`); virada em 2026-10-18; release pela PR do release-please |
 | `007` | Backlog de possibilidades e entrada nos ciclos | `Concluído` | `_project/ideations/007_backlog_possibilidades.md` | `_project/executed/007_backlog_possibilidades/007_plan.md` | [#82](https://github.com/EuThiagoAndrade/saldo-futuro/issues/82) — fechada como concluída | [PR #84](https://github.com/EuThiagoAndrade/saldo-futuro/pull/84), encerramento prospectivo até seu merge |
+
+| `008` | Legibilidade do patrimônio e dos cartões de resumo | `Em execução` | — (ciclo leve) | `_project/drafts/008_legibilidade_patrimonio_resumo/008_plan.md` | [#88](https://github.com/EuThiagoAndrade/saldo-futuro/issues/88) e [#89](https://github.com/EuThiagoAndrade/saldo-futuro/issues/89) — abertas | — |
 
 O ciclo `000` não tem ideação retroativa. Sua origem e as aprovações anteriores à implantação da governança estão registradas no próprio plano.

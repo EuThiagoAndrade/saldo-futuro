@@ -152,6 +152,12 @@ test.describe("séries de benchmark", () => {
     await page.getByText("Ver os números").click();
     await expect(page.getByRole("figure").getByRole("row", { name: /fevereiro de 2026/ })).toContainText("103,02");
     await expect(page.getByRole("figure").getByRole("row", { name: /fevereiro de 2026/ })).toContainText("101,61");
+    const grafico = page.locator('svg[aria-labelledby="comparacao-base100-titulo comparacao-base100-descricao"]');
+    await expect(grafico.locator('polyline[stroke-dasharray="6 4"]')).toHaveCount(1);
+    await expect(grafico.locator('polyline:not([stroke-dasharray])')).toHaveCount(1);
+    await expect(grafico).toContainText("IPCA");
+    await expect(grafico).toContainText("Carteira");
+    await expect(grafico).toContainText("100,00");
     // Mesmo benchmark público, carteira restrita ao dono: outro usuário não herda os retornos.
     await entrar(page, u.vazio);
     await comparar(page, ipca);
