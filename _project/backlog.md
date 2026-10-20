@@ -318,3 +318,29 @@ Registrado em `_project/knowledge/KB-002_operacao_producao_acessos.md` (passo GC
 ### Registro
 
 - 2026-10-20 — Pedido explícito de guardar a necessidade; captura local.
+
+## BL-013 — Alinhar a margem do gráfico de evolução patrimonial aos gráficos vizinhos
+
+> **Criado em:** `2026-10-20`
+> **Atualizado em:** `2026-10-20`
+> **Estado:** `Disponível`
+
+### Problema e benefício esperado
+
+Na tela Início, a área de grade e curva do gráfico de evolução patrimonial começa mais à direita que a dos gráficos de rentabilidade mensal e Base 100, criando desalinhamento visual e reduzindo o espaço útil da série patrimonial. O benefício esperado é que a área de plotagem do patrimônio tenha o mesmo recuo à esquerda que esses gráficos vizinhos, preservando a leitura integral e legível dos rótulos monetários.
+
+### Contexto
+
+No ciclo 008, a margem maior foi adotada para acomodar rótulos monetários extensos no eixo patrimonial. A necessidade atual revisa essa composição visual. BL-001, sobre precisão de escala e rótulos do eixo, foi integralmente encaminhado no ciclo 008; este item registra separadamente o alinhamento da margem.
+
+### Encaminhamentos
+
+—
+
+### Restante
+
+—
+
+### Registro
+
+- 2026-10-20 — Pedido explícito de corrigir o recuo do gráfico de evolução patrimonial e guardar a necessidade para seleção futura; captura local.
