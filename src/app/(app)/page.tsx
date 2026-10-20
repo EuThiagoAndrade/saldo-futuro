@@ -108,7 +108,7 @@ export default async function InicioPage({ searchParams }: { searchParams: Promi
 
 function Cartao({ titulo, children, detalhe }: { titulo: string; children: React.ReactNode; detalhe?: string }) {
   return (
-    <div className="flex flex-col gap-1 rounded-md border border-border bg-surface p-4">
+    <div className="flex flex-col gap-1 rounded-md border border-border bg-surface px-1 py-4 md:px-3">
       <p className="text-sm/5 text-text-secondary">{titulo}</p>
       <p className="text-2xl/8 font-semibold">{children}</p>
       {detalhe ? <p className="text-sm/5 text-text-secondary">{detalhe}</p> : null}
@@ -167,7 +167,7 @@ async function Resumo({
 
   return (
     <>
-      <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 md:grid-cols-2">
         <Cartao titulo="Patrimônio" detalhe={`em ${dataBr(ultimoDia(M))}`}>
           <Dinheiro valor={deM.vf} />
         </Cartao>

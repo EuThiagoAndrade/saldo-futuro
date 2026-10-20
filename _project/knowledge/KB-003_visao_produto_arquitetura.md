@@ -6,7 +6,7 @@ tags:
   - referência
 author: "Thiago Andrade e Claude"
 module: "Produto"
-last_updated: "2026-10-18"
+last_updated: "2026-10-20"
 origin_cycle: "002"
 ---
 
@@ -52,6 +52,12 @@ O Saldo Futuro é um sistema web de gestão de investimentos pessoais, multiusu�
   - **virada em 2026-10-18:** a partir dessa data, o Saldo Futuro é a fonte de verdade e a origem não recebe lançamentos; a cópia congelada da origem fica fora do repositório;
   - os meses importados da planilha da origem e os 2 meses do trânsito sem contrapartida têm rentabilidade `N/D` (P15); todo período que os inclui também é `N/D` (K1), e o Início mostra à parte o trecho calculável;
   - a função `lancar_migracao_transito` é a exceção à K12 que permite `migracao` no trânsito, só usada pelo migrador.
+
+- legibilidade do Início (ciclo `008`):
+  - eixo patrimonial com unidade única e precisão comum às marcas; a escala amplia somente o domínio de apresentação quando a resolução decimal exige, preservando a tabela em centavos;
+  - margem específica de 144 unidades no eixo monetário e área de 160 no viewBox de 360; índices e percentuais conservam a margem original;
+  - cartões em uma coluna abaixo de `md` e duas a partir de `md`, inclusive com menu lateral; preenchimento local `px-1 py-4 md:px-3`, mantendo quantia integral em uma linha e fonte de 24/32 px, peso 600;
+  - contenção do domínio integral de centavos seguros a partir de 360 px CSS úteis de layout (`document.documentElement.clientWidth`), descontada a barra vertical: janela de 375 px para barra clássica de 15 px; janela de 360 com essa barra deixa 345 úteis e fica abaixo do mínimo validado.
 
 Permanecem fora da entrega:
 
@@ -199,3 +205,4 @@ O plano executado do ciclo `001` (`_project/executed/001_fundacao_aplicacao/001_
 | 2026-10-15 | `004` | Telas do produto e versão `0.3.0`; acesso por ponto de entrada, leitura completa/coerente, gráficos e pendências conhecidas de mobile/desempenho e verificação autenticada parcial |
 | 2026-10-17 | `005` | Logo no cabeçalho mobile; leitura coerente fresca no Next (#57) e marcas em paralelo (#54); conferência autenticada em produção aprovada |
 | 2026-10-18 | `006` | Migração única dos dados e virada em 2026-10-18; migração no trânsito (exceção à K12) e posição implícita zero; pendência de migração retirada |
+| 2026-10-20 | `008` | Eixo patrimonial coerente com as marcas e cartões do Início contidos em uma/duas colunas; apresentação sem mudança de regra financeira |
