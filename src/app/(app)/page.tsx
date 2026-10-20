@@ -4,6 +4,7 @@ import { Campo, classeCampo } from "@/components/campos";
 import { Dinheiro } from "@/components/dinheiro";
 import { EstadoErro, EstadoVazio } from "@/components/estados";
 import { GraficoBarras, GraficoDistribuicao, GraficoLinha } from "@/components/graficos/graficos";
+import { margemComum, rotulosDoEixoBarras, rotulosDoEixoLinha } from "@/components/graficos/margem";
 import { PreviewNotice } from "@/components/preview-notice";
 import { NaoDisponivel, Percentual, ValorOculto, VariacaoPercentual } from "@/components/valores";
 import { dataBr, mesBr } from "@/lib/apresentacao/datas";
@@ -165,6 +166,20 @@ async function Resumo({
   const dinheiro = (centavos: bigint | number) => (oculto ? <ValorOculto /> : textoDinheiro(BigInt(centavos)));
   const eixoDinheiro = (reais: number, marcas: number[]) => (oculto ? "••••" : textoEixoDinheiro(reais, marcas));
 
+  // Margem esquerda comum aos três gráficos de eixo (BL-013): comporta o rótulo mais longo de todos.
+  const valoresPatrimonio = mesesDoGrafico.map((m) => (vfPorMes.has(m) ? Number(vfPorMes.get(m)!) / 100 : null));
+  const valoresRentabilidade = mesesDeRetorno.map((m) => {
+    const r = retornos[m];
+    return r === undefined || r === ND ? null : r;
+  });
+  const rotularRentabilidade = (v: number) => textoPercentual(v);
+  const rotularBase100 = (v: number) => indice(v);
+  const margemEsquerda = margemComum([
+    rotulosDoEixoLinha([valoresPatrimonio], eixoDinheiro),
+    rotulosDoEixoBarras(valoresRentabilidade, rotularRentabilidade),
+    ...(resultado.base100 === ND ? [] : [rotulosDoEixoLinha([resultado.base100], rotularBase100)]),
+  ]);
+
   return (
     <>
       <div className="grid gap-3 md:grid-cols-2">
@@ -243,12 +258,12 @@ async function Resumo({
           series={[
             {
               nome: "Carteira",
-              valores: mesesDoGrafico.map((m) => (vfPorMes.has(m) ? Number(vfPorMes.get(m)!) / 100 : null)),
+              valores: valoresPatrimonio,
               cor: "var(--color-chart-1)",
             },
           ]}
           rotularY={eixoDinheiro}
-          margemEsquerda={144}
+          margemEsquerda={margemEsquerda}
           colunasTabela={["Mês", "Patrimônio"]}
           linhasTabela={mesesDoGrafico.map((m) => ({
             rotulo: mesBr(m),
@@ -260,11 +275,9 @@ async function Resumo({
           titulo="Rentabilidade mensal"
           descricao={`Rentabilidade de cada mês de ${rotuloPeriodo(periodo)}; mês sem rentabilidade fica em branco.`}
           rotulosX={mesesDeRetorno.map(mesCurto)}
-          valores={mesesDeRetorno.map((m) => {
-            const r = retornos[m];
-            return r === undefined || r === ND ? null : r;
-          })}
-          rotularY={(v) => textoPercentual(v)}
+          valores={valoresRentabilidade}
+          rotularY={rotularRentabilidade}
+          margemEsquerda={margemEsquerda}
           colunasTabela={["Mês", "Rentabilidade"]}
           linhasTabela={mesesDeRetorno.map((m) => ({
             rotulo: mesBr(m),
@@ -282,7 +295,8 @@ async function Resumo({
             descricao={`Crescimento de 100 aplicados no começo de ${rotuloPeriodo(periodo)}, só pela rentabilidade.`}
             rotulosX={resultado.mesesBase100.map(mesCurto)}
             series={[{ nome: "Carteira", valores: resultado.base100, cor: "var(--color-chart-1)" }]}
-            rotularY={(v) => indice(v)}
+            rotularY={rotularBase100}
+            margemEsquerda={margemEsquerda}
             colunasTabela={["Mês", "Índice"]}
             linhasTabela={resultado.mesesBase100.map((m, i) => ({ rotulo: mesBr(m), valores: [indice((resultado.base100 as number[])[i])] }))}
           />
