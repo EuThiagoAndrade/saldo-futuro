@@ -8,7 +8,7 @@ Contrato, campos, estados e operação: [governança](README.md#backlog-de-possi
 
 > **Criado em:** `2026-10-20`
 > **Atualizado em:** `2026-10-20`
-> **Estado:** `Disponível`
+> **Estado:** `Encaminhado`
 
 ### Problema e benefício esperado
 
@@ -20,7 +20,7 @@ Originado de inconsistência visual observada na tela inicial (`src/app/(app)/pa
 
 ### Encaminhamentos
 
-—
+- ciclo 008 — 2026-10-20 — integral
 
 ### Restante
 
@@ -29,12 +29,13 @@ Originado de inconsistência visual observada na tela inicial (`src/app/(app)/pa
 ### Registro
 
 - 2026-10-20 — Pedido explícito de guardar a necessidade levantada no registro temporário de melhorias; captura local.
+- 2026-10-20 — Retorno pós-integração da seleção original do ciclo 008; necessidade integralmente encaminhada (issue #88, PR #90).
 
 ## BL-002 — Responsividade e contenção de valores monetários nos cartões de resumo
 
 > **Criado em:** `2026-10-20`
 > **Atualizado em:** `2026-10-20`
-> **Estado:** `Disponível`
+> **Estado:** `Encaminhado`
 
 ### Problema e benefício esperado
 
@@ -46,7 +47,7 @@ Identificado na tela inicial (`src/app/(app)/page.tsx`), onde a ativação simul
 
 ### Encaminhamentos
 
-—
+- ciclo 008 — 2026-10-20 — integral
 
 ### Restante
 
@@ -55,6 +56,7 @@ Identificado na tela inicial (`src/app/(app)/page.tsx`), onde a ativação simul
 ### Registro
 
 - 2026-10-20 — Pedido explícito de guardar a necessidade levantada no registro temporário de melhorias; captura local.
+- 2026-10-20 — Retorno pós-integração da seleção original do ciclo 008; necessidade integralmente encaminhada (issue #89, PR #92).
 
 ## BL-003 — Exibição condicional dos campos de data nos filtros de período da aplicação
 
@@ -316,3 +318,29 @@ Registrado em `_project/knowledge/KB-002_operacao_producao_acessos.md` (passo GC
 ### Registro
 
 - 2026-10-20 — Pedido explícito de guardar a necessidade; captura local.
+
+## BL-013 — Alinhar a margem do gráfico de evolução patrimonial aos gráficos vizinhos
+
+> **Criado em:** `2026-10-20`
+> **Atualizado em:** `2026-10-20`
+> **Estado:** `Disponível`
+
+### Problema e benefício esperado
+
+Na tela Início, a área de grade e curva do gráfico de evolução patrimonial começa mais à direita que a dos gráficos de rentabilidade mensal e Base 100, criando desalinhamento visual e reduzindo o espaço útil da série patrimonial. O benefício esperado é que a área de plotagem do patrimônio tenha o mesmo recuo à esquerda que esses gráficos vizinhos, preservando a leitura integral e legível dos rótulos monetários.
+
+### Contexto
+
+No ciclo 008, a margem maior foi adotada para acomodar rótulos monetários extensos no eixo patrimonial. A necessidade atual revisa essa composição visual. BL-001, sobre precisão de escala e rótulos do eixo, foi integralmente encaminhado no ciclo 008; este item registra separadamente o alinhamento da margem.
+
+### Encaminhamentos
+
+—
+
+### Restante
+
+—
+
+### Registro
+
+- 2026-10-20 — Pedido explícito de corrigir o recuo do gráfico de evolução patrimonial e guardar a necessidade para seleção futura; captura local.
