@@ -38,6 +38,16 @@ it("barras percentuais preservam ganho, perda e lacuna", () => {
   expect(html).toContain("-10%");
 });
 
+it("barras aceitam margemEsquerda e começam a grade na mesma coordenada das linhas", () => {
+  const padrao = renderToStaticMarkup(<GraficoBarras {...comum} valores={[-0.1, null, 0.1]} rotularY={(v) => `${v * 100}%`} />);
+  const recuada = renderToStaticMarkup(<GraficoBarras {...comum} valores={[-0.1, null, 0.1]} rotularY={(v) => `${v * 100}%`} margemEsquerda={100} />);
+  expect(padrao).toContain('x1="70" x2="304"');
+  expect(recuada).toContain('x1="100" x2="304"');
+  expect(recuada).not.toContain('x1="70"');
+  const linha = renderToStaticMarkup(<GraficoLinha {...comum} margemEsquerda={100} rotularY={(v) => String(v)} series={[{ nome: "Carteira", valores: [1, 2, 3], cor: "blue" }]} />);
+  expect(linha).toContain('x1="100" x2="304"');
+});
+
 it("meses se distribuem no espaço disponível sem juntar o último par", () => {
   const rotulos = Array.from({ length: 12 }, (_, i) => `mes${i}`);
   const html = renderToStaticMarkup(<GraficoLinha {...comum} rotulosX={rotulos} margemEsquerda={144} rotularY={textoEixoDinheiro} series={[{ nome: "Carteira", valores: rotulos.map((_, i) => i * 10), cor: "blue" }]} />);

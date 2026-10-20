@@ -14,6 +14,10 @@ const ALTURA = 200;
 const MARGEM = { topo: 12, direita: 56, base: 26, esquerda: 70 };
 const AREA = { x0: MARGEM.esquerda, x1: LARGURA - MARGEM.direita, y0: MARGEM.topo, y1: ALTURA - MARGEM.base };
 
+/** Margem esquerda padrão e a máxima que ainda deixa 160 unidades de curva (ciclo 008). */
+export const MARGEM_ESQUERDA_PADRAO = MARGEM.esquerda;
+export const MARGEM_ESQUERDA_MAXIMA = AREA.x1 - 160;
+
 export interface LinhaTabela {
   rotulo: string;
   valores: ReactNode[];
@@ -222,6 +226,7 @@ export function GraficoBarras({
   rotulosX,
   valores,
   rotularY,
+  margemEsquerda = AREA.x0,
   colunasTabela,
   linhasTabela,
 }: {
@@ -231,6 +236,7 @@ export function GraficoBarras({
   rotulosX: string[];
   valores: (number | null)[];
   rotularY: (v: number) => string;
+  margemEsquerda?: number;
   colunasTabela: string[];
   linhasTabela: LinhaTabela[];
 }) {
@@ -238,18 +244,18 @@ export function GraficoBarras({
   const f = { min: eixo[0], max: eixo.at(-1)! };
   const y = (v: number) => escalar(v, f.min, f.max, AREA.y1, AREA.y0);
   const n = rotulosX.length;
-  const largura = Math.max(3, Math.min(24, ((AREA.x1 - AREA.x0) / Math.max(n, 1)) * 0.6));
+  const largura = Math.max(3, Math.min(24, ((AREA.x1 - margemEsquerda) / Math.max(n, 1)) * 0.6));
 
   return (
     <Moldura id={id} titulo={titulo} descricao={descricao} colunas={colunasTabela} linhas={linhasTabela}>
-      <EixoY valores={eixo} rotular={rotularY} />
-      <EixoX rotulos={rotulosX} />
-      <line x1={AREA.x0} x2={AREA.x1} y1={y(0)} y2={y(0)} stroke="var(--color-border-strong)" strokeWidth={1} />
+      <EixoY valores={eixo} rotular={rotularY} esquerda={margemEsquerda} />
+      <EixoX rotulos={rotulosX} esquerda={margemEsquerda} />
+      <line x1={margemEsquerda} x2={AREA.x1} y1={y(0)} y2={y(0)} stroke="var(--color-border-strong)" strokeWidth={1} />
       {valores.map((v, i) =>
         v === null ? null : (
           <rect
             key={i}
-            x={posicaoX(i, n) - largura / 2}
+            x={posicaoX(i, n, margemEsquerda) - largura / 2}
             y={Math.min(y(v), y(0))}
             width={largura}
             height={Math.max(1, Math.abs(y(v) - y(0)))}
