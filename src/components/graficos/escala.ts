@@ -14,14 +14,21 @@ export function marcas(faixa: Faixa, quantidade = 4): number[] {
     min -= folga;
     max += folga;
   }
-  const bruto = (max - min) / quantidade;
-  const potencia = 10 ** Math.floor(Math.log10(bruto));
-  const passo = [1, 2, 5, 10].map((m) => m * potencia).find((p) => p >= bruto) ?? 10 * potencia;
-  const inicio = Math.floor(min / passo) * passo;
-  const fim = Math.ceil(max / passo) * passo;
-  const lista: number[] = [];
-  for (let v = inicio; v <= fim + passo / 2; v += passo) lista.push(Number(v.toPrecision(12)));
-  return lista;
+  const amplitude = Math.max(Math.abs(min), Math.abs(max));
+  const resolucao = amplitude > 0 ? 10 ** (Math.floor(Math.log10(amplitude)) - 11) : 0;
+  let bruto = Math.max((max - min) / quantidade, resolucao);
+  for (;;) {
+    const potencia = 10 ** Math.floor(Math.log10(bruto));
+    const passo = [1, 2, 5, 10].map((m) => m * potencia).find((p) => p >= bruto) ?? 10 * potencia;
+    const inicio = Math.floor(min / passo);
+    const fim = Math.ceil(max / passo);
+    // Índices inteiros evitam acumular erro somando o passo repetidamente.
+    const lista = Array.from({ length: fim - inicio + 1 }, (_, i) => Number(((inicio + i) * passo).toPrecision(12)));
+    if (lista.length >= 2 && lista.every((v, i) => Number.isFinite(v) && (i === 0 || v > lista[i - 1]))
+      && lista[0] <= min && lista.at(-1)! >= max) return lista;
+    // Recalcula o domínio caso o arredondamento ainda colapse ou não cubra a faixa.
+    bruto = passo * 2;
+  }
 }
 
 /** Converte um valor do domínio [d0, d1] para a coordenada [r0, r1]. */

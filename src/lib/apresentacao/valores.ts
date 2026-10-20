@@ -58,13 +58,17 @@ export function textoPontosPercentuais(fracao: number): string {
  * Rótulo de eixo de gráfico em dinheiro, abreviado (DESIGN.md 6.2: a forma abreviada só é
  * permitida em eixos): "R$ 500", "R$ 12 mil", "R$ 1,5 mi". O valor vem em reais, só para desenho.
  */
-export function textoEixoDinheiro(reais: number): string {
-  const sinal = reais < 0 ? MENOS : "";
-  const absoluto = Math.abs(reais);
-  const curto = (v: number) => v.toLocaleString("pt-BR", { maximumFractionDigits: 1 });
-  if (absoluto >= 1_000_000) return `${sinal}R$${ESPACO_FIXO}${curto(absoluto / 1_000_000)} mi`;
-  if (absoluto >= 1_000) return `${sinal}R$${ESPACO_FIXO}${curto(absoluto / 1_000)} mil`;
-  return `${sinal}R$${ESPACO_FIXO}${curto(absoluto)}`;
+export function textoEixoDinheiro(reais: number, marcas: readonly number[] = [reais]): string {
+  const maior = Math.max(...marcas.map(Math.abs));
+  const unidade = maior >= 1_000_000 ? 1_000_000 : maior >= 1_000 ? 1_000 : 1;
+  const sufixo = unidade === 1_000_000 ? " mi" : unidade === 1_000 ? " mil" : "";
+  // Precisão decimal comum às marcas, sem ruído da representação binária.
+  const casas = Math.max(...marcas.map((v) => {
+    const [mantissa, expoente = "0"] = Number((Math.abs(v) / unidade).toPrecision(12)).toString().split("e");
+    return Math.max(0, (mantissa.split(".")[1]?.length ?? 0) - Number(expoente));
+  }));
+  const texto = Math.abs(reais / unidade).toLocaleString("pt-BR", { minimumFractionDigits: casas, maximumFractionDigits: casas });
+  return `${reais < 0 ? MENOS : ""}R$${ESPACO_FIXO}${texto}${sufixo}`;
 }
 
 /** "2026-04" → "abr/26", para rótulos curtos de eixo. */

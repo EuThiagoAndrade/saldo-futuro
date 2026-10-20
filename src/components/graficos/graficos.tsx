@@ -89,7 +89,7 @@ function Moldura({
   );
 }
 
-function EixoY({ valores, rotular }: { valores: number[]; rotular: (v: number) => string }) {
+function EixoY({ valores, rotular, esquerda = AREA.x0 }: { valores: number[]; rotular: (v: number, marcas: number[]) => string; esquerda?: number }) {
   const f = { min: valores[0], max: valores.at(-1)! };
   return (
     <g>
@@ -97,9 +97,9 @@ function EixoY({ valores, rotular }: { valores: number[]; rotular: (v: number) =
         const y = escalar(v, f.min, f.max, AREA.y1, AREA.y0);
         return (
           <g key={v}>
-            <line x1={AREA.x0} x2={AREA.x1} y1={y} y2={y} stroke="var(--color-border)" strokeWidth={1} />
-            <text x={AREA.x0 - 6} y={y} textAnchor="end" dominantBaseline="middle" fontSize={11} fill="var(--color-text-secondary)">
-              {rotular(v)}
+            <line x1={esquerda} x2={AREA.x1} y1={y} y2={y} stroke="var(--color-border)" strokeWidth={1} />
+            <text x={esquerda - 6} y={y} textAnchor="end" dominantBaseline="middle" fontSize={11} fill="var(--color-text-secondary)">
+              {rotular(v, valores)}
             </text>
           </g>
         );
@@ -108,16 +108,17 @@ function EixoY({ valores, rotular }: { valores: number[]; rotular: (v: number) =
   );
 }
 
-function EixoX({ rotulos }: { rotulos: string[] }) {
-  // No máximo cinco rótulos, para caber no celular.
-  const passo = Math.max(1, Math.ceil(rotulos.length / 5));
+function EixoX({ rotulos, esquerda = AREA.x0 }: { rotulos: string[]; esquerda?: number }) {
+  // Reserva espaço para os meses também quando a margem monetária cresce.
+  const quantidade = Math.min(rotulos.length, 5, Math.floor((AREA.x1 - esquerda - 24) / 48) + 1);
+  const visiveis = new Set(Array.from({ length: quantidade }, (_, i) => quantidade === 1 ? 0 : Math.round(i * (rotulos.length - 1) / (quantidade - 1))));
   return (
     <g>
       {rotulos.map((r, i) =>
-        i % passo === 0 || i === rotulos.length - 1 ? (
+        visiveis.has(i) ? (
           <text
             key={r}
-            x={posicaoX(i, rotulos.length)}
+            x={posicaoX(i, rotulos.length, esquerda)}
             y={AREA.y1 + 17}
             textAnchor="middle"
             fontSize={11}
@@ -131,8 +132,8 @@ function EixoX({ rotulos }: { rotulos: string[] }) {
   );
 }
 
-function posicaoX(i: number, n: number): number {
-  return n === 1 ? (AREA.x0 + AREA.x1) / 2 : escalar(i, 0, n - 1, AREA.x0 + 12, AREA.x1 - 12);
+function posicaoX(i: number, n: number, esquerda = AREA.x0): number {
+  return n === 1 ? (esquerda + AREA.x1) / 2 : escalar(i, 0, n - 1, esquerda + 12, AREA.x1 - 12);
 }
 
 export interface Serie {
@@ -151,6 +152,7 @@ export function GraficoLinha({
   rotulosX,
   series,
   rotularY,
+  margemEsquerda = AREA.x0,
   colunasTabela,
   linhasTabela,
 }: {
@@ -159,7 +161,8 @@ export function GraficoLinha({
   descricao: string;
   rotulosX: string[];
   series: Serie[];
-  rotularY: (v: number) => string;
+  rotularY: (v: number, marcas: number[]) => string;
+  margemEsquerda?: number;
   colunasTabela: string[];
   linhasTabela: LinhaTabela[];
 }) {
@@ -170,14 +173,14 @@ export function GraficoLinha({
 
   return (
     <Moldura id={id} titulo={titulo} descricao={descricao} colunas={colunasTabela} linhas={linhasTabela}>
-      <EixoY valores={eixo} rotular={rotularY} />
-      <EixoX rotulos={rotulosX} />
+      <EixoY valores={eixo} rotular={rotularY} esquerda={margemEsquerda} />
+      <EixoX rotulos={rotulosX} esquerda={margemEsquerda} />
       {series.map((s) => {
         // Trechos contínuos: a lacuna (N/D) interrompe a linha.
         const trechos: string[][] = [[]];
         s.valores.forEach((v, i) => {
           if (v === null) trechos.push([]);
-          else trechos.at(-1)!.push(`${posicaoX(i, n)},${y(v)}`);
+          else trechos.at(-1)!.push(`${posicaoX(i, n, margemEsquerda)},${y(v)}`);
         });
         const ultimo = s.valores.findLastIndex((v) => v !== null);
         return (
@@ -200,7 +203,7 @@ export function GraficoLinha({
                 ),
               )}
             {ultimo >= 0 ? (
-              <text x={posicaoX(ultimo, n) + 6} y={y(s.valores[ultimo]!)} dominantBaseline="middle" fontSize={11} fill={s.cor} fontWeight={600}>
+              <text x={posicaoX(ultimo, n, margemEsquerda) + 6} y={y(s.valores[ultimo]!)} dominantBaseline="middle" fontSize={11} fill={s.cor} fontWeight={600}>
                 {s.nome}
               </text>
             ) : null}
