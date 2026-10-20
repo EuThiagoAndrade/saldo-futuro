@@ -7,7 +7,7 @@
 > **Issue:** `#89`
 > **Plano:** `_project/executed/008_legibilidade_patrimonio_resumo/008_plan.md`
 > **Branch:** `fix/issue-89`
-> **PR:** —
+> **PR:** [#92](https://github.com/EuThiagoAndrade/saldo-futuro/pull/92)
 > **Integração:** `Prospectiva — efetiva somente após o merge desta última PR`
 > **Autorização inicial:** "autorizo a implementação da issue #89" em 2026-10-20
 > **Modo contínuo:** `—`
@@ -47,7 +47,7 @@ Não se aplica.
 - [x] Corrigir grade e preenchimento local de Cartao.
 - [x] Medir conteúdo nas matrizes com/sem barra clássica e zoom real de 200%.
 - [x] Validar estados, regressões e preparar documentação de encerramento prospectivo.
-- [ ] Publicar PR revisável.
+- [x] Publicar PR #92 e conferir estado OPEN.
 
 ## Evidências
 
@@ -63,7 +63,7 @@ Não se aplica.
 | E2e sem backend | 13 passaram, 102 pulados por configuração; build sem backend passou |
 | Governança | Testes 48/48, validador com 0 erros/avisos e cinco itens manuais |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos | Fonte corrente: [PR #92](https://github.com/EuThiagoAndrade/saldo-futuro/pull/92/checks), sem antecipar o resultado; CI completa no Linux obrigatória antes do merge |
 
 ### Medidas de referência
 
@@ -100,13 +100,14 @@ Encerramento prospectivo autorizado pela aprovação da v3 e preparado nesta úl
 - [x] KB-003 consolida eixo e cartões; nenhuma nova regra financeira, ADR ou contrato visual.
 - [x] Plano Concluído, tasks Concluída, pasta em executed e cycles Concluído como estado prospectivo após o merge desta PR.
 - [x] Histórico de aprovação, revisão, origem e evidências preservado; nenhum SHA do próprio merge na task.
-- [ ] Publicar PR, conferir checks remotos verdes e obter aprovação específica do merge.
+- [x] Publicar PR #92 com encerramento prospectivo.
+- [ ] Conferir checks remotos verdes e obter aprovação específica do merge.
 
 Antes da integração, a situação efetiva é Aguardando merge. Retorno de BL-001/BL-002 à fila só após integração comprovada do ciclo; publicação desse retorno continua separada. Nenhuma ação em produção ou release é parte desta entrega.
 
 ## Próximo passo
 
-Encerramento prospectivo: antes do merge da última PR, a situação efetiva é Aguardando merge.
+Encerramento prospectivo: antes do merge da [PR #92](https://github.com/EuThiagoAndrade/saldo-futuro/pull/92), a situação efetiva é Aguardando merge. Checks e diff devem estar conferidos antes da frase "aprovo o merge da PR #92".
 
 ```text
 PRÓXIMO PASSO
@@ -120,9 +121,9 @@ Diga: —
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 008 + implementar_issue + 89/Item-2-BL-002 + ddc23b241ecccf7be2d42829ce512176f12bef8c`
-- `effect_class`: `local_mutation`
+- `effect_class`: `remote_mutation`
 - `state_before`: plano v3 Em Execução, ciclo Em execução, PR #90 integrada, #89 aberta sem task/branch e sem modo contínuo.
 - `state_after`: implementação, matrizes e zoom real validados; encerramento prospectivo preparado com plano/tasks concluídos em executed e KB-003 atualizada; integração e conclusão efetivas dependem de checks remotos e merge aprovado da última PR.
 - `result`: `executed`
-- `evidence`: frase humana inicial desta task; base igual a origin/main; PR #90 MERGED e #88 CLOSED conferidas; medidas e testes acima; doc-updater e governance-check aplicados com templates de task, plano, KB e PR; pré-publicação da #89 sem PR anterior.
+- `evidence`: frase humana inicial desta task; base igual a origin/main; PR #90 MERGED e #88 CLOSED conferidas; medidas e testes acima; doc-updater e governance-check aplicados com templates de task, plano, KB e PR; PR #92 OPEN na branch fix/issue-89, commit de implementação f3b554b; https://github.com/EuThiagoAndrade/saldo-futuro/pull/92.
 - `blockers`: ressalva local: encerramento nativo de worker no teste de volume quando executado junto à suíte; isolado passou. Checks remotos verdes e aprovação específica obrigatórios antes do merge.

@@ -212,7 +212,7 @@ Nenhuma dependência externa nova. IDs de origem já existem em main. Implementa
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | [#88 — BL-001](https://github.com/EuThiagoAndrade/saldo-futuro/issues/88), fechada, e [#89 — BL-002](https://github.com/EuThiagoAndrade/saldo-futuro/issues/89), aberta antes do merge da última PR |
-| PR(s) | [#90 — issue #88](https://github.com/EuThiagoAndrade/saldo-futuro/pull/90), integrada |
+| PR(s) | [#90 — issue #88](https://github.com/EuThiagoAndrade/saldo-futuro/pull/90), integrada; [#92 — issue #89 e encerramento](https://github.com/EuThiagoAndrade/saldo-futuro/pull/92), prospectiva até o merge |
 | Branch(es) | `fix/issue-88` e `fix/issue-89` |
 | Destino após conclusão | `_project/executed/008_legibilidade_patrimonio_resumo/008_plan.md` |
 
@@ -301,7 +301,7 @@ Ciclo 008 (leve), BL-002; `_project/drafts/008_legibilidade_patrimonio_resumo/00
 
 ## Encerramento prospectivo
 
-Última entrega: issue #89, autorizada em 2026-10-20 com "autorizo a implementação da issue #89". A #88 foi integrada pela PR #90 com checks verdes e a aprovação "aprovo o merge da PR #90". O Item 2 e a documentação viva foram concluídos conforme a v3 aprovada; evidências na task #89, inclusive ressalva do runner Windows e teste isolado bem-sucedido. KB-003 atualizada. Versão técnica, aprovação, payloads históricos e três rodadas preservados.
+Última entrega: [PR #92](https://github.com/EuThiagoAndrade/saldo-futuro/pull/92), issue #89, autorizada em 2026-10-20 com "autorizo a implementação da issue #89". A #88 foi integrada pela PR #90 com checks verdes e a aprovação "aprovo o merge da PR #90". O Item 2 e a documentação viva foram concluídos conforme a v3 aprovada; evidências na task #89, inclusive ressalva do runner Windows e teste isolado bem-sucedido. KB-003 atualizada. Versão técnica, aprovação, payloads históricos e três rodadas preservados.
 
 Este documento, tasks e cycles descrevem o estado depois do merge da última PR, conforme a exceção de encerramento prospectivo. Até essa integração, a situação efetiva é Aguardando merge; conclusão depende de checks remotos verdes e aprovação específica. O retorno do backlog ocorre somente depois da integração comprovada do ciclo, sem publicação automática.
 
@@ -319,11 +319,11 @@ Diga: —
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 008 + atualizar_docs + encerramento-prospectivo/issue-89 + ddc23b241ecccf7be2d42829ce512176f12bef8c`
-- `effect_class`: `local_mutation`
+- `effect_class`: `remote_mutation`
 - `state_before`: plano v3 Em Execução, ciclo Em execução, PR #90 integrada com aprovação e checks verdes; issue #89 autorizada e implementada em fix/issue-89.
 - `state_after`: encerramento prospectivo preparado: plano Concluído, tasks Concluída, pasta em executed, cycles Concluído e KB-003 atualizada; antes da integração da última PR, situação efetiva Aguardando merge.
 - `result`: `executed`
-- `evidence`: v3 aprovada em 2026-10-20; autorização da #89; task #89 com matrizes e zoom real; task #88 reconciliada com a PR #90; governança sem erros/avisos; histórico abaixo preservado.
+- `evidence`: v3 aprovada em 2026-10-20; autorização da #89; task #89 com matrizes e zoom real; task #88 reconciliada com a PR #90; governança sem erros/avisos; histórico abaixo preservado; PR #92 aberta (https://github.com/EuThiagoAndrade/saldo-futuro/pull/92).
 - `blockers`: nenhum no escopo de layout; ressalva do runner Windows descrita na task #89; checks remotos verdes e aprovação específica pendentes para integrar.
 
 ### Handoff histórico de criação das issues
