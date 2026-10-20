@@ -8,7 +8,7 @@ Contrato, campos, estados e operação: [governança](README.md#backlog-de-possi
 
 > **Criado em:** `2026-10-20`
 > **Atualizado em:** `2026-10-20`
-> **Estado:** `Disponível`
+> **Estado:** `Encaminhado`
 
 ### Problema e benefício esperado
 
@@ -20,7 +20,7 @@ Originado de inconsistência visual observada na tela inicial (`src/app/(app)/pa
 
 ### Encaminhamentos
 
-—
+- ciclo 008 — 2026-10-20 — integral
 
 ### Restante
 
@@ -29,12 +29,13 @@ Originado de inconsistência visual observada na tela inicial (`src/app/(app)/pa
 ### Registro
 
 - 2026-10-20 — Pedido explícito de guardar a necessidade levantada no registro temporário de melhorias; captura local.
+- 2026-10-20 — Retorno pós-integração da seleção original do ciclo 008; necessidade integralmente encaminhada (issue #88, PR #90).
 
 ## BL-002 — Responsividade e contenção de valores monetários nos cartões de resumo
 
 > **Criado em:** `2026-10-20`
 > **Atualizado em:** `2026-10-20`
-> **Estado:** `Disponível`
+> **Estado:** `Encaminhado`
 
 ### Problema e benefício esperado
 
@@ -46,7 +47,7 @@ Identificado na tela inicial (`src/app/(app)/page.tsx`), onde a ativação simul
 
 ### Encaminhamentos
 
-—
+- ciclo 008 — 2026-10-20 — integral
 
 ### Restante
 
@@ -55,6 +56,7 @@ Identificado na tela inicial (`src/app/(app)/page.tsx`), onde a ativação simul
 ### Registro
 
 - 2026-10-20 — Pedido explícito de guardar a necessidade levantada no registro temporário de melhorias; captura local.
+- 2026-10-20 — Retorno pós-integração da seleção original do ciclo 008; necessidade integralmente encaminhada (issue #89, PR #92).
 
 ## BL-003 — Exibição condicional dos campos de data nos filtros de período da aplicação
 
