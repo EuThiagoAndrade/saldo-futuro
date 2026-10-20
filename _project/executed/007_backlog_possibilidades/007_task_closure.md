@@ -7,7 +7,7 @@
 > **Issue:** — (encerramento documental sem issue recursiva)
 > **Plano:** `_project/executed/007_backlog_possibilidades/007_plan.md`
 > **Branch:** `chore/cycle-007-closure`
-> **PR:** —
+> **PR:** [#84](https://github.com/EuThiagoAndrade/saldo-futuro/pull/84)
 > **Integração:** prospectiva; válida somente depois do merge desta PR, conferido no GitHub
 > **Autorização inicial:** "O plano está apto com ressalvas. Está aprovado o plano do cilo 007 v3" em 2026-10-19; cobre preparar o encerramento conforme plano e governança
 > **Modo contínuo:** `—`
@@ -48,7 +48,7 @@ Não se aplica: encerramento documental de ciclo completo.
 - [x] Integrar por squash com assunto convencional explícito; PR #83 MERGED e issue #82 CLOSED no GitHub.
 - [x] Conferir main local/remota em f62a9dc7e971aed7a9e359a5cf22348809f98820 e árvore idêntica ao tip aprovado.
 - [x] Reconciliar task, plano, pós-mortem, cycles.md e movimentação prospectiva.
-- [ ] Validar e publicar PR de encerramento, sem issue recursiva.
+- [x] Validar e publicar PR #84 de encerramento, sem issue recursiva.
 
 ## Evidências
 
@@ -59,7 +59,7 @@ Não se aplica: encerramento documental de ciclo completo.
 | Documentação viva | Contrato em _project/README.md e .agent/ai_behavior.md, consumidores/templates e auditoria já integrados; backlog vazio. Nenhuma alteração necessária na KB-003 ou ADR, como determina o plano. |
 | Testes de governança do encerramento | 48/48 passaram em node --test scripts/validate-governance.test.mjs. |
 | Validador e diff | 0 erros, 0 avisos e 5 itens manuais conferidos; git diff --check limpo. Corpo aprovado e três rodadas comparados diretamente com a base, sem alterações. |
-| Checks do encerramento | Conferir no tip final da PR a criar; não presumidos a partir da implementação. |
+| Checks do encerramento | Em andamento na abertura da [PR #84](https://github.com/EuThiagoAndrade/saldo-futuro/pull/84/checks); conferir no tip final, sem presumir resultado a partir da implementação. |
 
 ## Revisão da correção
 
@@ -87,9 +87,9 @@ Diga: —
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 007 + atualizar_docs + encerramento + f62a9dc7e971aed7a9e359a5cf22348809f98820`
-- `effect_class`: `local_mutation`
+- `effect_class`: `remote_mutation`
 - `state_before`: issue #82 integrada pela PR #83; ciclo Em execução em drafts/; aprovação do plano cobre preparar o encerramento.
 - `state_after`: registros reconciliados e ciclo em executed/ com plano/tasks/cycles.md concluídos prospectivamente; antes do merge, situação efetiva depende da PR/checks.
 - `result`: `executed`
-- `evidence`: manifestações humanas, GitHub e Git conferidos acima; workflow/template/skill lidos no ponto de uso.
-- `blockers`: nenhum para preparar; merge do encerramento terá aprovação própria.
+- `evidence`: manifestações humanas, GitHub e Git conferidos acima; workflow/template/skill lidos no ponto de uso; 48/48 testes, validador sem erros e PR #84 publicada com diff documental.
+- `blockers`: checks verdes no tip final e "aprovo o merge da PR #84"; aprovação ainda não recebida. Situação efetiva Aguardando merge, sem concluir o ciclo em main antecipadamente.
