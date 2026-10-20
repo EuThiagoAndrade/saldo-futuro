@@ -7,7 +7,7 @@
 > **Issue:** `#94`
 > **Plano:** `_project/drafts/009_usabilidade_consistencia_visual/009_plan.md`
 > **Branch:** `fix/issue-94`
-> **PR:** —
+> **PR:** [#98](https://github.com/EuThiagoAndrade/saldo-futuro/pull/98)
 > **Integração:** `Pendente`
 > **Autorização inicial:** "autorizo a implementação da issue #94" em 2026-10-20
 > **Modo contínuo:** `—`
@@ -52,7 +52,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 - [x] Testes unitários da estimativa e da margem comum (faixa comum, mil/mi, negativos, rótulo longo recuando os três juntos, extremos do ciclo 008, ocultação) e de renderização de `GraficoBarras`.
 - [x] E2e com a fonte real carregada: asserção de 144 do ciclo 008 trocada pela margem real do gráfico; novo cenário `margem comum` (comum e extremo, 360 e 1280): mesma coordenada de grade nos três gráficos, 70 no comum, curva de pelo menos 160, nenhum corte, nenhuma sobreposição e estimativa nunca menor que a caixa medida.
 - [x] Suíte completa e governança.
-- [ ] Publicar a PR e conferir o estado.
+- [x] Publicar a PR #98 e conferir o estado OPEN.
 
 ## Evidências
 
@@ -90,8 +90,8 @@ Não se aplica: primeira entrega do ciclo; #95, #96 e #97 exigem autorização p
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 009 (leve)
 Quem: Responsável
-Conferir: checks e diff da PR da issue #94
-Diga: "aprovo o merge da PR #N"
+Conferir: checks e diff da [PR #98](https://github.com/EuThiagoAndrade/saldo-futuro/pull/98)
+Diga: "aprovo o merge da PR #98"
 ```
 
 ## Handoff de saída
@@ -99,7 +99,7 @@ Diga: "aprovo o merge da PR #N"
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 009 + implementar_issue + 94/Item-1-BL-013 + 811ff840a51da200bdff8f0591e11d9d95fd103f`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: plano `v2` Aprovado, ciclo Planejamento, #94 aberta, sem branch nem PR / branch `fix/issue-94` publicada com a PR aberta, plano e ciclo em Em execução
+- `state_before` / `state_after`: plano `v2` Aprovado, ciclo Planejamento, #94 aberta, sem branch nem PR / branch `fix/issue-94` publicada com a PR #98 aberta, plano e ciclo em Em execução
 - `result`: `executed`
 - `evidence`: autorização desta task; validações da tabela de evidências; `git fetch` com `main` igual a `origin/main` em `811ff84`; consulta prévia sem PR da #94
 - `blockers`: nenhum; o merge depende de checks verdes e de "aprovo o merge da PR #N"
