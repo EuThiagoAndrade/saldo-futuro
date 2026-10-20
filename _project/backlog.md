@@ -56,7 +56,7 @@ Identificado na tela inicial (`src/app/(app)/page.tsx`), onde a ativação simul
 
 - 2026-10-20 — Pedido explícito de guardar a necessidade levantada no registro temporário de melhorias; captura local.
 
-## BL-003 — Exibição condicional dos campos de data no filtro de período da tela inicial
+## BL-003 — Exibição condicional dos campos de data nos filtros de período da aplicação
 
 > **Criado em:** `2026-10-20`
 > **Atualizado em:** `2026-10-20`
@@ -64,11 +64,11 @@ Identificado na tela inicial (`src/app/(app)/page.tsx`), onde a ativação simul
 
 ### Problema e benefício esperado
 
-No formulário de filtro de período da tela inicial, os campos de data de início e fim de intervalo permanecem sempre visíveis, mesmo quando opções predefinidas (como mês, ano ou acumulado) estão selecionadas. Isso induz à interpretação equivocada de que os campos personalizam as opções predefinidas e polui a interface. O benefício esperado é apresentar uma interface limpa onde os seletores de data apareçam exclusivamente quando o usuário escolher consultar um intervalo personalizado, simplificando a interação nos períodos predefinidos.
+Nos formulários com filtro de período da aplicação, os campos de data de início e fim de intervalo ("De" e "Até") permanecem sempre visíveis, mesmo quando opções predefinidas (como mês, ano, 12 meses ou acumulado/desde o início) estão selecionadas. Isso induz à interpretação equivocada de que esses campos se aplicam ou personalizam as opções predefinidas e polui a interface. O benefício esperado é apresentar uma interface limpa e consistente em todo o sistema, onde os seletores de data apareçam exclusivamente quando o usuário escolher consultar um intervalo personalizado, simplificando a interação nos períodos predefinidos.
 
 ### Contexto
 
-Observado em `src/app/(app)/page.tsx` e `src/lib/telas/inicio.ts`. Possibilidades levantadas incluem controlar a visibilidade dos campos com componente cliente ou CSS condicional, além de avaliar eventual submissão direta ao alternar períodos predefinidos.
+Identificado inicialmente na tela inicial (`src/app/(app)/page.tsx`), com ocorrência idêntica na tela de comparação de benchmarks (`src/app/(app)/benchmarks/comparacao/page.tsx`), ambas consumindo `src/lib/telas/inicio.ts`. Possibilidades levantadas incluem unificar esse padrão em um componente cliente reutilizável (por exemplo, `FiltroPeriodo`) ou controle CSS condicional, além de avaliar eventual submissão direta ao alternar períodos predefinidos.
 
 ### Encaminhamentos
 
@@ -81,6 +81,7 @@ Observado em `src/app/(app)/page.tsx` e `src/lib/telas/inicio.ts`. Possibilidade
 ### Registro
 
 - 2026-10-20 — Pedido explícito de guardar a necessidade levantada no registro temporário de melhorias; captura local.
+- 2026-10-20 — Pedido explícito de expandir o escopo para todos os filtros de período da aplicação onde ocorre o padrão de predefinições e intervalo (incluindo tela inicial e comparação de benchmarks); edição local.
 
 ## BL-004 — Uniformidade de cursor e feedback tátil de interação nos botões
 
@@ -133,3 +134,159 @@ Observado em `GraficoDistribuicao` (`src/components/graficos/graficos.tsx`). A p
 ### Registro
 
 - 2026-10-20 — Pedido explícito de guardar a necessidade levantada no registro temporário de melhorias; captura local.
+
+## BL-006 — Reorganização da tela de ativos com fluxo de criação dedicado e gestão de listas
+
+> **Criado em:** `2026-10-20`
+> **Atualizado em:** `2026-10-20`
+> **Estado:** `Disponível`
+
+### Problema e benefício esperado
+
+Na tela de ativos, o formulário de cadastro encontra-se posicionado entre a lista de ativos em uso e a lista de desativados, tornando o acesso à criação de novos ativos difícil conforme o número de posições cresce, além de gerar uma rolagem vertical excessiva no celular com o acúmulo contínuo de registros desativados. O benefício esperado é proporcionar uma experiência móvel fluida e focada, destacando a ação de novo ativo no topo, isolando o preenchimento do formulário em fluxo dedicado e segmentando a visualização entre posições ativas e histórico desativado.
+
+### Contexto
+
+Observado em `src/app/(app)/ativos/page.tsx` e `src/components/formularios/novo-ativo.tsx`. A proposta alinha a estrutura ao padrão já utilizado em lançamentos (`src/app/(app)/lancamentos/page.tsx`): botão primário no cabeçalho direcionando para rota de cadastro dedicada (`/ativos/novo`), controle segmentado por abas (`Em uso` e `Desativados`) com contadores e visualização em lista mais densa no celular, eliminando cartões com espaçamento excessivo.
+
+### Encaminhamentos
+
+—
+
+### Restante
+
+—
+
+### Registro
+
+- 2026-10-20 — Pedido explícito de guardar a necessidade; captura local.
+
+## BL-007 — Expansão do catálogo de benchmarks com o índice de inflação IGP-M
+
+> **Criado em:** `2026-10-20`
+> **Atualizado em:** `2026-10-20`
+> **Estado:** `Disponível`
+
+### Problema e benefício esperado
+
+Atualmente a aplicação oferece apenas o IPCA como referência de índice de preços para comparação da rentabilidade da carteira. Usuários com ativos imobiliários, títulos de crédito privado ou contratos referenciados em IGP-M carecem de um referencial direto dessa dinâmica inflacionária. O benefício esperado é permitir comparar o desempenho patrimonial com o IGP-M, ampliando as referências macroeconômicas disponíveis na aplicação.
+
+### Contexto
+
+Observado no catálogo de benchmarks em `supabase/migrations/20261014193630_benchmarks.sql` e na tela de comparação (`src/app/(app)/benchmarks/comparacao/page.tsx`). A série SGS 189 do Banco Central do Brasil fornece a taxa de variação percentual mensal do IGP-M, sendo 100% aderente ao modelo de cálculo existente para séries mensais (`periodicidade: "mensal"` e `retornoMensalMensal`), dispensando alterações na arquitetura contábil.
+
+### Encaminhamentos
+
+—
+
+### Restante
+
+—
+
+### Registro
+
+- 2026-10-20 — Pedido explícito de guardar a necessidade; captura local.
+
+## BL-008 — Suporte a séries de benchmark de nível e cotação para o Dólar PTAX
+
+> **Criado em:** `2026-10-20`
+> **Atualizado em:** `2026-10-20`
+> **Estado:** `Disponível`
+
+### Problema e benefício esperado
+
+A aplicação não permite avaliar a rentabilidade da carteira frente à desvalorização cambial (moeda estrangeira), pois o motor atual de cálculo de benchmarks suporta exclusivamente séries de taxa percentual, enquanto as séries cambiais são publicadas em valor absoluto de cotação. O benefício esperado é permitir que o investidor acompanhe o desempenho do seu patrimônio frente à cotação do dólar, identificando ganhos ou perdas reais em moeda forte.
+
+### Contexto
+
+Observado na seção 9.5 da KB-004 ("Benchmark de valor absoluto", decisão D14), que especifica a derivação do retorno mensal $R_m = N_m / N_{m-1} - 1$ a partir de séries de cotação/nível, mas não possuía implementação. O item envolve implementar esse cálculo no motor financeiro e disponibilizar a série do Dólar PTAX a partir do SGS do Banco Central.
+
+### Encaminhamentos
+
+—
+
+### Restante
+
+—
+
+### Registro
+
+- 2026-10-20 — Pedido explícito de guardar a necessidade; captura local.
+
+## BL-009 — Metadados descritivos e classificação de ativos com aproveitamento do histórico
+
+> **Criado em:** `2026-10-20`
+> **Atualizado em:** `2026-10-20`
+> **Estado:** `Disponível`
+
+### Problema e benefício esperado
+
+O cadastro de ativos restringe-se a nome e tipo de ajuste contábil, impossibilitando análises patrimoniais por classe de alocação (renda fixa, renda variável, cripto), concentração por instituição custodiante, identificação de reserva de emergência e segregação de patrimônio previdenciário. O benefício esperado é enriquecer o modelo de ativos com atributos descritivos essenciais sem onerar a simplicidade de cadastro no celular, viabilizando visões estratégicas de alocação macro e aproveitando os dados históricos legados.
+
+### Contexto
+
+Observado em `src/components/formularios/novo-ativo.tsx` e no schema da tabela `public.ativos`. Na migração (ciclo 006), os dados descritivos foram preservados no arquivo SQLite de origem (`local/migracao-006/meus-investimentos.sqlite`). A proposta sugere campos principais ágeis (classe e instituição), seção retrátil de detalhes opcionais (previdência, liquidez imediata/reserva, exposição cambial e isenção de IR) e carga retroativa automática para posições históricas migradas.
+
+### Encaminhamentos
+
+—
+
+### Restante
+
+—
+
+### Registro
+
+- 2026-10-20 — Pedido explícito de guardar a necessidade; captura local.
+
+## BL-010 — Combobox pesquisável e ordenação alfabética uniforme para seleção de ativos
+
+> **Criado em:** `2026-10-20`
+> **Atualizado em:** `2026-10-20`
+> **Estado:** `Disponível`
+
+### Problema e benefício esperado
+
+Os campos de seleção de ativos na aplicação utilizam listas suspensas nativas sem recurso de busca por digitação e sem ordenação alfabética padronizada (apresentando itens na ordem de inserção do banco de dados). Em dispositivos móveis e em carteiras com dezenas de posições, localizar um ativo exige rolagem manual extensa e cansativa. O benefício esperado é proporcionar uma experiência de seleção rápida e previsível em todas as telas, com ordenação alfabética estrita e filtro de texto em tempo real tolerante a maiúsculas e acentos.
+
+### Contexto
+
+Identificado em `src/app/(app)/lancamentos/page.tsx` (filtro de lançamentos), `src/components/formularios/novo-lancamento.tsx` (seleção de ativo) e `src/components/formularios/nova-transferencia.tsx` (origem e destino). A proposta envolve ordenar os ativos por ordem alfabética na camada de leitura/dados e introduzir um componente unificado no design system (`ComboboxAtivo`) com busca incremental case-insensitive e accent-insensitive otimizada para toque.
+
+### Encaminhamentos
+
+—
+
+### Restante
+
+—
+
+### Registro
+
+- 2026-10-20 — Pedido explícito de guardar a necessidade; captura local.
+
+## BL-011 — Tela de novidades com histórico de versões e notas de lançamento acessíveis
+
+> **Criado em:** `2026-10-20`
+> **Atualizado em:** `2026-10-20`
+> **Estado:** `Disponível`
+
+### Problema e benefício esperado
+
+O sistema não disponibiliza aos usuários uma forma direta de identificar a versão atual em produção nem o histórico de melhorias implementadas, gerando incerteza sobre funcionalidades recém-lançadas ou correções entregues. O benefício esperado é oferecer transparência sobre a evolução contínua da aplicação através de uma tela dedicada de novidades acessível a todos os usuários, apresentando o número da versão e notas de lançamento redigidas em linguagem clara e não técnica.
+
+### Contexto
+
+Observado na navegação (`src/components/navegacao.tsx`). A proposta prevê um item "Novidades" acessível a todos os perfis (no menu lateral desktop e na folha móvel "Mais"), direcionando para uma rota `/novidades` com destaque para a versão corrente (sincronizada com `package.json`), data de publicação e linha do tempo decrescente categorizada em seções simples de novidades, melhorias e correções.
+
+### Encaminhamentos
+
+—
+
+### Restante
+
+—
+
+### Registro
+
+- 2026-10-20 — Pedido explícito de guardar a necessidade; captura local.
