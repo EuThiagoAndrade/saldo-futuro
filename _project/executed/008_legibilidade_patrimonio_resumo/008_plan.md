@@ -1,7 +1,7 @@
 # Plano de Implementação — Legibilidade do patrimônio e dos cartões de resumo
 
 > **Ciclo:** `008`
-> **Status:** `Em Execução`
+> **Status:** `Concluído`
 > **Versão:** `v3`
 > **Data de criação:** 2026-10-20
 > **Última atualização:** 2026-10-20
@@ -146,11 +146,11 @@ Em cada largura, usar zero, quantias positivas e negativas, `R$ 1.234.567,89`, `
 
 **Critérios de aceite:**
 
-- [ ] Títulos, quantias até ambos os extremos de centavos seguros e percentuais ficam integralmente legíveis e contidos nas duas matrizes definidas, incluindo mínimo de 360 px úteis e as faixas 768–776 e 1024–1032 px com barra clássica, e no teste separado de zoom de 200% sobre 1280 px.
-- [ ] Quantias mantêm formato pt-BR, duas casas, sinal correto, espaço não separável e conteúdo integral em uma linha; não há quebra, reticências, abreviação, corte ou teto monetário novo.
-- [ ] Nenhuma rolagem horizontal da página; a grade respeita as colunas máximas e os tokens do DESIGN.md.
-- [ ] Não há redução arbitrária de fonte, mudança de contrato visual, dependência ou JavaScript de medição no cliente.
-- [ ] Estados vazio, `N/D`, valores ocultos e os cartões de resultado do período não regridem.
+- [x] Títulos, quantias até ambos os extremos de centavos seguros e percentuais ficam integralmente legíveis e contidos nas duas matrizes definidas, incluindo mínimo de 360 px úteis e as faixas 768–776 e 1024–1032 px com barra clássica, e no teste separado de zoom de 200% sobre 1280 px.
+- [x] Quantias mantêm formato pt-BR, duas casas, sinal correto, espaço não separável e conteúdo integral em uma linha; não há quebra, reticências, abreviação, corte ou teto monetário novo.
+- [x] Nenhuma rolagem horizontal da página; a grade respeita as colunas máximas e os tokens do DESIGN.md.
+- [x] Não há redução arbitrária de fonte, mudança de contrato visual, dependência ou JavaScript de medição no cliente.
+- [x] Estados vazio, `N/D`, valores ocultos e os cartões de resultado do período não regridem.
 
 ## Arquivos afetados
 
@@ -211,9 +211,9 @@ Nenhuma dependência externa nova. IDs de origem já existem em main. Implementa
 
 | Campo | Valor |
 | :-- | :-- |
-| Issue(s) | [#88 — BL-001](https://github.com/EuThiagoAndrade/saldo-futuro/issues/88) e [#89 — BL-002](https://github.com/EuThiagoAndrade/saldo-futuro/issues/89), abertas e conferidas |
-| PR(s) | [#90 — issue #88](https://github.com/EuThiagoAndrade/saldo-futuro/pull/90), aberta |
-| Branch(es) | `fix/issue-88` |
+| Issue(s) | [#88 — BL-001](https://github.com/EuThiagoAndrade/saldo-futuro/issues/88), fechada, e [#89 — BL-002](https://github.com/EuThiagoAndrade/saldo-futuro/issues/89), aberta antes do merge da última PR |
+| PR(s) | [#90 — issue #88](https://github.com/EuThiagoAndrade/saldo-futuro/pull/90), integrada |
+| Branch(es) | `fix/issue-88` e `fix/issue-89` |
 | Destino após conclusão | `_project/executed/008_legibilidade_patrimonio_resumo/008_plan.md` |
 
 ## Aprovação e preparação das issues
@@ -299,19 +299,34 @@ Não se aplica.
 
 Ciclo 008 (leve), BL-002; `_project/drafts/008_legibilidade_patrimonio_resumo/008_plan.md`, v3 aprovada em 2026-10-20, Item 2, estratégia de testes e ressalva R3-1 aceita. No encerramento integrado, o plano passa a `_project/executed/008_legibilidade_patrimonio_resumo/008_plan.md`.
 
-## Próximo passo
+## Encerramento prospectivo
 
-Artefato ativo: `008_task_issue-88.md`. Implementação autorizada em 2026-10-20 com "autorizo a implementação da issue #88"; escopo Item 1 / BL-001. A #89 permanece dependente de integração e autorização própria. Handoff anterior de criação das issues preservado abaixo como histórico.
+Última entrega: issue #89, autorizada em 2026-10-20 com "autorizo a implementação da issue #89". A #88 foi integrada pela PR #90 com checks verdes e a aprovação "aprovo o merge da PR #90". O Item 2 e a documentação viva foram concluídos conforme a v3 aprovada; evidências na task #89, inclusive ressalva do runner Windows e teste isolado bem-sucedido. KB-003 atualizada. Versão técnica, aprovação, payloads históricos e três rodadas preservados.
+
+Este documento, tasks e cycles descrevem o estado depois do merge da última PR, conforme a exceção de encerramento prospectivo. Até essa integração, a situação efetiva é Aguardando merge; conclusão depende de checks remotos verdes e aprovação específica. O retorno do backlog ocorre somente depois da integração comprovada do ciclo, sem publicação automática.
+
+## Próximo passo
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 008 (leve)
-Quem: Responsável
-Conferir: Checks e diff da PR #90 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/90)
-Diga: "aprovo o merge da PR #90"
+Situação: Concluído — ciclo 008 (leve)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
+
+- `handoff_schema_version: 2`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 008 + atualizar_docs + encerramento-prospectivo/issue-89 + ddc23b241ecccf7be2d42829ce512176f12bef8c`
+- `effect_class`: `local_mutation`
+- `state_before`: plano v3 Em Execução, ciclo Em execução, PR #90 integrada com aprovação e checks verdes; issue #89 autorizada e implementada em fix/issue-89.
+- `state_after`: encerramento prospectivo preparado: plano Concluído, tasks Concluída, pasta em executed, cycles Concluído e KB-003 atualizada; antes da integração da última PR, situação efetiva Aguardando merge.
+- `result`: `executed`
+- `evidence`: v3 aprovada em 2026-10-20; autorização da #89; task #89 com matrizes e zoom real; task #88 reconciliada com a PR #90; governança sem erros/avisos; histórico abaixo preservado.
+- `blockers`: nenhum no escopo de layout; ressalva do runner Windows descrita na task #89; checks remotos verdes e aprovação específica pendentes para integrar.
+
+### Handoff histórico de criação das issues
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 008 + criar_issues + fix/BL-001-BL-002 + v3` (chaves individuais na tabela de publicação acima).
@@ -500,6 +515,6 @@ Diga: "aprovo o merge da PR #90"
 
 ## Pós-mortem
 
-- **Data de conclusão:** —
-- **Desvios:** —
-- **Lições comprovadas:** —
+- **Data de conclusão:** 2026-10-20 (prospectiva, efetiva após o merge da última PR)
+- **Desvios:** nenhum de escopo; encerramento nativo do worker de volume no Windows em execução conjunta, teste isolado passou, conforme task #89.
+- **Lições comprovadas:** barra clássica precisa ser medida por innerWidth/clientWidth; zoom real confirmado pelo fator do navegador e mudança da largura CSS. Referências e evidências nas tasks.

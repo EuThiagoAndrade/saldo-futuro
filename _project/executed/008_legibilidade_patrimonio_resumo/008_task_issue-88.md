@@ -2,13 +2,13 @@
 
 > **Ciclo:** `008`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `fix`
 > **Issue:** `#88`
-> **Plano:** `_project/drafts/008_legibilidade_patrimonio_resumo/008_plan.md`
+> **Plano:** `_project/executed/008_legibilidade_patrimonio_resumo/008_plan.md`
 > **Branch:** `fix/issue-88`
 > **PR:** [#90](https://github.com/EuThiagoAndrade/saldo-futuro/pull/90)
-> **Integração:** `Pendente`
+> **Integração:** `Conferida no GitHub — PR #90 MERGED em 2026-10-20`
 > **Autorização inicial:** "autorizo a implementação da issue #88" em 2026-10-20
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-20
@@ -67,7 +67,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 | E2e completo | Backend local: 104 passaram e 8 pulados (preview sem backend e suítes opt-in). Sem backend: 13 passaram e 99 pulados por configuração. Regressão de comparação com linha contínua/tracejada e índice 100,00 passou |
 | Governança | Testes 48/48; validador com 0 erros, 0 avisos e cinco itens manuais conferidos no escopo |
 | `git diff --check` | Passou |
-| Checks remotos | Publicação conferida; resultado corrente verificável na [PR #90](https://github.com/EuThiagoAndrade/saldo-futuro/pull/90/checks), sem antecipar conclusão da CI |
+| Checks remotos | Todos verdes na revisão integrada; resultado verificável na [PR #90](https://github.com/EuThiagoAndrade/saldo-futuro/pull/90/checks) |
 
 O teste `tests/e2e/eixo-patrimonio.spec.ts` confere numericamente as caixas com `getBBox`, exige x ≥ 0 e extremo direito < 144, ausência de sobreposição vertical e área de 160. Conferência de um ponto fictício abaixo de R$ 1,22 mi: ordenada maior que a linha da marca, como esperado em SVG. Tabela compara os textos originais em centavos, inclusive no extremo seguro. O cenário oculto exige ausência de quantias em todo HTML.
 
@@ -76,6 +76,10 @@ Capturas sintéticas ignoradas em `local/issue-88/eixo-{0,17}-{360,1280}.png`; c
 ## Revisão da correção
 
 Não se aplica (trilha normal).
+
+## Reconciliação da integração
+
+Em 2026-10-20, o responsável declarou "aprovo o merge da PR #90". Checks de aplicação, Supabase, governança e Vercel verdes no head `02ec1b83d7eff6c2b3fe755cc9811306cf24fda1`; merge por squash conferido no GitHub, issue #88 fechada. Reconciliação nesta implementação autorizada da #89; não registra SHA do próprio merge.
 
 ## Decisões incidentais e desvios
 
@@ -90,12 +94,14 @@ Não se aplica: primeira entrega; #89 requer integração desta PR e autorizaç�
 
 ## Próximo passo
 
+Encerramento prospectivo: antes do merge da última PR, a situação efetiva é Aguardando merge.
+
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 008 (leve)
-Quem: Responsável
-Conferir: Checks e diff da PR #90 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/90)
-Diga: "aprovo o merge da PR #90"
+Situação: Concluído — ciclo 008 (leve)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
@@ -104,7 +110,7 @@ Diga: "aprovo o merge da PR #90"
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 008 + implementar_issue + 88/Item-1-BL-001 + 7c78d1dff5cbd41358e64b45933c685c033020e1`
 - `effect_class`: `remote_mutation`
 - `state_before`: plano v3 Aprovado; ciclo Planejamento; issues #88/#89 abertas; sem branch/task da implementação; autorização explícita da #88 recebida em 2026-10-20.
-- `state_after`: branch fix/issue-88 publicada; PR #90 aberta; implementação validada e task Aguardando integração; plano Em Execução, ciclo Em execução; Aguardando merge, sem integração.
-- `result`: `executed`
+- `state_after`: PR #90 integrada com checks verdes e aprovação específica; #88 fechada, task Concluída; plano/ciclo em encerramento prospectivo na última PR da #89.
+- `result`: `already_executed_and_reconciled`
 - `evidence`: autorização inicial desta task; validações acima; commit de implementação `5e89898`; gh pr view 90 confirma OPEN e head fix/issue-88; https://github.com/EuThiagoAndrade/saldo-futuro/pull/90; consulta prévia sem PR preexistente da #88.
-- `blockers`: nenhum técnico local; integração depende de checks remotos verdes e aprovação específica do merge.
+- `blockers`: nenhum para a #88; próxima entrega autorizada na task #89.
