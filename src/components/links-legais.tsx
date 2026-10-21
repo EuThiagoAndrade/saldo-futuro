@@ -12,10 +12,10 @@ export type DocumentoLegal = (typeof DOCUMENTOS)[number]["href"];
 
 export const linkTexto = "text-primary underline underline-offset-2 hover:text-primary-hover";
 
-export function LinksLegais({ atual }: { atual?: DocumentoLegal }) {
+export function LinksLegais({ atual, centralizado = false }: { atual?: DocumentoLegal; centralizado?: boolean }) {
   return (
     <nav aria-label="Documentos">
-      <ul className="flex flex-wrap gap-x-6">
+      <ul className={`flex flex-wrap gap-x-6 ${centralizado ? "justify-center" : ""}`}>
         {DOCUMENTOS.map(({ href, rotulo }) => (
           <li key={href}>
             <Link

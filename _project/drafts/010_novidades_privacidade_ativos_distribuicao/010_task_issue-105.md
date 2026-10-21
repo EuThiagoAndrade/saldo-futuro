@@ -52,6 +52,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 - [x] Testes: `src/lib/novidades.test.ts` e `src/components/novidades.test.tsx` (versão do `package.json`, comparação numérica, transição 0.6.0 → 0.7.0 sem data → data comprovada, versão sem entrada sem erro, notas sem identificadores técnicos); `tests/e2e/novidades.spec.ts` (sem sessão, Mais no celular para o usuário comum, menu lateral para o admin, destino ativo, versão, histórico conforme a versão, nenhum link ao changelog, axe e rolagem em 360 e 1280 px); `/novidades` nas listas de `navegacao.spec.ts`, `botoes.spec.ts` e `preview.spec.ts`; menu lateral do usuário comum com 8 links.
 - [x] KB-003 com a capacidade da entrega.
 - [x] PR #110 publicada via `gh`, base `main`, com `Closes #105`; commit da entrega `e740541`.
+- [x] Links "Política de privacidade" e "Termos de uso" centralizados em `/entrar`, a pedido do responsável (ver "Decisões incidentais").
 
 ## Evidências
 
@@ -63,7 +64,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 | Build | Passou, sem backend e com backend, pelo `webServer` do Playwright |
 | E2e sem backend | 32 passaram e 148 pulados (suítes que exigem Supabase), inclusive `/novidades` com o aviso de preview |
 | `npx supabase test db` | 261/261 (7 arquivos) |
-| E2e com backend | 169 passaram e 11 pulados, sem falhas; inclui `novidades.spec.ts` (5 testes) e as listas ampliadas de navegação e botões |
+| E2e com backend | 169 passaram e 11 pulados, sem falhas; inclui `novidades.spec.ts` (5 testes) e as listas ampliadas de navegação e botões. Depois da centralização dos links em `/entrar`: de novo 169 passaram e 11 pulados, sem falhas; sem backend, 32 passaram e 148 pulados; unitários 332/332 |
 | Auditoria visual (DESIGN.md) | `/novidades` em 360 px (com a folha Mais) e 1280 px, com conta fictícia temporária criada e removida por script: título 24/32, destino ativo em `primary-subtle`, ícone de 24 px no traço do conjunto, alvo de 44 px e sem rolagem horizontal; axe WCAG 2.2 AA sem violações no e2e. O estado com a entrada `0.7.0` foi conferido pela marcação no teste unitário, porque o `package.json` ainda está em `0.6.0` |
 | Governança | `node scripts/validate-governance.mjs` com 0 erros, 0 avisos e cinco itens manuais |
 | G3 | Notas sem dado de usuário; contas de teste fictícias (`novidades105.*`, `visual105.comum`, todas `@example.com`) removidas no fim |
@@ -81,6 +82,7 @@ Não se aplica (trilha normal).
 - **Versão com sufixo:** a comparação lê só `maior.menor.correção` do início do texto; um sufixo de pré-lançamento não quebra a página. Texto sem versão lança erro, e o teste unitário garante que o `package.json` tem versão válida.
 - **Ordem em Mais:** Transferências, Novidades, Conta e Administração; o plano não fixava a posição. Conta continua perto do fim, junto de Administração.
 - **Leitura do `package.json`:** importado pelo módulo do servidor (`resolveJsonModule` já ativo); nenhum dado novo vai ao navegador além da versão exibida.
+- **Links legais centralizados em `/entrar` (2026-10-21, pedido do responsável antes do merge):** "na tela inicial, entrar, os dois itens ali de baixo, política de privacidade e termos de uso, eles precisam estar centralizados [...] só centraliza isso e já coloca nessa mesma PR". `LinksLegais` ganhou a opção `centralizado`, usada só em `/entrar` com backend; Conta, o rodapé das páginas legais e o preview sem backend (alinhado à esquerda, como o aviso) seguem como estavam. O ajuste é de `/entrar`, entregue na #104, e entra nesta PR por instrução expressa; o e2e confere logo, botão e links no mesmo eixo.
 - Sem mudança de banco, autenticação, schema, cálculo ou dependências.
 
 ## Encerramento
