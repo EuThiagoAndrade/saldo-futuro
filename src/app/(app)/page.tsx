@@ -201,7 +201,7 @@ async function Resumo({
         <h2 id="periodo" className="text-lg/7 font-semibold text-text">
           Rentabilidade no período
         </h2>
-        <form method="get" className="flex flex-col gap-3 rounded-md border border-border bg-surface p-4 md:flex-row md:items-end">
+        <form method="get" noValidate className="flex flex-col gap-3 rounded-md border border-border bg-surface p-4 md:flex-row md:items-end">
           <div className="md:w-56">
             <Campo id="periodo-tipo" rotulo="Período">
               <select id="periodo-tipo" name="periodo" defaultValue={tipo} className={classeCampo}>
@@ -213,15 +213,17 @@ async function Resumo({
               </select>
             </Campo>
           </div>
-          <div className="md:w-44">
-            <Campo id="periodo-de" rotulo="De (intervalo)">
-              <input id="periodo-de" name="de" type="month" max={M} defaultValue={tipo === "intervalo" ? periodo.de : ""} className={classeCampo} />
-            </Campo>
-          </div>
-          <div className="md:w-44">
-            <Campo id="periodo-ate" rotulo="Até (intervalo)">
-              <input id="periodo-ate" name="ate" type="month" max={M} defaultValue={tipo === "intervalo" ? periodo.ate : ""} className={classeCampo} />
-            </Campo>
+          <div data-campos-intervalo className="contents">
+            <div className="md:w-44">
+              <Campo id="periodo-de" rotulo="De">
+                <input id="periodo-de" name="de" type="month" max={M} defaultValue={tipo === "intervalo" ? periodo.de : ""} className={classeCampo} />
+              </Campo>
+            </div>
+            <div className="md:w-44">
+              <Campo id="periodo-ate" rotulo="Até">
+                <input id="periodo-ate" name="ate" type="month" max={M} defaultValue={tipo === "intervalo" ? periodo.ate : ""} className={classeCampo} />
+              </Campo>
+            </div>
           </div>
           <button type="submit" className={botaoSecundario}>
             Ver período

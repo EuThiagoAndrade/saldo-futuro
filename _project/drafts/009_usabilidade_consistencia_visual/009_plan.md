@@ -309,8 +309,8 @@ Nenhuma dependência externa nova. Os IDs de origem já existem em main. Os iten
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | [#94](https://github.com/EuThiagoAndrade/saldo-futuro/issues/94), [#95](https://github.com/EuThiagoAndrade/saldo-futuro/issues/95), [#96](https://github.com/EuThiagoAndrade/saldo-futuro/issues/96) e [#97](https://github.com/EuThiagoAndrade/saldo-futuro/issues/97) |
-| PR(s) | [#98](https://github.com/EuThiagoAndrade/saldo-futuro/pull/98) (issue #94, integrada); [#99](https://github.com/EuThiagoAndrade/saldo-futuro/pull/99) (issue #95); demais — |
-| Branch(es) | `fix/issue-94`; `fix/issue-95`; demais — |
+| PR(s) | [#98](https://github.com/EuThiagoAndrade/saldo-futuro/pull/98) (issue #94, integrada); [#99](https://github.com/EuThiagoAndrade/saldo-futuro/pull/99) (issue #95, integrada); [#100](https://github.com/EuThiagoAndrade/saldo-futuro/pull/100) (issue #96); demais — |
+| Branch(es) | `fix/issue-94`; `fix/issue-95`; `fix/issue-96`; demais — |
 | Destino após conclusão | `_project/executed/009_usabilidade_consistencia_visual/009_plan.md` |
 
 ## Aprovação e preparação das issues

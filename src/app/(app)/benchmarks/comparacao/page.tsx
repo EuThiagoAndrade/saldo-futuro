@@ -48,11 +48,13 @@ export default async function ComparacaoPage({ searchParams }: { searchParams: P
     const medidas = resultado.medidas;
     const valorBase = (serie: number[] | typeof ND, i: number) => serie === ND ? <NaoDisponivel /> : indice(serie[i]);
     return <>
-      <form className="flex flex-col items-start gap-4 md:flex-row md:flex-wrap md:items-end" action="/benchmarks/comparacao">
+      <form noValidate className="flex flex-col items-start gap-4 md:flex-row md:flex-wrap md:items-end" action="/benchmarks/comparacao">
         <Campo id="benchmark" rotulo="Benchmark"><select id="benchmark" name="benchmark" defaultValue={selecionado.id} className={classeCampo}>{catalogo.map((b) => <option key={b.id} value={b.id}>{b.nome}</option>)}</select></Campo>
         <Campo id="periodo" rotulo="Período"><select id="periodo" name="periodo" defaultValue={tipo} className={classeCampo}>{TIPOS_DE_PERIODO.map((p) => <option key={p} value={p}>{PERIODOS[p]}</option>)}</select></Campo>
-        <Campo id="de" rotulo="De (intervalo)"><input id="de" name="de" type="month" max={M} defaultValue={busca.de} className={classeCampo} /></Campo>
-        <Campo id="ate" rotulo="Até (intervalo)"><input id="ate" name="ate" type="month" max={M} defaultValue={busca.ate} className={classeCampo} /></Campo>
+        <div data-campos-intervalo className="contents">
+          <Campo id="de" rotulo="De"><input id="de" name="de" type="month" max={M} defaultValue={busca.de} className={classeCampo} /></Campo>
+          <Campo id="ate" rotulo="Até"><input id="ate" name="ate" type="month" max={M} defaultValue={busca.ate} className={classeCampo} /></Campo>
+        </div>
         <button className={botaoSecundario} type="submit">Ver comparação</button>
       </form>
       {recusa ? <p role="alert" className="text-loss">{recusa}</p> : null}

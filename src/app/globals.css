@@ -81,6 +81,12 @@
   }
 }
 
+/* Campos de intervalo dos filtros de período (BL-003): só aparecem com "Intervalo escolhido".
+   Sem suporte a :has(), a regra é descartada e os campos ficam visíveis, como antes. */
+form:not(:has(option[value="intervalo"]:checked)) [data-campos-intervalo] {
+  display: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
