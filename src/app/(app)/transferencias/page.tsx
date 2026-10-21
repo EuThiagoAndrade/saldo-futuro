@@ -11,7 +11,7 @@ import { backend } from "@/lib/config";
 import { hojeEmCuiaba } from "@/lib/financeiro/datas";
 import { exigirSessao } from "@/lib/sessao";
 import { montarTransferencias, type Transferencia } from "@/lib/telas/carteira";
-import { type Ativo, ativosTransferiveis, lerAtivos, lerCabecalhosDeTransferencia, lerEventos, nomeDoAtivo } from "@/lib/telas/leituras";
+import { type Ativo, ativosTransferiveis, lerAtivos, lerCabecalhosDeTransferencia, lerEventos, nomeDoAtivo, opcoesDeAtivo } from "@/lib/telas/leituras";
 import { corrigirTransferencia } from "./acoes";
 
 export const metadata = { title: "Transferências — Saldo Futuro" };
@@ -52,7 +52,7 @@ export default async function TransferenciasPage() {
     lerCabecalhosDeTransferencia(supabase),
   ]);
   const transferencias = montarTransferencias(cabecalhos, eventos).sort((a, b) => b.data.localeCompare(a.data));
-  const opcoes = ativosTransferiveis(ativos).map((a) => ({ id: a.id, nome: nomeDoAtivo(ativos, a.id) }));
+  const opcoes = opcoesDeAtivo(ativosTransferiveis(ativos));
   const hoje = hojeEmCuiaba();
 
   return (

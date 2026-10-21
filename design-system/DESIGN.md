@@ -324,6 +324,19 @@ A variação sempre combina **sinal**, **ícone** e **cor**; a cor sozinha nunca
 - Erro de validação: mensagem em `loss` abaixo do campo, contorno `loss` e `aria-invalid="true"` com `aria-describedby` apontando para a mensagem.
 - O botão principal fica ao alcance do polegar: no fim do formulário no celular e alinhado à direita no desktop.
 
+#### Seletor de ativo com busca (combobox)
+
+O seletor de ativo é um campo de texto com lista, no padrão combobox da WAI-ARIA 1.2 (`role="combobox"`, `aria-expanded`, `aria-controls`, `aria-activedescendant`; a lista é `role="listbox"` e cada item, `role="option"`). O ID do ativo confirmado vai num campo oculto com o `name` do formulário.
+
+- **Ordem e busca:** as opções vêm em ordem alfabética pelo nome exibido (pt-BR), "Em trânsito" incluído; nomes iguais continuam opções distintas. A busca é por trecho do nome, sem diferenciar maiúsculas nem acentos, e filtra a lista enquanto a pessoa digita. Sem correspondência, aparece "Nenhum ativo encontrado."
+- **Teclado:** setas navegam (a seta com a lista fechada a abre); Home e End vão à primeira e à última opção com a lista aberta; Enter confirma a opção destacada (ao digitar, a primeira correspondência); com a lista fechada, Enter envia o formulário. Esc fecha a lista; com a lista fechada, devolve texto e valor à última seleção confirmada, ou ao vazio.
+- **Toque e foco:** cada opção tem pelo menos 44 px de altura; o foco fica no campo e usa o anel de foco da seção 7.
+- **Seleção confirmada:** só existe depois de um clique ou toque numa opção, ou de Enter sobre a opção destacada. Digitar o nome completo não seleciona sozinho. Qualquer edição do texto depois de uma confirmação desfaz a seleção na hora: o valor enviado fica vazio até nova confirmação, e o texto nunca indica um ativo diferente do valor. Sair do campo sem confirmar fecha a lista e mantém o texto, sem valor.
+- **Validade:** texto preenchido sem seleção confirmada impede o envio com "Escolha um ativo da lista."; nos seletores obrigatórios, o campo vazio impede o envio com a mesma mensagem do servidor ("Escolha um ativo.", "Escolha o ativo de origem." ou "Escolha o ativo de destino."). A mensagem aparece abaixo do campo em `loss`, com contorno `loss`, `aria-invalid="true"` e `aria-describedby`, como no erro de validação acima. O componente só emite IDs das opções recebidas; o servidor continua validando.
+- **Filtro:** no filtro de Lançamentos, "Todos os ativos" é a primeira opção, tem valor vazio e é confirmável; texto vazio equivale a ela. O valor inicial vem da URL: um ID da lista começa confirmado com o nome do ativo; vazio ou desconhecido começa em "Todos os ativos".
+- **Reset:** o evento `reset` do formulário devolve o campo ao estado inicial (texto, valor, lista fechada e erro limpos).
+- **Dependência de JavaScript:** a busca só funciona depois da hidratação. Antes dela, o campo não envia valor.
+
 ### 6.9 Botões
 
 | Variante | Fundo | Texto | Hover | Pressionado | Uso |

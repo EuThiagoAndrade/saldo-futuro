@@ -5,7 +5,7 @@
 > **Estado:** `Concluída`
 > **Tipo:** `fix`
 > **Issue:** `#94`
-> **Plano:** `_project/drafts/009_usabilidade_consistencia_visual/009_plan.md`
+> **Plano:** `_project/executed/009_usabilidade_consistencia_visual/009_plan.md`
 > **Branch:** `fix/issue-94`
 > **PR:** [#98](https://github.com/EuThiagoAndrade/saldo-futuro/pull/98)
 > **Integração:** `Conferida no GitHub — PR #98 MERGED em 2026-10-20`
@@ -90,12 +90,14 @@ Em 2026-10-20, o responsável declarou "aprovo o merge da PR #98". Os cinco chec
 
 ## Próximo passo
 
+Ciclo 009 encerrado prospectivamente na última PR (issue #97): depois do merge dela, a situação do ciclo é Concluído.
+
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando autorização de implementação — ciclo 009 (leve)
-Quem: Responsável
-Conferir: issue #95 (BL-004) e o Item 2 do plano
-Diga: "autorizo a implementação da issue #95"
+Situação: Concluído — ciclo 009 (leve)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída

@@ -4,6 +4,7 @@ import { useActionState, useEffect, useRef } from "react";
 import { transferir } from "@/app/(app)/transferencias/acoes";
 import { botaoPrincipal } from "@/components/botoes";
 import { CampoMonetario } from "@/components/campo-monetario";
+import { ComboboxAtivo } from "@/components/combobox-ativo";
 import { Campo, classeCampo, Retorno } from "@/components/campos";
 import { ESTADO_INICIAL } from "@/lib/telas/acao";
 
@@ -17,30 +18,14 @@ export function FormNovaTransferencia({ ativos, hoje }: { ativos: { id: string; 
     if (estado.ok) formulario.current?.reset();
   }, [estado]);
 
-  const opcoes = ativos.map((a) => (
-    <option key={a.id} value={a.id}>
-      {a.nome}
-    </option>
-  ));
-
   return (
     <form ref={formulario} action={executar} className="flex flex-col gap-4 rounded-md border border-border bg-surface p-4">
       <h2 className="text-lg/7 font-semibold text-text">Nova transferência</h2>
       <Campo id="transferencia-origem" rotulo="Origem">
-        <select id="transferencia-origem" name="origem" required className={classeCampo} defaultValue="">
-          <option value="" disabled>
-            Escolha a origem
-          </option>
-          {opcoes}
-        </select>
+        <ComboboxAtivo id="transferencia-origem" nome="origem" opcoes={ativos} obrigatorio mensagemObrigatoria="Escolha o ativo de origem." placeholder="Escolha a origem" />
       </Campo>
       <Campo id="transferencia-destino" rotulo="Destino">
-        <select id="transferencia-destino" name="destino" required className={classeCampo} defaultValue="">
-          <option value="" disabled>
-            Escolha o destino
-          </option>
-          {opcoes}
-        </select>
+        <ComboboxAtivo id="transferencia-destino" nome="destino" opcoes={ativos} obrigatorio mensagemObrigatoria="Escolha o ativo de destino." placeholder="Escolha o destino" />
       </Campo>
       <CampoMonetario nome="valor" rotulo="Valor" />
       <Campo id="transferencia-data" rotulo="Data">

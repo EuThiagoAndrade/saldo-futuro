@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { botaoPrincipal, botaoSecundario } from "@/components/botoes";
 import { Campo, classeCampo } from "@/components/campos";
+import { ComboboxAtivo } from "@/components/combobox-ativo";
 import { ValorLancamento } from "@/components/dinheiro";
 import { EstadoVazio } from "@/components/estados";
 import { PreviewNotice } from "@/components/preview-notice";
@@ -9,7 +10,7 @@ import { backend } from "@/lib/config";
 import { hojeEmCuiaba, mesDe } from "@/lib/financeiro/datas";
 import { exigirSessao } from "@/lib/sessao";
 import { descreverEvento } from "@/lib/telas/carteira";
-import { lerAjustes, lerAtivos, lerEventos, mesFechado, nomeDoAtivo } from "@/lib/telas/leituras";
+import { lerAjustes, lerAtivos, lerEventos, mesFechado, nomeDoAtivo, opcoesDeAtivo } from "@/lib/telas/leituras";
 
 export const metadata = { title: "Lançamentos — Saldo Futuro" };
 
@@ -74,14 +75,7 @@ export default async function LancamentosPage({ searchParams }: { searchParams: 
         </div>
         <div className="sm:flex-1">
           <Campo id="filtro-ativo" rotulo="Ativo">
-            <select id="filtro-ativo" name="ativo" defaultValue={filtroAtivo} className={classeCampo}>
-              <option value="">Todos os ativos</option>
-              {ativos.map((a) => (
-                <option key={a.id} value={a.id}>
-                  {nomeDoAtivo(ativos, a.id)}
-                </option>
-              ))}
-            </select>
+            <ComboboxAtivo id="filtro-ativo" nome="ativo" opcoes={opcoesDeAtivo(ativos)} valorInicial={filtroAtivo} opcaoVazia="Todos os ativos" />
           </Campo>
         </div>
         <button type="submit" className={botaoSecundario}>

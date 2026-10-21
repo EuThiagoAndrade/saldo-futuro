@@ -4,6 +4,7 @@ import { useActionState, useState } from "react";
 import { lancar } from "@/app/(app)/lancamentos/acoes";
 import { botaoPrincipal } from "@/components/botoes";
 import { CampoMonetario } from "@/components/campo-monetario";
+import { ComboboxAtivo } from "@/components/combobox-ativo";
 import { Campo, classeCampo, Retorno } from "@/components/campos";
 import { ESTADO_INICIAL } from "@/lib/telas/acao";
 import { exigeDirecao, ROTULO_TIPO, TIPOS_DA_TELA, type TipoDaTela } from "@/lib/telas/carteira";
@@ -17,16 +18,7 @@ export function FormNovoLancamento({ ativos, hoje }: { ativos: { id: string; nom
   return (
     <form action={executar} className="flex flex-col gap-4 rounded-md border border-border bg-surface p-4">
       <Campo id="lancamento-ativo" rotulo="Ativo">
-        <select id="lancamento-ativo" name="ativo" required className={classeCampo} defaultValue="">
-          <option value="" disabled>
-            Escolha o ativo
-          </option>
-          {ativos.map((a) => (
-            <option key={a.id} value={a.id}>
-              {a.nome}
-            </option>
-          ))}
-        </select>
+        <ComboboxAtivo id="lancamento-ativo" nome="ativo" opcoes={ativos} obrigatorio mensagemObrigatoria="Escolha um ativo." placeholder="Escolha o ativo" />
       </Campo>
       <Campo id="lancamento-tipo" rotulo="Tipo">
         <select
