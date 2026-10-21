@@ -21,6 +21,7 @@ export const HISTORICO: readonly Novidade[] = [
     notas: [
       "Política de privacidade e termos de uso publicados, com links na tela de entrada e em Conta.",
       "Nova página Novidades, no menu, com a versão do aplicativo e o que mudou em cada versão.",
+      "Na tela de Ativos, o cadastro abre numa página própria pelo botão Novo ativo, e a lista se divide nas abas Em uso e Desativados.",
     ],
   },
 ];

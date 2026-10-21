@@ -2,13 +2,13 @@
 
 > **Ciclo:** `010`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#105`
 > **Plano:** `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_plan.md`
 > **Branch:** `feature/issue-105`
 > **PR:** [#110](https://github.com/EuThiagoAndrade/saldo-futuro/pull/110)
-> **Integração:** `Pendente`
+> **Integração:** `Conferida no GitHub — PR #110 MERGED em 2026-10-21`
 > **Autorização inicial:** "autorizo a implementação da issue #105" em 2026-10-21
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-21
@@ -69,7 +69,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 | Governança | `node scripts/validate-governance.mjs` com 0 erros, 0 avisos e cinco itens manuais |
 | G3 | Notas sem dado de usuário; contas de teste fictícias (`novidades105.*`, `visual105.comum`, todas `@example.com`) removidas no fim |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos | Todos verdes no head `bb6a47820e4cd457e26530419d0c46b7c917ec1d`: lint, tipos, testes, build e e2e de preview; Supabase local, testes de banco e e2e de autenticação; governança; Vercel |
 
 ## Revisão da correção
 
@@ -89,24 +89,28 @@ Não se aplica (trilha normal).
 
 Não se aplica: o ciclo é completo e o encerramento tem PR própria.
 
+## Reconciliação da integração
+
+Em 2026-10-21, o responsável declarou "As notas da 0.7.0 estão aprovadas. aprovo o merge da PR #110", aprovando as duas notas transcritas em "Decisões incidentais" sem alteração. O job de banco ainda rodava; o agente esperou e conferiu todos os checks verdes no head `bb6a478` e a PR `CLEAN` antes do squash, travado no mesmo HEAD, com o assunto `feat(issue-105): exibir versão e novidades do produto (#110)`, conferido em `main`. A issue #105 fechou como concluída; a #104 continua aberta até a ação externa. Reconciliação feita na implementação autorizada da #106; não registra o SHA do próprio merge.
+
 ## Próximo passo
+
+Entrega integrada; o próximo passo do ciclo fica no artefato ativo (task da issue em curso).
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 010 (completo)
+Situação: Aguardando autorização de implementação — ciclo 010 (completo)
 Quem: Responsável
-Conferir: Checks e diff da PR #110 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/110); notas da 0.7.0 em src/lib/novidades.ts, transcritas em "Decisões incidentais"
-Diga: "aprovo o merge da PR #110"
+Conferir: Issue #106 (https://github.com/EuThiagoAndrade/saldo-futuro/issues/106) e item 3 do plano
+Diga: "autorizo a implementação da issue #106"
 ```
-
-Depois do merge, a próxima situação é "Aguardando autorização de implementação" da issue #106. A PR #109 do release-please continua sem integrar até as quatro entregas.
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 010 + implementar_issue + 105/Item-2-BL-011 + 30e05c55e5756dfa017a6f98d1ce96aec9555e3a`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: plano Em Execução, #104 integrada, #105 aberta sem branch nem PR / branch `feature/issue-105` publicada, PR #110 aberta e task Aguardando integração
-- `result`: `executed`
-- `evidence`: autorização "autorizo a implementação da issue #105" em 2026-10-21; `git fetch` com `main` igual a `origin/main` em `30e05c5`; consulta sem PR ou branch da #105; PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/110 criada via `gh`; validações da tabela de evidências
-- `blockers`: checks remotos verdes no HEAD final e "aprovo o merge da PR #110"
+- `state_before` / `state_after`: PR #110 OPEN / PR #110 MERGED por squash em main, issue #105 CLOSED como concluída, task Concluída
+- `result`: `already_executed_and_reconciled`
+- `evidence`: aprovação "aprovo o merge da PR #110" em 2026-10-21; checks verdes no head `bb6a478`; assunto conferido em main; `gh issue view 105` com estado CLOSED
+- `blockers`: nenhum

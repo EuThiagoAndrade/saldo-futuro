@@ -73,6 +73,9 @@ O Saldo Futuro é um sistema web de gestão de investimentos pessoais, multiusu�
 - versão e novidades (ciclo `010`, em execução):
   - `/novidades`, autenticada para `admin` e `user`, em Mais e no menu lateral, mostra a versão corrente lida do `package.json` e o histórico manual de `src/lib/novidades.ts`, a partir da `0.7.0`, em linguagem simples;
   - uma entrada só aparece depois que sua versão é lançada no build; sem data comprovada da release, mostra "Data de publicação em confirmação", e a data real entra no encerramento do ciclo. Versão sem entrada não tem notas, sem erro; nenhum teste exige nota por versão, e a página não leva ao changelog técnico.
+- tela de ativos (ciclo `010`, em execução):
+  - `/ativos` tem Novo ativo no topo e as abas "Em uso" e "Desativados" como links (`/ativos` e `/ativos?aba=desativados`), lidas no servidor, com contadores e só a lista selecionada; valor ausente ou desconhecido abre Em uso. No celular, Em uso é uma lista densa com o nome completo; no desktop, tabela (DESIGN.md 6.7 e 6.12);
+  - o cadastro fica em `/ativos/novo`, com a mesma validação e a RPC `criar_ativo`; o sucesso volta a `/ativos` sem mensagem extra, e a recusa aparece no próprio formulário. A desativação continua pela confirmação e pela RPC `desativar_ativo`, com as mesmas restrições (trânsito sem ação, saldo zero obrigatório).
 
 Permanecem fora da entrega:
 
@@ -224,3 +227,4 @@ O plano executado do ciclo `001` (`_project/executed/001_fundacao_aplicacao/001_
 | 2026-10-20 | `009` | Margem comum dos gráficos do Início, estados dos botões, campos de intervalo condicionais e seletor de ativo com busca; apresentação e interação sem mudança de regra financeira |
 | 2026-10-21 | `010` | Issue #104: páginas públicas `/privacidade` e `/termos`, links em `/entrar` e em Conta e `/termos` como página inicial informada ao Google; estado final no encerramento do ciclo |
 | 2026-10-21 | `010` | Issue #105: `/novidades` com versão do `package.json` e histórico manual a partir da `0.7.0`, em Mais e no menu lateral |
+| 2026-10-21 | `010` | Issue #106: cadastro em `/ativos/novo` e `/ativos` com abas por URL, contadores e lista densa no celular |

@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { z } from "zod";
 import type { EstadoAcao } from "@/lib/telas/acao";
 import { mensagemDeRecusa } from "@/lib/telas/carteira";
@@ -21,7 +22,9 @@ export async function criarAtivo(_estado: EstadoAcao, dados: FormData): Promise<
   const { error } = await supabase.rpc("criar_ativo", { p_nome: entrada.data.nome, p_tipo_ajuste: entrada.data.tipoAjuste });
   if (error) return { erro: mensagemDeRecusa(error) };
   revalidatePath("/", "layout");
-  return { ok: `Ativo "${entrada.data.nome}" cadastrado.` };
+  // Cadastro em /ativos/novo (BL-006, ciclo 010): o sucesso volta à lista, sem mensagem extra.
+  // A recusa já voltou acima; o redirect fica fora de qualquer captura de erro.
+  redirect("/ativos");
 }
 
 export async function desativarAtivo(_estado: EstadoAcao, dados: FormData): Promise<EstadoAcao> {

@@ -6,7 +6,7 @@ import { configurado, criarUsuarios, entrar, removerUsuarios, type UsuarioDeTest
 // Área autenticada da issue A (#37): proteção por ponto de entrada (D2), navegação (DESIGN.md
 // 6.1), "Ocultar valores" (D8) e acessibilidade, com usuários exclusivos deste arquivo (D9).
 
-const ROTAS = ["/", "/lancamentos", "/ativos", "/benchmarks", "/transferencias", "/novidades", "/conta", "/admin"];
+const ROTAS = ["/", "/lancamentos", "/ativos", "/ativos/novo", "/benchmarks", "/transferencias", "/novidades", "/conta", "/admin"];
 // Páginas legais públicas (#104): fora do grupo autenticado, visitadas com e sem sessão.
 const PUBLICAS = ["/privacidade", "/termos"];
 const MOVEL = { width: 360, height: 800 };

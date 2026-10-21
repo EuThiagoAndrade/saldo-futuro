@@ -316,6 +316,7 @@ A variação sempre combina **sinal**, **ícone** e **cor**; a cor sozinha nunca
 - A partir de `md`: tabela com cabeçalho fixo, números alinhados à direita e texto à esquerda.
 - Abaixo de `md`: a mesma informação vira uma lista de cartões, um por linha da tabela, com o campo principal no topo e os demais como pares rótulo e valor.
 - A ordenação e os filtros são os mesmos nas duas formas.
+- **Exceção: lista densa de Ativos (ciclo `010`).** Abaixo de `md`, os ativos em uso formam uma lista contínua numa única superfície `surface` com contorno `border` e divisores `border` entre as linhas, em vez de um cartão por ativo. Cada linha traz o nome completo em `body` peso 500, com quebra de linha e nunca truncado, o tipo e os metadados em `body-sm` `text-secondary` na segunda linha e a ação à direita, com pelo menos 44 px de altura. O ativo de sistema não tem ação; a segunda linha diz que ele só recebe transferências. Desativados usam a mesma lista, com nome e data, sem ação. A partir de `md`, a tabela continua.
 
 ### 6.8 Formulário
 
@@ -371,6 +372,15 @@ Os controles com classes próprias seguem a mesma regra: "Ocultar valores", "Mai
 | Erro | Ícone, mensagem em linguagem simples sobre o que falhou e ação "Tentar novamente". Detalhes técnicos não aparecem |
 
 Um valor que não pôde ser carregado mostra o estado de erro, nunca o último valor conhecido sem aviso.
+
+### 6.12 Abas por navegação
+
+Usadas para alternar entre partes de uma mesma lista lidas pelo servidor, como "Em uso" e "Desativados" em Ativos (ciclo `010`).
+
+- São links com endereço próprio (por exemplo, `?aba=desativados`) dentro de um `nav` rotulado, não o padrão `tab` do ARIA: recarregar, voltar e avançar preservam a aba, e o teclado usa Tab e Enter como em qualquer link. Um valor ausente ou desconhecido abre a primeira aba.
+- Cada aba tem pelo menos 44 px de altura, rótulo `label` e um contador em etiqueta neutra (`neutral` sobre `neutral-subtle`, `caption` peso 500).
+- A aba selecionada tem `aria-current="page"`, texto `primary` e borda inferior de 2 px em `primary`; as demais usam `text-secondary` e borda transparente, com fundo `surface` em hover. O conjunto fica sobre uma linha `border`.
+- Só o conteúdo da aba selecionada é renderizado; cada aba tem o próprio estado vazio.
 
 ## 7. Acessibilidade
 

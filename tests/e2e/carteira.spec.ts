@@ -33,12 +33,14 @@ test.describe("carteira pela tela", () => {
     await removerUsuarios(u);
   });
 
+  // Cadastro em /ativos/novo (#106): o sucesso volta à lista, sem mensagem extra.
   async function criarAtivo(page: Page, nome: string, tipo = "Rendimento (renda fixa, poupança)") {
-    await page.goto("/ativos");
+    await page.goto("/ativos/novo");
     await page.getByLabel("Nome").fill(nome);
     await page.getByLabel(tipo).check();
     await page.getByRole("button", { name: "Cadastrar ativo" }).click();
-    await expect(page.getByText(`Ativo "${nome}" cadastrado.`)).toBeVisible();
+    await expect(page).toHaveURL(/\/ativos$/);
+    await expect(page.getByRole("main").getByText(nome, { exact: true }).filter({ visible: true })).toBeVisible();
   }
 
   async function preencherLancamento(
