@@ -352,7 +352,7 @@ Para BL-012, a PR de código usa vínculo de referência, sem fechamento automá
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | [#104 — BL-012](https://github.com/EuThiagoAndrade/saldo-futuro/issues/104), código integrado, aberta até a ação externa; [#105 — BL-011](https://github.com/EuThiagoAndrade/saldo-futuro/issues/105), implementação autorizada em 2026-10-21; [#106 — BL-006](https://github.com/EuThiagoAndrade/saldo-futuro/issues/106), [#107 — BL-005](https://github.com/EuThiagoAndrade/saldo-futuro/issues/107) — abertas, implementação não autorizada |
-| PR(s) | [#103 — publicação documental do plano](https://github.com/EuThiagoAndrade/saldo-futuro/pull/103), integrada em 2026-10-21 por squash (`c0e906eb96f5030fce27db734a43938b41e6a783`); [#108 — BL-012](https://github.com/EuThiagoAndrade/saldo-futuro/pull/108), integrada em 2026-10-21 por squash, sem fechar a #104 |
+| PR(s) | [#103 — publicação documental do plano](https://github.com/EuThiagoAndrade/saldo-futuro/pull/103), integrada em 2026-10-21 por squash (`c0e906eb96f5030fce27db734a43938b41e6a783`); [#108 — BL-012](https://github.com/EuThiagoAndrade/saldo-futuro/pull/108), integrada em 2026-10-21 por squash, sem fechar a #104; [#110 — BL-011](https://github.com/EuThiagoAndrade/saldo-futuro/pull/110), aberta |
 | Branch(es) | `chore/cycle-010-plan` (PR documental do plano); `feature/issue-104` (BL-012); `feature/issue-105` (BL-011) |
 | Task(s) | `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_task_issue-104.md`; `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_task_issue-105.md` |
 | Destino após conclusão | `_project/executed/010_novidades_privacidade_ativos_distribuicao/010_plan.md` |
@@ -394,6 +394,8 @@ Validação desta atualização: 48/48 testes de governança passaram; validador
 
 - **Issue #104 (BL-012):** "autorizo a implementação da issue #104" em 2026-10-21. A primeira entrega autorizada levou o plano a `Em Execução` e o ciclo a `Em execução`; o "Estado corrente" do Registro de criação das issues fica como histórico. Branch `feature/issue-104`, task `010_task_issue-104.md` (artefato ativo da entrega) e [PR #108](https://github.com/EuThiagoAndrade/saldo-futuro/pull/108), que referencia a issue sem fechá-la. A revisão humana dos textos e do contato de Q8 (R2-2) é registrada na task antes do merge.
 - **Decisão do responsável sobre `/entrar` (2026-10-21), durante a revisão da PR #108:** "Não vejo necessidade destes textos estarem na página /entrar. Pode remove-los. Deixando apenas o ícone do programa centralizado e o botão abaixo centralizado. O restante permanece tudo como está." Informado de que o Google não aceita como página inicial uma página só de login, escolheu a alternativa recomendada: "Minha escolha é a (recomendada)", isto é, `/termos` como página inicial informada no console, e confirmou que, no app, a entrada continua em `/entrar`. Efeitos: substitui Q10 e o critério de `/entrar` do item 1 (anotados no lugar), sem rota nova nem mudança de autenticação; KB-002 (armadilha 7, tabela de domínios, O1, O3 e O4) e KB-003 ajustadas na mesma PR. Recusa de `/termos` no console leva a "Parado" para decisão (O4).
+- **Issue #104 integrada:** PR #108 por squash em 2026-10-21, sem fechar a issue; etapa externa pendente até as quatro entregas.
+- **Issue #105 (BL-011):** "autorizo a implementação da issue #105" em 2026-10-21. Branch `feature/issue-105`, task `010_task_issue-105.md` (artefato ativo) e [PR #110](https://github.com/EuThiagoAndrade/saldo-futuro/pull/110), com `Closes #105`. A PR #109 do release-please (`0.7.0`) está aberta e não é integrada antes das quatro entregas.
 
 ## Próximo passo
 
@@ -401,19 +403,19 @@ Validação desta atualização: 48/48 testes de governança passaram; validador
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 010 (completo)
 Quem: Responsável
-Conferir: Checks e diff da PR #108 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/108); antes do merge, revisar os textos de /privacidade e /termos e o contato de Q8, cuja manifestação é registrada na task 010_task_issue-104.md por commit, com checks verdes no novo HEAD (R2-2)
-Diga: "aprovo o merge da PR #108"
+Conferir: Checks e diff da PR #110 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/110); notas da 0.7.0 em src/lib/novidades.ts, transcritas na task 010_task_issue-105.md
+Diga: "aprovo o merge da PR #110"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 010 + implementar_issue + 104/Item-1-BL-012 + c0e906eb96f5030fce27db734a43938b41e6a783`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 010 + implementar_issue + 105/Item-2-BL-011 + 30e05c55e5756dfa017a6f98d1ce96aec9555e3a`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: plano `v2` Aprovado, ciclo Planejamento, issue #104 aberta sem branch nem PR / plano Em Execução, ciclo Em execução, branch `feature/issue-104` publicada, PR #108 aberta e task Aguardando integração
+- `state_before` / `state_after`: #104 integrada pela PR #108, #105 aberta sem branch nem PR / branch `feature/issue-105` publicada, PR #110 aberta e task da #105 Aguardando integração
 - `result`: `executed`
-- `evidence`: autorização de implementação de 2026-10-21; base conferida igual a `origin/main` em `c0e906e`; PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/108 criada via `gh`; validações registradas na task
-- `blockers`: revisão humana dos textos e do contato (R2-2) a registrar na task; checks remotos verdes no HEAD final; "aprovo o merge da PR #108". As issues #105 a #107 seguem sem autorização
+- `evidence`: autorização de implementação da #105 em 2026-10-21; base conferida igual a `origin/main` em `30e05c5`; PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/110 criada via `gh`; validações registradas na task
+- `blockers`: checks remotos verdes no HEAD final; "aprovo o merge da PR #110". As issues #106 e #107 seguem sem autorização; PR #109 do release-please não é integrada antes das quatro entregas
 
 ## Revisão crítica
 

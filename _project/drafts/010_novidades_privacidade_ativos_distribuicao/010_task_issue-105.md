@@ -2,12 +2,12 @@
 
 > **Ciclo:** `010`
 > **Trilha:** `normal`
-> **Estado:** `Em andamento`
+> **Estado:** `Aguardando integração`
 > **Tipo:** `feature`
 > **Issue:** `#105`
 > **Plano:** `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_plan.md`
 > **Branch:** `feature/issue-105`
-> **PR:** —
+> **PR:** [#110](https://github.com/EuThiagoAndrade/saldo-futuro/pull/110)
 > **Integração:** `Pendente`
 > **Autorização inicial:** "autorizo a implementação da issue #105" em 2026-10-21
 > **Modo contínuo:** `—`
@@ -51,6 +51,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 - [x] Novidades em Mais e no menu lateral, para os dois perfis, entre Transferências e Conta, com ícone próprio no padrão de `icones.tsx`; DESIGN.md 6.1 atualizado com a ordem dos destinos e a posição dos documentos legais.
 - [x] Testes: `src/lib/novidades.test.ts` e `src/components/novidades.test.tsx` (versão do `package.json`, comparação numérica, transição 0.6.0 → 0.7.0 sem data → data comprovada, versão sem entrada sem erro, notas sem identificadores técnicos); `tests/e2e/novidades.spec.ts` (sem sessão, Mais no celular para o usuário comum, menu lateral para o admin, destino ativo, versão, histórico conforme a versão, nenhum link ao changelog, axe e rolagem em 360 e 1280 px); `/novidades` nas listas de `navegacao.spec.ts`, `botoes.spec.ts` e `preview.spec.ts`; menu lateral do usuário comum com 8 links.
 - [x] KB-003 com a capacidade da entrega.
+- [x] PR #110 publicada via `gh`, base `main`, com `Closes #105`; commit da entrega `e740541`.
 
 ## Evidências
 
@@ -90,18 +91,20 @@ Não se aplica: o ciclo é completo e o encerramento tem PR própria.
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 010 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 010"
+Situação: Aguardando merge — ciclo 010 (completo)
+Quem: Responsável
+Conferir: Checks e diff da PR #110 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/110); notas da 0.7.0 em src/lib/novidades.ts, transcritas em "Decisões incidentais"
+Diga: "aprovo o merge da PR #110"
 ```
+
+Depois do merge, a próxima situação é "Aguardando autorização de implementação" da issue #106. A PR #109 do release-please continua sem integrar até as quatro entregas.
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 010 + implementar_issue + 105/Item-2-BL-011 + 30e05c55e5756dfa017a6f98d1ce96aec9555e3a`
-- `effect_class`: `local_mutation`
-- `state_before` / `state_after`: plano Em Execução, #104 integrada, #105 aberta sem branch nem PR / implementação em andamento na branch `feature/issue-105`
-- `result`: `not_executed`
-- `evidence`: autorização "autorizo a implementação da issue #105" em 2026-10-21; `git fetch` com `main` igual a `origin/main` em `30e05c5`; consulta sem PR ou branch da #105
-- `blockers`: implementação em curso, coberta pela autorização registrada no cabeçalho; este bloco é substituído ao publicar a PR
+- `effect_class`: `remote_mutation`
+- `state_before` / `state_after`: plano Em Execução, #104 integrada, #105 aberta sem branch nem PR / branch `feature/issue-105` publicada, PR #110 aberta e task Aguardando integração
+- `result`: `executed`
+- `evidence`: autorização "autorizo a implementação da issue #105" em 2026-10-21; `git fetch` com `main` igual a `origin/main` em `30e05c5`; consulta sem PR ou branch da #105; PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/110 criada via `gh`; validações da tabela de evidências
+- `blockers`: checks remotos verdes no HEAD final e "aprovo o merge da PR #110"
