@@ -2,12 +2,12 @@
 
 > **Ciclo:** `010`
 > **Trilha:** `normal`
-> **Estado:** `Em andamento`
+> **Estado:** `Aguardando integração`
 > **Tipo:** `feature`
 > **Issue:** `#104`
 > **Plano:** `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_plan.md`
 > **Branch:** `feature/issue-104`
-> **PR:** —
+> **PR:** [#108](https://github.com/EuThiagoAndrade/saldo-futuro/pull/108)
 > **Integração:** `Pendente`
 > **Autorização inicial:** "autorizo a implementação da issue #104" em 2026-10-21
 > **Modo contínuo:** `—`
@@ -51,7 +51,8 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 - [x] E2e: `paginas-publicas.spec.ts` (novo, com e sem backend: 200 sem redirecionamento, título, descrição, data, contato em forma de link sem repetir o endereço, ausência de marcadores de rascunho, links cruzados, teclado e foco, axe e ausência de rolagem horizontal em 360, 375 e 1280 px, alvos de 44 px e nenhum pedido a outra origem); `preview.spec.ts` (apresentação e links em `/entrar` sem login e axe); `navegacao.spec.ts` (páginas legais sem sessão, links em Conta, menu sem destino legal e axe autenticado nas duas rotas); `botoes.spec.ts` (varredura das rotas públicas).
 - [x] KB-002: armadilha 7 separa Audience, Branding e a exceção de identidade básica, preservando o fato histórico do ciclo 001; GC2, GC4, P2 e a verificação "Recusa" condicionados ao status da Audience; nova seção O1 a O6 com os três domínios distintos, resultado mínimo e paradas. KB-003: capacidades da entrega, com consolidação no encerramento.
 - [x] Gates de aplicação e de governança (tabela de evidências); auditoria visual pelo DESIGN.md em 375 px e desktop, com dados fictícios.
-- [ ] Revisão humana dos textos e do contato de Q8 registrada nesta task por commit na branch da PR, antes do merge (R2-2).
+- [x] PR #108 publicada via `gh`, base `main`, referenciando a #104 sem fechamento automático; commit da entrega `4bc0f14`.
+- [ ] Revisão humana dos textos de `/privacidade`, `/termos` e `/entrar` e do contato de Q8 no código público, registrada nesta task (data e síntese, sem repetir os valores) por commit na branch da PR, com checks verdes no novo HEAD, antes do merge (R2-2).
 
 ## Evidências
 
@@ -95,18 +96,20 @@ Não se aplica: o ciclo é completo e o encerramento tem PR própria.
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 010 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 010"
+Situação: Aguardando merge — ciclo 010 (completo)
+Quem: Responsável
+Conferir: Checks e diff da PR #108 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/108); antes do merge, revisar os textos de /privacidade, /termos e /entrar e o contato de Q8, cuja manifestação é registrada nesta task por commit, com checks verdes no novo HEAD (R2-2)
+Diga: "aprovo o merge da PR #108"
 ```
+
+A revisão dos textos pode vir na mesma mensagem da aprovação do merge ou antes dela; o merge só ocorre depois do registro da revisão e dos checks verdes no HEAD resultante. Depois do merge, a próxima situação é "Aguardando autorização de implementação" da issue #105; a #104 continua aberta até a ação externa.
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 010 + implementar_issue + 104/Item-1-BL-012 + c0e906eb96f5030fce27db734a43938b41e6a783`
-- `effect_class`: `local_mutation`
-- `state_before` / `state_after`: plano `v2` Aprovado, ciclo Planejamento, issue #104 aberta, sem branch nem PR / implementação em andamento na branch `feature/issue-104`
-- `result`: `not_executed`
-- `evidence`: autorização "autorizo a implementação da issue #104" em 2026-10-21; `git fetch` com `main` igual a `origin/main` em `c0e906e`; `gh pr list --state open` vazio
-- `blockers`: implementação em curso, coberta pela autorização registrada no cabeçalho; este bloco é substituído ao publicar a PR
+- `effect_class`: `remote_mutation`
+- `state_before` / `state_after`: plano `v2` Aprovado, ciclo Planejamento, issue #104 aberta, sem branch nem PR / plano Em Execução, ciclo Em execução, branch `feature/issue-104` publicada e PR #108 aberta, task Aguardando integração
+- `result`: `executed`
+- `evidence`: autorização "autorizo a implementação da issue #104" em 2026-10-21; `git fetch` com `main` igual a `origin/main` em `c0e906e`; consulta prévia sem PR da branch; PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/108 criada via `gh`; validações da tabela de evidências
+- `blockers`: revisão humana dos textos e do contato (R2-2) a registrar nesta task antes do merge; checks remotos verdes no HEAD final; "aprovo o merge da PR #108"

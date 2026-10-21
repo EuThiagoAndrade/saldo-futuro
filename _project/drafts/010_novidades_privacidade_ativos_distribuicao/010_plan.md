@@ -352,7 +352,7 @@ Para BL-012, a PR de código usa vínculo de referência, sem fechamento automá
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | [#104 — BL-012](https://github.com/EuThiagoAndrade/saldo-futuro/issues/104), implementação autorizada em 2026-10-21; [#105 — BL-011](https://github.com/EuThiagoAndrade/saldo-futuro/issues/105), [#106 — BL-006](https://github.com/EuThiagoAndrade/saldo-futuro/issues/106), [#107 — BL-005](https://github.com/EuThiagoAndrade/saldo-futuro/issues/107) — abertas, implementação não autorizada |
-| PR(s) | [#103 — publicação documental do plano](https://github.com/EuThiagoAndrade/saldo-futuro/pull/103), integrada em 2026-10-21 por squash (`c0e906eb96f5030fce27db734a43938b41e6a783`) |
+| PR(s) | [#103 — publicação documental do plano](https://github.com/EuThiagoAndrade/saldo-futuro/pull/103), integrada em 2026-10-21 por squash (`c0e906eb96f5030fce27db734a43938b41e6a783`); [#108 — BL-012](https://github.com/EuThiagoAndrade/saldo-futuro/pull/108), aberta, referencia a #104 sem fechá-la |
 | Branch(es) | `chore/cycle-010-plan` (PR documental do plano); `feature/issue-104` (BL-012) |
 | Task(s) | `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_task_issue-104.md` |
 | Destino após conclusão | `_project/executed/010_novidades_privacidade_ativos_distribuicao/010_plan.md` |
@@ -390,25 +390,29 @@ Estado corrente: plano Aprovado e ciclo Planejamento; nenhuma branch/task de imp
 
 Validação desta atualização: 48/48 testes de governança passaram; validador com 0 erros, 0 avisos e 5 conferências manuais; `git diff --check` limpo. Diff limitado a plano/índice, sem dados reais; autorizações e semântica conferidas manualmente. Histórico integral das revisões preservado pelo SHA-256 normalizado `98bb4dab603c6772ba1c4b7375237cda5321c1a20d40bd73a16449720a86dcd1`.
 
+## Registro de execução
+
+- **Issue #104 (BL-012):** "autorizo a implementação da issue #104" em 2026-10-21. A primeira entrega autorizada levou o plano a `Em Execução` e o ciclo a `Em execução`; o "Estado corrente" do Registro de criação das issues fica como histórico. Branch `feature/issue-104`, task `010_task_issue-104.md` (artefato ativo da entrega) e [PR #108](https://github.com/EuThiagoAndrade/saldo-futuro/pull/108), que referencia a issue sem fechá-la. A revisão humana dos textos e do contato de Q8 (R2-2) é registrada na task antes do merge.
+
 ## Próximo passo
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando autorização de implementação — ciclo 010 (completo)
+Situação: Aguardando merge — ciclo 010 (completo)
 Quem: Responsável
-Conferir: Issue #104 (https://github.com/EuThiagoAndrade/saldo-futuro/issues/104), item 1 do plano e tratamentos R2-1/R2-2 no Registro de aprovação; escopo de privacidade, termos e preparação OAuth, sem executar ação externa nesta entrega
-Diga: "autorizo a implementação da issue #104"
+Conferir: Checks e diff da PR #108 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/108); antes do merge, revisar os textos de /privacidade, /termos e /entrar e o contato de Q8, cuja manifestação é registrada na task 010_task_issue-104.md por commit, com checks verdes no novo HEAD (R2-2)
+Diga: "aprovo o merge da PR #108"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 010 + criar_issues + feature/BL-012-BL-011-BL-006-BL-005 + v2/c0e906eb96f5030fce27db734a43938b41e6a783`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 010 + implementar_issue + 104/Item-1-BL-012 + c0e906eb96f5030fce27db734a43938b41e6a783`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: antes, plano v2 Aprovado e integrado pela PR #103, ciclo Planejamento, bloco gravado Aguardando merge já superado pela integração comprovada e confirmação humana dos quatro payloads nesta conversa, sem issues equivalentes. Depois, issues #104–#107 OPEN com payloads conferidos, plano/índice reconciliados localmente e Aguardando autorização de implementação da issue #104. Plano Aprovado e ciclo Planejamento preservados.
+- `state_before` / `state_after`: plano `v2` Aprovado, ciclo Planejamento, issue #104 aberta sem branch nem PR / plano Em Execução, ciclo Em execução, branch `feature/issue-104` publicada, PR #108 aberta e task Aguardando integração
 - `result`: `executed`
-- `evidence`: pedido "Pode criar as issues" em 2026-10-21; PR #103 conferida MERGED via gh e main em c0e906eb96f5030fce27db734a43938b41e6a783; URLs, ordem e hashes dos quatro payloads no Registro de criação das issues; releitura de títulos/corpos/estado OPEN no GitHub; índice local com #104–#107. Gates documentais desta atualização apresentados na saída do workflow; sem implementação, commit, push ou nova PR.
-- `blockers`: nenhum na criação das quatro issues, concluída. Próxima mutação de implementação exige "autorizo a implementação da issue #104"; modo contínuo permanece —. Sem acesso a dados reais ou produção; R2-1/R2-2 vinculadas às futuras entregas.
+- `evidence`: autorização de implementação de 2026-10-21; base conferida igual a `origin/main` em `c0e906e`; PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/108 criada via `gh`; validações registradas na task
+- `blockers`: revisão humana dos textos e do contato (R2-2) a registrar na task; checks remotos verdes no HEAD final; "aprovo o merge da PR #108". As issues #105 a #107 seguem sem autorização
 
 ## Revisão crítica
 
