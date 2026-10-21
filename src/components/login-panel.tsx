@@ -5,9 +5,9 @@ import { useState, type FormEvent } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 const buttonBase =
-  "min-h-11 rounded-md px-4 text-sm/5 font-medium disabled:cursor-not-allowed disabled:opacity-60";
-const primaryButton = `${buttonBase} bg-primary text-on-primary hover:bg-primary-hover`;
-const secondaryButton = `${buttonBase} border border-border-strong bg-surface text-primary`;
+  "min-h-11 rounded-md px-4 text-sm/5 font-medium not-disabled:cursor-pointer motion-safe:not-disabled:active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60";
+const primaryButton = `${buttonBase} bg-primary text-on-primary not-disabled:hover:bg-primary-hover not-disabled:active:bg-primary-hover`;
+const secondaryButton = `${buttonBase} border border-border-strong bg-surface text-primary not-disabled:hover:bg-surface-subtle not-disabled:active:bg-primary-subtle`;
 const fieldClass =
   "min-h-11 w-full rounded-md border border-border-strong bg-surface px-3 text-base/6 text-text";
 

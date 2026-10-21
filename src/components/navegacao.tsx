@@ -101,7 +101,7 @@ export function Navegacao({ admin }: { admin: boolean }) {
               type="button"
               aria-haspopup="dialog"
               onClick={() => folha.current?.showModal()}
-              className={`${itemBarra} flex-1 ${maisAtivo ? "text-primary" : "text-text-secondary"}`}
+              className={`${itemBarra} flex-1 cursor-pointer hover:bg-surface-subtle active:bg-primary-subtle motion-safe:active:translate-y-px ${maisAtivo ? "text-primary" : "text-text-secondary"}`}
             >
               <span className={`rounded-full px-4 py-0.5 ${maisAtivo ? "bg-primary-subtle" : ""}`}>
                 <IconeMais className="size-6" />
@@ -124,7 +124,7 @@ export function Navegacao({ admin }: { admin: boolean }) {
           {mais.map((destino) => (
             <ItemLateral key={destino.href} destino={destino} atual={ativo(caminho, destino.href)} />
           ))}
-          <button type="button" onClick={() => folha.current?.close()} className="mt-2 min-h-11 rounded-md border border-border-strong text-sm/5 font-medium text-primary">
+          <button type="button" onClick={() => folha.current?.close()} className="mt-2 min-h-11 cursor-pointer rounded-md border border-border-strong text-sm/5 font-medium text-primary hover:bg-surface-subtle active:bg-primary-subtle motion-safe:active:translate-y-px">
             Fechar
           </button>
         </nav>
