@@ -1,7 +1,7 @@
 # Plano de Implementação — Usabilidade e consistência visual
 
 > **Ciclo:** `009`
-> **Status:** `Em Execução`
+> **Status:** `Concluído`
 > **Versão:** `v2`
 > **Data de criação:** 2026-10-20
 > **Última atualização:** 2026-10-20
@@ -309,8 +309,8 @@ Nenhuma dependência externa nova. Os IDs de origem já existem em main. Os iten
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | [#94](https://github.com/EuThiagoAndrade/saldo-futuro/issues/94), [#95](https://github.com/EuThiagoAndrade/saldo-futuro/issues/95), [#96](https://github.com/EuThiagoAndrade/saldo-futuro/issues/96) e [#97](https://github.com/EuThiagoAndrade/saldo-futuro/issues/97) |
-| PR(s) | [#98](https://github.com/EuThiagoAndrade/saldo-futuro/pull/98) (issue #94, integrada); [#99](https://github.com/EuThiagoAndrade/saldo-futuro/pull/99) (issue #95, integrada); [#100](https://github.com/EuThiagoAndrade/saldo-futuro/pull/100) (issue #96); demais — |
-| Branch(es) | `fix/issue-94`; `fix/issue-95`; `fix/issue-96`; demais — |
+| PR(s) | [#98](https://github.com/EuThiagoAndrade/saldo-futuro/pull/98) (issue #94, integrada); [#99](https://github.com/EuThiagoAndrade/saldo-futuro/pull/99) (issue #95, integrada); [#100](https://github.com/EuThiagoAndrade/saldo-futuro/pull/100) (issue #96, integrada); [#101](https://github.com/EuThiagoAndrade/saldo-futuro/pull/101) (issue #97 e encerramento prospectivo) |
+| Branch(es) | `fix/issue-94`; `fix/issue-95`; `fix/issue-96`; `feature/issue-97` |
 | Destino após conclusão | `_project/executed/009_usabilidade_consistencia_visual/009_plan.md` |
 
 ## Aprovação e preparação das issues
@@ -494,13 +494,24 @@ Depende da integração das três issues anteriores, especialmente dos estados d
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando autorização de implementação — ciclo 009 (leve)
-Quem: Responsável
-Conferir: issues #94 a #97 criadas e conferidas; a primeira da ordem é a #94 (BL-013), que leva o plano, cycles e a task na primeira PR
-Diga: "autorizo a implementação da issue #94"
+Situação: Concluído — ciclo 009 (leve)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
+
+- `handoff_schema_version: 2`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 009 + atualizar_docs + encerramento-prospectivo/issue-97 + e5f1f1a`
+- `effect_class`: `remote_mutation`
+- `state_before`: plano `v2` Em Execução, ciclo Em execução, PR #98, #99 e #100 integradas com aprovação e checks verdes; issue #97 autorizada e implementada em `feature/issue-97`.
+- `state_after`: encerramento prospectivo preparado: plano Concluído, tasks Concluída, pasta em `executed/`, `cycles.md` Concluído, DESIGN.md e KB-003 atualizados; antes da integração da última PR, situação efetiva Aguardando merge.
+- `result`: `executed`
+- `evidence`: `v2` aprovada em 2026-10-20; autorização da #97; task #97 com unitários, e2e e axe; tasks #94 a #96 reconciliadas com as PRs integradas; governança sem erros ou avisos; histórico abaixo preservado.
+- `blockers`: nenhum no escopo; checks remotos verdes e aprovação específica do merge pendentes; retorno de BL-013, BL-004, BL-003 e BL-010 à fila e sua publicação dependem de autorização separada.
+
+### Handoff histórico de criação das issues
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 009 + criar_issues + BL-013/BL-004/BL-003/BL-010 + v2`
@@ -509,6 +520,7 @@ Diga: "autorizo a implementação da issue #94"
 - `result`: `executed`
 - `evidence`: confirmação humana "Confirmo a criação das 04 issues com os payloads 1 a 4" em 2026-10-20; `gh issue list --state all --search` sem correspondentes antes da criação; issues #94, #95, #96 e #97 conferidas no GitHub com os títulos dos payloads
 - `blockers`: nenhum; a implementação depende de autorização específica por issue
+
 
 ## Revisão crítica
 
@@ -577,43 +589,8 @@ Diga: "autorizo a implementação da issue #94"
 - **Revisor:** Codex, GPT-6 (variante exata não exposta nesta sessão).
 - **Data e autorização:** 2026-10-20; novo pedido humano "revise o plano do ciclo 009", sobre a `v2`. Autoriza o parecer e seu registro local; não aprova o plano nem autoriza implementação ou publicação.
 - **Base conferida:** `main` local e remoto em `811ff840a51da200bdff8f0591e11d9d95fd103f`, remoto conferido por `git ls-remote`. Ciclo 009 em `Planejamento`, plano `v2` em `Em Revisão`, próximo passo inicial `Aguardando revisão (rodada 2)`. Plano ainda não versionado; alterações preexistentes em `_project/cycles.md` e `.agent/lessons_learned.md` preservadas. Consultas `gh`: nenhuma issue aberta e somente a PR #91 de release aberta, independente deste ciclo.
-- **Identidade da origem (UTF-8/LF):** SHA-256 da `v2` antes desta revisão: `e72e4b7661fcf88451e7042e9e54f30b2f7091d489488289179310b2603e22d2`; do corpo entre `## Problema e contexto` e `## Próximo passo`: `d01921a43363d00106f3f6820a589a01309fae54517893d7effb26272b57284d`; do histórico desde `### Rodada 1` até antes de `## Pós-mortem`: `1879c513e94317b0f60181080153c1b9f080355fb18984cb8e7d65659e7a161a`; do handoff de correção: `eda6561131840f9548e5b29f5f01d46c801778de8edfff9dede2edc7c6333a79`. Esses trechos ficam preservados nesta revisão.
-- **Autoridades e template:** `.agent/ai_behavior.md`, `_project/README.md` (revisão formal, situações, estados e fluxo do leve), `_project/cycles.md`, `.agent/workflows/revisar_plano.md` e `.agent/templates/plano_implementacao.md`. Permanecem aplicáveis KB-003, ADR-004, ADR-005 e DESIGN.md já lidos na rodada 1; §§6.8–6.9 e 7 do DESIGN.md reconferidos no ponto de uso. Código das ações, validação dos períodos, formulários e consumidores de botões inspecionado somente por leitura.
+- **Identidade da origem (UTF-8/LF):** SHA-256 da `v2` antes desta revisão: `e72e4b7661fcf88451e7042e9e54f30b2f7091d489488289179310b2603e22d2`; do corpo entre `## Problema e contexto` e `## Próximo passo`: `d01921a43363d00106f3f6820a589a01309fae54517893d7effb26272b57284d`; do histórico desde `### Rodada 1` até antes de `## Pós-mortem
 
-#### Conferência dos achados anteriores
-
-- **R1-1 — resolvido no planejamento.** A `v2` especifica `novalidate` nos dois formulários, mantém a validação existente de `limitesDoPeriodo` no servidor e acrescenta os testes com envio efetivo depois da troca de período e com mês futuro vindo da URL. Conferido no código: os filtros não têm outros campos `required` ou restrições adicionais a preservar. Em reprodução mínima em Chrome headless pelo Playwright do projeto, com mês fictício além de `max` e grupo oculto, clicar em enviar produziu zero eventos de submissão sem `novalidate` e um com ele. A mudança do local da mensagem de erro está declarada nos riscos e não muda a regra de período.
-- **R1-2 — resolvido no planejamento.** Há agora contrato verificável para confirmação, edição que limpa o ID, texto sem seleção, Esc, saída, filtro vazio, valor inicial, IDs das opções e reset. As mensagens obrigatórias conferem com os schemas Zod das ações de lançamento e transferência; o reset explícito de `FormNovaTransferencia` existe no código. A reprodução mínima confirmou que `setCustomValidity` bloqueia texto sem seleção e que o evento nativo `reset` permite limpar o erro customizado. Os testes planejados cobrem a sincronização com estado React e duas transferências consecutivas. Não foi implementado nem testado um combobox completo nesta revisão; a prova integrada continua sendo um critério da entrega.
-- **R1-3 — resolvido no planejamento.** "Ocultar valores", "Mais" e "Fechar" constam do baseline, escopo, arquivos, ação técnica e critérios. As duas bases do login também estão incluídas. O e2e agora exige cursor computado em todos os botões visíveis e habilitados das telas percorridas, além da cobertura das variantes.
-- **R1-4 — tratado, com ressalva residual R2-1.** O destrutivo recebe sinal de cor sem movimento; a exceção do principal com mouse e movimento reduzido foi explicitada no aceite e na cobertura de BL-004. A mudança de cor proposta foi conferida com a versão instalada do Tailwind: a compilação em memória de `bg-loss/90` gera `color-mix` em Oklab; no Chrome, a cor computada foi `oklab(0.501712 0.128701 0.0634938 / 0.9)`. Composta sobre `surface` branca, resultou em RGB aproximado (174, 77, 73), com contraste de 5,31:1 para `on-primary`, acima de 4,5:1. A diferença em relação à estimativa de 5,24 não muda a viabilidade. Repetir a conferência na tela real e no estado `active`, como o plano exige.
-
-#### Achados desta rodada
-
-- **R2-1 — ressalva: a aprovação inclui a exceção explícita de feedback do principal.** Com mouse e `prefers-reduced-motion`, pressionar o principal não produz diferença visual adicional em relação ao hover. A `v2` delimita essa condição no Item 2 e condiciona a cobertura integral de BL-004 à sua aceitação pelo responsável. Não é bloqueador: a proposta é explícita, compatível com o token existente e não promete mais distinção no critério de aceite. **Conferir na aprovação:** aceitar essa limitação declarada e mantê-la na documentação da entrega e no retorno ao backlog conforme a cobertura real. A aprovação deste plano não autoriza ampliar silenciosamente a exceção; se o recuo condicional do destrutivo se mostrar necessário na implementação, ele deve ser reconciliado com o aceite antes do merge.
-
-#### Itens atendidos e validações
-
-- Objetivo, quatro entregas, sequência, não-escopo e pontos de aprovação continuam coerentes com o nível leve sem modo contínuo. Aprovação humana permanece pendente, issues ainda não criadas e implementação não iniciada. Nenhum cálculo, RLS, autenticação, consulta ou schema foi alterado.
-- Barreiras G1–G4 e privacidade permanecem adequadas ao recorte. Foram usados apenas HTML e valores fictícios em memória; nenhum dado financeiro em `local/`, produção ou captura autenticada foi acessado.
-- BL-013 mantém o orçamento e as regressões da rodada 1: margem comum de 70 a 144, curva mínima de 160 unidades, comparação de benchmarks preservada e medição dos rótulos efetivos na implementação. Não foram feitas novas alterações nessa proposta.
-- Progresso: dois bloqueadores da rodada 1 resolvidos no planejamento; cobertura de botões ampliada dentro de BL-004 e limitação de pressão explicitada. Não há reaparecimento de achado corrigido, oscilação ou discordância persistente que exija parada. Esta é a rodada 2 de no máximo 5.
-- Gates desta revisão: `node --test scripts/validate-governance.test.mjs` passou, 48/48; `node scripts/validate-governance.mjs` com zero erros, zero avisos e cinco conferências manuais; `git diff --check` e verificação de whitespace do plano não versionado sem diagnósticos. As reproduções foram feitas em Chrome headless com Playwright e CSS compilado em memória, sem gravar arquivos ou alterar a aplicação. Não foram executados os testes completos da aplicação, pois não houve implementação.
-
-**Veredito: `APTO COM RESSALVAS`.** Nenhum bloqueador técnico de planejamento; uma ressalva explícita (R2-1). Revisão formal da `v2` concluída. O plano permanece em `Em Revisão`, aguardando manifestação humana posterior a este parecer. Não é necessária nova correção para apresentá-lo à aprovação.
-
-#### Handoff da revisão
-
-- `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 009 + revisar_plano + 009_plan/rodada-2 + v2`
-- `effect_class`: `local_mutation`
-- `state_before`: ciclo 009 em `Planejamento`; plano `v2` em `Em Revisão`; revisão formal `Em andamento`; veredito anterior `REQUER NOVA RODADA` sobre a `v1`; aprovação humana `Pendente`; próximo passo `Aguardando revisão (rodada 2)`.
-- `state_after`: ciclo 009 permanece em `Planejamento`; plano `v2` permanece em `Em Revisão`; revisão formal `Concluída`; veredito `APTO COM RESSALVAS` sobre a `v2`; aprovação humana `Pendente`; próximo passo `Aguardando aprovação do plano — ciclo 009 (leve)`.
-- `result`: `executed`
-- `evidence`: pedido humano desta rodada, hashes de origem, conferência de R1-1 a R1-4, reproduções e gates descritos acima; corpo, histórico e handoff da correção preservados; registro limitado à revisão, campos de status/veredito e próximo passo exigido pelo workflow.
-- `blockers`: nenhum bloqueador técnico; aprovação humana pendente, com a ressalva R2-1. Nenhuma issue, implementação, commit, PR ou publicação realizada.
-
-## Pós-mortem
-
-- **Data de conclusão:** —
-- **Desvios:** —
-- **Lições comprovadas:** —
+- **Data de conclusão:** 2026-10-20 (prospectiva, efetiva após o merge da última PR)
+- **Desvios:** sem desvio de escopo. Os "testes de componente" do plano viraram testes unitários da política de seleção (funções puras) mais e2e, porque o projeto não tem jsdom e o plano veda dependência nova. O e2e completo da última entrega teve uma falha de infraestrutura do runner Windows (worker encerrado, teste isolado aprovado), como no ciclo 008.
+- **Lições comprovadas:** a regra global de movimento reduzido (`transition-duration` de 0,01 ms) faz a cor computada atrasar um quadro, então testes de estilo precisam esperar o quadro; `getByRole("option")` também casa as opções de `select` nativos, e testes de combobox devem escopar a lista; a largura medida de um rótulo SVG varia com o viewport, então a estimativa conservadora precisa de folga e do e2e que a compara com a caixa medida. Referências e evidências nas tasks.

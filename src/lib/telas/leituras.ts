@@ -2,6 +2,7 @@ import "server-only";
 import type { Evento, TipoAjuste } from "../financeiro/eventos";
 import { type Cliente, ErroLeitura, lerComposicao, lerTabela, marcaCarteira } from "../leitura";
 import { deLinhaEvento, type LinhaEvento } from "./carteira";
+import { ordenarPorNome } from "./combobox";
 import { mesDaColuna, type PosicaoLida } from "./fechamento";
 
 // Leituras completas das telas da carteira (D13): todas as linhas, na ordem declarada, com a
@@ -69,6 +70,11 @@ export function nomeDoAtivo(ativos: Ativo[], id: string): string {
   const ativo = ativos.find((a) => a.id === id);
   if (!ativo) return "Ativo";
   return ativo.sistema === "transito" ? "Em trânsito" : ativo.nome;
+}
+
+/** Opções dos seletores de ativo: pelo nome exibido, em ordem alfabética (pt-BR), "Em trânsito" incluído. */
+export function opcoesDeAtivo(ativos: Ativo[]): { id: string; nome: string }[] {
+  return ordenarPorNome(ativos.map((a) => ({ id: a.id, nome: nomeDoAtivo(ativos, a.id) })));
 }
 
 export interface InsumosDoFechamento {

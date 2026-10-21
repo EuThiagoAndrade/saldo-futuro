@@ -6,14 +6,14 @@ import { PreviewNotice } from "@/components/preview-notice";
 import { backend } from "@/lib/config";
 import { hojeEmCuiaba } from "@/lib/financeiro/datas";
 import { exigirSessao } from "@/lib/sessao";
-import { ativosLancaveis, lerAtivos } from "@/lib/telas/leituras";
+import { ativosLancaveis, lerAtivos, opcoesDeAtivo } from "@/lib/telas/leituras";
 
 export const metadata = { title: "Novo lançamento — Saldo Futuro" };
 
 export default async function NovoLancamentoPage() {
   if (!backend) return <PreviewNotice />;
   const { supabase } = await exigirSessao();
-  const ativos = ativosLancaveis(await lerAtivos(supabase)).sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
+  const ativos = opcoesDeAtivo(ativosLancaveis(await lerAtivos(supabase)));
 
   return (
     <div className="flex max-w-xl flex-col gap-6">
@@ -30,7 +30,7 @@ export default async function NovoLancamentoPage() {
           Para registrar um lançamento, cadastre antes o ativo que vai recebê-lo.
         </EstadoVazio>
       ) : (
-        <FormNovoLancamento ativos={ativos.map((a) => ({ id: a.id, nome: a.nome }))} hoje={hojeEmCuiaba()} />
+        <FormNovoLancamento ativos={ativos} hoje={hojeEmCuiaba()} />
       )}
     </div>
   );

@@ -1,6 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, type Page, test } from "@playwright/test";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { escolherAtivo } from "./apoio/combobox";
 import { prepararCenario } from "./apoio/cenarios";
 import { clienteDoUsuario, configurado, criarUsuarios, entrar, removerUsuarios, type UsuarioDeTeste } from "./apoio/supabase";
 
@@ -45,7 +46,7 @@ test.describe("carteira pela tela", () => {
     l: { ativo: string; tipo: string; direcao?: "Ganho" | "Perda"; valor: string; data: string },
   ) {
     await page.goto("/lancamentos/novo");
-    await page.getByLabel("Ativo").selectOption({ label: l.ativo });
+    await escolherAtivo(page.getByLabel("Ativo"), l.ativo);
     await page.getByLabel("Tipo").selectOption({ label: l.tipo });
     if (l.direcao) await page.getByLabel(l.direcao).check();
     await page.getByLabel("Valor").fill(l.valor);
@@ -60,8 +61,8 @@ test.describe("carteira pela tela", () => {
 
   async function transferir(page: Page, t: { origem: string; destino: string; valor: string; data: string }) {
     await page.goto("/transferencias");
-    await page.getByLabel("Origem", { exact: true }).selectOption({ label: t.origem });
-    await page.getByLabel("Destino", { exact: true }).selectOption({ label: t.destino });
+    await escolherAtivo(page.getByLabel("Origem", { exact: true }), t.origem);
+    await escolherAtivo(page.getByLabel("Destino", { exact: true }), t.destino);
     await page.getByLabel("Valor").fill(t.valor);
     await page.getByLabel("Data", { exact: true }).fill(t.data);
     await page.getByRole("button", { name: "Transferir" }).click();

@@ -2,13 +2,13 @@
 
 > **Ciclo:** `009`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `fix`
 > **Issue:** `#96`
-> **Plano:** `_project/drafts/009_usabilidade_consistencia_visual/009_plan.md`
+> **Plano:** `_project/executed/009_usabilidade_consistencia_visual/009_plan.md`
 > **Branch:** `fix/issue-96`
 > **PR:** [#100](https://github.com/EuThiagoAndrade/saldo-futuro/pull/100)
-> **Integração:** `Pendente`
+> **Integração:** `Conferida no GitHub — PR #100 MERGED em 2026-10-20`
 > **Autorização inicial:** "autorizo a implementação da issue #96" em 2026-10-20
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-20
@@ -65,7 +65,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 | E2e completo | Backend local: 137 passaram e 8 pulados (preview sem backend e suítes opt-in); inclui CR-51 (limites dos cinco períodos), as telas de benchmarks e o axe das páginas autenticadas em 360 e 1280 px, sem regressões |
 | Governança | `node --test scripts/validate-governance.test.mjs` 48/48; `node scripts/validate-governance.mjs` com 0 erros, 0 avisos e cinco itens manuais |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos | Todos verdes no head `9440444cf137bf31594aedc73db6e21451e1781c`: lint, tipos, testes, build e e2e de preview; Supabase local, testes de banco e e2e de autenticação; governança; Vercel |
 
 ## Revisão da correção
 
@@ -82,14 +82,20 @@ Não se aplica (trilha normal).
 
 Não se aplica: a #97 é a última issue do ciclo e leva o encerramento prospectivo.
 
+## Reconciliação da integração
+
+Em 2026-10-20, o responsável declarou "aprovo o merge da PR #100". O check de Supabase local estava pendente nesse momento; o agente esperou a conclusão e conferiu os cinco checks verdes no head `9440444cf137bf31594aedc73db6e21451e1781c` antes do squash, conferido no GitHub com o assunto `fix(issue-96): mostrar os campos de intervalo só no período escolhido (#100)`. A issue #96 foi fechada. Reconciliação feita na implementação autorizada da #97; não registra o SHA do próprio merge.
+
 ## Próximo passo
+
+Ciclo 009 encerrado prospectivamente na última PR (issue #97): depois do merge dela, a situação do ciclo é Concluído.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 009 (leve)
-Quem: Responsável
-Conferir: checks e diff da [PR #100](https://github.com/EuThiagoAndrade/saldo-futuro/pull/100)
-Diga: "aprovo o merge da PR #100"
+Situação: Concluído — ciclo 009 (leve)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
@@ -98,6 +104,6 @@ Diga: "aprovo o merge da PR #100"
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 009 + implementar_issue + 96/Item-3-BL-003 + d57f8fe`
 - `effect_class`: `remote_mutation`
 - `state_before` / `state_after`: plano `v2` Em Execução, #94 e #95 integradas, #96 aberta, sem branch nem PR / branch `fix/issue-96` publicada com a PR #100 aberta
-- `result`: `executed`
+- `result`: `already_executed_and_reconciled`
 - `evidence`: autorização desta task; validações da tabela de evidências; `git fetch` com `main` igual a `origin/main` em `d57f8fe`; consulta prévia sem PR da #96
 - `blockers`: nenhum; o merge depende de checks verdes e de "aprovo o merge da PR #N"

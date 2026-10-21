@@ -47,6 +47,12 @@ O Saldo Futuro é um sistema web de gestão de investimentos pessoais, multiusu�
   - logo à esquerda no cabeçalho mobile, com link para o Início;
   - leitura coerente que vai ao banco em cada fase dentro do servidor Next e marcas lidas em paralelo, reduzindo a espera ao voltar ao Início.
 
+- usabilidade e consistência visual (ciclo `009`):
+  - margem esquerda comum a patrimônio, rentabilidade mensal e Base 100 no Início: o maior valor entre 70 e a largura estimada do rótulo mais longo dos três eixos mais 6, limitado a 144 para manter 160 unidades de curva; a estimativa roda no servidor, é conservadora e o e2e a confere contra a caixa medida com a fonte carregada; a comparação de benchmarks mantém a margem padrão;
+  - botões com cursor de ponteiro, hover e estado pressionado em todas as variantes e nos controles com classes próprias (DESIGN.md 6.9); exceção declarada: no principal, com mouse e movimento reduzido, o pressionado coincide com o hover;
+  - campos de intervalo dos filtros de período do Início e da comparação só aparecem com "Intervalo escolhido" (CSS `:has()`, sem JavaScript), com `novalidate` nos dois formulários e a validação do intervalo só no servidor;
+  - seletor de ativo com busca (`ComboboxAtivo`) e ordem alfabética pelo nome exibido em Lançamentos (filtro), Novo lançamento e Nova transferência; política de seleção em `src/lib/telas/combobox.ts` e contrato no DESIGN.md 6.8; a busca depende de JavaScript.
+
 - migração e virada (ciclo `006`):
   - a carteira do `Meus-Investimentos` foi reconstruída em produção por uma migração única (simular, gravar e conferir, em `src/lib/migracao/` e `npm run migracao`), com conferência sem diferença mês a mês;
   - **virada em 2026-10-18:** a partir dessa data, o Saldo Futuro é a fonte de verdade e a origem não recebe lançamentos; a cópia congelada da origem fica fora do repositório;
@@ -55,7 +61,7 @@ O Saldo Futuro é um sistema web de gestão de investimentos pessoais, multiusu�
 
 - legibilidade do Início (ciclo `008`):
   - eixo patrimonial com unidade única e precisão comum às marcas; a escala amplia somente o domínio de apresentação quando a resolução decimal exige, preservando a tabela em centavos;
-  - margem específica de 144 unidades no eixo monetário e área de 160 no viewBox de 360; índices e percentuais conservam a margem original;
+  - margem esquerda dos gráficos do Início: ver o bullet do ciclo `009` (a margem fixa de 144 do ciclo `008` foi substituída por uma margem comum); área de curva de pelo menos 160 unidades no viewBox de 360;
   - cartões em uma coluna abaixo de `md` e duas a partir de `md`, inclusive com menu lateral; preenchimento local `px-1 py-4 md:px-3`, mantendo quantia integral em uma linha e fonte de 24/32 px, peso 600;
   - contenção do domínio integral de centavos seguros a partir de 360 px CSS úteis de layout (`document.documentElement.clientWidth`), descontada a barra vertical: janela de 375 px para barra clássica de 15 px; janela de 360 com essa barra deixa 345 úteis e fica abaixo do mínimo validado.
 
@@ -206,3 +212,4 @@ O plano executado do ciclo `001` (`_project/executed/001_fundacao_aplicacao/001_
 | 2026-10-17 | `005` | Logo no cabeçalho mobile; leitura coerente fresca no Next (#57) e marcas em paralelo (#54); conferência autenticada em produção aprovada |
 | 2026-10-18 | `006` | Migração única dos dados e virada em 2026-10-18; migração no trânsito (exceção à K12) e posição implícita zero; pendência de migração retirada |
 | 2026-10-20 | `008` | Eixo patrimonial coerente com as marcas e cartões do Início contidos em uma/duas colunas; apresentação sem mudança de regra financeira |
+| 2026-10-20 | `009` | Margem comum dos gráficos do Início, estados dos botões, campos de intervalo condicionais e seletor de ativo com busca; apresentação e interação sem mudança de regra financeira |
