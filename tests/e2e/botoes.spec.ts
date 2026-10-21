@@ -6,6 +6,9 @@ import { clienteDoUsuario, configurado, criarUsuarios, entrar, removerUsuarios, 
 const MOVEL = { width: 360, height: 800 };
 const DESKTOP = { width: 1280, height: 900 };
 const ROTAS = ["/", "/lancamentos", "/lancamentos/novo", "/ativos", "/benchmarks", "/benchmarks/comparacao", "/transferencias", "/conta"];
+// Páginas legais públicas (#104): hoje sem botões. A varredura cobre os que vierem a existir;
+// links, foco e acessibilidade ficam em paginas-publicas.spec.ts.
+const PUBLICAS = ["/privacidade", "/termos"];
 
 type Rgb = [number, number, number];
 interface Estilo { fundo: Rgb; texto: Rgb; fundoCru: string; translate: string; cursor: string }
@@ -86,6 +89,10 @@ test.describe("botões (#95)", () => {
       await page.goto("/entrar");
       expect((await visiveis(page)).length, "botões do login").toBeGreaterThan(1);
       await conferir(`/entrar ${tamanho.width}`);
+      for (const rota of PUBLICAS) {
+        await page.goto(rota);
+        await conferir(`${rota} ${tamanho.width}`);
+      }
     }
     await entrar(page, u.comum);
     for (const tamanho of [MOVEL, DESKTOP]) {

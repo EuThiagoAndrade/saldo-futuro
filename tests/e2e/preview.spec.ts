@@ -23,11 +23,23 @@ test.describe("preview sem backend", () => {
     });
   }
 
-  test("o aviso não tem violações de acessibilidade (WCAG 2.2 AA)", async ({ page }) => {
-    await page.goto("/");
-    const results = await new AxeBuilder({ page })
-      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
-      .analyze();
-    expect(results.violations).toEqual([]);
+  // Links da política e dos termos em /entrar (#104) continuam no preview, sem login.
+  test("/entrar mantém os links legais, sem habilitar o login", async ({ page }) => {
+    await page.goto("/entrar");
+    const documentos = page.getByRole("navigation", { name: "Documentos" });
+    await expect(documentos.getByRole("link", { name: "Política de privacidade" })).toBeVisible();
+    await expect(documentos.getByRole("link", { name: "Termos de uso" })).toBeVisible();
+    await expect(page.getByRole("button")).toHaveCount(0);
+    await expect(page.getByLabel("E-mail")).toHaveCount(0);
   });
+
+  for (const route of ["/", "/entrar"]) {
+    test(`o aviso em ${route} não tem violações de acessibilidade (WCAG 2.2 AA)`, async ({ page }) => {
+      await page.goto(route);
+      const results = await new AxeBuilder({ page })
+        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
+        .analyze();
+      expect(results.violations).toEqual([]);
+    });
+  }
 });

@@ -1,7 +1,7 @@
 # Plano de Implementação — Novidades, privacidade, tela de ativos e distribuição patrimonial
 
 > **Ciclo:** `010`
-> **Status:** `Aprovado`
+> **Status:** `Em Execução`
 > **Versão:** `v2`
 > **Data de criação:** 2026-10-21
 > **Última atualização:** 2026-10-21
@@ -90,7 +90,7 @@ Em 2026-10-21 o responsável declarou: "Aceito as suas sugestões para os itens 
 | Q7 | Arquivo manual, histórico começa na release `0.7.0`. Agente redige e responsável revisa; sem obrigação automatizada de nota por release. |
 | Q8 | Agente redige os textos a partir do código e KB-002; responsável revisa antes do merge. Nome e e-mail públicos fornecidos e autorizados na conversa de 2026-10-21, referidos neste plano como "contato de Q8". |
 | Q9 | Páginas legais estáticas aparecem em previews sem backend. Links em `/entrar` e Conta e links cruzados entre as páginas; nenhum novo destino legal na navegação principal. |
-| Q10 | `/entrar` candidata a página inicial; documentação Google conferida neste plano e console conferido pelo responsável na ação externa. |
+| Q10 | `/entrar` candidata a página inicial; documentação Google conferida neste plano e console conferido pelo responsável na ação externa. **Substituída em 2026-10-21** pela decisão registrada em "Registro de execução": página inicial informada ao Google é `/termos`. |
 | Q11 | Uma issue por item na ordem BL-012 → BL-011 → BL-006 → BL-005. |
 
 O contato de Q8 foi fornecido em resposta à pergunta expressa sobre publicação em 2026-10-21. Para limitar sua repetição, os valores literais aparecem somente no código das páginas públicas, cuja publicação foi autorizada; plano, KBs, payloads, issues, descrições de PR e tasks usam "contato de Q8". A revisão do diff das páginas inclui sua presença no código-fonte versionado, tratado como público pela ADR-003. Não ampliar a autorização para e-mails de contas, credenciais ou outros dados privados. Os valores não são inferidos de credenciais nem da lista de acessos.
@@ -157,7 +157,7 @@ Atualizar KB-002 (armadilha 7, GC2, GC4, P2 e verificações relacionadas) com c
 **Critérios de aceite:**
 
 - [ ] Duas rotas públicas completas, sem sessão/backend, com links cruzados e sem placeholders.
-- [ ] `/entrar` descreve gestão e acompanhamento de investimentos pessoais e a restrição de acesso; links visíveis com e sem backend, preservando a segurança do login.
+- [ ] `/entrar` descreve gestão e acompanhamento de investimentos pessoais e a restrição de acesso; links visíveis com e sem backend, preservando a segurança do login. **Substituído em 2026-10-21** (ver "Registro de execução"): `/entrar` só com logo e login centralizados e os links, com e sem backend; `/termos` identifica o app, descreve a funcionalidade e leva à política, como página inicial informada ao Google.
 - [ ] Conta oferece os dois links; navegação principal mantém seus destinos.
 - [ ] Redação factual e contato de Q8 no código público revisados expressamente pelo responsável antes do merge; evidência com data e síntese na task, sem repetir os valores, conforme o ponto de aprovar merge da entrega.
 - [ ] KB-002 distingue Audience, Branding e exceção de identidade básica, com fontes oficiais e roteiro executável pelo responsável.
@@ -166,7 +166,7 @@ Atualizar KB-002 (armadilha 7, GC2, GC4, P2 e verificações relacionadas) com c
 
 **Roteiro da ação externa, após integrar e disponibilizar as quatro entregas:**
 
-1. Responsável abre anonimamente `https://investimentos.euthiagoandrade.com.br/entrar`, `/privacidade` e `/termos`; confere produto, texto e links. O agente só faz conferência pública após autorização de produção.
+1. Responsável abre anonimamente `https://investimentos.euthiagoandrade.com.br/entrar`, `/privacidade` e `/termos`; confere produto, texto e links. (Desde 2026-10-21, a página inicial a informar no passo 3 é `/termos`; ver "Registro de execução" e KB-002, O3.) O agente só faz conferência pública após autorização de produção.
 2. No Google Auth Platform, conferir projeto, escopos configurados e efetivamente solicitados pelo Supabase. Registrar apenas categorias/resultado. Se houver escopo além de identidade básica, interromper esse passo e decidir o novo escopo, sem removê-lo ou ampliá-lo por inferência.
 3. Conferir domínio próprio e sua propriedade no Search Console com conta adequada ao projeto; preencher homepage candidata `/entrar`, política e termos no mesmo domínio. Distinguir essas URLs do callback Google→Supabase (`https://<project-id>.supabase.co/auth/v1/callback`, KB-002 GC3) e do retorno Supabase→app (`/auth/callback`). O [guia Supabase](https://supabase.com/docs/guides/auth/social-login/auth-google) documenta o callback do projeto e trata domínio próprio/Branding como melhorias opcionais. Não tentar provar propriedade de `supabase.co`, alterar callback ou contratar domínio próprio de Auth neste ciclo. Se o Google exigir essa propriedade, registrar motivo sanitizado: se a exigência bloquear o resultado mínimo, a situação é Parado para decisão; se afetar só Branding opcional, registrar a limitação sem impedir o resultado mínimo. Nenhum ID, credencial ou e-mail de conta entra nas evidências.
 4. Separar o resultado mínimo — publicar Audience — de Branding opcional. Conferir o estado real e publicar o aplicativo quando permitido, sem exigir a marca verificada como condição adicional deste ciclo. Registrar Branding como não solicitado, pendente ou publicado, sem prometer aprovação. Se `/entrar` for recusada ou outra exigência impedir o resultado mínimo, parar para decisão antes de implementar alternativa. Não iniciar nova dependência/custo nem uma mudança de autenticação por inferência.
@@ -351,9 +351,10 @@ Para BL-012, a PR de código usa vínculo de referência, sem fechamento automá
 
 | Campo | Valor |
 | :-- | :-- |
-| Issue(s) | — (quatro propostas; nenhuma criada) |
-| PR(s) | [#103 — publicação documental do plano](https://github.com/EuThiagoAndrade/saldo-futuro/pull/103), aberta; merge pendente |
-| Branch(es) | `chore/cycle-010-plan` (PR documental do plano) |
+| Issue(s) | [#104 — BL-012](https://github.com/EuThiagoAndrade/saldo-futuro/issues/104), implementação autorizada em 2026-10-21; [#105 — BL-011](https://github.com/EuThiagoAndrade/saldo-futuro/issues/105), [#106 — BL-006](https://github.com/EuThiagoAndrade/saldo-futuro/issues/106), [#107 — BL-005](https://github.com/EuThiagoAndrade/saldo-futuro/issues/107) — abertas, implementação não autorizada |
+| PR(s) | [#103 — publicação documental do plano](https://github.com/EuThiagoAndrade/saldo-futuro/pull/103), integrada em 2026-10-21 por squash (`c0e906eb96f5030fce27db734a43938b41e6a783`); [#108 — BL-012](https://github.com/EuThiagoAndrade/saldo-futuro/pull/108), aberta, referencia a #104 sem fechá-la |
+| Branch(es) | `chore/cycle-010-plan` (PR documental do plano); `feature/issue-104` (BL-012) |
+| Task(s) | `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_task_issue-104.md` |
 | Destino após conclusão | `_project/executed/010_novidades_privacidade_ativos_distribuicao/010_plan.md` |
 
 ## Registro de aprovação
@@ -369,25 +370,50 @@ Para BL-012, a PR de código usa vínculo de referência, sem fechamento automá
 - **Estado reconciliado:** esta seção resolve as propostas/pendências de aprovação descritas no corpo da v2. As alternativas e os relatos anteriores ficam preservados; os tratamentos das ressalvas acima prevalecem sobre as passagens apontadas pela rodada 2.
 - **Validação documental da publicação:** 48/48 testes do validador passaram; governança com 0 erros e 0 avisos (5 conferências manuais); diff e staging sem erros de whitespace e limitados à ideação, plano e índice. Histórico de revisão preservado (SHA-256 normalizado `98bb4dab603c6772ba1c4b7375237cda5321c1a20d40bd73a16449720a86dcd1`). Sem dados reais, contato literal ou código de aplicação no lote.
 
+## Registro de criação das issues
+
+- **Data e autorização:** 2026-10-21, "Pode criar as issues", em resposta aos quatro textos apresentados após o merge da PR #103. A manifestação confirma a publicação dos payloads, não a implementação.
+- **Precondições conferidas:** plano v2 Aprovado com aprovação humana posterior à rodada 2; escolhas A/UUID/calendário registradas; PR #103 MERGED em `c0e906eb96f5030fce27db734a43938b41e6a783`, presente em main local e remota. Consultas via gh, por título/ID e vínculo ao ciclo, sem issue equivalente antes de criar cada unidade.
+- **Template aplicado:** `.github/ISSUE_TEMPLATE/feature_request.yml`, com campos Contexto, Escopo, Critérios de aceite, Ciclo e plano relacionados e Dependências, riscos e autorizações, nessa ordem.
+- **Resultado:** quatro issues criadas sequencialmente via `gh issue create --body-file`, sem labels ou responsáveis adicionais. Cada título/corpo foi relido via `gh issue view` e comparado ao payload confirmado; todas OPEN. Os hashes abaixo usam corpo em UTF-8, LF e uma quebra final; identificam o payload efetivo sem depender de arquivo ignorado.
+
+| Ordem | Origem | Issue e título | SHA-256 do corpo confirmado |
+| :-- | :-- | :-- | :-- |
+| 1 | BL-012 | [#104 — Publicar páginas de privacidade e termos e preparar OAuth](https://github.com/EuThiagoAndrade/saldo-futuro/issues/104) | `12eb0f3594cf96e6f409ea1d3225a380d5900d2fea35d8a867f1ee1d3d654f03` |
+| 2 | BL-011 | [#105 — Exibir versão e novidades do produto](https://github.com/EuThiagoAndrade/saldo-futuro/issues/105) | `700b537c73ef79f64476b4732a986ba0be9e29f04e578013de4d0cc7f58813c2` |
+| 3 | BL-006 | [#106 — Separar cadastro e organizar ativos por abas](https://github.com/EuThiagoAndrade/saldo-futuro/issues/106) | `3d083dee7474602a4b378dab18316e2a5bcaf04eb8028bc821d337e836cda1e8` |
+| 4 | BL-005 | [#107 — Mostrar distribuição patrimonial em rosca acessível](https://github.com/EuThiagoAndrade/saldo-futuro/issues/107) | `32f0f06ca4eb8ab06024b432a82f3011589fe65bf4e66ed78970c2fe36cb9a62` |
+
+A sequência de implementação é #104 → #105 → #106 → #107, cada uma com autorização própria. A PR de código #104 apenas referencia a issue; ela permanece aberta até a ação externa após as quatro entregas e fecha pela PR de encerramento. As demais fecham pelas próprias PRs. O calendário e os tratamentos R2-1/R2-2 do Registro de aprovação permanecem válidos.
+
+Estado corrente: plano Aprovado e ciclo Planejamento; nenhuma branch/task de implementação, código, nova PR, ação externa ou operação em produção iniciada. A fila do backlog não foi alterada neste workflow. Os vínculos no plano/índice são registro local da criação e acompanharão a próxima entrega autorizada, sem commit direto ou push em main.
+
+Validação desta atualização: 48/48 testes de governança passaram; validador com 0 erros, 0 avisos e 5 conferências manuais; `git diff --check` limpo. Diff limitado a plano/índice, sem dados reais; autorizações e semântica conferidas manualmente. Histórico integral das revisões preservado pelo SHA-256 normalizado `98bb4dab603c6772ba1c4b7375237cda5321c1a20d40bd73a16449720a86dcd1`.
+
+## Registro de execução
+
+- **Issue #104 (BL-012):** "autorizo a implementação da issue #104" em 2026-10-21. A primeira entrega autorizada levou o plano a `Em Execução` e o ciclo a `Em execução`; o "Estado corrente" do Registro de criação das issues fica como histórico. Branch `feature/issue-104`, task `010_task_issue-104.md` (artefato ativo da entrega) e [PR #108](https://github.com/EuThiagoAndrade/saldo-futuro/pull/108), que referencia a issue sem fechá-la. A revisão humana dos textos e do contato de Q8 (R2-2) é registrada na task antes do merge.
+- **Decisão do responsável sobre `/entrar` (2026-10-21), durante a revisão da PR #108:** "Não vejo necessidade destes textos estarem na página /entrar. Pode remove-los. Deixando apenas o ícone do programa centralizado e o botão abaixo centralizado. O restante permanece tudo como está." Informado de que o Google não aceita como página inicial uma página só de login, escolheu a alternativa recomendada: "Minha escolha é a (recomendada)", isto é, `/termos` como página inicial informada no console, e confirmou que, no app, a entrada continua em `/entrar`. Efeitos: substitui Q10 e o critério de `/entrar` do item 1 (anotados no lugar), sem rota nova nem mudança de autenticação; KB-002 (armadilha 7, tabela de domínios, O1, O3 e O4) e KB-003 ajustadas na mesma PR. Recusa de `/termos` no console leva a "Parado" para decisão (O4).
+
 ## Próximo passo
 
 ```text
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 010 (completo)
 Quem: Responsável
-Conferir: Diff e checks da PR documental #103 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/103); confirmar checks verdes no HEAD atual antes de integrar
-Diga: "aprovo o merge da PR #103"
+Conferir: Checks e diff da PR #108 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/108); antes do merge, revisar os textos de /privacidade e /termos e o contato de Q8, cuja manifestação é registrada na task 010_task_issue-104.md por commit, com checks verdes no novo HEAD (R2-2)
+Diga: "aprovo o merge da PR #108"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 010 + atualizar_docs + 010_plan/aprovacao-publicacao + v2/5cf019089f4465e5e85fa6661966d856fec09922`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 010 + implementar_issue + 104/Item-1-BL-012 + c0e906eb96f5030fce27db734a43938b41e6a783`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: antes, ciclo 010 em Planejamento e plano v2 em Em Revisão, rodada 2 APTO COM RESSALVAS, Aguardando aprovação do plano, sem PR aberta. Depois, plano v2 Aprovado com manifestação humana posterior e decisões A/UUID/calendário registradas; branch documental publicada e PR #103 aberta, Aguardando merge. Ciclo permanece Planejamento até a primeira implementação autorizada.
+- `state_before` / `state_after`: plano `v2` Aprovado, ciclo Planejamento, issue #104 aberta sem branch nem PR / plano Em Execução, ciclo Em execução, branch `feature/issue-104` publicada, PR #108 aberta e task Aguardando integração
 - `result`: `executed`
-- `evidence`: manifestação humana de 2026-10-21 no Registro de aprovação; rodada 2 apta anterior à manifestação; branch chore/cycle-010-plan sobre main 5cf019089f4465e5e85fa6661966d856fec09922; commit inicial 14aec155663f27c3815b90822331212b3f6b671b publicado; PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/103 criada via gh e conferida OPEN, base main, somente ideação/plano/índice. 48/48 testes locais e validador sem erros/avisos. Checks remotos iniciados na leitura de criação; estado atualizado é conferido no GitHub no HEAD atual antes de qualquer merge.
-- `blockers`: merge pendente de checks verdes e aprovação humana específica da PR #103. Criação de issues aguarda integração documental e confirmação dos payloads. Nenhuma implementação, issue, ação externa, verificação em produção ou merge executado. R2-1/R2-2 vinculadas à execução conforme o registro acima.
+- `evidence`: autorização de implementação de 2026-10-21; base conferida igual a `origin/main` em `c0e906e`; PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/108 criada via `gh`; validações registradas na task
+- `blockers`: revisão humana dos textos e do contato (R2-2) a registrar na task; checks remotos verdes no HEAD final; "aprovo o merge da PR #108". As issues #105 a #107 seguem sem autorização
 
 ## Revisão crítica
 

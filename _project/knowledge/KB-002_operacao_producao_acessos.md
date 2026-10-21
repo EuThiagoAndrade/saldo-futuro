@@ -6,7 +6,7 @@ tags:
   - acesso
 author: "Thiago Andrade e Claude"
 module: "Operação"
-last_updated: "2026-10-18"
+last_updated: "2026-10-21"
 origin_cycle: "001"
 ---
 
@@ -14,7 +14,7 @@ origin_cycle: "001"
 
 ## Finalidade
 
-Roteiro verificável para levar o Saldo Futuro a `investimentos.euthiagoandrade.com.br` e para operar a lista de acessos depois disso. É consultada no Gate H-C do ciclo `001` (configuração externa feita pelo responsável), na verificação em produção (Gate V-C) sempre que for preciso autorizar, promover ou revogar um acesso e, no ciclo `006`, na migração dos dados e na virada.
+Roteiro verificável para levar o Saldo Futuro a `investimentos.euthiagoandrade.com.br` e para operar a lista de acessos depois disso. É consultada no Gate H-C do ciclo `001` (configuração externa feita pelo responsável), na verificação em produção (Gate V-C) sempre que for preciso autorizar, promover ou revogar um acesso, no ciclo `006`, na migração dos dados e na virada e, no ciclo `010`, na publicação da tela de consentimento do Google (O1 a O6).
 
 ## Limite de autoridade
 
@@ -55,7 +55,12 @@ Concluída a configuração, o agente registra as evidências do Gate V-C. Cada 
 4. **`NEXT_PUBLIC_ENABLE_PASSWORD_LOGIN` nunca vai para a Vercel.** O formulário de senha existe só no ambiente local e no CI. Em produção, o provedor de senha desabilitado no Supabase mantém o bloqueio mesmo se a variável vazar.
 5. **A chave secreta do Supabase nunca vai para a Vercel nem para o GitHub.** A aplicação usa só a chave publicável.
 6. **Cloudflare sem proxy.** O registro do subdomínio fica em "somente DNS" (nuvem cinza), para a Vercel emitir o certificado.
-7. **Tela de consentimento do Google em modo Testando.** O Google só publica uma tela externa se houver página inicial e política de privacidade públicas, que o produto ainda não tem. Enquanto ela estiver em **Testando**, só entram as contas cadastradas como usuários de teste (até 100): cada pessoa autorizada na lista (procedimento P2) também precisa ser adicionada como usuário de teste (passo GC4). Publicar a tela fica para um ciclo futuro, com uma página de privacidade aprovada. O app só pede identidade básica (`openid`, e-mail e perfil) e o login é mantido pelo Supabase; confirme no Gate V-C, depois de 8 dias ou mais, que o login continua funcionando.
+7. **Tela de consentimento do Google: Audience, Branding e a exceção de identidade básica.** No ciclo `001` (2026-10-13), o Google recusou publicar a tela externa porque o produto não tinha página inicial nem política de privacidade públicas, e a tela ficou com o público (Audience) em **Testando**. Daí veio a regra de cadastrar cada pessoa autorizada na lista (P2) também como usuário de teste (GC4), até 100. Essa regra foi premissa: nenhuma conta fora da lista de teste chegou a ser tentada. Três coisas são diferentes e não devem ser confundidas:
+   - **Audience** (status de publicação): em Testando, o Google limita o acesso aos usuários de teste e faz as autorizações expirarem em 7 dias; em produção, qualquer conta Google pode autorizar o app, e a lista do app continua sendo a barreira (hook e gatilho).
+   - **Exceção de identidade básica:** pela documentação do Google (consultada em 2026-10-21), um app que pede só nome, e-mail e perfil (`openid`, `userinfo.email`, `userinfo.profile`, ou Sign in with Google) não exige que a conta esteja na lista de teste e não tem a expiração de 7 dias. O código do app não pede escopos além desses (`signInWithOAuth` sem `scopes`), mas os escopos configurados e os efetivamente pedidos pelo Supabase em produção não foram conferidos; a exceção só vale se nada além do básico for pedido.
+   - **Branding** (verificação da marca): nome e logo do app na tela de consentimento, com página inicial, política de privacidade e domínios autorizados verificados. É opcional para o objetivo do ciclo `010`, que é publicar a Audience.
+
+   Desde o ciclo `010`, `/privacidade` e `/termos` são páginas públicas no domínio do app, linkadas em `/entrar` e em Conta. `/entrar` continua sendo a entrada do app, só com logo e login; a página inicial informada ao Google é `/termos`, que identifica o app, descreve a funcionalidade e leva à política (decisão do responsável de 2026-10-21). A publicação e a prova de que contas fora da lista de teste entram seguem o roteiro O1 a O6. O login é mantido pelo Supabase; com a Audience em Testando, confira no Gate V-C, depois de 8 dias ou mais, que o login continua funcionando.
 8. **`db push` sempre a partir da `main` atualizada.** Rode `git checkout main` e `git pull` antes de `npx supabase db push`, para enviar exatamente as migrações já integradas. Desde o merge da PR C a `main` tem duas migrações (acesso e keepalive), e um único `db push` as aplica; sem a função `public.keepalive()` no banco, `/api/keepalive` responderia `500`.
 9. **Não instale integrações do Supabase.** Em particular, a integração **Cron** (`pg_cron`) não é usada: o cron do projeto é o da Vercel.
 
@@ -87,9 +92,34 @@ Concluída a configuração, o agente registra as evidências do Gate V-C. Cada 
 | Passo | Quem | Onde | Evidência |
 | :-- | :-- | :-- | :-- |
 | GC1. Criar ou escolher um projeto do Google Cloud para o login | Responsável | Console do Google Cloud | Item marcado |
-| GC2. Configurar a tela de consentimento como **externa**, com nome do app, e-mail de suporte, contato do desenvolvedor e os escopos básicos (`openid`, e-mail e perfil). **Não publicar:** o Google exige página inicial e política de privacidade para sair de **Testando**, e o app fica em modo de teste (armadilha 7) | Responsável | Google Auth Platform, Branding, Audience e Data Access | Item marcado; o status continua **Testando** |
+| GC2. Configurar a tela de consentimento como **externa**, com nome do app, e-mail de suporte, contato do desenvolvedor e só os escopos básicos (`openid`, e-mail e perfil). No ciclo `001` ela ficou em **Testando**, porque faltavam página inicial e política de privacidade; a publicação da Audience segue o roteiro O1 a O6 (armadilha 7) | Responsável | Google Auth Platform, Branding, Audience e Data Access | Item marcado; o status registrado é o real (**Testando** até O4) |
 | GC3. Criar o cliente OAuth do tipo **Aplicativo da Web**, com a origem JavaScript `https://investimentos.euthiagoandrade.com.br` e o URI de redirecionamento do Supabase, copiado da página do provedor Google no painel do Supabase (`https://<project-id>.supabase.co/auth/v1/callback`) | Responsável | Clients, Create client | Item marcado. O ID e o segredo do cliente vão só para o Supabase (S7); copie o segredo na hora, porque ele pode não ser mostrado de novo |
-| GC4. Adicionar como **usuário de teste** a conta Google do administrador e, depois, a de cada pessoa autorizada na lista (P2) | Responsável | Google Auth Platform, Audience, Test users | Item marcado; o e-mail **não** é registrado. Sem isso o Google bloqueia o login dessa conta com `access_denied` antes de chegar ao app |
+| GC4. Enquanto a Audience estiver em **Testando**, adicionar como **usuário de teste** a conta Google do administrador e a de cada pessoa autorizada na lista (P2). Com a Audience publicada e o login fora da lista de teste comprovado (O5), o passo deixa de ser necessário | Responsável | Google Auth Platform, Audience, Test users | Item marcado; o e-mail **não** é registrado. O bloqueio por `access_denied` de uma conta fora da lista de teste foi premissa do ciclo `001`, não observação; com só identidade básica, a documentação do Google indica que a lista não é exigida (armadilha 7) |
+
+### Publicação da tela de consentimento (ciclo 010)
+
+Roteiro da ação externa da issue #104 (BL-012), executado pelo responsável **depois** de integrar e publicar as quatro entregas do ciclo `010`. O agente não abre o console, não muda escopos, domínios ou listas e só confere por leitura páginas públicas, depois da autorização de verificação em produção. Nenhum ID de projeto ou de cliente, credencial, e-mail de conta ou print com dado real entra nas evidências: só categorias, estados e passou/falhou.
+
+**Resultado mínimo:** Audience publicada **e** login de uma conta autorizada na lista do app, fora da lista de teste do Google, comprovado pelo responsável. Branding é opcional. Sem o resultado mínimo, a issue não é concluída: a situação passa a "Parado" para decisão.
+
+Três domínios distintos aparecem no console; não os confunda:
+
+| Papel | Endereço | Observação |
+| :-- | :-- | :-- |
+| Página inicial (para o Google), política e termos | `https://investimentos.euthiagoandrade.com.br/termos` como página inicial e `/privacidade` como política; `/termos` também como termos | Domínio próprio, verificável no Search Console. A entrada do app para as pessoas continua em `/entrar`; o campo do console não muda o roteamento |
+| Retorno Google → Supabase (URI de redirecionamento do cliente OAuth) | `https://<project-id>.supabase.co/auth/v1/callback` (GC3) | Domínio do Supabase: o responsável não tem como provar a propriedade de `supabase.co` |
+| Retorno Supabase → app | `https://investimentos.euthiagoandrade.com.br/auth/callback` (S9) | Configurado no Supabase, não no Google |
+
+| Passo | Quem | Onde | Evidência |
+| :-- | :-- | :-- | :-- |
+| O1. Abrir em janela anônima `/entrar`, `/privacidade` e `/termos` no domínio de produção; conferir os links em `/entrar`, a descrição do produto em `/termos`, os textos e os links entre as páginas | Responsável | Navegador | Texto: as três páginas abriram sem login, com os links funcionando |
+| O2. Conferir o projeto do Google Cloud, os escopos configurados em Data Access e os efetivamente pedidos no login (a tela de consentimento mostra o que o app pede). Se houver qualquer escopo além de identidade básica, **parar este roteiro** e decidir o escopo; não removê-lo nem ampliá-lo por inferência | Responsável | Google Auth Platform, Data Access; tela de consentimento | Texto: só identidade básica, ou a categoria do escopo extra encontrado |
+| O3. Conferir a propriedade do domínio próprio no Search Console, com conta adequada ao projeto, e preencher em Branding a página inicial (`/termos`), a política (`/privacidade`) e os termos (`/termos`), todos no mesmo domínio. Não alterar o callback, não tentar provar a propriedade de `supabase.co` e não contratar domínio próprio de Auth. Se o Google exigir essa propriedade e a exigência **impedir** o resultado mínimo, parar para decisão; se afetar só o Branding opcional, registrar a limitação e seguir | Responsável | Search Console; Google Auth Platform, Branding | Texto: domínio verificado ou não; motivo sanitizado de qualquer exigência |
+| O4. Publicar a Audience (Publish app), quando o console permitir, sem exigir a marca verificada. Registrar o Branding como não solicitado, pendente ou publicado, sem prometer aprovação. Se `/termos` for recusada como página inicial ou outra exigência impedir a publicação, parar para decisão antes de qualquer alternativa; `/entrar` não serve como alternativa sem mudança, porque é só login, o que o Google não aceita | Responsável | Google Auth Platform, Audience | Texto: status da Audience e estado do Branding |
+| O5. Com a Audience publicada, entrar com uma conta **autorizada na lista do app e fora da lista de teste do Google**, e confirmar a recusa, com a mensagem neutra, de uma conta fora da lista do app (verificação "Recusa"). Não adicionar contas nem alterar listas para fazer a prova | Responsável | Navegador | Texto: passou ou falhou em cada prova, com limitações; sem e-mail. Sem conta ou meio de provar, o critério fica pendente para decisão, sem substituir pela CI |
+| O6. Dizer "concluí a ação externa da issue #104" com o estado real da Audience e do Branding e os resultados sanitizados | Responsável | Conversa | A frase não transforma pendência em prova: sem O4 e O5, "Parado". Os fatos entram na task da última issue do ciclo e, no encerramento, nesta KB e na task da issue #104 |
+
+O [guia de verificação do Google](https://support.google.com/cloud/answer/13464321?hl=en) pede página inicial no domínio verificado que identifique o app, descreva sua funcionalidade e leve à política de privacidade, e não aceita uma página que seja só de login. O [guia de público do app](https://support.google.com/cloud/answer/15549945?hl=en) define Testando, produção e a exceção de identidade básica. O [guia do Supabase](https://supabase.com/docs/guides/auth/social-login/auth-google) trata o domínio próprio de Auth e o Branding como melhorias opcionais.
 
 ### Vercel
 
@@ -130,7 +160,7 @@ insert into public.authorized_emails (email, role)
 values ('<e-mail-do-administrador>', 'admin');
 ```
 
-**P2. Autorizar um e-mail** (cadastro futuro; vale só para quem ainda não tem conta). Enquanto a tela do Google estiver em **Testando**, adicione também a conta como usuário de teste (GC4):
+**P2. Autorizar um e-mail** (cadastro futuro; vale só para quem ainda não tem conta). Enquanto a Audience do Google estiver em **Testando**, adicione também a conta como usuário de teste (GC4); depois de O5 comprovado, a lista do app basta:
 
 ```sql
 insert into public.authorized_emails (email, role)
@@ -168,7 +198,7 @@ Depois do merge da PR C, do deploy e do `db push` (S5), o agente registra na tas
 | Item | Como | Evidência |
 | :-- | :-- | :-- |
 | Login e papel | Login com Google do responsável | Texto: entrou e viu o papel de administrador |
-| Recusa | Login com uma segunda conta Google que esteja como usuário de teste no Google (GC4), mas **fora** da lista do app: quem a recusa é o hook. Uma conta que nem é usuário de teste é bloqueada pelo próprio Google, o que não prova o hook. Sem essa segunda conta, a prova é o teste de CI do mesmo hook, registrado como limitação | Texto: a conta foi recusada com a mensagem neutra |
+| Recusa | Login com uma segunda conta Google **fora** da lista do app que chegue ao Supabase: com a Audience em Testando, uma conta cadastrada como usuário de teste (GC4); com a Audience publicada, qualquer conta. Quem a recusa é o hook; um bloqueio do próprio Google (por exemplo, conta fora da lista de teste com escopo além do básico) não prova o hook. Sem essa segunda conta, a prova é o teste de CI do mesmo hook, registrado como limitação | Texto: a conta foi recusada com a mensagem neutra |
 | Cron | Settings, Cron Jobs; chamada sem segredo; chamada com o segredo (veja "Keepalive"); logs da Vercel | Cron listado; `GET /api/keepalive` sem segredo responde `401`; com o segredo, `ok: True`; chamada automática diária nos logs, ou a limitação do painel registrada |
 | PWA | Instalar pelo menu no celular ("Instalar app" no Android, "Adicionar à Tela de Início" no iOS); o aviso automático de instalação pode não aparecer, porque não há service worker | Texto: o app abriu em janela própria, com o ícone e o nome corretos |
 | Security Advisor | Database, Advisors | Sem alertas de RLS, de grants nem de `search_path` |
@@ -352,6 +382,10 @@ Consultadas em 2026-10-12 e conferidas na execução de 2026-10-13. São documen
 - Vercel, limites de cron: <https://vercel.com/docs/cron-jobs/usage-and-pricing>. Função: mínimo diário e precisão de ±59 min no Hobby.
 - Chrome, critérios de instalação do PWA: <https://web.dev/articles/install-criteria>. Função: instalação pelo menu sem service worker.
 - Plano `001`, `_project/executed/001_fundacao_aplicacao/001_plan.md`, "Modelo de acesso", "Regra de papel adotada na v2" e decisões D1 a D3: origem dos procedimentos P1 a P4.
+- Google, verificação do app e página inicial: <https://support.google.com/cloud/answer/13464321?hl=en>. Consultado em 2026-10-21. Função: página inicial no domínio verificado, descrição da funcionalidade, link da política e recusa de página só de login. Limite: não diz quais exigências o console deste projeto vai mostrar.
+- Google, público do app (Testando, produção e exceção de identidade básica): <https://support.google.com/cloud/answer/15549945?hl=en>. Consultado em 2026-10-21. Função: lista de teste, expiração de 7 dias e exceção para nome, e-mail e perfil. Limite: o comportamento efetivo é conferido em O5.
+- Google, políticas OAuth: <https://developers.google.com/identity/protocols/oauth2/policies> e verificação de marca: <https://developers.google.com/identity/protocols/oauth2/production-readiness/brand-verification>. Consultados no plano `010`, em 2026-10-21.
+- Plano `010`, `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_plan.md`, item 1 e roteiro da ação externa: origem de O1 a O6.
 
 ## Histórico
 
@@ -363,3 +397,4 @@ Consultadas em 2026-10-12 e conferidas na execução de 2026-10-13. São documen
 | 2026-10-18 | `006` | Issue #73: `db push` da função `lancar_migracao_transito` antes de gravar, códigos de recusa de M6 revisada, contagens de trânsito no resumo e o motivo `funcao_ausente` |
 | 2026-10-18 | `006` | Issue #76: contagem `posicoesImplicitasZero` no resumo da simulação (M10 revisada) |
 | 2026-10-18 | `006` | Encerramento: virada registrada em 2026-10-18 |
+| 2026-10-21 | `010` | Issue #104: armadilha 7 separa Audience, Branding e a exceção de identidade básica; GC2, GC4, P2 e a verificação "Recusa" condicionados ao status da Audience; roteiro O1 a O6 da publicação, com resultado mínimo e parada por impedimento externo. Página inicial informada ao Google: `/termos`, por decisão do responsável; `/entrar` fica só com logo e login. O resultado real entra no encerramento do ciclo |
