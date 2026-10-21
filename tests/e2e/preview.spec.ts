@@ -23,10 +23,9 @@ test.describe("preview sem backend", () => {
     });
   }
 
-  // Página inicial pública (#104): a apresentação e os links continuam no preview, sem login.
-  test("/entrar mantém a apresentação e os links legais, sem habilitar o login", async ({ page }) => {
+  // Links da política e dos termos em /entrar (#104) continuam no preview, sem login.
+  test("/entrar mantém os links legais, sem habilitar o login", async ({ page }) => {
     await page.goto("/entrar");
-    await expect(page.getByText(/sistema web de gestão de investimentos pessoais/)).toBeVisible();
     const documentos = page.getByRole("navigation", { name: "Documentos" });
     await expect(documentos.getByRole("link", { name: "Política de privacidade" })).toBeVisible();
     await expect(documentos.getByRole("link", { name: "Termos de uso" })).toBeVisible();

@@ -99,16 +99,42 @@ for (const { rota, titulo, outra } of PAGINAS) {
   });
 }
 
+// /termos é a página inicial informada ao Google (KB-002, O3): identifica o app, descreve a
+// funcionalidade e leva à política de privacidade no mesmo domínio, sem ser página de login.
+test("/termos identifica o app, descreve a funcionalidade e leva à política, sem login", async ({ page }) => {
+  await page.goto("/termos");
+  await expect(page.getByRole("link", { name: "Saldo Futuro" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 2, name: "O que é o Saldo Futuro" })).toBeVisible();
+  await expect(page.getByText(/registrar e acompanhar investimentos pessoais/)).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "Documentos" }).getByRole("link", { name: "Política de privacidade" })).toHaveAttribute(
+    "href",
+    "/privacidade",
+  );
+  await expect(page.getByRole("button")).toHaveCount(0);
+  await expect(page.locator("input")).toHaveCount(0);
+});
+
 test.describe("/entrar", () => {
-  test("descreve o produto e a restrição de acesso e leva à política e aos termos", async ({ page }) => {
+  // Decisão do responsável em 2026-10-21: /entrar só com logo e login centralizados, sem texto
+  // descritivo; a página inicial informada ao Google é /termos (KB-002, O3).
+  test("mostra logo e login centralizados, sem texto descritivo, e leva à política e aos termos", async ({ page }) => {
     await page.goto("/entrar");
-    await expect(page.getByText(/sistema web de gestão de investimentos pessoais/)).toBeVisible();
-    await expect(page.getByText(/só entram pessoas com e-mail autorizado/)).toBeVisible();
+    await expect(page.getByText(/sistema web de gestão de investimentos pessoais/)).toHaveCount(0);
     await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", /investimentos pessoais/);
 
     if (hasBackend) {
-      await expect(page.getByRole("heading", { level: 1, name: "Entrar" })).toBeVisible();
-      await expect(page.getByRole("button", { name: "Entrar com Google" })).toBeVisible();
+      // O título fica só para leitores de tela.
+      const titulo = page.getByRole("heading", { level: 1, name: "Entrar" });
+      await expect(titulo).toHaveClass(/\bsr-only\b/);
+      const centro = async (alvo: import("@playwright/test").Locator) => {
+        const caixa = (await alvo.boundingBox())!;
+        return caixa.x + caixa.width / 2;
+      };
+      const logo = page.getByRole("img", { name: "Saldo Futuro" });
+      const google = page.getByRole("button", { name: "Entrar com Google" });
+      await expect(google).toBeVisible();
+      expect(Math.abs((await centro(logo)) - (await centro(google)))).toBeLessThanOrEqual(1);
+      expect((await logo.boundingBox())!.y).toBeLessThan((await google.boundingBox())!.y);
     } else {
       await expect(page.getByRole("heading", { level: 1, name: "Preview sem backend" })).toBeVisible();
       await expect(page.getByRole("button")).toHaveCount(0);

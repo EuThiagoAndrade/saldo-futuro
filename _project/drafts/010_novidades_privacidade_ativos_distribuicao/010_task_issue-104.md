@@ -17,7 +17,7 @@
 
 ## Objetivo
 
-Publicar `/privacidade` e `/termos` como páginas estáticas e públicas, descrever o produto em `/entrar` com e sem backend, oferecer os dois links em Conta e preparar na KB-002 o roteiro da publicação OAuth que o responsável executará depois das quatro entregas do ciclo.
+Publicar `/privacidade` e `/termos` como páginas estáticas e públicas, levar a elas a partir de `/entrar` (com e sem backend) e de Conta, usar `/termos` como página inicial informada ao Google e preparar na KB-002 o roteiro da publicação OAuth que o responsável executará depois das quatro entregas do ciclo.
 
 ## Escopo autorizado
 
@@ -46,13 +46,14 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 
 - [x] Autorização, issue #104 aberta, plano `v2` Aprovado, PR documental #103 integrada e base `c0e906e` igual a `origin/main` conferidas; sem branch ou PR anteriores da #104.
 - [x] Páginas `/privacidade` e `/termos` estáticas, fora de `(app)`, com metadata (título e descrição), data de atualização em `<time>`, seções semânticas, contato de Q8 em linha própria e links cruzados no rodapé (`src/components/pagina-legal.tsx` e `src/components/links-legais.tsx`). Nenhuma leitura de sessão, cookie ou banco nas páginas.
-- [x] `/entrar` com descrição do produto (registro de ativos, lançamentos, transferências e fechamentos; patrimônio, rentabilidade e comparação com CDI e IPCA), restrição de acesso e links, com e sem backend. Sem backend, `PreviewNotice` recebe a apresentação e os links e o login continua indisponível (nenhum botão nem campo).
+- [x] `/entrar` com os links, com e sem backend; sem backend, `PreviewNotice` recebe os links e o login continua indisponível (nenhum botão nem campo). A descrição do produto entregue na primeira versão foi retirada por decisão do responsável (item abaixo).
 - [x] Conta com os dois links; menu lateral e barra inferior com os mesmos destinos de antes (o e2e conta os 7 links do menu do usuário comum).
-- [x] E2e: `paginas-publicas.spec.ts` (novo, com e sem backend: 200 sem redirecionamento, título, descrição, data, contato em forma de link sem repetir o endereço, ausência de marcadores de rascunho, links cruzados, teclado e foco, axe e ausência de rolagem horizontal em 360, 375 e 1280 px, alvos de 44 px e nenhum pedido a outra origem); `preview.spec.ts` (apresentação e links em `/entrar` sem login e axe); `navegacao.spec.ts` (páginas legais sem sessão, links em Conta, menu sem destino legal e axe autenticado nas duas rotas); `botoes.spec.ts` (varredura das rotas públicas).
+- [x] E2e: `paginas-publicas.spec.ts` (novo, com e sem backend: 200 sem redirecionamento, título, descrição, data, contato em forma de link sem repetir o endereço, ausência de marcadores de rascunho, links cruzados, teclado e foco, axe e ausência de rolagem horizontal em 360, 375 e 1280 px, alvos de 44 px e nenhum pedido a outra origem); `preview.spec.ts` (links em `/entrar` sem login e axe); `navegacao.spec.ts` (páginas legais sem sessão, links em Conta, menu sem destino legal e axe autenticado nas duas rotas); `botoes.spec.ts` (varredura das rotas públicas).
 - [x] KB-002: armadilha 7 separa Audience, Branding e a exceção de identidade básica, preservando o fato histórico do ciclo 001; GC2, GC4, P2 e a verificação "Recusa" condicionados ao status da Audience; nova seção O1 a O6 com os três domínios distintos, resultado mínimo e paradas. KB-003: capacidades da entrega, com consolidação no encerramento.
 - [x] Gates de aplicação e de governança (tabela de evidências); auditoria visual pelo DESIGN.md em 375 px e desktop, com dados fictícios.
 - [x] PR #108 publicada via `gh`, base `main`, referenciando a #104 sem fechamento automático; commit da entrega `4bc0f14`.
-- [ ] Revisão humana dos textos de `/privacidade`, `/termos` e `/entrar` e do contato de Q8 no código público, registrada nesta task (data e síntese, sem repetir os valores) por commit na branch da PR, com checks verdes no novo HEAD, antes do merge (R2-2).
+- [x] Decisão do responsável na revisão da PR (ver "Decisões incidentais"): `/entrar` sem os textos, só com logo e login centralizados e os links; `/termos` como página inicial informada ao Google. Título "Entrar" mantido só para leitores de tela (`sr-only`); e2e ajustados (ausência do texto, logo e botão no mesmo eixo, `/termos` com identificação, funcionalidade e link da política, sem botão nem campo); plano, KB-002 e KB-003 atualizados.
+- [ ] Revisão humana dos textos de `/privacidade` e `/termos` e do contato de Q8 no código público, registrada nesta task (data e síntese, sem repetir os valores) por commit na branch da PR, com checks verdes no novo HEAD, antes do merge (R2-2).
 
 ## Evidências
 
@@ -63,9 +64,9 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 | `npm run typecheck` | Passou |
 | `npm test` | 319/319 (26 arquivos); a entrega é de marcação e texto, sem teste unitário novo |
 | Build | Passou, sem backend e com backend, pelo `webServer` do Playwright |
-| E2e sem backend | 30 passaram e 143 pulados (suítes que exigem Supabase), inclusive `paginas-publicas.spec.ts` e `preview.spec.ts` |
+| E2e sem backend | 30 passaram e 143 pulados (suítes que exigem Supabase), inclusive `paginas-publicas.spec.ts` e `preview.spec.ts`. Depois da decisão sobre `/entrar`: 31 passaram e 143 pulados |
 | `npx supabase test db` | 261/261 (7 arquivos) |
-| E2e com backend | Rodada 1, antes do ajuste dos alvos de toque: 163 passaram e 10 pulados. Rodada 2, no código final: 162 passaram, 10 pulados e 1 falhou: `carteira.spec.ts` CR-04 por timeout esperando o campo "Origem" de Transferências, tela que esta entrega não altera, enquanto o mesmo servidor atendia a conferência visual manual. Reexecução isolada de `carteira.spec.ts`: 8/8. Os 25 testes das rotas novas e alteradas passaram na rodada 2 |
+| E2e com backend | Rodada 1, antes do ajuste dos alvos de toque: 163 passaram e 10 pulados. Rodada 2, no código final: 162 passaram, 10 pulados e 1 falhou: `carteira.spec.ts` CR-04 por timeout esperando o campo "Origem" de Transferências, tela que esta entrega não altera, enquanto o mesmo servidor atendia a conferência visual manual. Reexecução isolada de `carteira.spec.ts`: 8/8. Os 25 testes das rotas novas e alteradas passaram na rodada 2. Rodada 3, depois da decisão sobre `/entrar`: 163 passaram, 10 pulados e 1 falhou em `public-assets.spec.ts` (ícones do manifesto) porque o processo do worker do Playwright caiu no Windows antes do teste (código 3221226505), sem asserção executada; reexecução isolada de `public-assets.spec.ts`: 6/6 |
 | Auditoria visual (DESIGN.md) | Tokens, escala tipográfica (24/32, 20/28, 16/24 e 14/20), foco visível, alvo de 44 px em todo link (achado corrigido nesta entrega), 360/375/1280 px sem rolagem horizontal e axe WCAG 2.2 AA sem violações |
 | Governança | `node --test scripts/validate-governance.test.mjs` 48/48; `node scripts/validate-governance.mjs` com 0 erros, 0 avisos e cinco itens manuais |
 | G3 | `git grep` do e-mail de contato: só em `src/app/privacidade/page.tsx` e `src/app/termos/page.tsx`; nenhum outro endereço de e-mail no diff |
@@ -86,6 +87,7 @@ Não se aplica (trilha normal).
 - **Teste de marcadores de rascunho:** a primeira versão, sem distinção de caixa, acusou "todos" como `TODO`; passou a procurar `TODO`, `TBD` e `XXX` em maiúsculas, além de lorem ipsum e campos entre colchetes ou chaves.
 - **Data de atualização das páginas:** 2026-10-21, data da redação; se a revisão humana alterar o texto em outra data, a data é ajustada no mesmo commit.
 - **Proxy:** as páginas legais continuam no `matcher` do `src/proxy.ts`, que só renova a sessão quando há backend; sem sessão ele não altera a resposta. Mudar o matcher ficaria fora do escopo.
+- **`/entrar` sem descrição (2026-10-21, decisão do responsável na revisão da PR #108):** "Não vejo necessidade destes textos estarem na página /entrar. Pode remove-los. Deixando apenas o ícone do programa centralizado e o botão abaixo centralizado. O restante permanece tudo como está." Avisado de que o Google não aceita como página inicial uma página só de login, escolheu "a (recomendada)": `/termos` como página inicial informada no console, mantendo `/entrar` como entrada do app. Substitui a decisão Q10 e o critério de `/entrar` do item 1 (registro no plano). Removidos o título visível "Entrar" e os dois parágrafos, inclusive no preview sem backend; mantidos os links, o formulário de senha local e a `description` da metadata, que não aparece na página. O `h1` continua só para leitores de tela, para a página não ficar sem título de seção. Esta manifestação trata só de `/entrar`; a revisão dos textos de `/privacidade` e `/termos` e do contato (R2-2) continua pendente.
 - Sem mudança de banco, autenticação, schema, cálculo ou dependências.
 
 ## Encerramento
@@ -98,7 +100,7 @@ Não se aplica: o ciclo é completo e o encerramento tem PR própria.
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 010 (completo)
 Quem: Responsável
-Conferir: Checks e diff da PR #108 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/108); antes do merge, revisar os textos de /privacidade, /termos e /entrar e o contato de Q8, cuja manifestação é registrada nesta task por commit, com checks verdes no novo HEAD (R2-2)
+Conferir: Checks e diff da PR #108 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/108); antes do merge, revisar os textos de /privacidade e /termos e o contato de Q8, cuja manifestação é registrada nesta task por commit, com checks verdes no novo HEAD (R2-2)
 Diga: "aprovo o merge da PR #108"
 ```
 

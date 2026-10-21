@@ -67,7 +67,8 @@ O Saldo Futuro é um sistema web de gestão de investimentos pessoais, multiusu�
 
 - páginas públicas (ciclo `010`, em execução; estado final consolidado no encerramento):
   - `/privacidade` e `/termos`, estáticas e fora da área autenticada, respondem sem sessão e sem backend, com data de atualização, contato do responsável e links entre si (`src/app/privacidade/`, `src/app/termos/` e `src/components/pagina-legal.tsx`);
-  - `/entrar` descreve o produto e a restrição de acesso e leva às duas páginas, também no preview sem backend, onde o login continua indisponível; Conta oferece os mesmos links (`src/components/links-legais.tsx`), sem novo destino na navegação principal;
+  - `/entrar` mostra só o logo e o login centralizados e leva às duas páginas, também no preview sem backend, onde o login continua indisponível; Conta oferece os mesmos links (`src/components/links-legais.tsx`), sem novo destino na navegação principal;
+  - a página inicial informada ao Google é `/termos`, que identifica o app, descreve a funcionalidade e leva à política; para as pessoas, a entrada continua em `/entrar`;
   - a publicação da tela de consentimento do Google é ação do responsável, pelo roteiro O1 a O6 da KB-002, depois das quatro entregas do ciclo.
 
 Permanecem fora da entrega:
@@ -117,7 +118,7 @@ Sem as variáveis do Supabase, a aplicação roda sem backend e não chama o Sup
 
 A decisão está na ADR-003: só entra quem está numa lista de e-mails no banco, e um e-mail fora da lista não cria conta nem sessão.
 
-1. **Entrar:** a página `/entrar` descreve o produto, leva à política de privacidade e aos termos e oferece "Entrar com Google" (OAuth pelo Supabase Auth) e, só no ambiente local, login por senha (`src/components/login-panel.tsx`). O app não pede escopos além da identidade básica.
+1. **Entrar:** a página `/entrar` mostra o logo, leva à política de privacidade e aos termos e oferece "Entrar com Google" (OAuth pelo Supabase Auth) e, só no ambiente local, login por senha (`src/components/login-panel.tsx`). O app não pede escopos além da identidade básica.
 2. **Primeira barreira:** o hook "before user created" (`private.before_user_created`, configurado em `supabase/config.toml` e no painel de produção) recusa a criação do usuário quando o e-mail não está em `public.authorized_emails`.
 3. **Segunda barreira:** o gatilho `on_auth_user_created` (`private.handle_new_user`) cria o perfil com o papel inicial da lista. Para um e-mail fora dela, ele aborta a criação do usuário, caso o hook esteja desligado ou mal configurado.
 4. **Retorno:** `/auth/callback` troca o código pela sessão. Na falha, redireciona com uma mensagem neutra, que não revela se o e-mail está na lista (`src/app/auth/callback/route.ts`).
@@ -218,4 +219,4 @@ O plano executado do ciclo `001` (`_project/executed/001_fundacao_aplicacao/001_
 | 2026-10-18 | `006` | Migração única dos dados e virada em 2026-10-18; migração no trânsito (exceção à K12) e posição implícita zero; pendência de migração retirada |
 | 2026-10-20 | `008` | Eixo patrimonial coerente com as marcas e cartões do Início contidos em uma/duas colunas; apresentação sem mudança de regra financeira |
 | 2026-10-20 | `009` | Margem comum dos gráficos do Início, estados dos botões, campos de intervalo condicionais e seletor de ativo com busca; apresentação e interação sem mudança de regra financeira |
-| 2026-10-21 | `010` | Issue #104: páginas públicas `/privacidade` e `/termos`, apresentação do produto em `/entrar` e links em Conta; estado final no encerramento do ciclo |
+| 2026-10-21 | `010` | Issue #104: páginas públicas `/privacidade` e `/termos`, links em `/entrar` e em Conta e `/termos` como página inicial informada ao Google; estado final no encerramento do ciclo |

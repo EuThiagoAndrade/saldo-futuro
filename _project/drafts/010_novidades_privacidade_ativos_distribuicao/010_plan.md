@@ -90,7 +90,7 @@ Em 2026-10-21 o responsável declarou: "Aceito as suas sugestões para os itens 
 | Q7 | Arquivo manual, histórico começa na release `0.7.0`. Agente redige e responsável revisa; sem obrigação automatizada de nota por release. |
 | Q8 | Agente redige os textos a partir do código e KB-002; responsável revisa antes do merge. Nome e e-mail públicos fornecidos e autorizados na conversa de 2026-10-21, referidos neste plano como "contato de Q8". |
 | Q9 | Páginas legais estáticas aparecem em previews sem backend. Links em `/entrar` e Conta e links cruzados entre as páginas; nenhum novo destino legal na navegação principal. |
-| Q10 | `/entrar` candidata a página inicial; documentação Google conferida neste plano e console conferido pelo responsável na ação externa. |
+| Q10 | `/entrar` candidata a página inicial; documentação Google conferida neste plano e console conferido pelo responsável na ação externa. **Substituída em 2026-10-21** pela decisão registrada em "Registro de execução": página inicial informada ao Google é `/termos`. |
 | Q11 | Uma issue por item na ordem BL-012 → BL-011 → BL-006 → BL-005. |
 
 O contato de Q8 foi fornecido em resposta à pergunta expressa sobre publicação em 2026-10-21. Para limitar sua repetição, os valores literais aparecem somente no código das páginas públicas, cuja publicação foi autorizada; plano, KBs, payloads, issues, descrições de PR e tasks usam "contato de Q8". A revisão do diff das páginas inclui sua presença no código-fonte versionado, tratado como público pela ADR-003. Não ampliar a autorização para e-mails de contas, credenciais ou outros dados privados. Os valores não são inferidos de credenciais nem da lista de acessos.
@@ -157,7 +157,7 @@ Atualizar KB-002 (armadilha 7, GC2, GC4, P2 e verificações relacionadas) com c
 **Critérios de aceite:**
 
 - [ ] Duas rotas públicas completas, sem sessão/backend, com links cruzados e sem placeholders.
-- [ ] `/entrar` descreve gestão e acompanhamento de investimentos pessoais e a restrição de acesso; links visíveis com e sem backend, preservando a segurança do login.
+- [ ] `/entrar` descreve gestão e acompanhamento de investimentos pessoais e a restrição de acesso; links visíveis com e sem backend, preservando a segurança do login. **Substituído em 2026-10-21** (ver "Registro de execução"): `/entrar` só com logo e login centralizados e os links, com e sem backend; `/termos` identifica o app, descreve a funcionalidade e leva à política, como página inicial informada ao Google.
 - [ ] Conta oferece os dois links; navegação principal mantém seus destinos.
 - [ ] Redação factual e contato de Q8 no código público revisados expressamente pelo responsável antes do merge; evidência com data e síntese na task, sem repetir os valores, conforme o ponto de aprovar merge da entrega.
 - [ ] KB-002 distingue Audience, Branding e exceção de identidade básica, com fontes oficiais e roteiro executável pelo responsável.
@@ -166,7 +166,7 @@ Atualizar KB-002 (armadilha 7, GC2, GC4, P2 e verificações relacionadas) com c
 
 **Roteiro da ação externa, após integrar e disponibilizar as quatro entregas:**
 
-1. Responsável abre anonimamente `https://investimentos.euthiagoandrade.com.br/entrar`, `/privacidade` e `/termos`; confere produto, texto e links. O agente só faz conferência pública após autorização de produção.
+1. Responsável abre anonimamente `https://investimentos.euthiagoandrade.com.br/entrar`, `/privacidade` e `/termos`; confere produto, texto e links. (Desde 2026-10-21, a página inicial a informar no passo 3 é `/termos`; ver "Registro de execução" e KB-002, O3.) O agente só faz conferência pública após autorização de produção.
 2. No Google Auth Platform, conferir projeto, escopos configurados e efetivamente solicitados pelo Supabase. Registrar apenas categorias/resultado. Se houver escopo além de identidade básica, interromper esse passo e decidir o novo escopo, sem removê-lo ou ampliá-lo por inferência.
 3. Conferir domínio próprio e sua propriedade no Search Console com conta adequada ao projeto; preencher homepage candidata `/entrar`, política e termos no mesmo domínio. Distinguir essas URLs do callback Google→Supabase (`https://<project-id>.supabase.co/auth/v1/callback`, KB-002 GC3) e do retorno Supabase→app (`/auth/callback`). O [guia Supabase](https://supabase.com/docs/guides/auth/social-login/auth-google) documenta o callback do projeto e trata domínio próprio/Branding como melhorias opcionais. Não tentar provar propriedade de `supabase.co`, alterar callback ou contratar domínio próprio de Auth neste ciclo. Se o Google exigir essa propriedade, registrar motivo sanitizado: se a exigência bloquear o resultado mínimo, a situação é Parado para decisão; se afetar só Branding opcional, registrar a limitação sem impedir o resultado mínimo. Nenhum ID, credencial ou e-mail de conta entra nas evidências.
 4. Separar o resultado mínimo — publicar Audience — de Branding opcional. Conferir o estado real e publicar o aplicativo quando permitido, sem exigir a marca verificada como condição adicional deste ciclo. Registrar Branding como não solicitado, pendente ou publicado, sem prometer aprovação. Se `/entrar` for recusada ou outra exigência impedir o resultado mínimo, parar para decisão antes de implementar alternativa. Não iniciar nova dependência/custo nem uma mudança de autenticação por inferência.
@@ -393,6 +393,7 @@ Validação desta atualização: 48/48 testes de governança passaram; validador
 ## Registro de execução
 
 - **Issue #104 (BL-012):** "autorizo a implementação da issue #104" em 2026-10-21. A primeira entrega autorizada levou o plano a `Em Execução` e o ciclo a `Em execução`; o "Estado corrente" do Registro de criação das issues fica como histórico. Branch `feature/issue-104`, task `010_task_issue-104.md` (artefato ativo da entrega) e [PR #108](https://github.com/EuThiagoAndrade/saldo-futuro/pull/108), que referencia a issue sem fechá-la. A revisão humana dos textos e do contato de Q8 (R2-2) é registrada na task antes do merge.
+- **Decisão do responsável sobre `/entrar` (2026-10-21), durante a revisão da PR #108:** "Não vejo necessidade destes textos estarem na página /entrar. Pode remove-los. Deixando apenas o ícone do programa centralizado e o botão abaixo centralizado. O restante permanece tudo como está." Informado de que o Google não aceita como página inicial uma página só de login, escolheu a alternativa recomendada: "Minha escolha é a (recomendada)", isto é, `/termos` como página inicial informada no console, e confirmou que, no app, a entrada continua em `/entrar`. Efeitos: substitui Q10 e o critério de `/entrar` do item 1 (anotados no lugar), sem rota nova nem mudança de autenticação; KB-002 (armadilha 7, tabela de domínios, O1, O3 e O4) e KB-003 ajustadas na mesma PR. Recusa de `/termos` no console leva a "Parado" para decisão (O4).
 
 ## Próximo passo
 
@@ -400,7 +401,7 @@ Validação desta atualização: 48/48 testes de governança passaram; validador
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 010 (completo)
 Quem: Responsável
-Conferir: Checks e diff da PR #108 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/108); antes do merge, revisar os textos de /privacidade, /termos e /entrar e o contato de Q8, cuja manifestação é registrada na task 010_task_issue-104.md por commit, com checks verdes no novo HEAD (R2-2)
+Conferir: Checks e diff da PR #108 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/108); antes do merge, revisar os textos de /privacidade e /termos e o contato de Q8, cuja manifestação é registrada na task 010_task_issue-104.md por commit, com checks verdes no novo HEAD (R2-2)
 Diga: "aprovo o merge da PR #108"
 ```
 

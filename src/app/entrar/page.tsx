@@ -10,26 +10,13 @@ export const metadata = {
   description: "Saldo Futuro: gestão e acompanhamento de investimentos pessoais, com acesso restrito a e-mails autorizados.",
 };
 
-// Página inicial pública (BL-012, ciclo 010): descreve o produto e leva à política e aos termos,
-// com e sem backend. Sem backend (previews), o login continua indisponível.
-function Apresentacao() {
-  return (
-    <div className="flex max-w-prose flex-col gap-3 text-base/6 text-text-secondary">
-      <p>
-        O Saldo Futuro é um sistema web de gestão de investimentos pessoais. Nele você registra ativos,
-        lançamentos e transferências, fecha cada mês e acompanha o patrimônio, a rentabilidade e a comparação com
-        índices como CDI e IPCA.
-      </p>
-      <p>O acesso é restrito: só entram pessoas com e-mail autorizado pelo administrador.</p>
-    </div>
-  );
-}
-
+// Entrada do app: logo e login centralizados, com os links da política e dos termos (BL-012,
+// ciclo 010), também no preview sem backend, onde o login continua indisponível. A descrição do
+// produto para o Google fica em /termos, a página inicial informada no console (KB-002, O3).
 export default async function EntrarPage({ searchParams }: { searchParams: Promise<{ erro?: string }> }) {
   if (!backend) {
     return (
       <PreviewNotice>
-        <Apresentacao />
         <LinksLegais />
       </PreviewNotice>
     );
@@ -38,9 +25,8 @@ export default async function EntrarPage({ searchParams }: { searchParams: Promi
 
   return (
     <main className="mx-auto flex min-h-screen max-w-sm flex-col justify-center gap-6 px-4 py-12">
-      <Image src={logo} alt="Saldo Futuro" priority className="h-12 w-auto self-start" />
-      <h1 className="text-2xl/8 font-semibold text-text">Entrar</h1>
-      <Apresentacao />
+      <h1 className="sr-only">Entrar</h1>
+      <Image src={logo} alt="Saldo Futuro" priority className="h-12 w-auto self-center" />
       <LoginPanel initialError={erro !== undefined} passwordLogin={passwordLogin} />
       <LinksLegais />
     </main>
