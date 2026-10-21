@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.6.0](https://github.com/EuThiagoAndrade/saldo-futuro/compare/v0.5.0...v0.6.0) (2026-10-21)
+
+
+### Features
+
+* **issue-97:** seletor de ativo com busca e ordem alfabética e encerrar ciclo 009 ([#101](https://github.com/EuThiagoAndrade/saldo-futuro/issues/101)) ([30551ba](https://github.com/EuThiagoAndrade/saldo-futuro/commit/30551ba0bf20039988b28b770ff03e7c36e971d9)), closes [#97](https://github.com/EuThiagoAndrade/saldo-futuro/issues/97)
+
+
+### Bug Fixes
+
+* **issue-88:** alinhar precisão e escala do eixo patrimonial ([ddc23b2](https://github.com/EuThiagoAndrade/saldo-futuro/commit/ddc23b241ecccf7be2d42829ce512176f12bef8c))
+* **issue-89:** conter cartões do início e encerrar ciclo 008 ([#92](https://github.com/EuThiagoAndrade/saldo-futuro/issues/92)) ([3b3cc02](https://github.com/EuThiagoAndrade/saldo-futuro/commit/3b3cc02d3d062dca4ff91bf1526745abcdae8d59))
+* **issue-94:** alinhar a margem do gráfico patrimonial aos gráficos vizinhos ([#98](https://github.com/EuThiagoAndrade/saldo-futuro/issues/98)) ([b303d26](https://github.com/EuThiagoAndrade/saldo-futuro/commit/b303d26e8136c6b1b01b2c8a272f4e7f907308f3)), closes [#94](https://github.com/EuThiagoAndrade/saldo-futuro/issues/94)
+* **issue-95:** uniformizar cursor e estados de interação dos botões ([#99](https://github.com/EuThiagoAndrade/saldo-futuro/issues/99)) ([d57f8fe](https://github.com/EuThiagoAndrade/saldo-futuro/commit/d57f8fef7fb5a55bfcdbd267c75b84ca873917a1)), closes [#95](https://github.com/EuThiagoAndrade/saldo-futuro/issues/95)
+* **issue-96:** mostrar os campos de intervalo só no período escolhido ([#100](https://github.com/EuThiagoAndrade/saldo-futuro/issues/100)) ([e5f1f1a](https://github.com/EuThiagoAndrade/saldo-futuro/commit/e5f1f1aa81eb98ba85ebd81690a5fb84048840f9)), closes [#96](https://github.com/EuThiagoAndrade/saldo-futuro/issues/96)
+
 ## [0.5.0](https://github.com/EuThiagoAndrade/saldo-futuro/compare/v0.4.0...v0.5.0) (2026-10-18)
 
 
