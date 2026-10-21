@@ -69,7 +69,10 @@ O Saldo Futuro é um sistema web de gestão de investimentos pessoais, multiusu�
   - `/privacidade` e `/termos`, estáticas e fora da área autenticada, respondem sem sessão e sem backend, com data de atualização, contato do responsável e links entre si (`src/app/privacidade/`, `src/app/termos/` e `src/components/pagina-legal.tsx`);
   - `/entrar` mostra só o logo e o login centralizados e leva às duas páginas, também no preview sem backend, onde o login continua indisponível; Conta oferece os mesmos links (`src/components/links-legais.tsx`), sem novo destino na navegação principal;
   - a página inicial informada ao Google é `/termos`, que identifica o app, descreve a funcionalidade e leva à política; para as pessoas, a entrada continua em `/entrar`;
-  - a publicação da tela de consentimento do Google é ação do responsável, pelo roteiro O1 a O6 da KB-002, depois das quatro entregas do ciclo.
+  - a publicação da tela de consentimento do Google é ação do responsável, pelo roteiro O1 a O6 da KB-002, depois das quatro entregas do ciclo;
+- versão e novidades (ciclo `010`, em execução):
+  - `/novidades`, autenticada para `admin` e `user`, em Mais e no menu lateral, mostra a versão corrente lida do `package.json` e o histórico manual de `src/lib/novidades.ts`, a partir da `0.7.0`, em linguagem simples;
+  - uma entrada só aparece depois que sua versão é lançada no build; sem data comprovada da release, mostra "Data de publicação em confirmação", e a data real entra no encerramento do ciclo. Versão sem entrada não tem notas, sem erro; nenhum teste exige nota por versão, e a página não leva ao changelog técnico.
 
 Permanecem fora da entrega:
 
@@ -184,7 +187,7 @@ Definidos em `supabase/migrations/20261014193630_benchmarks.sql`.
 ### Interface e PWA
 
 - A aplicação usa os tokens e a fonte IBM Plex Sans do `design-system/DESIGN.md` (`src/app/globals.css`).
-- O grupo `src/app/(app)/` oferece Início, Lançamentos, Ativos, Benchmarks, Transferências, Conta e Administração (só para admin), com barra inferior no celular e menu lateral no desktop. O logo está no menu lateral, no login e, no celular, à esquerda do cabeçalho.
+- O grupo `src/app/(app)/` oferece Início, Lançamentos, Ativos, Benchmarks, Transferências, Novidades, Conta e Administração (só para admin), com barra inferior no celular e menu lateral no desktop. O logo está no menu lateral, no login e, no celular, à esquerda do cabeçalho.
 - As leituras usadas em cálculo são completas e paginadas; composições de carteira e benchmark conferem marcas antes/depois, repetindo no máximo três vezes. Dentro do servidor Next, cada fase passa um `AbortSignal` próprio às consultas, porque o Next devolve a mesma resposta para GET idênticos no mesmo pedido; os componentes de cada marca são lidos em paralelo, sem sobrepor as fases (`src/lib/leitura.ts`). Dado indisponível aparece como `N/D`, sem virar zero. As regras de apresentação do Início estão na seção 15 da KB-004, com CR-51/CR-52.
 - É instalável como PWA pelo menu do navegador, sem service worker e sem modo offline (`src/app/manifest.ts`; ADR-002).
 
@@ -220,3 +223,4 @@ O plano executado do ciclo `001` (`_project/executed/001_fundacao_aplicacao/001_
 | 2026-10-20 | `008` | Eixo patrimonial coerente com as marcas e cartões do Início contidos em uma/duas colunas; apresentação sem mudança de regra financeira |
 | 2026-10-20 | `009` | Margem comum dos gráficos do Início, estados dos botões, campos de intervalo condicionais e seletor de ativo com busca; apresentação e interação sem mudança de regra financeira |
 | 2026-10-21 | `010` | Issue #104: páginas públicas `/privacidade` e `/termos`, links em `/entrar` e em Conta e `/termos` como página inicial informada ao Google; estado final no encerramento do ciclo |
+| 2026-10-21 | `010` | Issue #105: `/novidades` com versão do `package.json` e histórico manual a partir da `0.7.0`, em Mais e no menu lateral |

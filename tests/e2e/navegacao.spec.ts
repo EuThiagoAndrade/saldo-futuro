@@ -6,7 +6,7 @@ import { configurado, criarUsuarios, entrar, removerUsuarios, type UsuarioDeTest
 // Área autenticada da issue A (#37): proteção por ponto de entrada (D2), navegação (DESIGN.md
 // 6.1), "Ocultar valores" (D8) e acessibilidade, com usuários exclusivos deste arquivo (D9).
 
-const ROTAS = ["/", "/lancamentos", "/ativos", "/benchmarks", "/transferencias", "/conta", "/admin"];
+const ROTAS = ["/", "/lancamentos", "/ativos", "/benchmarks", "/transferencias", "/novidades", "/conta", "/admin"];
 // Páginas legais públicas (#104): fora do grupo autenticado, visitadas com e sem sessão.
 const PUBLICAS = ["/privacidade", "/termos"];
 const MOVEL = { width: 360, height: 800 };
@@ -67,6 +67,7 @@ test.describe("área autenticada", () => {
     await barra.getByRole("button", { name: "Mais" }).click();
     const folha = page.getByRole("dialog", { name: "Mais" });
     await expect(folha.getByRole("link", { name: "Transferências" })).toBeVisible();
+    await expect(folha.getByRole("link", { name: "Novidades" })).toBeVisible();
     await expect(folha.getByRole("link", { name: "Conta" })).toBeVisible();
     await expect(folha.getByRole("link", { name: "Administração" })).toHaveCount(0);
     await semViolacoes(page);
@@ -78,12 +79,12 @@ test.describe("área autenticada", () => {
     await page.setViewportSize(DESKTOP);
     await entrar(page, u.comum);
     const menu = page.getByRole("navigation", { name: "Menu lateral" });
-    for (const item of ["Início", "Lançamentos", "Ativos", "Benchmarks", "Transferências", "Conta"]) {
+    for (const item of ["Início", "Lançamentos", "Ativos", "Benchmarks", "Transferências", "Novidades", "Conta"]) {
       await expect(menu.getByRole("link", { name: item })).toBeVisible();
     }
     await expect(menu.getByRole("link", { name: "Administração" })).toHaveCount(0);
     // Os documentos legais ficam em Conta e no login, não na navegação (#104).
-    await expect(menu.getByRole("link")).toHaveCount(7);
+    await expect(menu.getByRole("link")).toHaveCount(8);
     await expect(menu.getByRole("link", { name: "Saldo Futuro" })).toBeVisible();
     await expect(page.getByRole("banner").getByRole("link", { name: "Saldo Futuro" })).toBeHidden();
     await expect(page.getByRole("link", { name: "Saldo Futuro" })).toHaveCount(1);

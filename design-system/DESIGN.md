@@ -2,7 +2,7 @@
 
 > **Status:** Canônico
 > **Versão:** v1
-> **Última atualização:** 2026-10-13
+> **Última atualização:** 2026-10-21
 > **Ciclo de origem:** `000` (issue #3)
 > **Escopo:** interface web do Saldo Futuro
 > **Fonte normativa:** este documento é a autoridade do contrato visual e de interação. A partir do ciclo `001`, a aplicação implementa seus tokens em Tailwind CSS 4. A página `design-system/referencia.html` demonstra o contrato com dados fictícios e não define layout final de telas (ciclo `004`).
@@ -267,7 +267,8 @@ A partir do ciclo `001`, a aplicação implementa os tokens em configuração CS
 
 - Cada item tem ícone de 24 px e rótulo `caption`; o rótulo nunca é omitido.
 - O item ativo usa ícone e rótulo em `primary` e um indicador `primary-subtle` atrás do ícone, além de `aria-current="page"`.
-- "Mais" abre uma folha inferior com os demais destinos. O conteúdo exato é definido no ciclo `004`; o destino de administração só aparece para o perfil `admin`.
+- "Mais" abre uma folha inferior com os demais destinos, nesta ordem: Transferências, Novidades (ciclo `010`), Conta e Administração. Os mesmos destinos aparecem abaixo do divisor do menu lateral. Novidades vale para os dois perfis; o destino de administração só aparece para o perfil `admin`. Com um destino de "Mais" aberto, o próprio botão "Mais" fica em `primary`.
+- Política de privacidade e termos de uso não são destinos da navegação: ficam como links de texto na tela de entrada e em Conta (ciclo `010`).
 - A área de toque de cada item cobre toda a sua posição na barra (no mínimo 44 × 44 px).
 
 ### 6.2 Valor monetário

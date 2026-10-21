@@ -9,7 +9,7 @@ const hasBackend = Boolean(
 test.describe("preview sem backend", () => {
   test.skip(hasBackend, "Roda só quando o Supabase não está configurado.");
 
-  for (const route of ["/", "/entrar", "/admin/acessos"]) {
+  for (const route of ["/", "/entrar", "/admin/acessos", "/novidades"]) {
     test(`${route} mostra o aviso e não faz requisição a outra origem`, async ({ page, baseURL }) => {
       const foreign: string[] = [];
       page.on("request", (request) => {

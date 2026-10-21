@@ -135,6 +135,12 @@ test.describe("/entrar", () => {
       await expect(google).toBeVisible();
       expect(Math.abs((await centro(logo)) - (await centro(google)))).toBeLessThanOrEqual(1);
       expect((await logo.boundingBox())!.y).toBeLessThan((await google.boundingBox())!.y);
+      // Os links legais também ficam centralizados no mesmo eixo (pedido do responsável na PR #110).
+      const links = await page.getByRole("navigation", { name: "Documentos" }).getByRole("link").all();
+      const caixas = await Promise.all(links.map(async (link) => (await link.boundingBox())!));
+      const esquerda = Math.min(...caixas.map((c) => c.x));
+      const direita = Math.max(...caixas.map((c) => c.x + c.width));
+      expect(Math.abs((esquerda + direita) / 2 - (await centro(google)))).toBeLessThanOrEqual(1);
     } else {
       await expect(page.getByRole("heading", { level: 1, name: "Preview sem backend" })).toBeVisible();
       await expect(page.getByRole("button")).toHaveCount(0);

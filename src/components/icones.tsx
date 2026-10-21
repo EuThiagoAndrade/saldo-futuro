@@ -79,6 +79,13 @@ export const IconeConta = (p: Props) => (
   </Icone>
 );
 
+export const IconeNovidades = (p: Props) => (
+  <Icone {...p}>
+    <path d="m11 4 1.9 4.6L17.5 10.5l-4.6 1.9L11 17l-1.9-4.6-4.6-1.9 4.6-1.9z" />
+    <path d="M18 15v5M15.5 17.5h5" />
+  </Icone>
+);
+
 export const IconeAdministracao = (p: Props) => (
   <Icone {...p}>
     <path d="M12 3 5 6v5c0 4.5 3 8.5 7 10 4-1.5 7-5.5 7-10V6z" />

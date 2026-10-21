@@ -28,7 +28,7 @@ export default async function EntrarPage({ searchParams }: { searchParams: Promi
       <h1 className="sr-only">Entrar</h1>
       <Image src={logo} alt="Saldo Futuro" priority className="h-12 w-auto self-center" />
       <LoginPanel initialError={erro !== undefined} passwordLogin={passwordLogin} />
-      <LinksLegais />
+      <LinksLegais centralizado />
     </main>
   );
 }
