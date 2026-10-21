@@ -5,7 +5,7 @@ import { clienteDoUsuario, configurado, criarUsuarios, entrar, removerUsuarios, 
 // Cursor e estados de interação dos botões (#95, BL-004; DESIGN.md 6.9). Dados fictícios.
 const MOVEL = { width: 360, height: 800 };
 const DESKTOP = { width: 1280, height: 900 };
-const ROTAS = ["/", "/lancamentos", "/lancamentos/novo", "/ativos", "/benchmarks", "/benchmarks/comparacao", "/transferencias", "/conta"];
+const ROTAS = ["/", "/lancamentos", "/lancamentos/novo", "/ativos", "/benchmarks", "/benchmarks/comparacao", "/transferencias", "/novidades", "/conta"];
 // Páginas legais públicas (#104): hoje sem botões. A varredura cobre os que vierem a existir;
 // links, foco e acessibilidade ficam em paginas-publicas.spec.ts.
 const PUBLICAS = ["/privacidade", "/termos"];

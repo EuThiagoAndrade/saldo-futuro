@@ -2,13 +2,13 @@
 
 > **Ciclo:** `010`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#104`
 > **Plano:** `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_plan.md`
 > **Branch:** `feature/issue-104`
 > **PR:** [#108](https://github.com/EuThiagoAndrade/saldo-futuro/pull/108)
-> **Integração:** `Pendente`
+> **Integração:** `Conferida no GitHub — PR #108 MERGED em 2026-10-21; etapa externa pendente`
 > **Autorização inicial:** "autorizo a implementação da issue #104" em 2026-10-21
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-21
@@ -71,7 +71,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 | Governança | `node --test scripts/validate-governance.test.mjs` 48/48; `node scripts/validate-governance.mjs` com 0 erros, 0 avisos e cinco itens manuais |
 | G3 | `git grep` do e-mail de contato: só em `src/app/privacidade/page.tsx` e `src/app/termos/page.tsx`; nenhum outro endereço de e-mail no diff |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos | Todos verdes no head `372a520b913a96b84db3b234246554be066b7a97`: lint, tipos, testes, build e e2e de preview; Supabase local, testes de banco e e2e de autenticação; governança; Vercel |
 
 ## Revisão da correção
 
@@ -94,24 +94,30 @@ Não se aplica (trilha normal).
 
 Não se aplica: o ciclo é completo e o encerramento tem PR própria.
 
+## Reconciliação da integração
+
+Em 2026-10-21, o responsável declarou "Revisei os textos de /privacidade e /termos e o contato de Q8 no código: aprovados como estão. aprovo o merge da PR #108". O agente registrou a revisão na task (`372a520`), esperou os checks desse HEAD (o CI ainda rodava na primeira consulta) e conferiu todos verdes e a PR `CLEAN` antes do squash, travado no mesmo HEAD, com o assunto `feat(issue-104): publicar páginas de privacidade e termos e preparar OAuth (#108)`, conferido em `main`. A PR não fechou a issue: #104 continua OPEN, como o plano define. Reconciliação feita na implementação autorizada da #105; não registra o SHA do próprio merge.
+
+**Fatos distintos até o encerramento:** o código da entrega está integrado; a etapa externa (roteiro O1 a O6 da KB-002, com `/termos` como página inicial) ainda não começou e só começa depois de integrar as quatro entregas do ciclo. O resultado externo, a atualização factual da KB-002 e o fechamento da #104 entram na PR de encerramento; até lá, o próximo passo do ciclo fica no artefato ativo (task da issue em curso).
+
 ## Próximo passo
+
+Etapa pendente desta issue, condicionada à integração das quatro entregas (#104 a #107); antes disso, vale o bloco da task da issue em curso.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 010 (completo)
+Situação: Aguardando ação externa — ciclo 010 (completo)
 Quem: Responsável
-Conferir: Checks e diff da PR #108 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/108); antes do merge, revisar os textos de /privacidade e /termos e o contato de Q8, cuja manifestação é registrada nesta task por commit, com checks verdes no novo HEAD (R2-2)
-Diga: "aprovo o merge da PR #108"
+Conferir: Roteiro O1 a O6 da KB-002 (_project/knowledge/KB-002_operacao_producao_acessos.md), somente depois de integrar as quatro entregas do ciclo; issue #104 (https://github.com/EuThiagoAndrade/saldo-futuro/issues/104)
+Diga: "concluí a ação externa da issue #104"
 ```
-
-A revisão dos textos pode vir na mesma mensagem da aprovação do merge ou antes dela; o merge só ocorre depois do registro da revisão e dos checks verdes no HEAD resultante. Depois do merge, a próxima situação é "Aguardando autorização de implementação" da issue #105; a #104 continua aberta até a ação externa.
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 010 + implementar_issue + 104/Item-1-BL-012 + c0e906eb96f5030fce27db734a43938b41e6a783`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: plano `v2` Aprovado, ciclo Planejamento, issue #104 aberta, sem branch nem PR / plano Em Execução, ciclo Em execução, branch `feature/issue-104` publicada e PR #108 aberta, task Aguardando integração
-- `result`: `executed`
-- `evidence`: autorização "autorizo a implementação da issue #104" em 2026-10-21; `git fetch` com `main` igual a `origin/main` em `c0e906e`; consulta prévia sem PR da branch; PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/108 criada via `gh`; validações da tabela de evidências
-- `blockers`: revisão humana dos textos e do contato (R2-2) a registrar nesta task antes do merge; checks remotos verdes no HEAD final; "aprovo o merge da PR #108"
+- `state_before` / `state_after`: PR #108 OPEN com a revisão R2-2 registrada / PR #108 MERGED por squash em main, issue #104 OPEN, task Concluída quanto ao código e etapa externa pendente
+- `result`: `already_executed_and_reconciled`
+- `evidence`: aprovação "aprovo o merge da PR #108" em 2026-10-21; checks verdes no head `372a520`; assunto conferido em main; `gh issue view 104` com estado OPEN
+- `blockers`: nenhum para o código. Ação externa só depois das quatro entregas; fechamento da #104 pela PR de encerramento
