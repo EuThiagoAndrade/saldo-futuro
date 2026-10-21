@@ -352,7 +352,7 @@ Para BL-012, a PR de código usa vínculo de referência, sem fechamento automá
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | — (quatro propostas; nenhuma criada) |
-| PR(s) | — |
+| PR(s) | [#103 — publicação documental do plano](https://github.com/EuThiagoAndrade/saldo-futuro/pull/103), aberta; merge pendente |
 | Branch(es) | `chore/cycle-010-plan` (PR documental do plano) |
 | Destino após conclusão | `_project/executed/010_novidades_privacidade_ativos_distribuicao/010_plan.md` |
 
@@ -373,21 +373,21 @@ Para BL-012, a PR de código usa vínculo de referência, sem fechamento automá
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 010 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 010"
+Situação: Aguardando merge — ciclo 010 (completo)
+Quem: Responsável
+Conferir: Diff e checks da PR documental #103 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/103); confirmar checks verdes no HEAD atual antes de integrar
+Diga: "aprovo o merge da PR #103"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 010 + atualizar_docs + 010_plan/aprovacao-publicacao + v2/5cf019089f4465e5e85fa6661966d856fec09922`
-- `effect_class`: `local_mutation`
-- `state_before` / `state_after`: antes, ciclo 010 em Planejamento e plano v2 em Em Revisão, rodada 2 APTO COM RESSALVAS, Aguardando aprovação do plano, sem PR aberta. Depois, plano v2 Aprovado com manifestação humana posterior e decisões A/UUID/calendário registradas; branch documental criada; Pronto para continuar com publicação documental coberta pela aprovação. Ciclo permanece Planejamento até a primeira implementação autorizada.
+- `effect_class`: `remote_mutation`
+- `state_before` / `state_after`: antes, ciclo 010 em Planejamento e plano v2 em Em Revisão, rodada 2 APTO COM RESSALVAS, Aguardando aprovação do plano, sem PR aberta. Depois, plano v2 Aprovado com manifestação humana posterior e decisões A/UUID/calendário registradas; branch documental publicada e PR #103 aberta, Aguardando merge. Ciclo permanece Planejamento até a primeira implementação autorizada.
 - `result`: `executed`
-- `evidence`: manifestação humana de 2026-10-21 no Registro de aprovação; rodada 2 apta anterior à manifestação; branch chore/cycle-010-plan sobre main/HEAD 5cf019089f4465e5e85fa6661966d856fec09922; leitura via gh sem PR aberta e git ls-remote com main no mesmo SHA antes da criação. Publicação e checks serão reconciliados neste bloco após a PR existir; nenhum número de PR antecipado.
-- `blockers`: nenhum para publicar a PR documental autorizada. Seu merge exige checks verdes e aprovação humana específica; criação de issues aguarda integração documental e confirmação dos payloads. R2-1/R2-2 vinculadas à execução conforme o registro acima.
+- `evidence`: manifestação humana de 2026-10-21 no Registro de aprovação; rodada 2 apta anterior à manifestação; branch chore/cycle-010-plan sobre main 5cf019089f4465e5e85fa6661966d856fec09922; commit inicial 14aec155663f27c3815b90822331212b3f6b671b publicado; PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/103 criada via gh e conferida OPEN, base main, somente ideação/plano/índice. 48/48 testes locais e validador sem erros/avisos. Checks remotos iniciados na leitura de criação; estado atualizado é conferido no GitHub no HEAD atual antes de qualquer merge.
+- `blockers`: merge pendente de checks verdes e aprovação humana específica da PR #103. Criação de issues aguarda integração documental e confirmação dos payloads. Nenhuma implementação, issue, ação externa, verificação em produção ou merge executado. R2-1/R2-2 vinculadas à execução conforme o registro acima.
 
 ## Revisão crítica
 
