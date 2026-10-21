@@ -53,7 +53,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 - [x] Gates de aplicação e de governança (tabela de evidências); auditoria visual pelo DESIGN.md em 375 px e desktop, com dados fictícios.
 - [x] PR #108 publicada via `gh`, base `main`, referenciando a #104 sem fechamento automático; commit da entrega `4bc0f14`.
 - [x] Decisão do responsável na revisão da PR (ver "Decisões incidentais"): `/entrar` sem os textos, só com logo e login centralizados e os links; `/termos` como página inicial informada ao Google. Título "Entrar" mantido só para leitores de tela (`sr-only`); e2e ajustados (ausência do texto, logo e botão no mesmo eixo, `/termos` com identificação, funcionalidade e link da política, sem botão nem campo); plano, KB-002 e KB-003 atualizados.
-- [ ] Revisão humana dos textos de `/privacidade` e `/termos` e do contato de Q8 no código público, registrada nesta task (data e síntese, sem repetir os valores) por commit na branch da PR, com checks verdes no novo HEAD, antes do merge (R2-2).
+- [x] Revisão humana dos textos (R2-2): em 2026-10-21, sobre o HEAD `d48c6cf` da PR #108, o responsável declarou "Revisei os textos de /privacidade e /termos e o contato de Q8 no código: aprovados como estão.", na mesma mensagem de "aprovo o merge da PR #108". Síntese: redação de `/privacidade` e `/termos` aprovada sem alteração, inclusive o inventário factual e os pontos deixados de fora (retenção, residência de dados e conformidade), e o contato de Q8 aprovado para publicação no código das duas páginas. A decisão anterior sobre `/entrar` está em "Decisões incidentais". Registro feito por commit na branch antes do merge; o merge só ocorre com os checks verdes no HEAD que contém este registro.
 
 ## Evidências
 
