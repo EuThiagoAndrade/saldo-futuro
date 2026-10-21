@@ -1,4 +1,5 @@
 import { botaoSecundario } from "@/components/botoes";
+import { LinksLegais } from "@/components/links-legais";
 import { PreviewNotice } from "@/components/preview-notice";
 import { backend } from "@/lib/config";
 import { exigirSessao } from "@/lib/sessao";
@@ -20,6 +21,7 @@ export default async function ContaPage() {
         <dt className="text-text-secondary">Perfil</dt>
         <dd className="text-text">{ROTULO_PAPEL[sessao.papel]}</dd>
       </dl>
+      <LinksLegais />
       <form action="/sair" method="post">
         <button type="submit" className={botaoSecundario}>
           Sair

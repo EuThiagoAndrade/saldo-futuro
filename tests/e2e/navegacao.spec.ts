@@ -7,6 +7,8 @@ import { configurado, criarUsuarios, entrar, removerUsuarios, type UsuarioDeTest
 // 6.1), "Ocultar valores" (D8) e acessibilidade, com usuários exclusivos deste arquivo (D9).
 
 const ROTAS = ["/", "/lancamentos", "/ativos", "/benchmarks", "/transferencias", "/conta", "/admin"];
+// Páginas legais públicas (#104): fora do grupo autenticado, visitadas com e sem sessão.
+const PUBLICAS = ["/privacidade", "/termos"];
 const MOVEL = { width: 360, height: 800 };
 const DESKTOP = { width: 1280, height: 900 };
 const WCAG = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
@@ -32,6 +34,14 @@ test.describe("área autenticada", () => {
     for (const rota of ROTAS) {
       await page.goto(rota);
       await expect(page, rota).toHaveURL(/\/entrar$/);
+    }
+  });
+
+  test("sem sessão, as páginas legais abrem sem redirecionar para /entrar", async ({ page }) => {
+    for (const rota of PUBLICAS) {
+      await page.goto(rota);
+      await expect(page, rota).toHaveURL(new RegExp(`${rota}$`));
+      await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     }
   });
 
@@ -72,6 +82,8 @@ test.describe("área autenticada", () => {
       await expect(menu.getByRole("link", { name: item })).toBeVisible();
     }
     await expect(menu.getByRole("link", { name: "Administração" })).toHaveCount(0);
+    // Os documentos legais ficam em Conta e no login, não na navegação (#104).
+    await expect(menu.getByRole("link")).toHaveCount(7);
     await expect(menu.getByRole("link", { name: "Saldo Futuro" })).toBeVisible();
     await expect(page.getByRole("banner").getByRole("link", { name: "Saldo Futuro" })).toBeHidden();
     await expect(page.getByRole("link", { name: "Saldo Futuro" })).toHaveCount(1);
@@ -178,6 +190,16 @@ test.describe("área autenticada", () => {
     await expect(page).toHaveURL(/\/entrar$/);
   });
 
+  test("Conta oferece a política de privacidade e os termos de uso", async ({ page }) => {
+    await entrar(page, u.comum);
+    await page.goto("/conta");
+    const documentos = page.getByRole("main").getByRole("navigation", { name: "Documentos" });
+    await expect(documentos.getByRole("link", { name: "Política de privacidade" })).toHaveAttribute("href", "/privacidade");
+    await documentos.getByRole("link", { name: "Termos de uso" }).click();
+    await expect(page).toHaveURL(/\/termos$/);
+    await expect(page.getByRole("heading", { level: 1, name: "Termos de uso" })).toBeVisible();
+  });
+
   test("Ocultar valores ligado antes da carga vale depois de recarregar e navegar", async ({ page, context, baseURL }) => {
     await context.addCookies([{ name: "sf_ocultar_valores", value: "1", url: baseURL! }]);
     await entrar(page, u.comum);
@@ -240,7 +262,7 @@ test.describe("área autenticada", () => {
     test(`as páginas da entrega não têm violações de acessibilidade em ${tamanho.width} px`, async ({ page }) => {
       await page.setViewportSize(tamanho);
       await entrar(page, u.admin);
-      for (const rota of ROTAS) {
+      for (const rota of [...ROTAS, ...PUBLICAS]) {
         await page.goto(rota);
         await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
         await semViolacoes(page);

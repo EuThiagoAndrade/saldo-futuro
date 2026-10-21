@@ -1,7 +1,7 @@
 # Plano de Implementação — Novidades, privacidade, tela de ativos e distribuição patrimonial
 
 > **Ciclo:** `010`
-> **Status:** `Aprovado`
+> **Status:** `Em Execução`
 > **Versão:** `v2`
 > **Data de criação:** 2026-10-21
 > **Última atualização:** 2026-10-21
@@ -351,9 +351,10 @@ Para BL-012, a PR de código usa vínculo de referência, sem fechamento automá
 
 | Campo | Valor |
 | :-- | :-- |
-| Issue(s) | — (quatro propostas; nenhuma criada) |
-| PR(s) | [#103 — publicação documental do plano](https://github.com/EuThiagoAndrade/saldo-futuro/pull/103), aberta; merge pendente |
-| Branch(es) | `chore/cycle-010-plan` (PR documental do plano) |
+| Issue(s) | [#104 — BL-012](https://github.com/EuThiagoAndrade/saldo-futuro/issues/104), implementação autorizada em 2026-10-21; [#105 — BL-011](https://github.com/EuThiagoAndrade/saldo-futuro/issues/105), [#106 — BL-006](https://github.com/EuThiagoAndrade/saldo-futuro/issues/106), [#107 — BL-005](https://github.com/EuThiagoAndrade/saldo-futuro/issues/107) — abertas, implementação não autorizada |
+| PR(s) | [#103 — publicação documental do plano](https://github.com/EuThiagoAndrade/saldo-futuro/pull/103), integrada em 2026-10-21 por squash (`c0e906eb96f5030fce27db734a43938b41e6a783`) |
+| Branch(es) | `chore/cycle-010-plan` (PR documental do plano); `feature/issue-104` (BL-012) |
+| Task(s) | `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_task_issue-104.md` |
 | Destino após conclusão | `_project/executed/010_novidades_privacidade_ativos_distribuicao/010_plan.md` |
 
 ## Registro de aprovação
@@ -369,25 +370,45 @@ Para BL-012, a PR de código usa vínculo de referência, sem fechamento automá
 - **Estado reconciliado:** esta seção resolve as propostas/pendências de aprovação descritas no corpo da v2. As alternativas e os relatos anteriores ficam preservados; os tratamentos das ressalvas acima prevalecem sobre as passagens apontadas pela rodada 2.
 - **Validação documental da publicação:** 48/48 testes do validador passaram; governança com 0 erros e 0 avisos (5 conferências manuais); diff e staging sem erros de whitespace e limitados à ideação, plano e índice. Histórico de revisão preservado (SHA-256 normalizado `98bb4dab603c6772ba1c4b7375237cda5321c1a20d40bd73a16449720a86dcd1`). Sem dados reais, contato literal ou código de aplicação no lote.
 
+## Registro de criação das issues
+
+- **Data e autorização:** 2026-10-21, "Pode criar as issues", em resposta aos quatro textos apresentados após o merge da PR #103. A manifestação confirma a publicação dos payloads, não a implementação.
+- **Precondições conferidas:** plano v2 Aprovado com aprovação humana posterior à rodada 2; escolhas A/UUID/calendário registradas; PR #103 MERGED em `c0e906eb96f5030fce27db734a43938b41e6a783`, presente em main local e remota. Consultas via gh, por título/ID e vínculo ao ciclo, sem issue equivalente antes de criar cada unidade.
+- **Template aplicado:** `.github/ISSUE_TEMPLATE/feature_request.yml`, com campos Contexto, Escopo, Critérios de aceite, Ciclo e plano relacionados e Dependências, riscos e autorizações, nessa ordem.
+- **Resultado:** quatro issues criadas sequencialmente via `gh issue create --body-file`, sem labels ou responsáveis adicionais. Cada título/corpo foi relido via `gh issue view` e comparado ao payload confirmado; todas OPEN. Os hashes abaixo usam corpo em UTF-8, LF e uma quebra final; identificam o payload efetivo sem depender de arquivo ignorado.
+
+| Ordem | Origem | Issue e título | SHA-256 do corpo confirmado |
+| :-- | :-- | :-- | :-- |
+| 1 | BL-012 | [#104 — Publicar páginas de privacidade e termos e preparar OAuth](https://github.com/EuThiagoAndrade/saldo-futuro/issues/104) | `12eb0f3594cf96e6f409ea1d3225a380d5900d2fea35d8a867f1ee1d3d654f03` |
+| 2 | BL-011 | [#105 — Exibir versão e novidades do produto](https://github.com/EuThiagoAndrade/saldo-futuro/issues/105) | `700b537c73ef79f64476b4732a986ba0be9e29f04e578013de4d0cc7f58813c2` |
+| 3 | BL-006 | [#106 — Separar cadastro e organizar ativos por abas](https://github.com/EuThiagoAndrade/saldo-futuro/issues/106) | `3d083dee7474602a4b378dab18316e2a5bcaf04eb8028bc821d337e836cda1e8` |
+| 4 | BL-005 | [#107 — Mostrar distribuição patrimonial em rosca acessível](https://github.com/EuThiagoAndrade/saldo-futuro/issues/107) | `32f0f06ca4eb8ab06024b432a82f3011589fe65bf4e66ed78970c2fe36cb9a62` |
+
+A sequência de implementação é #104 → #105 → #106 → #107, cada uma com autorização própria. A PR de código #104 apenas referencia a issue; ela permanece aberta até a ação externa após as quatro entregas e fecha pela PR de encerramento. As demais fecham pelas próprias PRs. O calendário e os tratamentos R2-1/R2-2 do Registro de aprovação permanecem válidos.
+
+Estado corrente: plano Aprovado e ciclo Planejamento; nenhuma branch/task de implementação, código, nova PR, ação externa ou operação em produção iniciada. A fila do backlog não foi alterada neste workflow. Os vínculos no plano/índice são registro local da criação e acompanharão a próxima entrega autorizada, sem commit direto ou push em main.
+
+Validação desta atualização: 48/48 testes de governança passaram; validador com 0 erros, 0 avisos e 5 conferências manuais; `git diff --check` limpo. Diff limitado a plano/índice, sem dados reais; autorizações e semântica conferidas manualmente. Histórico integral das revisões preservado pelo SHA-256 normalizado `98bb4dab603c6772ba1c4b7375237cda5321c1a20d40bd73a16449720a86dcd1`.
+
 ## Próximo passo
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 010 (completo)
+Situação: Aguardando autorização de implementação — ciclo 010 (completo)
 Quem: Responsável
-Conferir: Diff e checks da PR documental #103 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/103); confirmar checks verdes no HEAD atual antes de integrar
-Diga: "aprovo o merge da PR #103"
+Conferir: Issue #104 (https://github.com/EuThiagoAndrade/saldo-futuro/issues/104), item 1 do plano e tratamentos R2-1/R2-2 no Registro de aprovação; escopo de privacidade, termos e preparação OAuth, sem executar ação externa nesta entrega
+Diga: "autorizo a implementação da issue #104"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 010 + atualizar_docs + 010_plan/aprovacao-publicacao + v2/5cf019089f4465e5e85fa6661966d856fec09922`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 010 + criar_issues + feature/BL-012-BL-011-BL-006-BL-005 + v2/c0e906eb96f5030fce27db734a43938b41e6a783`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: antes, ciclo 010 em Planejamento e plano v2 em Em Revisão, rodada 2 APTO COM RESSALVAS, Aguardando aprovação do plano, sem PR aberta. Depois, plano v2 Aprovado com manifestação humana posterior e decisões A/UUID/calendário registradas; branch documental publicada e PR #103 aberta, Aguardando merge. Ciclo permanece Planejamento até a primeira implementação autorizada.
+- `state_before` / `state_after`: antes, plano v2 Aprovado e integrado pela PR #103, ciclo Planejamento, bloco gravado Aguardando merge já superado pela integração comprovada e confirmação humana dos quatro payloads nesta conversa, sem issues equivalentes. Depois, issues #104–#107 OPEN com payloads conferidos, plano/índice reconciliados localmente e Aguardando autorização de implementação da issue #104. Plano Aprovado e ciclo Planejamento preservados.
 - `result`: `executed`
-- `evidence`: manifestação humana de 2026-10-21 no Registro de aprovação; rodada 2 apta anterior à manifestação; branch chore/cycle-010-plan sobre main 5cf019089f4465e5e85fa6661966d856fec09922; commit inicial 14aec155663f27c3815b90822331212b3f6b671b publicado; PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/103 criada via gh e conferida OPEN, base main, somente ideação/plano/índice. 48/48 testes locais e validador sem erros/avisos. Checks remotos iniciados na leitura de criação; estado atualizado é conferido no GitHub no HEAD atual antes de qualquer merge.
-- `blockers`: merge pendente de checks verdes e aprovação humana específica da PR #103. Criação de issues aguarda integração documental e confirmação dos payloads. Nenhuma implementação, issue, ação externa, verificação em produção ou merge executado. R2-1/R2-2 vinculadas à execução conforme o registro acima.
+- `evidence`: pedido "Pode criar as issues" em 2026-10-21; PR #103 conferida MERGED via gh e main em c0e906eb96f5030fce27db734a43938b41e6a783; URLs, ordem e hashes dos quatro payloads no Registro de criação das issues; releitura de títulos/corpos/estado OPEN no GitHub; índice local com #104–#107. Gates documentais desta atualização apresentados na saída do workflow; sem implementação, commit, push ou nova PR.
+- `blockers`: nenhum na criação das quatro issues, concluída. Próxima mutação de implementação exige "autorizo a implementação da issue #104"; modo contínuo permanece —. Sem acesso a dados reais ou produção; R2-1/R2-2 vinculadas às futuras entregas.
 
 ## Revisão crítica
 

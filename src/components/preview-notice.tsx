@@ -1,7 +1,7 @@
 import Image from "next/image";
 import logo from "../../design-system/assets/logo-saldo-futuro.svg";
 
-export function PreviewNotice() {
+export function PreviewNotice({ children }: { children?: React.ReactNode }) {
   return (
     <main className="mx-auto flex min-h-screen max-w-[1120px] flex-col justify-center gap-6 px-4 py-12 sm:px-6 lg:px-8">
       <Image src={logo} alt="Saldo Futuro" priority className="h-12 w-auto self-start" />
@@ -10,6 +10,7 @@ export function PreviewNotice() {
         Esta é uma versão de pré-visualização, sem conexão com o banco de dados. O login e os dados
         só existem no ambiente de produção.
       </p>
+      {children}
     </main>
   );
 }
