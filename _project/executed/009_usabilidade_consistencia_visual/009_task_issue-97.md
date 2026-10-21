@@ -7,7 +7,7 @@
 > **Issue:** `#97`
 > **Plano:** `_project/executed/009_usabilidade_consistencia_visual/009_plan.md`
 > **Branch:** `feature/issue-97`
-> **PR:** [#NNN](https://github.com/EuThiagoAndrade/saldo-futuro/pull/NNN)
+> **PR:** [#101](https://github.com/EuThiagoAndrade/saldo-futuro/pull/101)
 > **Integração:** `Pendente — encerramento prospectivo: efetiva após o merge desta PR`
 > **Autorização inicial:** "autorizo a implementação da issue #97" em 2026-10-20
 > **Modo contínuo:** `—`
@@ -91,14 +91,14 @@ Encerramento prospectivo autorizado pela aprovação da `v2` e preparado nesta �
 - [x] DESIGN.md §6.8 e §6.9 e KB-003 consolidam o contrato do seletor, os estados dos botões, os campos de intervalo e a margem comum; nenhuma nova regra financeira ou ADR.
 - [x] Plano Concluído, tasks Concluída, pasta em `executed/` e `cycles.md` Concluído como estado prospectivo após o merge desta PR.
 - [x] Histórico de aprovação, revisão, origem e evidências preservado; nenhum SHA do próprio merge na task.
-- [x] Publicar a PR #NNN com o encerramento prospectivo.
+- [x] Publicar a PR #101 com o encerramento prospectivo.
 - [ ] Conferir checks remotos verdes e obter aprovação específica do merge.
 
 Antes da integração, a situação efetiva é Aguardando merge. O retorno de BL-013, BL-004, BL-003 e BL-010 à fila só vale depois da integração comprovada do ciclo (cobertura integral prevista para os quatro, com a exceção R2-1 de BL-004 declarada); a publicação desse retorno continua separada e exige autorização própria. Nenhuma ação em produção ou release é parte desta entrega.
 
 ## Próximo passo
 
-Encerramento prospectivo: antes do merge da [PR #NNN](https://github.com/EuThiagoAndrade/saldo-futuro/pull/NNN), a situação efetiva é Aguardando merge. Checks e diff devem estar conferidos antes da frase "aprovo o merge da PR #NNN".
+Encerramento prospectivo: antes do merge da [PR #101](https://github.com/EuThiagoAndrade/saldo-futuro/pull/101), a situação efetiva é Aguardando merge. Checks e diff devem estar conferidos antes da frase "aprovo o merge da PR #101".
 
 ```text
 PRÓXIMO PASSO
