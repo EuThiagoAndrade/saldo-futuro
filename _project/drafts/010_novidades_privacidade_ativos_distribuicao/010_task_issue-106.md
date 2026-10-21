@@ -2,12 +2,12 @@
 
 > **Ciclo:** `010`
 > **Trilha:** `normal`
-> **Estado:** `Em andamento`
+> **Estado:** `Aguardando integração`
 > **Tipo:** `feature`
 > **Issue:** `#106`
 > **Plano:** `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_plan.md`
 > **Branch:** `feature/issue-106`
-> **PR:** —
+> **PR:** [#111](https://github.com/EuThiagoAndrade/saldo-futuro/pull/111)
 > **Integração:** `Pendente`
 > **Autorização inicial:** "autorizo a implementação da issue #106" em 2026-10-21
 > **Modo contínuo:** `—`
@@ -53,6 +53,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 - [x] Testes: `tests/e2e/ativos.spec.ts` (estado vazio das duas abas, Novo ativo acima das abas, cadastro só em `/ativos/novo`, recusa do servidor sem gravar e sem sair da página, sucesso sem mensagem, voltar, abas por URL com parâmetro inválido, recarga e histórico, só a lista selecionada, trânsito sem ação, recusa por saldo não zero, desativação movendo o ativo de aba, nome de 98 caracteres sem truncar no celular, alvos de 44 px, sem rolagem horizontal e axe nas duas abas e no cadastro em 360 e 1280 px); `carteira.spec.ts` com o cadastro pela rota nova; `/ativos/novo` nas listas de navegação, botões e preview.
 - [x] `navegacao-desempenho.spec.ts`: prontidão de `/ativos` passou do formulário embutido para `main #ativos-da-aba > *` (lista ou estado vazio da aba); `MEDICAO.md` atualizado.
 - [x] DESIGN.md 6.7 (exceção da lista densa de Ativos) e 6.12 (abas por navegação); KB-003; nota da `0.7.0` em `src/lib/novidades.ts`.
+- [x] PR #111 publicada via `gh`, base `main`, com `Closes #106`; commit da entrega `2e20f2d`.
 
 ## Evidências
 
@@ -94,18 +95,20 @@ Não se aplica: o ciclo é completo e o encerramento tem PR própria.
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 010 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 010"
+Situação: Aguardando merge — ciclo 010 (completo)
+Quem: Responsável
+Conferir: Checks e diff da PR #111 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/111); nota da 0.7.0 transcrita em "Decisões incidentais"
+Diga: "aprovo o merge da PR #111"
 ```
+
+Depois do merge, a próxima situação é "Aguardando autorização de implementação" da issue #107, última entrega do ciclo. A PR #109 do release-please continua sem integrar.
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 010 + implementar_issue + 106/Item-3-BL-006 + 74d36d0c3550bc381a4ae1e73ab3e8493a230ac5`
-- `effect_class`: `local_mutation`
-- `state_before` / `state_after`: plano Em Execução, #104 e #105 integradas, #106 aberta sem branch nem PR / implementação em andamento na branch `feature/issue-106`
-- `result`: `not_executed`
-- `evidence`: autorização "autorizo a implementação da issue #106" em 2026-10-21; `git fetch` com `main` igual a `origin/main` em `74d36d0`; consulta sem PR ou branch da #106
-- `blockers`: implementação em curso, coberta pela autorização registrada no cabeçalho; este bloco é substituído ao publicar a PR
+- `effect_class`: `remote_mutation`
+- `state_before` / `state_after`: plano Em Execução, #104 e #105 integradas, #106 aberta sem branch nem PR / branch `feature/issue-106` publicada, PR #111 aberta e task Aguardando integração
+- `result`: `executed`
+- `evidence`: autorização "autorizo a implementação da issue #106" em 2026-10-21; `git fetch` com `main` igual a `origin/main` em `74d36d0`; consulta sem PR ou branch da #106; PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/111 criada via `gh`; validações da tabela de evidências
+- `blockers`: checks remotos verdes no HEAD final e "aprovo o merge da PR #111"
