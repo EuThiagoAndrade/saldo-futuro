@@ -1,7 +1,7 @@
 # Registro de ciclos
 
-> **Próximo ciclo:** `010`
-> **Última atualização:** 2026-10-20
+> **Próximo ciclo:** `011`
+> **Última atualização:** 2026-10-21
 
 | Ciclo | Assunto | Estado | Ideação | Plano | Issues | Encerramento |
 | :-- | :-- | :-- | :-- | :-- | :-- | :-- |
@@ -17,5 +17,6 @@
 
 | `008` | Legibilidade do patrimônio e dos cartões de resumo | `Concluído` | — (ciclo leve) | `_project/executed/008_legibilidade_patrimonio_resumo/008_plan.md` | [#88](https://github.com/EuThiagoAndrade/saldo-futuro/issues/88) e [#89](https://github.com/EuThiagoAndrade/saldo-futuro/issues/89) — fechadas como concluídas após o merge da última PR | [PR #92](https://github.com/EuThiagoAndrade/saldo-futuro/pull/92), encerramento prospectivo até seu merge |
 | `009` | Usabilidade e consistência visual | `Concluído` | — (ciclo leve) | `_project/executed/009_usabilidade_consistencia_visual/009_plan.md` | [#94](https://github.com/EuThiagoAndrade/saldo-futuro/issues/94), [#95](https://github.com/EuThiagoAndrade/saldo-futuro/issues/95), [#96](https://github.com/EuThiagoAndrade/saldo-futuro/issues/96) e [#97](https://github.com/EuThiagoAndrade/saldo-futuro/issues/97) — fechadas como concluídas após o merge da última PR | [PR #101](https://github.com/EuThiagoAndrade/saldo-futuro/pull/101), encerramento prospectivo até seu merge |
+| `010` | Novidades, privacidade, tela de ativos e distribuição patrimonial | `Planejamento` | `_project/ideations/010_novidades_privacidade_ativos_distribuicao.md` | `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_plan.md` | — | — |
 
 O ciclo `000` não tem ideação retroativa. Sua origem e as aprovações anteriores à implantação da governança estão registradas no próprio plano.
