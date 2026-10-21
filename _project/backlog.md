@@ -62,7 +62,7 @@ Identificado na tela inicial (`src/app/(app)/page.tsx`), onde a ativação simul
 
 > **Criado em:** `2026-10-20`
 > **Atualizado em:** `2026-10-20`
-> **Estado:** `Disponível`
+> **Estado:** `Encaminhado`
 
 ### Problema e benefício esperado
 
@@ -74,7 +74,7 @@ Identificado inicialmente na tela inicial (`src/app/(app)/page.tsx`), com ocorr�
 
 ### Encaminhamentos
 
-—
+- ciclo 009 — 2026-10-20 — integral
 
 ### Restante
 
@@ -84,12 +84,13 @@ Identificado inicialmente na tela inicial (`src/app/(app)/page.tsx`), com ocorr�
 
 - 2026-10-20 — Pedido explícito de guardar a necessidade levantada no registro temporário de melhorias; captura local.
 - 2026-10-20 — Pedido explícito de expandir o escopo para todos os filtros de período da aplicação onde ocorre o padrão de predefinições e intervalo (incluindo tela inicial e comparação de benchmarks); edição local.
+- 2026-10-20 — Retorno pós-integração da seleção original do ciclo 009; necessidade integralmente encaminhada (issue #96, PR #100).
 
 ## BL-004 — Uniformidade de cursor e feedback tátil de interação nos botões
 
 > **Criado em:** `2026-10-20`
 > **Atualizado em:** `2026-10-20`
-> **Estado:** `Disponível`
+> **Estado:** `Encaminhado`
 
 ### Problema e benefício esperado
 
@@ -101,7 +102,7 @@ Observado em telas como Lançamentos (`src/app/(app)/lancamentos/page.tsx`) e na
 
 ### Encaminhamentos
 
-—
+- ciclo 009 — 2026-10-20 — integral
 
 ### Restante
 
@@ -110,6 +111,7 @@ Observado em telas como Lançamentos (`src/app/(app)/lancamentos/page.tsx`) e na
 ### Registro
 
 - 2026-10-20 — Pedido explícito de guardar a necessidade levantada no registro temporário de melhorias; captura local.
+- 2026-10-20 — Retorno pós-integração da seleção original do ciclo 009; necessidade integralmente encaminhada (issue #95, PR #99); a exceção declarada na aprovação do plano continua valendo: no botão principal, com mouse e movimento reduzido, o pressionado tem a mesma cor do hover.
 
 ## BL-005 — Visualização intuitiva de alocação patrimonial por ativo com detalhamento legível
 
@@ -245,7 +247,7 @@ Observado em `src/components/formularios/novo-ativo.tsx` e no schema da tabela `
 
 > **Criado em:** `2026-10-20`
 > **Atualizado em:** `2026-10-20`
-> **Estado:** `Disponível`
+> **Estado:** `Encaminhado`
 
 ### Problema e benefício esperado
 
@@ -257,7 +259,7 @@ Identificado em `src/app/(app)/lancamentos/page.tsx` (filtro de lançamentos), `
 
 ### Encaminhamentos
 
-—
+- ciclo 009 — 2026-10-20 — integral
 
 ### Restante
 
@@ -266,6 +268,7 @@ Identificado em `src/app/(app)/lancamentos/page.tsx` (filtro de lançamentos), `
 ### Registro
 
 - 2026-10-20 — Pedido explícito de guardar a necessidade; captura local.
+- 2026-10-20 — Retorno pós-integração da seleção original do ciclo 009; necessidade integralmente encaminhada (issue #97, PR #101).
 
 ## BL-011 — Tela de novidades com histórico de versões e notas de lançamento acessíveis
 
@@ -323,7 +326,7 @@ Registrado em `_project/knowledge/KB-002_operacao_producao_acessos.md` (passo GC
 
 > **Criado em:** `2026-10-20`
 > **Atualizado em:** `2026-10-20`
-> **Estado:** `Disponível`
+> **Estado:** `Encaminhado`
 
 ### Problema e benefício esperado
 
@@ -335,7 +338,7 @@ No ciclo 008, a margem maior foi adotada para acomodar rótulos monetários exte
 
 ### Encaminhamentos
 
-—
+- ciclo 009 — 2026-10-20 — integral
 
 ### Restante
 
@@ -344,3 +347,4 @@ No ciclo 008, a margem maior foi adotada para acomodar rótulos monetários exte
 ### Registro
 
 - 2026-10-20 — Pedido explícito de corrigir o recuo do gráfico de evolução patrimonial e guardar a necessidade para seleção futura; captura local.
+- 2026-10-20 — Retorno pós-integração da seleção original do ciclo 009; necessidade integralmente encaminhada (issue #94, PR #98).
