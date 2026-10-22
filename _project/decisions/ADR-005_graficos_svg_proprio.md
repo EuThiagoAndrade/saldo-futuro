@@ -6,7 +6,7 @@ tags:
   - gráficos
 author: "Thiago Andrade e Claude"
 module: "Interface"
-last_updated: "2026-10-14"
+last_updated: "2026-10-21"
 origin_cycle: "004"
 ---
 
@@ -33,6 +33,7 @@ A origem (`Meus-Investimentos`) usava Chart.js carregado de CDN sem versão fixa
 
 - Os gráficos são componentes SVG próprios, renderizados no servidor, sem JavaScript no cliente e sem dependência de pacote.
 - São quatro tipos: linha, linha com séries tracejadas, barras de ganho e perda e barras horizontais.
+- **Emenda do ciclo `010` (BL-005):** a rosca entra como quinto tipo e passa a desenhar a distribuição por ativo. As barras horizontais, que só serviam a ela, saem do código. A rosca segue as mesmas regras: SVG próprio no servidor, sem JavaScript nem biblioteca; fatias proporcionais aos saldos positivos, sem tamanho mínimo artificial, e círculo completo quando há um só positivo; legenda HTML com nome completo, participação e valor, e Outros retrátil com `<details>`; saldos negativos listados fora da rosca; tabela equivalente com resumo e detalhe separados. O cálculo da participação é o da KB-004, seção 15, e o contrato visual é o do `DESIGN.md` (2.3 e 6.13).
 - Cada gráfico tem título, descrição e uma tabela com os mesmos números, que é a forma acessível da informação.
 - Um mês `N/D` é lacuna na série, nunca zero.
 - Rótulos monetários, título, descrição e tabela obedecem à preferência "Ocultar valores" lida no servidor.
@@ -62,3 +63,4 @@ A origem (`Meus-Investimentos`) usava Chart.js carregado de CDN sem versão fixa
 - ADR-002, seção "Stack".
 - `design-system/DESIGN.md`, seções 2.3, 6.5 e 7.
 - Ideação do ciclo `004` (P4, defeito U1) e plano do ciclo `004` (D6, D8 e D14).
+- Plano do ciclo `010`, item 4 (Q1 a Q5), para a emenda da rosca; KB-004, seção 15.

@@ -300,7 +300,8 @@ for (const [alvo, alteracao, prova] of [
     const patrimonio = page.locator('main').getByText('Patrimônio', { exact: true }).first().locator('..');
     const distribuicao = page.getByRole('figure').filter({ hasText: 'Distribuição por ativo em setembro de 2026' });
     await distribuicao.getByText('Ver os números').click();
-    const linhaAtivo1 = distribuicao.getByRole('rowheader', { name: 'Ativo fictício 1', exact: true }).locator('..');
+    // Só o detalhe por ativo (#107): o resumo também lista os cinco maiores e somaria Outros.
+    const linhaAtivo1 = distribuicao.getByRole('table', { name: 'Detalhe por ativo' }).getByRole('rowheader', { name: 'Ativo fictício 1', exact: true }).locator('..');
     // A marca final vai ao banco, vê o refechamento e a composição inteira é lida de novo.
     await expect(linhaAtivo1).toContainText('R$ 7.060,00');
     await expect(patrimonio).toContainText('R$ 182.800,00');

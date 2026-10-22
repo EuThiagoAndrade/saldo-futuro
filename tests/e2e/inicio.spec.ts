@@ -99,8 +99,10 @@ test.describe("Início", () => {
     await expect(cartao(page, "Patrimônio")).toContainText("em 30/04/2026");
     const distribuicao = page.getByRole("figure").filter({ hasText: "Distribuição por ativo em abril de 2026" });
     await distribuicao.getByText("Ver os números").click();
-    await expect(distribuicao.getByRole("row", { name: /Ativo A/ })).toContainText("R$ 8.050,00");
-    await expect(distribuicao.getByRole("row", { name: /Em trânsito/ })).toContainText("R$ 2.000,00");
+    // Resumo e detalhe são tabelas separadas (#107); cada posição é conferida no detalhe.
+    const detalhe = distribuicao.getByRole("table", { name: "Detalhe por ativo" });
+    await expect(detalhe.getByRole("row", { name: /Ativo A/ })).toContainText("R$ 8.050,00");
+    await expect(detalhe.getByRole("row", { name: /Em trânsito/ })).toContainText("R$ 2.000,00");
   });
 
   test("CR-20: rentabilidade do mês (Modified Dietz) e variação do patrimônio", async ({ page }) => {

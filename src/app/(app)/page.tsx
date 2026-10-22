@@ -3,8 +3,9 @@ import { botaoPrincipal, botaoSecundario } from "@/components/botoes";
 import { Campo, classeCampo } from "@/components/campos";
 import { Dinheiro } from "@/components/dinheiro";
 import { EstadoErro, EstadoVazio } from "@/components/estados";
-import { GraficoBarras, GraficoDistribuicao, GraficoLinha } from "@/components/graficos/graficos";
+import { GraficoBarras, GraficoLinha } from "@/components/graficos/graficos";
 import { margemComum, rotulosDoEixoBarras, rotulosDoEixoLinha } from "@/components/graficos/margem";
+import { GraficoRosca } from "@/components/graficos/rosca";
 import { PreviewNotice } from "@/components/preview-notice";
 import { NaoDisponivel, Percentual, ValorOculto, VariacaoPercentual } from "@/components/valores";
 import { dataBr, mesBr } from "@/lib/apresentacao/datas";
@@ -12,6 +13,7 @@ import { mesCurto, textoDinheiro, textoEixoDinheiro, textoPercentual } from "@/l
 import { backend } from "@/lib/config";
 import { indice } from "@/lib/financeiro/apresentacao";
 import { RecusaFinanceira } from "@/lib/financeiro/centavos";
+import { comporDistribuicao } from "@/lib/financeiro/distribuicao";
 import { hojeEmCuiaba, ultimoDia } from "@/lib/financeiro/datas";
 import { ND } from "@/lib/financeiro/rentabilidade";
 import { ErroLeitura, MENSAGEM_DADOS_MUDARAM } from "@/lib/leitura";
@@ -42,9 +44,6 @@ const ROTULO_PERIODO: Record<TipoDePeriodo, string> = {
   desde_inicio: "Desde o início",
   intervalo: "Intervalo escolhido",
 };
-
-const CORES = ["var(--color-chart-1)", "var(--color-chart-2)", "var(--color-chart-3)", "var(--color-chart-4)", "var(--color-chart-6)"];
-const COR_OUTROS = "var(--color-chart-5)";
 
 const rotuloPeriodo = (p: Periodo) => (p.de === p.ate ? mesBr(p.de) : `${mesBr(p.de)} a ${mesBr(p.ate)}`);
 const maiuscula = (t: string) => `${t[0].toUpperCase()}${t.slice(1)}`;
@@ -154,15 +153,12 @@ async function Resumo({
   const mesesDoGrafico = mesesDoPeriodo(periodo).filter((m) => m >= inicio);
   const mesesDeRetorno = resultado.mesesBase100.length ? resultado.mesesBase100 : mesesDoGrafico;
   const vfPorMes = new Map(meses.map((m) => [m.mes, m.vf]));
-  const posicoesDeM = insumos.posicoes
-    .filter((p) => p.mes.slice(0, 7) === M && p.saldo_final !== 0)
-    .sort((a, b) => b.saldo_final - a.saldo_final);
-  const principais = posicoesDeM.slice(0, 5);
-  const outros = posicoesDeM.slice(5);
-  const distribuicao = [
-    ...principais.map((p, i) => ({ nome: nomeDoAtivo(insumos.ativos, p.ativo_id), valor: p.saldo_final, cor: CORES[i] })),
-    ...(outros.length ? [{ nome: "Outros", valor: outros.reduce((s, p) => s + p.saldo_final, 0), cor: COR_OUTROS }] : []),
-  ];
+  // Distribuição de M (KB-004, seção 15): participação sobre os saldos positivos, pelo maior resto.
+  const distribuicao = comporDistribuicao(
+    insumos.posicoes
+      .filter((p) => p.mes.slice(0, 7) === M)
+      .map((p) => ({ id: p.ativo_id, nome: nomeDoAtivo(insumos.ativos, p.ativo_id), saldo: p.saldo_final })),
+  );
   const dinheiro = (centavos: bigint | number) => (oculto ? <ValorOculto /> : textoDinheiro(BigInt(centavos)));
   const eixoDinheiro = (reais: number, marcas: number[]) => (oculto ? "••••" : textoEixoDinheiro(reais, marcas));
 
@@ -303,16 +299,13 @@ async function Resumo({
             linhasTabela={resultado.mesesBase100.map((m, i) => ({ rotulo: mesBr(m), valores: [indice((resultado.base100 as number[])[i])] }))}
           />
         )}
-        {distribuicao.length ? (
-          <GraficoDistribuicao
-            id="grafico-distribuicao"
-            titulo={`Distribuição por ativo em ${mesBr(M)}`}
-            descricao="Saldo de cada ativo no fim do último mês fechado; além dos cinco maiores, os demais somados em Outros."
-            itens={distribuicao}
-            colunasTabela={["Ativo", "Saldo"]}
-            linhasTabela={distribuicao.map((d) => ({ rotulo: d.nome, valores: [dinheiro(d.valor)] }))}
-          />
-        ) : null}
+        <GraficoRosca
+          id="grafico-distribuicao"
+          titulo={`Distribuição por ativo em ${mesBr(M)}`}
+          descricao="Participação de cada ativo na soma dos saldos positivos no fim do último mês fechado; além dos cinco maiores, os demais somados em Outros. Saldos negativos ficam fora da rosca."
+          distribuicao={distribuicao}
+          dinheiro={dinheiro}
+        />
       </section>
     </>
   );
