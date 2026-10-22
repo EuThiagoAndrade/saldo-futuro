@@ -2,12 +2,12 @@
 
 > **Ciclo:** `010`
 > **Trilha:** `normal`
-> **Estado:** `Em andamento`
+> **Estado:** `Aguardando integração`
 > **Tipo:** `feature`
 > **Issue:** `#107`
 > **Plano:** `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_plan.md`
 > **Branch:** `feature/issue-107`
-> **PR:** —
+> **PR:** [#112](https://github.com/EuThiagoAndrade/saldo-futuro/pull/112)
 > **Integração:** `Pendente`
 > **Autorização inicial:** "autorizo a implementação da issue #107" em 2026-10-21
 > **Modo contínuo:** `—`
@@ -54,6 +54,8 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 - [x] Início: `comporDistribuicao` sobre as posições de M e `GraficoRosca` sempre que há M; `GraficoDistribuicao` (barras) removido de `graficos.tsx`.
 - [x] E2e: `tests/e2e/distribuicao.spec.ts` (novo); CR-17 de `inicio.spec.ts` e prova D13 de `navegacao-desempenho.spec.ts` limitados à tabela "Detalhe por ativo".
 - [x] Nota da `0.7.0` em `src/lib/novidades.ts` e KB-003.
+- [x] Layout: lado a lado só de `md` até antes de `lg`; empilhado na meia coluna do Início (correção da rolagem de 1 px em 1024 px).
+- [x] PR #112 publicada via `gh`, base `main`, com `Closes #107`; commits `3e1cfc8` (G1), `cfe4ce8` (entrega) e `451d004` (layout).
 
 ## Evidências
 
@@ -97,18 +99,20 @@ Não se aplica: o ciclo é completo e o encerramento tem PR própria.
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 010 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 010"
+Situação: Aguardando merge — ciclo 010 (completo)
+Quem: Responsável
+Conferir: Checks e diff da PR #112 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/112); nota da 0.7.0 e ordem de apresentação dos negativos e omitidos em "Decisões incidentais"
+Diga: "aprovo o merge da PR #112"
 ```
+
+Depois do merge, esta task passa a ser o artefato ativo da etapa externa: a situação é "Aguardando ação externa" da issue #104, pelo roteiro O1 a O6 da KB-002, com `/termos` como página inicial no Google. A PR #109 do release-please continua sem integrar até a etapa de release do plano.
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 010 + implementar_issue + 107/Item-4-BL-005 + d02c1ea18d68743b5a572393fa688eeca6d611ec`
-- `effect_class`: `local_mutation`
-- `state_before` / `state_after`: plano Em Execução, #104 a #106 integradas, #107 aberta sem branch nem PR / implementação em andamento na branch `feature/issue-107`
-- `result`: `not_executed`
-- `evidence`: autorização "autorizo a implementação da issue #107" em 2026-10-21; `git fetch` com `main` igual a `origin/main` em `d02c1ea`; consulta sem PR ou branch da #107
-- `blockers`: implementação em curso, coberta pela autorização registrada no cabeçalho; este bloco é substituído ao publicar a PR
+- `effect_class`: `remote_mutation`
+- `state_before` / `state_after`: plano Em Execução, #104 a #106 integradas, #107 aberta sem branch nem PR / branch `feature/issue-107` publicada, PR #112 aberta e task Aguardando integração
+- `result`: `executed`
+- `evidence`: autorização "autorizo a implementação da issue #107" em 2026-10-21; `git fetch` com `main` igual a `origin/main` em `d02c1ea`; consulta sem PR ou branch da #107; PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/112 criada via `gh`; validações da tabela de evidências
+- `blockers`: checks remotos verdes no HEAD final e "aprovo o merge da PR #112"

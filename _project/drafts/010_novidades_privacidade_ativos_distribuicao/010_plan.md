@@ -352,7 +352,7 @@ Para BL-012, a PR de código usa vínculo de referência, sem fechamento automá
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | [#104 — BL-012](https://github.com/EuThiagoAndrade/saldo-futuro/issues/104), código integrado, aberta até a ação externa; [#105 — BL-011](https://github.com/EuThiagoAndrade/saldo-futuro/issues/105), fechada pela PR #110; [#106 — BL-006](https://github.com/EuThiagoAndrade/saldo-futuro/issues/106), fechada pela PR #111; [#107 — BL-005](https://github.com/EuThiagoAndrade/saldo-futuro/issues/107), implementação autorizada em 2026-10-21 |
-| PR(s) | [#103 — publicação documental do plano](https://github.com/EuThiagoAndrade/saldo-futuro/pull/103), integrada em 2026-10-21 por squash (`c0e906eb96f5030fce27db734a43938b41e6a783`); [#108 — BL-012](https://github.com/EuThiagoAndrade/saldo-futuro/pull/108), integrada em 2026-10-21 por squash, sem fechar a #104; [#110 — BL-011](https://github.com/EuThiagoAndrade/saldo-futuro/pull/110), integrada em 2026-10-21 por squash; [#111 — BL-006](https://github.com/EuThiagoAndrade/saldo-futuro/pull/111), integrada em 2026-10-22 por squash |
+| PR(s) | [#103 — publicação documental do plano](https://github.com/EuThiagoAndrade/saldo-futuro/pull/103), integrada em 2026-10-21 por squash (`c0e906eb96f5030fce27db734a43938b41e6a783`); [#108 — BL-012](https://github.com/EuThiagoAndrade/saldo-futuro/pull/108), integrada em 2026-10-21 por squash, sem fechar a #104; [#110 — BL-011](https://github.com/EuThiagoAndrade/saldo-futuro/pull/110), integrada em 2026-10-21 por squash; [#111 — BL-006](https://github.com/EuThiagoAndrade/saldo-futuro/pull/111), integrada em 2026-10-22 por squash; [#112 — BL-005](https://github.com/EuThiagoAndrade/saldo-futuro/pull/112), aberta |
 | Branch(es) | `chore/cycle-010-plan` (PR documental do plano); `feature/issue-104` (BL-012); `feature/issue-105` (BL-011); `feature/issue-106` (BL-006); `feature/issue-107` (BL-005) |
 | Task(s) | `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_task_issue-104.md`; `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_task_issue-105.md`; `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_task_issue-106.md`; `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_task_issue-107.md` |
 | Destino após conclusão | `_project/executed/010_novidades_privacidade_ativos_distribuicao/010_plan.md` |
@@ -398,6 +398,8 @@ Validação desta atualização: 48/48 testes de governança passaram; validador
 - **Issue #105 (BL-011):** "autorizo a implementação da issue #105" em 2026-10-21. Branch `feature/issue-105`, task `010_task_issue-105.md` (artefato ativo) e [PR #110](https://github.com/EuThiagoAndrade/saldo-futuro/pull/110), com `Closes #105`. A PR #109 do release-please (`0.7.0`) está aberta e não é integrada antes das quatro entregas.
 - **Issue #105 integrada:** PR #110 por squash em 2026-10-21, com as notas da `0.7.0` aprovadas; inclui, a pedido do responsável, os links legais centralizados em `/entrar`.
 - **Issue #106 (BL-006):** "autorizo a implementação da issue #106" em 2026-10-21. Branch `feature/issue-106`, task `010_task_issue-106.md` (artefato ativo) e [PR #111](https://github.com/EuThiagoAndrade/saldo-futuro/pull/111), com `Closes #106`.
+- **Issue #106 integrada:** PR #111 por squash em 2026-10-22, depois de repetir o job de CI que falhou por porta ocupada no runner.
+- **Issue #107 (BL-005):** "autorizo a implementação da issue #107" em 2026-10-21. Regra e casos CR-53 a CR-61 registrados na KB-004 e no JSON antes do código (commit `3e1cfc8`); branch `feature/issue-107`, task `010_task_issue-107.md` (artefato ativo) e [PR #112](https://github.com/EuThiagoAndrade/saldo-futuro/pull/112), com `Closes #107`.
 
 ## Próximo passo
 
@@ -405,19 +407,19 @@ Validação desta atualização: 48/48 testes de governança passaram; validador
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 010 (completo)
 Quem: Responsável
-Conferir: Checks e diff da PR #111 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/111); nota da 0.7.0 transcrita na task 010_task_issue-106.md
-Diga: "aprovo o merge da PR #111"
+Conferir: Checks e diff da PR #112 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/112); nota da 0.7.0 e ordem dos negativos e omitidos na task 010_task_issue-107.md
+Diga: "aprovo o merge da PR #112"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 010 + implementar_issue + 106/Item-3-BL-006 + 74d36d0c3550bc381a4ae1e73ab3e8493a230ac5`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 010 + implementar_issue + 107/Item-4-BL-005 + d02c1ea18d68743b5a572393fa688eeca6d611ec`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: #104 e #105 integradas, #106 aberta sem branch nem PR / branch `feature/issue-106` publicada, PR #111 aberta e task da #106 Aguardando integração
+- `state_before` / `state_after`: #104 a #106 integradas, #107 aberta sem branch nem PR / branch `feature/issue-107` publicada, PR #112 aberta e task da #107 Aguardando integração
 - `result`: `executed`
-- `evidence`: autorização de implementação da #106 em 2026-10-21; base conferida igual a `origin/main` em `74d36d0`; PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/111 criada via `gh`; validações registradas na task
-- `blockers`: checks remotos verdes no HEAD final; "aprovo o merge da PR #111". A issue #107 segue sem autorização; PR #109 do release-please não é integrada antes das quatro entregas
+- `evidence`: autorização de implementação da #107 em 2026-10-21; base conferida igual a `origin/main` em `d02c1ea`; KB-004 e casos registrados antes do código; PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/112 criada via `gh`; validações registradas na task
+- `blockers`: checks remotos verdes no HEAD final; "aprovo o merge da PR #112". Depois do merge, Aguardando ação externa da issue #104; PR #109 do release-please sem integrar até a etapa de release
 
 ## Revisão crítica
 
