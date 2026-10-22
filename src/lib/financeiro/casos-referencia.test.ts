@@ -85,7 +85,7 @@ describe("casos de referência da KB-004", () => {
 
   it("todo caso tem entrega conhecida e ao menos um valor esperado", () => {
     for (const caso of casos) {
-      expect(["B", "C", "D", "004", "006"]).toContain(caso.entrega);
+      expect(["B", "C", "D", "004", "006", "010"]).toContain(caso.entrega);
       expect(Object.keys(caso.esperado).length).toBeGreaterThan(0);
     }
   });

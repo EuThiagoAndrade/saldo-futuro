@@ -6,7 +6,7 @@ tags:
   - referência
 author: "Thiago Andrade e Claude"
 module: "Regras financeiras"
-last_updated: "2026-10-18"
+last_updated: "2026-10-21"
 origin_cycle: "003"
 ---
 
@@ -42,7 +42,7 @@ Ela deliberadamente não decide:
 
 **Índices e taxas.** Valores de séries de benchmark são gravados exatamente como publicados pela fonte, em `numeric` sem escala fixa (D1). Eles são lidos como texto e só convertidos para `float64` no cálculo.
 
-**Razões.** Retornos, composições, variações e percentuais são frações em `float64` (0,01 = 1%), nunca gravadas (D2) e nunca arredondadas em valores intermediários (P3). Nos testes, uma razão confere quando o erro é de no máximo 10⁻⁹ × max(1, |esperado|): absoluto até 1, relativo acima.
+**Razões.** Retornos, composições, variações e percentuais são frações em `float64` (0,01 = 1%), nunca gravadas (D2) e nunca arredondadas em valores intermediários (P3). Nos testes, uma razão confere quando o erro é de no máximo 10⁻⁹ × max(1, |esperado|): absoluto até 1, relativo acima. **Exceção (ciclo `010`):** a participação de cada ativo na distribuição do Início (seção 15) não é razão `float64`: é um inteiro de centésimos de ponto percentual, de 0 a 10000, calculado em `bigint` pelo maior resto.
 
 **`N/D`.** Ausência de valor, nunca zero (`DESIGN.md`, 6.5). Toda regra que dependa de um valor `N/D` devolve `N/D`, salvo regra explícita nesta KB.
 
@@ -53,6 +53,7 @@ Ela deliberadamente não decide:
 - O arredondamento é decimal, feito sobre a representação decimal mais curta que reproduz o `float64` (a de `Number.prototype.toString`), expandida sem expoente. Um percentual é obtido dessa representação deslocando a vírgula duas casas, sem multiplicar por 100 em ponto flutuante. Assim, a fração 0,01005, cujo `float64` fica abaixo de 0,01005, é apresentada como 1,01%.
 - O resultado usa o formato brasileiro: `.` como separador de milhar, `,` como separador decimal e o sinal de menos U+2212 nos negativos. Um resultado que arredonda para zero é `0,00`, sem sinal.
 - O símbolo (`%`, `p.p.`), o sinal explícito de positivos e a cor são do `DESIGN.md`. O arredondamento só ocorre na apresentação; nenhum cálculo usa o valor arredondado.
+- **Exceção (ciclo `010`):** a participação da distribuição do Início (seção 15) não passa por este arredondamento individual. Ela já é um inteiro de centésimos de ponto percentual, repartido pelo maior resto para somar exatamente 100,00%, e é apresentada com duas casas, sem sinal, por simples posição da vírgula (3334 → 33,34%).
 - O `DESIGN.md` (6.3) indica `Intl.NumberFormat` para percentuais. Ele é um meio aceitável desde que produza os resultados do CR-38: no Node.js 24, conferido em 2026-10-14, o `Intl` coincide nos algarismos de todos os percentuais do caso, mas usa hífen nos negativos (que o `DESIGN.md` manda trocar pelo U+2212) e apresenta −0,00004 como `-0,00%`, com sinal no zero. A regra vale pelo resultado, não pelo mecanismo.
 
 ### 3. Faixa monetária e recusa (D11)
@@ -310,7 +311,8 @@ Os casos usam só dados fictícios. Cada caso tem o mesmo identificador `CR-NN` 
 - quantias em centavos inteiros; razões como frações (0.01 = 1%), escritas com a representação decimal mais curta do `float64`;
 - os valores esperados ficam na lista **Esperado**, um por linha, no formato `` `chave`: `valor` ``, e são sempre o último bloco do caso;
 - `recusado_<motivo>` indica recusa sem gravação; `aceito`, uma operação aceita;
-- a coluna "Entrega" indica a issue cujos testes executam o caso (B, C, D ou o ciclo `004`).
+- a coluna "Entrega" indica a issue cujos testes executam o caso (B, C, D ou os ciclos `004`, `006` e `010`);
+- nos casos da distribuição (CR-53 a CR-61, ciclo `010`), a participação `participacao_<alias>_centesimos_pp` é um inteiro de centésimos de ponto percentual, de 0 a 10000, escrito como texto decimal; `base_positiva_centavos`, `patrimonio_liquido_centavos` e `outros_centavos` são centavos em texto decimal exato; `principais`, `componentes_outros`, `sem_percentual` e `omitidos` são listas de aliases em JSON compacto, na ordem de apresentação; subcenários usam os prefixos `s1_`, `s2_` e `s3_`.
 
 A conferência independente está em `_project/executed/003_regras_financeiras/003_validation_casos_referencia.md`.
 
@@ -977,6 +979,141 @@ Nos casos de série diária, os valores são fictícios, de 0,04% ao dia, em dia
   - `aportes_liquidos`: `5000`
   - `aportes_liquidos_sem_fechamento`: `80000`
 
+#### Distribuição por ativo
+
+Casos da regra de participação da seção 15 (ciclo `010`, BL-005). Os nomes são os próprios aliases, salvo onde indicado; os identificadores são UUIDs fictícios. Os esperados vêm de quocientes e restos inteiros de `v × 10000 ÷ S` calculados à mão no plano do ciclo `010` (item 4), sem a função testada. As participações em porcentagem (33,34%) são só a leitura do inteiro (3334).
+
+#### CR-53 — Participação com saldos iguais: desempate pelo nome
+
+- **Entrega:** ciclo `010`. **Regras:** 15 (distribuição), 1 e 2 (exceção da participação).
+- **Entrada:** C, A e B com 10.000 cada, nessa ordem de entrada.
+- **Passo a passo:** S = 30.000. Para cada um, 10.000 × 10.000 = 100.000.000; ÷ 30.000 dá piso 3.333 e resto 10.000. A soma dos pisos é 9.999; sobra 1 unidade. Os três restos e saldos empatam, e o nome decide: A recebe a unidade. Embaralhar a entrada não muda o resultado.
+- **Esperado:**
+  - `base_positiva_centavos`: `30000`
+  - `participacao_A_centesimos_pp`: `3334`
+  - `participacao_B_centesimos_pp`: `3333`
+  - `participacao_C_centesimos_pp`: `3333`
+  - `principais`: `["A","B","C"]`
+  - `componentes_outros`: `[]`
+  - `sem_percentual`: `[]`
+  - `omitidos`: `[]`
+
+#### CR-54 — Maior resto e empate de resto pelo saldo
+
+- **Entrega:** ciclo `010`. **Regras:** 15 (distribuição).
+- **Entrada:** (s1) A = 5 e B = 1. (s2) A = 7, B = 1 e C = 4.
+- **Passo a passo:** (s1) S = 6. A: 50.000 ÷ 6 = 8.333, resto 2; B: 10.000 ÷ 6 = 1.666, resto 4. Pisos somam 9.999; a unidade vai para o maior resto, B: 83,33% e 16,67%. (s2) S = 12. A: 70.000 ÷ 12 = 5.833, resto 4; B: 10.000 ÷ 12 = 833, resto 4; C: 40.000 ÷ 12 = 3.333, resto 4. Pisos somam 9.999; os restos empatam, e o maior saldo, A, recebe a unidade: 58,34%, 8,33% e 33,33%. A ordem de apresentação é por saldo: A, C, B.
+- **Esperado:**
+  - `s1_base_positiva_centavos`: `6`
+  - `s1_participacao_A_centesimos_pp`: `8333`
+  - `s1_participacao_B_centesimos_pp`: `1667`
+  - `s1_principais`: `["A","B"]`
+  - `s2_base_positiva_centavos`: `12`
+  - `s2_participacao_A_centesimos_pp`: `5834`
+  - `s2_participacao_B_centesimos_pp`: `833`
+  - `s2_participacao_C_centesimos_pp`: `3333`
+  - `s2_principais`: `["A","C","B"]`
+
+#### CR-55 — Cinco principais e Outros pela soma dos componentes
+
+- **Entrega:** ciclo `010`. **Regras:** 15 (distribuição, Outros).
+- **Entrada:** A a G com 100 cada, em ordem inversa (G primeiro).
+- **Passo a passo:** S = 700. Cada um: 1.000.000 ÷ 700 = 1.428, resto 400. Pisos somam 9.996; sobram 4 unidades. Restos e saldos empatam; pelo nome, A, B, C e D recebem uma cada: 14,29%; E, F e G ficam com 14,28%. O rateio é feito antes de agrupar: os cinco principais são A a E, e Outros reúne F e G, com 100 + 100 = 200 centavos e 1.428 + 1.428 = 2.856 unidades (28,56%). Conferência: 4 × 1.429 + 1.428 + 2.856 = 10.000.
+- **Esperado:**
+  - `base_positiva_centavos`: `700`
+  - `participacao_A_centesimos_pp`: `1429`
+  - `participacao_B_centesimos_pp`: `1429`
+  - `participacao_C_centesimos_pp`: `1429`
+  - `participacao_D_centesimos_pp`: `1429`
+  - `participacao_E_centesimos_pp`: `1428`
+  - `participacao_F_centesimos_pp`: `1428`
+  - `participacao_G_centesimos_pp`: `1428`
+  - `principais`: `["A","B","C","D","E"]`
+  - `componentes_outros`: `["F","G"]`
+  - `outros_centavos`: `200`
+  - `participacao_outros_centesimos_pp`: `2856`
+
+#### CR-56 — Negativo fora da base e zero omitido
+
+- **Entrega:** ciclo `010`. **Regras:** 15 (distribuição), 6 (patrimônio).
+- **Entrada:** A = 100.000, B = −20.000 e Z = 0.
+- **Passo a passo:** só A é positivo: S = 100.000 e A tem 10.000 unidades (100,00%). B aparece sem percentual nem fatia, com −20.000; Z, de saldo zero, não aparece. O patrimônio líquido continua 100.000 − 20.000 = 80.000 e não é o denominador.
+- **Esperado:**
+  - `base_positiva_centavos`: `100000`
+  - `patrimonio_liquido_centavos`: `80000`
+  - `participacao_A_centesimos_pp`: `10000`
+  - `principais`: `["A"]`
+  - `sem_percentual`: `["B"]`
+  - `omitidos`: `["Z"]`
+
+#### CR-57 — Sem saldo positivo: nenhuma participação
+
+- **Entrega:** ciclo `010`. **Regras:** 15 (distribuição).
+- **Entrada:** (s1) nenhuma posição. (s2) A = 0 e B = −200.
+- **Passo a passo:** S = 0 nos dois: não há divisão, participação, rosca nem total de 100% fictício. Em s2, B é listado sem percentual e A, de saldo zero, não aparece.
+- **Esperado:**
+  - `s1_base_positiva_centavos`: `0`
+  - `s1_principais`: `[]`
+  - `s1_sem_percentual`: `[]`
+  - `s1_omitidos`: `[]`
+  - `s2_base_positiva_centavos`: `0`
+  - `s2_principais`: `[]`
+  - `s2_sem_percentual`: `["B"]`
+  - `s2_omitidos`: `["A"]`
+
+#### CR-58 — Em trânsito pelo sinal do saldo
+
+- **Entrega:** ciclo `010`. **Regras:** 15 (distribuição), 4.4 (trânsito).
+- **Entrada:** A = 300 e o ativo de sistema Em trânsito (alias T) com (s1) 100, (s2) 0 e (s3) −100.
+- **Passo a passo:** (s1) S = 400; A: 3.000.000 ÷ 400 = 7.500, T: 1.000.000 ÷ 400 = 2.500, sem resto: 75,00% e 25,00%. (s2) T é zero e não aparece; A tem 100,00%. (s3) T é negativo e fica listado sem percentual; A tem 100,00%.
+- **Esperado:**
+  - `s1_base_positiva_centavos`: `400`
+  - `s1_participacao_A_centesimos_pp`: `7500`
+  - `s1_participacao_T_centesimos_pp`: `2500`
+  - `s1_principais`: `["A","T"]`
+  - `s2_base_positiva_centavos`: `300`
+  - `s2_participacao_A_centesimos_pp`: `10000`
+  - `s2_omitidos`: `["T"]`
+  - `s3_base_positiva_centavos`: `300`
+  - `s3_participacao_A_centesimos_pp`: `10000`
+  - `s3_sem_percentual`: `["T"]`
+
+#### CR-59 — Precisão no limite da faixa e base positiva intermediária
+
+- **Entrega:** ciclo `010`. **Regras:** 15 (distribuição), 1 e 3 (faixa).
+- **Entrada:** A = 9.007.199.254.740.991 (2⁵³ − 1), B = 1 e C = −1.
+- **Passo a passo:** o patrimônio líquido é 9.007.199.254.740.991, dentro da faixa, como num mês fechado. A soma dos positivos, S = 9.007.199.254.740.992, passa da faixa de uma posição: é intermediária, exata em `bigint`, nunca gravada nem devolvida como `number`. A: piso 9.999 e resto 9.007.199.254.730.992; B: piso 0 e resto 10.000. A unidade que sobra vai para A: 10.000 e 0 unidades (100,00% e 0,00%). C fica listado sem percentual.
+- **Esperado:**
+  - `base_positiva_centavos`: `9007199254740992`
+  - `patrimonio_liquido_centavos`: `9007199254740991`
+  - `participacao_A_centesimos_pp`: `10000`
+  - `participacao_B_centesimos_pp`: `0`
+  - `principais`: `["A","B"]`
+  - `sem_percentual`: `["C"]`
+
+#### CR-60 — Uma única posição positiva
+
+- **Entrega:** ciclo `010`. **Regras:** 15 (distribuição).
+- **Entrada:** A = 1.
+- **Passo a passo:** S = 1; A tem 10.000 unidades (100,00%). A rosca é um círculo completo, e não há Outros.
+- **Esperado:**
+  - `base_positiva_centavos`: `1`
+  - `participacao_A_centesimos_pp`: `10000`
+  - `principais`: `["A"]`
+  - `componentes_outros`: `[]`
+
+#### CR-61 — Mesmo nome e mesmo saldo: desempate pelo identificador
+
+- **Entrega:** ciclo `010`. **Regras:** 15 (distribuição, desempate completo).
+- **Entrada:** três posições de nome "Ativo repetido" e saldo 1, com os identificadores `00000000-0000-4000-8000-000000000001` (U1), `…0002` (U2) e `…0003` (U3), na ordem de entrada U3, U1, U2.
+- **Passo a passo:** S = 3; cada uma tem piso 3.333 e resto 1. Sobra 1 unidade; saldo e nome empatam, e o menor identificador, em comparação textual sem locale, decide: U1 recebe 3.334; U2 e U3, 3.333. As três continuam linhas distintas, sem se juntar pelo nome, e reordenar a entrada não muda o resultado.
+- **Esperado:**
+  - `base_positiva_centavos`: `3`
+  - `participacao_U1_centesimos_pp`: `3334`
+  - `participacao_U2_centesimos_pp`: `3333`
+  - `participacao_U3_centesimos_pp`: `3333`
+  - `principais`: `["U1","U2","U3"]`
+
 ### 15. Apresentação do Início (P17 a P19 do ciclo `004`)
 
 Regras de apresentação decididas pelo responsável em 2026-10-14, na correção da rodada 1 do plano do ciclo `004`. Elas só escolhem os limites e o que somar; os cálculos são os das seções 7 e 8.
@@ -998,6 +1135,16 @@ Todo período passa pelo período efetivo (K8) e pela regra do `N/D` (K1) da se�
 **Patrimônio (P6 do ciclo `004`).** É o Vf de M, com a data do último dia de M.
 
 **Aportes líquidos (P19).** Soma, em centavos, dos eventos com data posterior ao último dia de M cujo tipo efetivo é aporte ou resgate. O estorno conta pelo tipo do evento referenciado (K2). Transferências, rendimento, marcação, câmbio e migração não entram. Sem M, entram todos os eventos da carteira.
+
+**Distribuição por ativo (ciclo `010`, BL-005).** Decidida pelo responsável em 2026-10-21, na aprovação do plano do ciclo `010` (Q1 a Q3 e as escolhas A e UUID do Registro de aprovação). É só alocação e apresentação do mês M: não muda saldos, patrimônio líquido nem retornos. Casos CR-53 a CR-61.
+
+1. **Entradas.** As posições de M (saldo final de cada ativo), com nome exibido e identificador. Cada saldo passa pela fronteira (`Number.isSafeInteger`, seção 1) e vira `bigint`. Saldo zero é omitido; saldo negativo não entra no denominador; o ativo de sistema Em trânsito segue o mesmo critério pelo sinal.
+2. **Base.** S é a soma exata dos saldos positivos, em `bigint`. Ela pode passar da faixa de uma posição quando há negativos que compensam (CR-59): é um valor intermediário, nunca gravado nem devolvido como saldo.
+3. **Ordem.** Positivos por saldo decrescente; empate pelo nome em ordem crescente do português (pt-BR); empate de nome pelo identificador UUID canônico (minúsculo, com hífens) em ordem crescente de texto, sem locale. Negativos por saldo crescente (o mais negativo primeiro), com os mesmos desempates; omitidos por nome e identificador.
+4. **Participação.** Com S > 0, cada positivo v tem piso q = ⌊v × 10000 ÷ S⌋ e resto r = (v × 10000) mod S, em `bigint`. As 10000 − Σq unidades que faltam vão, uma a cada, aos maiores restos; empate de resto segue a ordem do item 3. Cada unidade é 0,01 ponto percentual, e os positivos somam exatamente 10000 (100,00%). Nada passa por ponto flutuante; a exceção às seções 1 e 2 está anotada nelas.
+5. **Agrupamento.** O rateio é feito uma única vez entre todos os positivos, antes de agrupar (alternativa A). Com até cinco positivos, cada um é uma fatia. Com seis ou mais, os cinco primeiros da ordem são fatias e os demais formam Outros, cujos saldo e participação são as somas exatas dos componentes. Os componentes de Outros mantêm a participação sobre S, não sobre o grupo.
+6. **Sem positivos.** Com S = 0, não há divisão, participação nem total de 100%; os negativos continuam listados.
+7. **Apresentação.** A participação aparece com duas casas, sem sinal, pela posição da vírgula sobre o inteiro (seção 2, exceção). Legenda e tabela usam os mesmos inteiros, sem novo arredondamento. Negativos aparecem com nome e quantia, sem participação. A geometria da rosca, as cores e a ocultação de valores são do `DESIGN.md` e da ADR-005.
 
 ### 16. Migração da origem (M1 a M10 do ciclo `006`)
 
@@ -1160,6 +1307,7 @@ Estas regras foram aprovadas no plano do ciclo `006` e implementadas na simulaç
 | Plano do ciclo `003` | Decisões P1 a P18 e D1 a D14 | `_project/executed/003_regras_financeiras/003_plan.md`, `v3` aprovada em 2026-10-14 | Autoridade das decisões; esta KB as especifica |
 | Plano do ciclo `004` | Decisões P17 a P19 (apresentação do Início) | `_project/executed/004_telas_produto/004_plan.md`, `v4` aprovada em 2026-10-14 | Autoridade das decisões; a seção 15 as especifica |
 | Plano do ciclo `006` | Regras M1 a M10 da simulação da migração (issue #63) M6 revisada com a exceção à K12 (issue #73) e M10 revisada com a posição implícita zero (issue #76) | `_project/executed/006_migracao_dados_virada/006_plan.md`, `v3` aprovada em 2026-10-17, `v4` e `v5` aprovadas em 2026-10-18 | Autoridade das decisões; a seção 16 as especifica |
+| Plano do ciclo `010` | Regra da distribuição por ativo (Q1 a Q3, alternativa A e desempate por UUID) e casos CR-53 a CR-61 | `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_plan.md`, `v2` aprovada em 2026-10-21 | Autoridade das decisões; a seção 15 as especifica |
 | `design-system/DESIGN.md`, seções 6.3 a 6.5 | Formato brasileiro, sinal e `N/D` | Versão vigente em `main` | Contrato visual |
 
 ## Histórico
@@ -1173,3 +1321,4 @@ Estas regras foram aprovadas no plano do ciclo `006` e implementadas na simulaç
 | 2026-10-18 | `006` | Issue #73: M6 revisada (`v4` do plano), exceção à K12 (seção 4.4 e decisão K12), precedência das recusas e casos CR-M04 a CR-M07 |
 | 2026-10-18 | `006` | Issue #76: M10 revisada (`v5` do plano), posição implícita zero, e caso CR-M08 |
 | 2026-10-18 | `006` | Encerramento: a seção 4.5 passa a citar o ciclo `006`, que fez a migração (antes, `005`) |
+| 2026-10-21 | `010` | Issue #107: distribuição por ativo na seção 15 (participação em centésimos de p.p. pelo maior resto, antes de agrupar, com desempate por saldo, nome e UUID), exceções nas seções 1 e 2, convenções e casos CR-53 a CR-61 na seção 14 |

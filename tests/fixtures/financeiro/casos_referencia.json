@@ -2872,6 +2872,497 @@
         "posicoes_implicitas_zero": "2",
         "operacoes.desativar_ativo": "1"
       }
+    },
+    {
+      "id": "CR-53",
+      "titulo": "Participação com saldos iguais: desempate pelo nome",
+      "entrega": "010",
+      "regras": [
+        "15",
+        "1",
+        "2",
+        "14"
+      ],
+      "entrada": {
+        "posicoes": [
+          {
+            "alias": "C",
+            "id": "00000000-0000-4000-8000-000000005303",
+            "nome": "C",
+            "saldo": 10000
+          },
+          {
+            "alias": "A",
+            "id": "00000000-0000-4000-8000-000000005301",
+            "nome": "A",
+            "saldo": 10000
+          },
+          {
+            "alias": "B",
+            "id": "00000000-0000-4000-8000-000000005302",
+            "nome": "B",
+            "saldo": 10000
+          }
+        ]
+      },
+      "esperado": {
+        "base_positiva_centavos": "30000",
+        "participacao_A_centesimos_pp": "3334",
+        "participacao_B_centesimos_pp": "3333",
+        "participacao_C_centesimos_pp": "3333",
+        "principais": [
+          "A",
+          "B",
+          "C"
+        ],
+        "componentes_outros": [],
+        "sem_percentual": [],
+        "omitidos": []
+      }
+    },
+    {
+      "id": "CR-54",
+      "titulo": "Maior resto e empate de resto pelo saldo",
+      "entrega": "010",
+      "regras": [
+        "15",
+        "1",
+        "2",
+        "14"
+      ],
+      "entrada": {
+        "s1": {
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-000000005401",
+              "nome": "A",
+              "saldo": 5
+            },
+            {
+              "alias": "B",
+              "id": "00000000-0000-4000-8000-000000005402",
+              "nome": "B",
+              "saldo": 1
+            }
+          ]
+        },
+        "s2": {
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-000000005411",
+              "nome": "A",
+              "saldo": 7
+            },
+            {
+              "alias": "B",
+              "id": "00000000-0000-4000-8000-000000005412",
+              "nome": "B",
+              "saldo": 1
+            },
+            {
+              "alias": "C",
+              "id": "00000000-0000-4000-8000-000000005413",
+              "nome": "C",
+              "saldo": 4
+            }
+          ]
+        }
+      },
+      "esperado": {
+        "s1_base_positiva_centavos": "6",
+        "s1_participacao_A_centesimos_pp": "8333",
+        "s1_participacao_B_centesimos_pp": "1667",
+        "s1_principais": [
+          "A",
+          "B"
+        ],
+        "s2_base_positiva_centavos": "12",
+        "s2_participacao_A_centesimos_pp": "5834",
+        "s2_participacao_B_centesimos_pp": "833",
+        "s2_participacao_C_centesimos_pp": "3333",
+        "s2_principais": [
+          "A",
+          "C",
+          "B"
+        ]
+      }
+    },
+    {
+      "id": "CR-55",
+      "titulo": "Cinco principais e Outros pela soma dos componentes",
+      "entrega": "010",
+      "regras": [
+        "15",
+        "1",
+        "2",
+        "14"
+      ],
+      "entrada": {
+        "posicoes": [
+          {
+            "alias": "G",
+            "id": "00000000-0000-4000-8000-000000005507",
+            "nome": "G",
+            "saldo": 100
+          },
+          {
+            "alias": "F",
+            "id": "00000000-0000-4000-8000-000000005506",
+            "nome": "F",
+            "saldo": 100
+          },
+          {
+            "alias": "E",
+            "id": "00000000-0000-4000-8000-000000005505",
+            "nome": "E",
+            "saldo": 100
+          },
+          {
+            "alias": "D",
+            "id": "00000000-0000-4000-8000-000000005504",
+            "nome": "D",
+            "saldo": 100
+          },
+          {
+            "alias": "C",
+            "id": "00000000-0000-4000-8000-000000005503",
+            "nome": "C",
+            "saldo": 100
+          },
+          {
+            "alias": "B",
+            "id": "00000000-0000-4000-8000-000000005502",
+            "nome": "B",
+            "saldo": 100
+          },
+          {
+            "alias": "A",
+            "id": "00000000-0000-4000-8000-000000005501",
+            "nome": "A",
+            "saldo": 100
+          }
+        ]
+      },
+      "esperado": {
+        "base_positiva_centavos": "700",
+        "participacao_A_centesimos_pp": "1429",
+        "participacao_B_centesimos_pp": "1429",
+        "participacao_C_centesimos_pp": "1429",
+        "participacao_D_centesimos_pp": "1429",
+        "participacao_E_centesimos_pp": "1428",
+        "participacao_F_centesimos_pp": "1428",
+        "participacao_G_centesimos_pp": "1428",
+        "principais": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ],
+        "componentes_outros": [
+          "F",
+          "G"
+        ],
+        "outros_centavos": "200",
+        "participacao_outros_centesimos_pp": "2856"
+      }
+    },
+    {
+      "id": "CR-56",
+      "titulo": "Negativo fora da base e zero omitido",
+      "entrega": "010",
+      "regras": [
+        "15",
+        "1",
+        "2",
+        "14"
+      ],
+      "entrada": {
+        "posicoes": [
+          {
+            "alias": "A",
+            "id": "00000000-0000-4000-8000-000000005601",
+            "nome": "A",
+            "saldo": 100000
+          },
+          {
+            "alias": "B",
+            "id": "00000000-0000-4000-8000-000000005602",
+            "nome": "B",
+            "saldo": -20000
+          },
+          {
+            "alias": "Z",
+            "id": "00000000-0000-4000-8000-000000005603",
+            "nome": "Z",
+            "saldo": 0
+          }
+        ]
+      },
+      "esperado": {
+        "base_positiva_centavos": "100000",
+        "patrimonio_liquido_centavos": "80000",
+        "participacao_A_centesimos_pp": "10000",
+        "principais": [
+          "A"
+        ],
+        "sem_percentual": [
+          "B"
+        ],
+        "omitidos": [
+          "Z"
+        ]
+      }
+    },
+    {
+      "id": "CR-57",
+      "titulo": "Sem saldo positivo: nenhuma participação",
+      "entrega": "010",
+      "regras": [
+        "15",
+        "1",
+        "2",
+        "14"
+      ],
+      "entrada": {
+        "s1": {
+          "posicoes": []
+        },
+        "s2": {
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-000000005711",
+              "nome": "A",
+              "saldo": 0
+            },
+            {
+              "alias": "B",
+              "id": "00000000-0000-4000-8000-000000005712",
+              "nome": "B",
+              "saldo": -200
+            }
+          ]
+        }
+      },
+      "esperado": {
+        "s1_base_positiva_centavos": "0",
+        "s1_principais": [],
+        "s1_sem_percentual": [],
+        "s1_omitidos": [],
+        "s2_base_positiva_centavos": "0",
+        "s2_principais": [],
+        "s2_sem_percentual": [
+          "B"
+        ],
+        "s2_omitidos": [
+          "A"
+        ]
+      }
+    },
+    {
+      "id": "CR-58",
+      "titulo": "Em trânsito pelo sinal do saldo",
+      "entrega": "010",
+      "regras": [
+        "15",
+        "1",
+        "2",
+        "14"
+      ],
+      "entrada": {
+        "s1": {
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-000000005801",
+              "nome": "A",
+              "saldo": 300
+            },
+            {
+              "alias": "T",
+              "id": "00000000-0000-4000-8000-000000005802",
+              "nome": "Em trânsito",
+              "saldo": 100,
+              "sistema": "transito"
+            }
+          ]
+        },
+        "s2": {
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-000000005811",
+              "nome": "A",
+              "saldo": 300
+            },
+            {
+              "alias": "T",
+              "id": "00000000-0000-4000-8000-000000005812",
+              "nome": "Em trânsito",
+              "saldo": 0,
+              "sistema": "transito"
+            }
+          ]
+        },
+        "s3": {
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-000000005821",
+              "nome": "A",
+              "saldo": 300
+            },
+            {
+              "alias": "T",
+              "id": "00000000-0000-4000-8000-000000005822",
+              "nome": "Em trânsito",
+              "saldo": -100,
+              "sistema": "transito"
+            }
+          ]
+        }
+      },
+      "esperado": {
+        "s1_base_positiva_centavos": "400",
+        "s1_participacao_A_centesimos_pp": "7500",
+        "s1_participacao_T_centesimos_pp": "2500",
+        "s1_principais": [
+          "A",
+          "T"
+        ],
+        "s2_base_positiva_centavos": "300",
+        "s2_participacao_A_centesimos_pp": "10000",
+        "s2_omitidos": [
+          "T"
+        ],
+        "s3_base_positiva_centavos": "300",
+        "s3_participacao_A_centesimos_pp": "10000",
+        "s3_sem_percentual": [
+          "T"
+        ]
+      }
+    },
+    {
+      "id": "CR-59",
+      "titulo": "Precisão no limite da faixa e base positiva intermediária",
+      "entrega": "010",
+      "regras": [
+        "15",
+        "1",
+        "2",
+        "14"
+      ],
+      "entrada": {
+        "posicoes": [
+          {
+            "alias": "A",
+            "id": "00000000-0000-4000-8000-000000005901",
+            "nome": "A",
+            "saldo": 9007199254740991
+          },
+          {
+            "alias": "B",
+            "id": "00000000-0000-4000-8000-000000005902",
+            "nome": "B",
+            "saldo": 1
+          },
+          {
+            "alias": "C",
+            "id": "00000000-0000-4000-8000-000000005903",
+            "nome": "C",
+            "saldo": -1
+          }
+        ]
+      },
+      "esperado": {
+        "base_positiva_centavos": "9007199254740992",
+        "patrimonio_liquido_centavos": "9007199254740991",
+        "participacao_A_centesimos_pp": "10000",
+        "participacao_B_centesimos_pp": "0",
+        "principais": [
+          "A",
+          "B"
+        ],
+        "sem_percentual": [
+          "C"
+        ]
+      }
+    },
+    {
+      "id": "CR-60",
+      "titulo": "Uma única posição positiva",
+      "entrega": "010",
+      "regras": [
+        "15",
+        "1",
+        "2",
+        "14"
+      ],
+      "entrada": {
+        "posicoes": [
+          {
+            "alias": "A",
+            "id": "00000000-0000-4000-8000-000000006001",
+            "nome": "A",
+            "saldo": 1
+          }
+        ]
+      },
+      "esperado": {
+        "base_positiva_centavos": "1",
+        "participacao_A_centesimos_pp": "10000",
+        "principais": [
+          "A"
+        ],
+        "componentes_outros": []
+      }
+    },
+    {
+      "id": "CR-61",
+      "titulo": "Mesmo nome e mesmo saldo: desempate pelo identificador",
+      "entrega": "010",
+      "regras": [
+        "15",
+        "1",
+        "2",
+        "14"
+      ],
+      "entrada": {
+        "posicoes": [
+          {
+            "alias": "U3",
+            "id": "00000000-0000-4000-8000-000000000003",
+            "nome": "Ativo repetido",
+            "saldo": 1
+          },
+          {
+            "alias": "U1",
+            "id": "00000000-0000-4000-8000-000000000001",
+            "nome": "Ativo repetido",
+            "saldo": 1
+          },
+          {
+            "alias": "U2",
+            "id": "00000000-0000-4000-8000-000000000002",
+            "nome": "Ativo repetido",
+            "saldo": 1
+          }
+        ]
+      },
+      "esperado": {
+        "base_positiva_centavos": "3",
+        "participacao_U1_centesimos_pp": "3334",
+        "participacao_U2_centesimos_pp": "3333",
+        "participacao_U3_centesimos_pp": "3333",
+        "principais": [
+          "U1",
+          "U2",
+          "U3"
+        ]
+      }
     }
   ]
 }

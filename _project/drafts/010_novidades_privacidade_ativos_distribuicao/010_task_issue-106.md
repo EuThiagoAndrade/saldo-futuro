@@ -2,13 +2,13 @@
 
 > **Ciclo:** `010`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#106`
 > **Plano:** `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_plan.md`
 > **Branch:** `feature/issue-106`
 > **PR:** [#111](https://github.com/EuThiagoAndrade/saldo-futuro/pull/111)
-> **Integração:** `Pendente`
+> **Integração:** `Conferida no GitHub — PR #111 MERGED em 2026-10-22`
 > **Autorização inicial:** "autorizo a implementação da issue #106" em 2026-10-21
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-21
@@ -71,7 +71,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 | Governança | `node scripts/validate-governance.mjs` com 0 erros, 0 avisos e cinco itens manuais |
 | G3 | Contas e ativos de teste fictícios (`ativos106.*`, `visual106.comum`, todas `@example.com`), removidos no fim |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos | Todos verdes no head `39cdea37608a80cb9794f9bd88ea93ea99ea4187`, depois de repetir o job de banco e e2e com backend, que na primeira tentativa não subiu o Supabase por porta 54322 ocupada no runner do GitHub, sem executar teste; CI de app, governança e Vercel verdes na primeira tentativa |
 
 ## Revisão da correção
 
@@ -91,24 +91,28 @@ Não se aplica (trilha normal).
 
 Não se aplica: o ciclo é completo e o encerramento tem PR própria.
 
+## Reconciliação da integração
+
+Em 2026-10-21, o responsável declarou "A nota da 0.7.0 está aprovada. aprovo o merge da PR #111", aprovando a nota transcrita em "Decisões incidentais" sem alteração. O job "Supabase local, database tests and auth e2e" tinha falhado no passo "Start Supabase" por porta já ocupada no runner, sem rodar teste; o agente pediu a reexecução só do job falho, conferiu todos os checks verdes no head `39cdea3` e a PR `CLEAN` e fez o squash travado nesse HEAD, com o assunto `feat(issue-106): separar cadastro e organizar ativos por abas (#111)`, conferido em `main`. A issue #106 fechou como concluída. Reconciliação feita na implementação autorizada da #107; não registra o SHA do próprio merge.
+
 ## Próximo passo
+
+Entrega integrada; o próximo passo do ciclo fica no artefato ativo (task da issue em curso).
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 010 (completo)
+Situação: Aguardando autorização de implementação — ciclo 010 (completo)
 Quem: Responsável
-Conferir: Checks e diff da PR #111 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/111); nota da 0.7.0 transcrita em "Decisões incidentais"
-Diga: "aprovo o merge da PR #111"
+Conferir: Issue #107 (https://github.com/EuThiagoAndrade/saldo-futuro/issues/107) e item 4 do plano
+Diga: "autorizo a implementação da issue #107"
 ```
-
-Depois do merge, a próxima situação é "Aguardando autorização de implementação" da issue #107, última entrega do ciclo. A PR #109 do release-please continua sem integrar.
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 010 + implementar_issue + 106/Item-3-BL-006 + 74d36d0c3550bc381a4ae1e73ab3e8493a230ac5`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: plano Em Execução, #104 e #105 integradas, #106 aberta sem branch nem PR / branch `feature/issue-106` publicada, PR #111 aberta e task Aguardando integração
-- `result`: `executed`
-- `evidence`: autorização "autorizo a implementação da issue #106" em 2026-10-21; `git fetch` com `main` igual a `origin/main` em `74d36d0`; consulta sem PR ou branch da #106; PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/111 criada via `gh`; validações da tabela de evidências
-- `blockers`: checks remotos verdes no HEAD final e "aprovo o merge da PR #111"
+- `state_before` / `state_after`: PR #111 OPEN / PR #111 MERGED por squash em main, issue #106 CLOSED como concluída, task Concluída
+- `result`: `already_executed_and_reconciled`
+- `evidence`: aprovação "aprovo o merge da PR #111" em 2026-10-21; reexecução do job falho por infraestrutura e checks verdes no head `39cdea3`; assunto conferido em main; `gh issue view 106` com estado CLOSED
+- `blockers`: nenhum
