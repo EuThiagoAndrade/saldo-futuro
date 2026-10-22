@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.7.0](https://github.com/EuThiagoAndrade/saldo-futuro/compare/v0.6.0...v0.7.0) (2026-10-22)
+
+
+### Features
+
+* **issue-104:** publicar páginas de privacidade e termos e preparar OAuth ([#108](https://github.com/EuThiagoAndrade/saldo-futuro/issues/108)) ([30e05c5](https://github.com/EuThiagoAndrade/saldo-futuro/commit/30e05c55e5756dfa017a6f98d1ce96aec9555e3a))
+* **issue-105:** exibir versão e novidades do produto ([#110](https://github.com/EuThiagoAndrade/saldo-futuro/issues/110)) ([74d36d0](https://github.com/EuThiagoAndrade/saldo-futuro/commit/74d36d0c3550bc381a4ae1e73ab3e8493a230ac5))
+* **issue-106:** separar cadastro e organizar ativos por abas ([#111](https://github.com/EuThiagoAndrade/saldo-futuro/issues/111)) ([d02c1ea](https://github.com/EuThiagoAndrade/saldo-futuro/commit/d02c1ea18d68743b5a572393fa688eeca6d611ec))
+* **issue-107:** mostrar distribuição patrimonial em rosca acessível ([#112](https://github.com/EuThiagoAndrade/saldo-futuro/issues/112)) ([baabb6a](https://github.com/EuThiagoAndrade/saldo-futuro/commit/baabb6aa12595b19d08573d5bea9fe42e69ddf24))
+
 ## [0.6.0](https://github.com/EuThiagoAndrade/saldo-futuro/compare/v0.5.0...v0.6.0) (2026-10-21)
 
 
