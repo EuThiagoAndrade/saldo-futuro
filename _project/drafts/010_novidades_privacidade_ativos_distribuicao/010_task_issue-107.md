@@ -59,9 +59,20 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 
 | Validação | Resultado |
 | :-- | :-- |
-| Testes | Pendente |
-| Validador | Pendente |
-| `git diff --check` | Pendente |
+| Concordância KB-004 ↔ JSON | 4/4, antes do código (commit `3e1cfc8`) |
+| `npm test` | 357/357 (30 arquivos): `distribuicao.test.ts` 16 (nove casos em três ordens, propriedades e fronteiras), `rosca.test.tsx` 7, `valores.test.ts` com `textoParticipacao`; depois do ajuste de layout, `src/components/graficos` 41/41 |
+| `npm run lint` | 0 erros com `--ignore-pattern ".claude/**"`; três avisos preexistentes em `local/` |
+| `npm run typecheck` | Passou |
+| Build | Passou, sem backend e com backend, pelo `webServer` do Playwright |
+| E2e sem backend | 33 passaram e 159 pulados |
+| `npx supabase test db` | 261/261 (7 arquivos) |
+| E2e com backend | Rodada A, simultânea a uma rodada da sessão de investigação do CR-04 no mesmo Supabase: 165 passaram, 12 pulados e 9 falharam; 8 por contas de teste apagadas pela outra suíte (mesmos e-mails fixos, "Invalid login credentials") e 1 por seletor ambíguo no `distribuicao.spec.ts`, corrigido. Rodada B, limpa: 175 passaram, 12 pulados e 3 falharam: `cartoes-inicio.spec.ts` (1 px de rolagem horizontal em 1024 px com quantias no limite da faixa: defeito da rosca lado a lado na meia coluna, corrigido empilhando a partir de `lg`), CR-04 (a parada preexistente de 30 s em Transferências) e `migracao.spec.ts` (queda do processo de teste, 0xC0000409, em 0 ms). Depois da correção: `cartoes-inicio`, `distribuicao`, `inicio` e `carteira` passaram (CR-04 em 4,4 s); `migracao.spec.ts` derrubou o processo de novo e, repetido sozinho, passou 23/23 e caiu na vez seguinte: queda intermitente da máquina, também observada pela sessão de investigação no código sem esta entrega, em suíte que não importa nenhum arquivo alterado |
+| `distribuicao.spec.ts` | 4/4 sozinho: legenda, Outros, negativos, tabelas com as mesmas participações e soma 10000, ocultação em texto e atributos, axe e sem rolagem em 360 e 1280 px |
+| Prova D13 (`MEDIR_NAVEGACAO=1`, `MEDICAO_D13=1`, `medicao.config.ts`, porta 3105) | 2/2: alteração entre páginas de posições e entre componentes da marca devolvem só a versão nova, conferida na tabela "Detalhe por ativo"; evidência só em `local/` |
+| Auditoria visual (DESIGN.md) | Conta fictícia temporária, criada e removida por script: rosca em 360 e 1280 px com Outros aberto, tabelas Resumo e Detalhe e valores ocultos em 360 px. Cores na ordem de 2.3, separação `surface`, nome longo com quebra, alvos de 44 px no resumo de Outros |
+| Governança | `node scripts/validate-governance.mjs --root` sobre a exportação do HEAD: 0 erros, 0 avisos, cinco itens manuais; `node --test scripts/validate-governance.test.mjs` 48/48 |
+| G3 | Fixtures, testes e capturas só com nomes e valores fictícios; contas `distribuicao107.*`, `visual107.comum` e `d13next.*`, todas `@example.com`, removidas no fim |
+| `git diff --check` | Passou |
 | Checks remotos | Pendente |
 
 ## Revisão da correção

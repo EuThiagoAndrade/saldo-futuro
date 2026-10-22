@@ -393,7 +393,7 @@ Distribuição por ativo no Início (ciclo `010`, ADR-005). O cálculo da partic
 - **Sem positivos:** em vez da rosca, a frase "Não há saldos positivos para exibir"; negativos continuam listados.
 - **Números:** "Ver os números" traz duas tabelas: Resumo (as fatias e Outros, mais os negativos) e Detalhe por ativo (cada posição uma vez). Outros nunca aparece somado a seus componentes na mesma tabela.
 - **Ocultar valores:** toda quantia da legenda, das listas e das tabelas vira "Valor oculto" já no servidor; títulos, descrições e atributos acessíveis não carregam quantias. Participações e nomes continuam visíveis.
-- **Layout:** abaixo de `md`, rosca acima da legenda; a partir de `md`, lado a lado. Nunca há rolagem horizontal.
+- **Layout:** rosca acima da legenda; lado a lado só enquanto o cartão ocupa a largura toda (de `md` até antes de `lg`). A partir de `lg`, na meia coluna do Início, volta a empilhar, para que nomes e quantias da legenda caibam mesmo no limite da faixa monetária. Nunca há rolagem horizontal.
 
 ## 7. Acessibilidade
 

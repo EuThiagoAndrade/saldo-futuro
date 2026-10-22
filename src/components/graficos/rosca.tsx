@@ -49,7 +49,7 @@ const voltas = (saldo: bigint, base: bigint) => Number((saldo * 1_000_000_000n) 
 function Desenho({ fatias, base, rotulo }: { fatias: Fatia[]; base: bigint; rotulo: string }) {
   let inicio = 0;
   return (
-    <svg viewBox={`0 0 ${TAMANHO} ${TAMANHO}`} role="img" aria-labelledby={rotulo} className="mx-auto h-auto w-full max-w-56 shrink-0 md:mx-0 md:w-48">
+    <svg viewBox={`0 0 ${TAMANHO} ${TAMANHO}`} role="img" aria-labelledby={rotulo} className="mx-auto h-auto w-full max-w-56 shrink-0 md:mx-0 md:w-48 lg:mx-auto lg:w-full">
       {fatias.length === 1 ? (
         <circle cx={CENTRO} cy={CENTRO} r={(RAIO_EXTERNO + RAIO_INTERNO) / 2} fill="none" stroke={fatias[0].cor} strokeWidth={RAIO_EXTERNO - RAIO_INTERNO} />
       ) : (
@@ -153,7 +153,8 @@ export function GraficoRosca({
       {base === 0n ? (
         <p className="text-base/6 text-text-secondary">Não há saldos positivos para exibir.</p>
       ) : (
-        <div className="flex flex-col gap-4 md:flex-row md:items-start">
+        // Lado a lado só com o cartão na largura toda (de md até lg); na meia coluna, empilhado.
+        <div className="flex flex-col gap-4 md:flex-row md:items-start lg:flex-col lg:items-stretch">
           <Desenho fatias={fatias} base={base} rotulo={`${id}-titulo ${id}-descricao`} />
           <ol aria-label="Legenda da distribuição" className="flex min-w-0 flex-1 flex-col gap-3">
             {principais.map((p, i) => (
