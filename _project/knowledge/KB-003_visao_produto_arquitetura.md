@@ -76,6 +76,10 @@ O Saldo Futuro é um sistema web de gestão de investimentos pessoais, multiusu�
 - tela de ativos (ciclo `010`, em execução):
   - `/ativos` tem Novo ativo no topo e as abas "Em uso" e "Desativados" como links (`/ativos` e `/ativos?aba=desativados`), lidas no servidor, com contadores e só a lista selecionada; valor ausente ou desconhecido abre Em uso. No celular, Em uso é uma lista densa com o nome completo; no desktop, tabela (DESIGN.md 6.7 e 6.12);
   - o cadastro fica em `/ativos/novo`, com a mesma validação e a RPC `criar_ativo`; o sucesso volta a `/ativos` sem mensagem extra, e a recusa aparece no próprio formulário. A desativação continua pela confirmação e pela RPC `desativar_ativo`, com as mesmas restrições (trânsito sem ação, saldo zero obrigatório).
+- distribuição por ativo (ciclo `010`, em execução):
+  - o Início desenha a distribuição de M em rosca SVG no servidor (`src/components/graficos/rosca.tsx`; ADR-005, emenda), no lugar das barras horizontais, que saíram do código;
+  - a participação vem de `src/lib/financeiro/distribuicao.ts`: só saldos positivos formam a base, em `bigint`, com 10000 centésimos de p.p. repartidos pelo maior resto antes de agrupar Outros e desempate por saldo, nome e UUID (KB-004, seção 15, CR-53 a CR-61); negativos ficam listados fora da rosca e zeros não aparecem;
+  - legenda com nome completo, participação e valor, Outros retrátil com os componentes, e "Ver os números" com Resumo e Detalhe por ativo separados; "Ocultar valores" esconde toda quantia no servidor e mantém as participações (DESIGN.md 2.3 e 6.13).
 
 Permanecem fora da entrega:
 
@@ -228,3 +232,4 @@ O plano executado do ciclo `001` (`_project/executed/001_fundacao_aplicacao/001_
 | 2026-10-21 | `010` | Issue #104: páginas públicas `/privacidade` e `/termos`, links em `/entrar` e em Conta e `/termos` como página inicial informada ao Google; estado final no encerramento do ciclo |
 | 2026-10-21 | `010` | Issue #105: `/novidades` com versão do `package.json` e histórico manual a partir da `0.7.0`, em Mais e no menu lateral |
 | 2026-10-21 | `010` | Issue #106: cadastro em `/ativos/novo` e `/ativos` com abas por URL, contadores e lista densa no celular |
+| 2026-10-21 | `010` | Issue #107: distribuição por ativo em rosca, com participação pelo maior resto sobre os saldos positivos (KB-004, seção 15) |

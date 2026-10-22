@@ -6,6 +6,7 @@ import {
   direcaoPercentual,
   textoDinheiro,
   textoDinheiroComSinal,
+  textoParticipacao,
   textoPercentual,
   textoPercentualComSinal,
   textoPontosPercentuais,
@@ -79,5 +80,19 @@ describe("rótulos de eixo", () => {
 
   it("mês curto", () => {
     expect(mesCurto("2026-04")).toBe("abr/26");
+  });
+});
+
+describe("participação da distribuição (KB-004, seções 2 e 15)", () => {
+  it("só posiciona a vírgula sobre o inteiro de centésimos, sem sinal", () => {
+    expect(textoParticipacao(3334)).toBe("33,34%");
+    expect(textoParticipacao(10000)).toBe("100,00%");
+    expect(textoParticipacao(833)).toBe("8,33%");
+    expect(textoParticipacao(0)).toBe("0,00%");
+    expect(textoParticipacao(5)).toBe("0,05%");
+  });
+
+  it("recusa valor fora de 0 a 10000 ou não inteiro", () => {
+    for (const v of [-1, 10001, 1.5]) expect(() => textoParticipacao(v)).toThrow(RangeError);
   });
 });

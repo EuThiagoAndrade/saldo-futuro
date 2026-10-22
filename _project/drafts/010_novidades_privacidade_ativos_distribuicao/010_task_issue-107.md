@@ -47,6 +47,13 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 - [x] Autorização, issue #107 aberta, plano `v2` Em Execução com as escolhas A e UUID no Registro de aprovação, PR #111 da #106 integrada e base `d02c1ea` igual a `origin/main` conferidas; sem branch ou PR anteriores da #107. PR #109 do release-please continua fora do escopo.
 - [x] Reconciliação da task #106 e do índice de ciclos.
 - [x] **G1, antes do cálculo:** KB-004 com a regra da distribuição na seção 15, as exceções nas seções 1 e 2, as convenções na seção 14 e os casos CR-53 a CR-61; `tests/fixtures/financeiro/casos_referencia.json` com os mesmos casos, entradas completas e UUIDs fictícios, inseridos sem reformatar os casos anteriores; entrega `010` aceita em `casos-referencia.test.ts`. Esperados transcritos do plano e conferidos por aritmética `bigint` avulsa de quocientes e restos, sem a função a testar; concordância KB ↔ JSON 4/4. Registro em commit próprio, anterior ao código.
+- [x] ADR-005 emendada (rosca como quinto tipo, barras horizontais fora do código) e DESIGN.md com a ordem de cores da rosca (2.3) e o contrato 6.13.
+- [x] `src/lib/financeiro/distribuicao.ts` (`comporDistribuicao`): fronteira por `deNumero`, base positiva e maior resto em `bigint`, ordem por saldo, nome pt-BR (`Intl.Collator`) e UUID em texto minúsculo sem locale, cinco principais e Outros pela soma dos componentes; negativos e omitidos separados. `src/lib/financeiro/distribuicao.test.ts`: os nove casos do JSON em três ordens de entrada, com todas as chaves esperadas conferidas; soma 10000 e erro de cada participação menor que 0,01 p.p.; fronteira de inteiros seguros; cinco e seis positivos; Outros como soma exata; nomes iguais com UUID; ordem dos negativos. Controle negativo: sem o desempate por UUID, o CR-61 e o teste de nomes iguais falham.
+- [x] `textoParticipacao` em `src/lib/apresentacao/valores.ts` (só a vírgula sobre o inteiro, sem sinal), com testes.
+- [x] `src/components/graficos/rosca.tsx` (`GraficoRosca`): setores com traço `surface`, anel completo para um positivo, legenda em lista ordenada com amostra de cor, nome inteiro, participação e valor, Outros em `<details>` com seta e os componentes, negativos listados fora da rosca, frase própria sem positivos e "Ver os números" com as tabelas Resumo e Detalhe por ativo. `rosca.test.tsx` (SSR): seis fatias com Outros, mesmas participações na legenda e nas tabelas sem Outros duplicado, negativos e zero, anel único, sem positivos, geometria de 75% e 25%, fatia de 0,00% e nome longo, valores ocultos em texto e atributos, sem JavaScript.
+- [x] Início: `comporDistribuicao` sobre as posições de M e `GraficoRosca` sempre que há M; `GraficoDistribuicao` (barras) removido de `graficos.tsx`.
+- [x] E2e: `tests/e2e/distribuicao.spec.ts` (novo); CR-17 de `inicio.spec.ts` e prova D13 de `navegacao-desempenho.spec.ts` limitados à tabela "Detalhe por ativo".
+- [x] Nota da `0.7.0` em `src/lib/novidades.ts` e KB-003.
 
 ## Evidências
 
@@ -62,6 +69,14 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 Não se aplica (trilha normal).
 
 ## Decisões incidentais e desvios
+
+- **Nota da `0.7.0` para revisão do responsável:** "No Início, a distribuição por ativo virou um gráfico de rosca com a participação de cada ativo; os menores ficam juntos em Outros, que abre a lista completa, e os saldos negativos aparecem à parte."
+- **Ordem dos negativos e dos omitidos (apresentação, sem efeito em valor):** o plano fixou só a ordem dos positivos. Os negativos saem do mais negativo para o menos negativo, com os mesmos desempates por nome e UUID; os omitidos, por nome e UUID. Nenhuma participação, saldo ou soma depende dessa ordem; registrada na KB-004 (seção 15, item 3) para revisão.
+- **Distribuição sem positivos:** a figura aparece sempre que há mês fechado, com "Não há saldos positivos para exibir." quando a base é zero, como o plano pede; antes, sem posição diferente de zero, o cartão não aparecia.
+- **Geometria:** a fração de volta é calculada como `saldo × 10⁹ ÷ base` em `bigint` e só então convertida para `number`, sem passar o saldo por ponto flutuante; a última fatia fecha a volta exatamente.
+- **Tabelas:** o Resumo lista as fatias, Outros e os negativos ("fora da rosca"); o Detalhe por ativo lista cada posição uma vez, sem a linha Outros. Por isso o CR-17 e a prova D13 passaram a consultar só o detalhe.
+- **Validador com a cópia da outra sessão:** a sessão de investigação do CR-04 mantém uma cópia de trabalho em `.claude/worktrees/`, dentro desta pasta e fora do Git, que o validador e o ESLint varrem (20 erros G3 e milhares de avisos, nenhum de arquivo versionado). Os gates desta entrega usam o validador sobre uma exportação do HEAD (`git archive`) e o ESLint com `--ignore-pattern ".claude/**"`; no CI essa pasta não existe.
+- Sem mudança de banco, autenticação, schema, saldos, patrimônio, retornos ou dependências.
 
 ## Encerramento
 

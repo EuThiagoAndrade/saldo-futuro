@@ -42,6 +42,15 @@ export function direcaoPercentual(fracao: number): Direcao {
   return texto === "0,00" ? "zero" : texto.startsWith(MENOS) ? "baixa" : "alta";
 }
 
+/**
+ * Participação da distribuição em centésimos de ponto percentual → "33,34%" (KB-004, seções 2 e
+ * 15): só a posição da vírgula, sem novo arredondamento e sem sinal.
+ */
+export function textoParticipacao(centesimos: number): string {
+  if (!Number.isInteger(centesimos) || centesimos < 0 || centesimos > 10000) throw new RangeError(`participação inválida: ${centesimos}`);
+  return `${Math.floor(centesimos / 100)},${String(centesimos % 100).padStart(2, "0")}%`;
+}
+
 /** Variação percentual com sinal explícito: "+1,23%", "−0,45%", "0,00%" (6.3). */
 export function textoPercentualComSinal(fracao: number): string {
   const texto = textoPercentual(fracao);

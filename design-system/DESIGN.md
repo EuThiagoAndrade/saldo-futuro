@@ -109,6 +109,7 @@ A paleta é independente de biblioteca; a biblioteca de gráficos é escolhida n
 | `chart-6` | `#B04F6F` | Quinta categoria |
 
 - As séries usam a ordem da tabela. No máximo seis séries; o excedente é agrupado em "outros" (`chart-5`).
+- Na rosca da distribuição por ativo (ciclo `010`, 6.13), as cinco fatias principais usam, nesta ordem, `chart-1`, `chart-2`, `chart-3`, `chart-4` e `chart-6`; `chart-5` fica reservado a Outros.
 - Barras de variação usam `gain` e `loss`, e nunca uma cor de categoria.
 - Séries de benchmark usam linha tracejada; a carteira usa linha contínua. Cor nunca é a única diferença entre séries: use rótulo direto no fim da linha ou legenda com o mesmo traço.
 - Eixos e grades usam `border`; rótulos de eixo usam `text-secondary` com algarismos tabulares.
@@ -381,6 +382,18 @@ Usadas para alternar entre partes de uma mesma lista lidas pelo servidor, como "
 - Cada aba tem pelo menos 44 px de altura, rótulo `label` e um contador em etiqueta neutra (`neutral` sobre `neutral-subtle`, `caption` peso 500).
 - A aba selecionada tem `aria-current="page"`, texto `primary` e borda inferior de 2 px em `primary`; as demais usam `text-secondary` e borda transparente, com fundo `surface` em hover. O conjunto fica sobre uma linha `border`.
 - Só o conteúdo da aba selecionada é renderizado; cada aba tem o próprio estado vazio.
+
+### 6.13 Rosca de distribuição
+
+Distribuição por ativo no Início (ciclo `010`, ADR-005). O cálculo da participação é o da KB-004, seção 15.
+
+- **Base:** a rosca representa 100,00% da soma dos saldos positivos do último mês fechado. Saldos negativos ficam fora dela, numa lista própria abaixo da legenda, com nome e quantia, sem participação e sem cor de fatia; o texto do gráfico explica que a base são os saldos positivos.
+- **Fatias:** até seis — os cinco maiores positivos e Outros, com as cores de 2.3. A geometria é proporcional aos saldos, sem tamanho mínimo; uma fatia muito pequena pode quase não aparecer e continua na legenda. Um único positivo é um anel completo. Fatias são separadas por um traço `surface`, para que duas cores vizinhas não dependam de contraste entre si.
+- **Legenda:** HTML, em lista ordenada, na ordem das fatias. Cada item tem uma amostra da cor, o nome completo com quebra de linha (nunca truncado), a participação com duas casas e o valor em `value`, com algarismos tabulares. Outros é um `<details>`: o resumo traz o total do grupo, e a lista aberta traz cada componente com nome, participação sobre a mesma base e valor.
+- **Sem positivos:** em vez da rosca, a frase "Não há saldos positivos para exibir"; negativos continuam listados.
+- **Números:** "Ver os números" traz duas tabelas: Resumo (as fatias e Outros, mais os negativos) e Detalhe por ativo (cada posição uma vez). Outros nunca aparece somado a seus componentes na mesma tabela.
+- **Ocultar valores:** toda quantia da legenda, das listas e das tabelas vira "Valor oculto" já no servidor; títulos, descrições e atributos acessíveis não carregam quantias. Participações e nomes continuam visíveis.
+- **Layout:** abaixo de `md`, rosca acima da legenda; a partir de `md`, lado a lado. Nunca há rolagem horizontal.
 
 ## 7. Acessibilidade
 
