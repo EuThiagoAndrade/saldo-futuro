@@ -10,7 +10,7 @@ test.setTimeout(14_400_000);
 const destinos = {
   '/': { titulo: 'Início', pronto: 'main section[aria-label="Gráficos"] > :last-child' },
   '/lancamentos': { titulo: 'Lançamentos', pronto: 'main #lancamentos-do-mes' },
-  '/ativos': { titulo: 'Ativos', pronto: 'main form:has(#ativo-nome)' },
+  '/ativos': { titulo: 'Ativos', pronto: 'main #ativos-da-aba > *' },
   '/benchmarks': { titulo: 'Benchmarks', pronto: 'main a[href^="/benchmarks/comparacao"]' },
 };
 type Rota = keyof typeof destinos;

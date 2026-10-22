@@ -1,22 +1,18 @@
 "use client";
 
-import { useActionState, useEffect, useRef } from "react";
+import { useActionState } from "react";
 import { criarAtivo } from "@/app/(app)/ativos/acoes";
 import { botaoPrincipal } from "@/components/botoes";
 import { Campo, classeCampo, Retorno } from "@/components/campos";
 import { ESTADO_INICIAL } from "@/lib/telas/acao";
 
+// Formulário de /ativos/novo (BL-006, ciclo 010). A recusa aparece aqui, sem sair da página; o
+// sucesso redireciona para /ativos.
 export function FormNovoAtivo() {
   const [estado, executar, pendente] = useActionState(criarAtivo, ESTADO_INICIAL);
-  const formulario = useRef<HTMLFormElement>(null);
-
-  useEffect(() => {
-    if (estado.ok) formulario.current?.reset();
-  }, [estado]);
 
   return (
-    <form ref={formulario} action={executar} className="flex flex-col gap-4 rounded-md border border-border bg-surface p-4">
-      <h2 className="text-lg/7 font-semibold text-text">Novo ativo</h2>
+    <form action={executar} className="flex flex-col gap-4 rounded-md border border-border bg-surface p-4">
       <Campo id="ativo-nome" rotulo="Nome">
         <input id="ativo-nome" name="nome" required maxLength={100} autoComplete="off" className={classeCampo} />
       </Campo>

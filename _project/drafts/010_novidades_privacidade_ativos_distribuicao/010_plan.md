@@ -351,10 +351,10 @@ Para BL-012, a PR de código usa vínculo de referência, sem fechamento automá
 
 | Campo | Valor |
 | :-- | :-- |
-| Issue(s) | [#104 — BL-012](https://github.com/EuThiagoAndrade/saldo-futuro/issues/104), código integrado, aberta até a ação externa; [#105 — BL-011](https://github.com/EuThiagoAndrade/saldo-futuro/issues/105), implementação autorizada em 2026-10-21; [#106 — BL-006](https://github.com/EuThiagoAndrade/saldo-futuro/issues/106), [#107 — BL-005](https://github.com/EuThiagoAndrade/saldo-futuro/issues/107) — abertas, implementação não autorizada |
-| PR(s) | [#103 — publicação documental do plano](https://github.com/EuThiagoAndrade/saldo-futuro/pull/103), integrada em 2026-10-21 por squash (`c0e906eb96f5030fce27db734a43938b41e6a783`); [#108 — BL-012](https://github.com/EuThiagoAndrade/saldo-futuro/pull/108), integrada em 2026-10-21 por squash, sem fechar a #104; [#110 — BL-011](https://github.com/EuThiagoAndrade/saldo-futuro/pull/110), aberta |
-| Branch(es) | `chore/cycle-010-plan` (PR documental do plano); `feature/issue-104` (BL-012); `feature/issue-105` (BL-011) |
-| Task(s) | `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_task_issue-104.md`; `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_task_issue-105.md` |
+| Issue(s) | [#104 — BL-012](https://github.com/EuThiagoAndrade/saldo-futuro/issues/104), código integrado, aberta até a ação externa; [#105 — BL-011](https://github.com/EuThiagoAndrade/saldo-futuro/issues/105), fechada pela PR #110; [#106 — BL-006](https://github.com/EuThiagoAndrade/saldo-futuro/issues/106), implementação autorizada em 2026-10-21; [#107 — BL-005](https://github.com/EuThiagoAndrade/saldo-futuro/issues/107) — aberta, implementação não autorizada |
+| PR(s) | [#103 — publicação documental do plano](https://github.com/EuThiagoAndrade/saldo-futuro/pull/103), integrada em 2026-10-21 por squash (`c0e906eb96f5030fce27db734a43938b41e6a783`); [#108 — BL-012](https://github.com/EuThiagoAndrade/saldo-futuro/pull/108), integrada em 2026-10-21 por squash, sem fechar a #104; [#110 — BL-011](https://github.com/EuThiagoAndrade/saldo-futuro/pull/110), integrada em 2026-10-21 por squash; [#111 — BL-006](https://github.com/EuThiagoAndrade/saldo-futuro/pull/111), aberta |
+| Branch(es) | `chore/cycle-010-plan` (PR documental do plano); `feature/issue-104` (BL-012); `feature/issue-105` (BL-011); `feature/issue-106` (BL-006) |
+| Task(s) | `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_task_issue-104.md`; `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_task_issue-105.md`; `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_task_issue-106.md` |
 | Destino após conclusão | `_project/executed/010_novidades_privacidade_ativos_distribuicao/010_plan.md` |
 
 ## Registro de aprovação
@@ -396,6 +396,8 @@ Validação desta atualização: 48/48 testes de governança passaram; validador
 - **Decisão do responsável sobre `/entrar` (2026-10-21), durante a revisão da PR #108:** "Não vejo necessidade destes textos estarem na página /entrar. Pode remove-los. Deixando apenas o ícone do programa centralizado e o botão abaixo centralizado. O restante permanece tudo como está." Informado de que o Google não aceita como página inicial uma página só de login, escolheu a alternativa recomendada: "Minha escolha é a (recomendada)", isto é, `/termos` como página inicial informada no console, e confirmou que, no app, a entrada continua em `/entrar`. Efeitos: substitui Q10 e o critério de `/entrar` do item 1 (anotados no lugar), sem rota nova nem mudança de autenticação; KB-002 (armadilha 7, tabela de domínios, O1, O3 e O4) e KB-003 ajustadas na mesma PR. Recusa de `/termos` no console leva a "Parado" para decisão (O4).
 - **Issue #104 integrada:** PR #108 por squash em 2026-10-21, sem fechar a issue; etapa externa pendente até as quatro entregas.
 - **Issue #105 (BL-011):** "autorizo a implementação da issue #105" em 2026-10-21. Branch `feature/issue-105`, task `010_task_issue-105.md` (artefato ativo) e [PR #110](https://github.com/EuThiagoAndrade/saldo-futuro/pull/110), com `Closes #105`. A PR #109 do release-please (`0.7.0`) está aberta e não é integrada antes das quatro entregas.
+- **Issue #105 integrada:** PR #110 por squash em 2026-10-21, com as notas da `0.7.0` aprovadas; inclui, a pedido do responsável, os links legais centralizados em `/entrar`.
+- **Issue #106 (BL-006):** "autorizo a implementação da issue #106" em 2026-10-21. Branch `feature/issue-106`, task `010_task_issue-106.md` (artefato ativo) e [PR #111](https://github.com/EuThiagoAndrade/saldo-futuro/pull/111), com `Closes #106`.
 
 ## Próximo passo
 
@@ -403,19 +405,19 @@ Validação desta atualização: 48/48 testes de governança passaram; validador
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 010 (completo)
 Quem: Responsável
-Conferir: Checks e diff da PR #110 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/110); notas da 0.7.0 em src/lib/novidades.ts, transcritas na task 010_task_issue-105.md
-Diga: "aprovo o merge da PR #110"
+Conferir: Checks e diff da PR #111 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/111); nota da 0.7.0 transcrita na task 010_task_issue-106.md
+Diga: "aprovo o merge da PR #111"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 010 + implementar_issue + 105/Item-2-BL-011 + 30e05c55e5756dfa017a6f98d1ce96aec9555e3a`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 010 + implementar_issue + 106/Item-3-BL-006 + 74d36d0c3550bc381a4ae1e73ab3e8493a230ac5`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: #104 integrada pela PR #108, #105 aberta sem branch nem PR / branch `feature/issue-105` publicada, PR #110 aberta e task da #105 Aguardando integração
+- `state_before` / `state_after`: #104 e #105 integradas, #106 aberta sem branch nem PR / branch `feature/issue-106` publicada, PR #111 aberta e task da #106 Aguardando integração
 - `result`: `executed`
-- `evidence`: autorização de implementação da #105 em 2026-10-21; base conferida igual a `origin/main` em `30e05c5`; PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/110 criada via `gh`; validações registradas na task
-- `blockers`: checks remotos verdes no HEAD final; "aprovo o merge da PR #110". As issues #106 e #107 seguem sem autorização; PR #109 do release-please não é integrada antes das quatro entregas
+- `evidence`: autorização de implementação da #106 em 2026-10-21; base conferida igual a `origin/main` em `74d36d0`; PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/111 criada via `gh`; validações registradas na task
+- `blockers`: checks remotos verdes no HEAD final; "aprovo o merge da PR #111". A issue #107 segue sem autorização; PR #109 do release-please não é integrada antes das quatro entregas
 
 ## Revisão crítica
 
