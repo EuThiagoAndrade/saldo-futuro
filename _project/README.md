@@ -466,7 +466,7 @@ npm run test:e2e
 
 Os comandos de Supabase valem para entregas que tocam o banco ou a autenticação; o `test:e2e` com backend exige as variáveis do Supabase local (ver `README.md`).
 
-Antes de publicar uma entrega, execute também as validações adicionais definidas no plano e confirme que o staging contém somente o escopo autorizado. Registre resultados reais na task. Checks críticos devem passar antes do merge, mesmo sem proteção técnica de branch no plano gratuito do GitHub. Falhas semânticas que a automação não cobre exigem revisão manual.
+Antes de publicar uma entrega, execute também as validações adicionais definidas no plano e confirme que o staging contém somente o escopo autorizado. Registre resultados reais na task. Checks críticos devem passar antes do merge. O ruleset `proteger-main` do GitHub, observado na auditoria do ciclo `011`, exige PR e os checks de governança, aplicação e banco no `main` e impede force push e exclusão; ele não exige aprovação de revisão, então a aprovação do merge continua sendo a frase do responsável. Falhas semânticas que a automação não cobre exigem revisão manual.
 
 ## Handoffs e efeitos
 

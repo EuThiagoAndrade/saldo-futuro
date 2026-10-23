@@ -36,6 +36,9 @@ coverage/
 test-results/
 playwright-report/
 
+# Configuração local de ferramentas de agente
+.claude/
+
 # Sistema operacional e editores
 .DS_Store
 Thumbs.db

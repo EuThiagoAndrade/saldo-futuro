@@ -327,6 +327,8 @@ Estado corrente: plano `Aprovado` e ciclo `Planejamento`; nenhuma branch, task, 
 ## Registro de execução
 
 - **Issue #116 (auditoria):** "autorizo a implementação da issue #116" em 2026-10-22. A primeira entrega autorizada levou o plano a `Em Execução` e o ciclo a `Em execução`; o "Estado corrente" do Registro de criação das issues fica como histórico. Branch `chore/issue-116`, task `011_task_issue-116.md` (artefato ativo da entrega), registro `011_research_auditoria_historico.md` e [PR #119](https://github.com/EuThiagoAndrade/saldo-futuro/pull/119), com `Closes #116`. Auditoria concluída sem achado; a classificação do e-mail pessoal nos metadados de autoria foi decidida pelo responsável ("Aceitar como autoria", critério C8).
+- **Issue #116 integrada:** "aprovo o merge da PR #119" em 2026-10-22; PR #119 por squash, com todos os checks verdes; issue fechada como concluída.
+- **Issue #117 (governança):** "autorizo a implementação da issue #117" em 2026-10-22. Branch `chore/issue-117`, task `011_task_issue-117.md` (artefato ativo) e [PR #120](https://github.com/EuThiagoAndrade/saldo-futuro/pull/120), com `Closes #117`.
 
 ## Próximo passo
 

@@ -35,7 +35,7 @@ test.describe("novidades (#105)", () => {
       await expect(page.getByText("O histórico de novidades ainda não está disponível.")).toBeVisible();
       await expect(page.getByText("0.7.0")).toHaveCount(0);
     }
-    // Nenhum link ao changelog técnico do repositório privado.
+    // Nenhum link ao changelog técnico do repositório.
     await expect(page.locator('main a[href*="github.com"], main a[href*="CHANGELOG" i]')).toHaveCount(0);
   }
 
