@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/EuThiagoAndrade/saldo-futuro/compare/v0.7.0...v0.8.0) (2026-10-23)
+
+
+### Features
+
+* **issue-118:** incluir o IGP-M no catálogo de benchmarks ([#121](https://github.com/EuThiagoAndrade/saldo-futuro/issues/121)) ([c4105a2](https://github.com/EuThiagoAndrade/saldo-futuro/commit/c4105a24459e97ea6259d34b036fcccd238586ee)), closes [#118](https://github.com/EuThiagoAndrade/saldo-futuro/issues/118)
+
 ## [0.7.0](https://github.com/EuThiagoAndrade/saldo-futuro/compare/v0.6.0...v0.7.0) (2026-10-22)
 
 
