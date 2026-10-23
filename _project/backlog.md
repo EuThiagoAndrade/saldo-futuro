@@ -170,8 +170,8 @@ Observado em `src/app/(app)/ativos/page.tsx` e `src/components/formularios/novo-
 ## BL-007 — Expansão do catálogo de benchmarks com o índice de inflação IGP-M
 
 > **Criado em:** `2026-10-20`
-> **Atualizado em:** `2026-10-20`
-> **Estado:** `Disponível`
+> **Atualizado em:** `2026-10-23`
+> **Estado:** `Encaminhado`
 
 ### Problema e benefício esperado
 
@@ -183,7 +183,7 @@ Observado no catálogo de benchmarks em `supabase/migrations/20261014193630_benc
 
 ### Encaminhamentos
 
-—
+- ciclo 011 — 2026-10-23 — integral
 
 ### Restante
 
@@ -192,6 +192,7 @@ Observado no catálogo de benchmarks em `supabase/migrations/20261014193630_benc
 ### Registro
 
 - 2026-10-20 — Pedido explícito de guardar a necessidade; captura local.
+- 2026-10-23 — Retorno pós-integração da seleção original do ciclo 011; necessidade integralmente encaminhada (issue #118, PR #121).
 
 ## BL-008 — Suporte a séries de benchmark de nível e cotação para o Dólar PTAX
 
