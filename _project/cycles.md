@@ -1,6 +1,6 @@
 # Registro de ciclos
 
-> **Próximo ciclo:** `011`
+> **Próximo ciclo:** `012`
 > **Última atualização:** 2026-10-22
 
 | Ciclo | Assunto | Estado | Ideação | Plano | Issues | Encerramento |
@@ -18,5 +18,6 @@
 | `008` | Legibilidade do patrimônio e dos cartões de resumo | `Concluído` | — (ciclo leve) | `_project/executed/008_legibilidade_patrimonio_resumo/008_plan.md` | [#88](https://github.com/EuThiagoAndrade/saldo-futuro/issues/88) e [#89](https://github.com/EuThiagoAndrade/saldo-futuro/issues/89) — fechadas como concluídas após o merge da última PR | [PR #92](https://github.com/EuThiagoAndrade/saldo-futuro/pull/92), encerramento prospectivo até seu merge |
 | `009` | Usabilidade e consistência visual | `Concluído` | — (ciclo leve) | `_project/executed/009_usabilidade_consistencia_visual/009_plan.md` | [#94](https://github.com/EuThiagoAndrade/saldo-futuro/issues/94), [#95](https://github.com/EuThiagoAndrade/saldo-futuro/issues/95), [#96](https://github.com/EuThiagoAndrade/saldo-futuro/issues/96) e [#97](https://github.com/EuThiagoAndrade/saldo-futuro/issues/97) — fechadas como concluídas após o merge da última PR | [PR #101](https://github.com/EuThiagoAndrade/saldo-futuro/pull/101), encerramento prospectivo até seu merge |
 | `010` | Novidades, privacidade, tela de ativos e distribuição patrimonial | `Concluído` | `_project/ideations/010_novidades_privacidade_ativos_distribuicao.md` | `_project/executed/010_novidades_privacidade_ativos_distribuicao/010_plan.md` | [#104](https://github.com/EuThiagoAndrade/saldo-futuro/issues/104), [#105](https://github.com/EuThiagoAndrade/saldo-futuro/issues/105), [#106](https://github.com/EuThiagoAndrade/saldo-futuro/issues/106) e [#107](https://github.com/EuThiagoAndrade/saldo-futuro/issues/107) — #104 com código integrado pela [PR #108](https://github.com/EuThiagoAndrade/saldo-futuro/pull/108), ação externa concluída em 2026-10-22 e fechada pela PR de encerramento (`Closes #104`); #105 fechada pela [PR #110](https://github.com/EuThiagoAndrade/saldo-futuro/pull/110); #106 fechada pela [PR #111](https://github.com/EuThiagoAndrade/saldo-futuro/pull/111); #107 fechada pela [PR #112](https://github.com/EuThiagoAndrade/saldo-futuro/pull/112); release `0.7.0` pela [PR #109](https://github.com/EuThiagoAndrade/saldo-futuro/pull/109)| [PR de encerramento](https://github.com/EuThiagoAndrade/saldo-futuro/pull/114), encerramento prospectivo até seu merge |
+| `011` | Repositório público na governança e benchmark IGP-M | `Planejamento` | `_project/ideations/011_repositorio_publico_governanca_igpm.md` | `_project/drafts/011_repositorio_publico_governanca_igpm/011_plan.md` | — | — |
 
 O ciclo `000` não tem ideação retroativa. Sua origem e as aprovações anteriores à implantação da governança estão registradas no próprio plano.
