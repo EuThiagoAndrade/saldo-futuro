@@ -2,7 +2,7 @@
 
 > **Ciclo:** `011`
 > **Issue:** `#116`
-> **Plano:** `_project/drafts/011_repositorio_publico_governanca_igpm/011_plan.md`, item 1
+> **Plano:** `_project/executed/011_repositorio_publico_governanca_igpm/011_plan.md`, item 1
 > **Método:** D-A1 (aprovado em 2026-10-22)
 > **Data:** 2026-10-22 (horário de Cuiabá)
 > **Base:** `main` em `07adff78c33d8b5565e5ef77d425ced33a3f6d01`, igual a `origin/main`
