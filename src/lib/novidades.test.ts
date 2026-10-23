@@ -66,6 +66,11 @@ describe("histórico do produto", () => {
     }
     expect(new Set(HISTORICO.map((n) => n.versao)).size).toBe(HISTORICO.length);
   });
+
+  it("a nota da 0.8.0 (IGP-M) só aparece quando a 0.8.0 for a versão corrente ou anterior a ela", () => {
+    expect(novidadesPublicadas("0.7.0", HISTORICO).map((n) => n.versao)).toEqual(["0.7.0"]);
+    expect(novidadesPublicadas("0.8.0", HISTORICO).map((n) => n.versao)).toEqual(["0.8.0", "0.7.0"]);
+  });
 });
 
 describe("dataExtensaBr", () => {
