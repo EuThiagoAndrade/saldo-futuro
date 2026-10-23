@@ -72,7 +72,7 @@ O Saldo Futuro é um sistema web de gestão de investimentos pessoais, multiusu�
   - a Audience da tela de consentimento do Google foi publicada em produção pelo responsável em 2026-10-22, pelo roteiro O1 a O6 da KB-002, com escopos só de identidade básica e login de conta autorizada fora da lista de teste comprovado; Branding não foi solicitado;
 - versão e novidades (ciclo `010`):
   - `/novidades`, autenticada para `admin` e `user`, em Mais e no menu lateral, mostra a versão corrente lida do `package.json` e o histórico manual de `src/lib/novidades.ts`, a partir da `0.7.0`, em linguagem simples;
-  - uma entrada só aparece depois que sua versão é lançada no build; a `0.7.0` foi publicada em 2026-10-22 e sua data está registrada em `src/lib/novidades.ts`; uma entrada sem data comprovada mostra "Data de publicação em confirmação". Versão sem entrada não tem notas, sem erro; nenhum teste exige nota por versão, e a página não leva ao changelog técnico.
+  - uma entrada só aparece depois que sua versão é lançada no build; a `0.7.0` foi publicada em 2026-10-22 e a `0.8.0` em 2026-10-23, com as datas registradas em `src/lib/novidades.ts`; uma entrada sem data comprovada mostra "Data de publicação em confirmação". Versão sem entrada não tem notas, sem erro; nenhum teste exige nota por versão, e a página não leva ao changelog técnico.
 - tela de ativos (ciclo `010`):
   - `/ativos` tem Novo ativo no topo e as abas "Em uso" e "Desativados" como links (`/ativos` e `/ativos?aba=desativados`), lidas no servidor, com contadores e só a lista selecionada; valor ausente ou desconhecido abre Em uso. No celular, Em uso é uma lista densa com o nome completo; no desktop, tabela (DESIGN.md 6.7 e 6.12);
   - o cadastro fica em `/ativos/novo`, com a mesma validação e a RPC `criar_ativo`; o sucesso volta a `/ativos` sem mensagem extra, e a recusa aparece no próprio formulário. A desativação continua pela confirmação e pela RPC `desativar_ativo`, com as mesmas restrições (trânsito sem ação, saldo zero obrigatório).
@@ -234,3 +234,5 @@ O plano executado do ciclo `001` (`_project/executed/001_fundacao_aplicacao/001_
 | 2026-10-21 | `010` | Issue #106: cadastro em `/ativos/novo` e `/ativos` com abas por URL, contadores e lista densa no celular |
 | 2026-10-21 | `010` | Issue #107: distribuição por ativo em rosca, com participação pelo maior resto sobre os saldos positivos (KB-004, seção 15) |
 | 2026-10-22 | `010` | Encerramento: release `0.7.0` publicada, Audience do Google em produção, data da release registrada em `/novidades` e estado final das páginas públicas, das novidades, de Ativos e da rosca consolidado |
+| 2026-10-23 | `011` | Issue #118 (BL-007): IGP-M (SGS 189, mensal) no catálogo de benchmarks, por último na ordem do catálogo, com a regra mensal existente da KB-004 |
+| 2026-10-23 | `011` | Encerramento: release `0.8.0` publicada e data registrada em `/novidades`; IGP-M em produção com a cobertura iniciando junto com a do IPCA |

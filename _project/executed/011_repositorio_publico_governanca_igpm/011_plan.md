@@ -1,10 +1,10 @@
 # Plano de Implementação — Repositório público na governança e benchmark IGP-M
 
 > **Ciclo:** `011`
-> **Status:** `Em Execução`
+> **Status:** `Concluído`
 > **Versão:** `v2`
 > **Data de criação:** 2026-10-22
-> **Última atualização:** 2026-10-22
+> **Última atualização:** 2026-10-23
 > **Tipo:** `chore`
 > **Prioridade:** `P1`
 > **Nível:** `completo`
@@ -293,9 +293,11 @@ Commits `chore(issue-N):` ou `feat(issue-N):`; documentação `docs(cycle-011):`
 
 | Campo | Valor |
 | :-- | :-- |
-| Issue(s) | [#116 — auditoria](https://github.com/EuThiagoAndrade/saldo-futuro/issues/116); [#117 — governança](https://github.com/EuThiagoAndrade/saldo-futuro/issues/117); [#118 — IGP-M, BL-007](https://github.com/EuThiagoAndrade/saldo-futuro/issues/118), que fecha pela PR de encerramento |
-| PR(s) | [#115 — publicação documental do plano](https://github.com/EuThiagoAndrade/saldo-futuro/pull/115), integrada em 2026-10-23 por squash (`07adff78c33d8b5565e5ef77d425ced33a3f6d01`) |
-| Branch(es) | `chore/cycle-011-plan` (PR documental do plano) |
+| Issue(s) | [#116 — auditoria](https://github.com/EuThiagoAndrade/saldo-futuro/issues/116), fechada pela PR #119; [#117 — governança](https://github.com/EuThiagoAndrade/saldo-futuro/issues/117), fechada pela PR #120; [#118 — IGP-M, BL-007](https://github.com/EuThiagoAndrade/saldo-futuro/issues/118), código integrado pela PR #121 e fechada por `Closes #118` na [PR de encerramento](https://github.com/EuThiagoAndrade/saldo-futuro/pull/123) |
+| PR(s) | [#115 — publicação documental do plano](https://github.com/EuThiagoAndrade/saldo-futuro/pull/115), integrada em 2026-10-22 (horário de Cuiabá) por squash (`07adff78c33d8b5565e5ef77d425ced33a3f6d01`); [#119 — auditoria](https://github.com/EuThiagoAndrade/saldo-futuro/pull/119) (`4b7fa70`); [#120 — governança](https://github.com/EuThiagoAndrade/saldo-futuro/pull/120) (`130325e`); [#121 — IGP-M](https://github.com/EuThiagoAndrade/saldo-futuro/pull/121) (`c4105a2`), sem fechar a #118; [#122 — release `0.8.0`](https://github.com/EuThiagoAndrade/saldo-futuro/pull/122) (`8578a52`), com a release `v0.8.0` publicada; [PR de encerramento](https://github.com/EuThiagoAndrade/saldo-futuro/pull/123), prospectiva até seu merge |
+| Branch(es) | `chore/cycle-011-plan` (PR documental do plano); `chore/issue-116`; `chore/issue-117`; `feature/issue-118`; `chore/cycle-011-closure` (encerramento) |
+| Task(s) | `_project/executed/011_repositorio_publico_governanca_igpm/011_task_issue-116.md`; `_project/executed/011_repositorio_publico_governanca_igpm/011_task_issue-117.md`; `_project/executed/011_repositorio_publico_governanca_igpm/011_task_issue-118.md`; `_project/executed/011_repositorio_publico_governanca_igpm/011_task_closure.md` |
+| Registro auxiliar | `_project/executed/011_repositorio_publico_governanca_igpm/011_research_auditoria_historico.md` |
 | Destino após conclusão | `_project/executed/011_repositorio_publico_governanca_igpm/011_plan.md` |
 
 ## Registro de aprovação
@@ -331,26 +333,31 @@ Estado corrente: plano `Aprovado` e ciclo `Planejamento`; nenhuma branch, task, 
 - **Issue #117 (governança):** "autorizo a implementação da issue #117" em 2026-10-22. Branch `chore/issue-117`, task `011_task_issue-117.md` (artefato ativo) e [PR #120](https://github.com/EuThiagoAndrade/saldo-futuro/pull/120), com `Closes #117`.
 - **Issue #117 integrada:** "aprovo o merge da PR #120" em 2026-10-22; PR #120 por squash, depois de o check de banco terminar verde; issue fechada como concluída.
 - **Issue #118 (IGP-M, BL-007):** "autorizo a implementação da issue #118" em 2026-10-23. Conferência G1 da série 189 registrada antes do código. Decisão do responsável de 2026-10-23, durante a implementação: o IGP-M recebe id fixo no topo da faixa para ficar por último no catálogo e não mudar o benchmark padrão da comparação ("Fixar no fim"). Branch `feature/issue-118`, task `011_task_issue-118.md` (artefato ativo) e [PR #121](https://github.com/EuThiagoAndrade/saldo-futuro/pull/121), com `Refs #118`, sem fechar a issue.
+- **Issue #118 integrada:** teste manual do responsável no servidor local com dados fictícios ("Testes concluídos"); "aprovo o merge da PR", confirmado como #121 em resposta à pergunta expressa, em 2026-10-23; PR #121 por squash (`c4105a2`) com os cinco checks verdes; issue mantida aberta. Deploy de produção do `c4105a2` com sucesso.
+- **Ação externa da issue #118:** "concluí a ação externa da issue #118" em 2026-10-23, com migrações alinhadas, cobertura do IGP-M com o mesmo início da do IPCA e último mês setembro de 2026, declarados pelo responsável; detalhes na task `011_task_issue-118.md`, artefato ativo desta etapa.
+- **Verificação em produção:** autorizada em 2026-10-23. Parte pública conferida pelo agente (rotas exigem sessão; sincronização responde 401) e conferência autenticada do responsável aprovada nos três itens, sem limitações; detalhes na task da #118. Falta conferir `/novidades` depois da release `0.8.0`.
+- **Release `0.8.0`:** PR #122 conferida; o vínculo de fechamento da #118, criado pelo release-please na descrição, foi retirado por decisão do responsável; execuções automáticas da PR aprovadas e checks verdes, também por `workflow_dispatch`; "aprovo o merge da PR #122" em 2026-10-23 e squash `8578a52`; release `v0.8.0` publicada em 2026-10-23 às 14:52 em America/Cuiaba. O responsável conferiu `/novidades` em produção com a `0.8.0` e a nota do IGP-M: passou.
+- **Encerramento:** autorizado pela aprovação do plano; "Passou: /novidades em produção mostra a versão 0.8.0 com a nota do IGP-M. Pode seguir para o encerramento do ciclo 011." em 2026-10-23. Branch `chore/cycle-011-closure`, task `011_task_closure.md`, [PR de encerramento](https://github.com/EuThiagoAndrade/saldo-futuro/pull/123) com `Closes #118`: data real da `0.8.0` em `src/lib/novidades.ts`, consolidação nas KB-002 e KB-003, no ADR-003 (caminho do registro da auditoria) e em `_project/README.md` (PRs de release no repositório público), lição registrada e movimentação para `executed/`, prospectivas até o merge.
 
 ## Próximo passo
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando autorização de implementação — ciclo 011 (completo)
-Quem: Responsável
-Conferir: Issue #116 (https://github.com/EuThiagoAndrade/saldo-futuro/issues/116) e o item 1 deste plano
-Diga: "autorizo a implementação da issue #116"
+Situação: Concluído — ciclo 011 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 011 + criar_issues + chore-chore-feature/itens-1-3 + v2/07adff78c33d8b5565e5ef77d425ced33a3f6d01`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 011 + atualizar_docs + encerramento + 8578a52ba960d7464dc72bc02dd5786f4ef0a084`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: plano `v2` `Aprovado`, PR #115 integrada, nenhuma issue do ciclo / três issues `OPEN` (#116, #117, #118) iguais aos payloads confirmados; plano e índice com os vínculos, ainda locais.
+- `state_before` / `state_after`: três entregas e release `0.8.0` integradas, ação externa e verificação em produção concluídas, ciclo em `drafts/` / ciclo e plano `Concluído` em `executed/`, prospectivos até o merge da PR de encerramento
 - `result`: `executed`
-- `evidence`: confirmação humana "Pode criar as issues"; URLs das issues; comparação título/corpo via `gh issue view` e hashes acima; PR #115 `MERGED`.
-- `blockers`: implementação depende de "autorizo a implementação da issue #116".
+- `evidence`: PRs #115, #119, #120, #121 e #122 `MERGED` e release `v0.8.0` conferidas no GitHub; ação externa e conferências autenticadas declaradas pelo responsável; gates da PR de encerramento na task `011_task_closure.md`
+- `blockers`: checks verdes no tip final e "aprovo o merge da PR de encerramento"; antes disso a situação efetiva é Aguardando merge
 
 ## Revisão crítica
 
@@ -459,6 +466,6 @@ Nenhum bloqueador e nenhuma ressalva nova. As correções mantêm o escopo da id
 
 ## Pós-mortem
 
-- **Data de conclusão:** —
-- **Desvios:** —
-- **Lições comprovadas:** —
+- **Data de conclusão:** 2026-10-23, prospectiva até o merge da PR de encerramento.
+- **Desvios:** padrões da auditoria ampliados de forma conservadora (códigos da B3, títulos do Tesouro, blocos compactados e metadados de autoria); e-mail pessoal nos metadados de autoria aceito pelo responsável como identidade de autoria (C8); recomendação sobre o `GITHUB_TOKEN` corrigida na #117; id fixo do IGP-M para preservar a ordem do catálogo, por decisão do responsável; vínculo de fechamento da #118 retirado da descrição da PR de release. Nenhuma mudança de regra financeira, RLS ou escopo.
+- **Lições comprovadas:** o release-please converte referências de commit em "closes" na PR de release (registrada em `.agent/lessons_learned.md`). Em repositório público, a PR de release do bot exige aprovar as execuções de `pull_request` (consolidado em `_project/README.md`).

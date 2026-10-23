@@ -438,7 +438,7 @@ Uma única convenção, nomeada pelo tipo semântico e sem prefixo de ferramenta
 
 Os commits seguem Conventional Commits, compatíveis com o release-please a partir do ciclo `001`. PRs são integradas por squash.
 
-Exceção: o release-please cria por conta própria a branch `release-please--branches--main--components--saldo-futuro` e o commit de release `chore(main): release x.y.z`, que não seguem as convenções acima. As PRs abertas com o `GITHUB_TOKEN` não disparam outros workflows; os checks da PR de release são executados por `workflow_dispatch`. Os nomes foram conferidos na primeira PR de release (#13).
+Exceção: o release-please cria por conta própria a branch `release-please--branches--main--components--saldo-futuro` e o commit de release `chore(main): release x.y.z`, que não seguem as convenções acima. Os checks da PR de release são executados por `workflow_dispatch` na branch da release. Desde que o repositório é público (ciclo `011`), as execuções automáticas de `pull_request` dessa PR, aberta pelo bot do GitHub Actions, ficam aguardando aprovação pela política de colaboradores externos e também precisam ser aprovadas para o ruleset liberar o merge. O release-please transforma referências de commit em "closes" na descrição da PR; uma issue que deva fechar depois, pelo encerramento, precisa ter o vínculo retirado da descrição antes do merge. Os nomes foram conferidos na primeira PR de release (#13).
 
 ## Gates mínimos
 

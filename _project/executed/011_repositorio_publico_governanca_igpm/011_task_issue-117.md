@@ -5,7 +5,7 @@
 > **Estado:** `Concluída`
 > **Tipo:** `chore`
 > **Issue:** `#117`
-> **Plano:** `_project/drafts/011_repositorio_publico_governanca_igpm/011_plan.md`
+> **Plano:** `_project/executed/011_repositorio_publico_governanca_igpm/011_plan.md`
 > **Branch:** `chore/issue-117`
 > **PR:** [#120](https://github.com/EuThiagoAndrade/saldo-futuro/pull/120)
 > **Integração:** PR #120 integrada por squash em 2026-10-22 (horário de Cuiabá); issue #117 fechada como concluída
@@ -79,10 +79,10 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando autorização de implementação — ciclo 011 (completo)
-Quem: Responsável
-Conferir: Issue #118 (https://github.com/EuThiagoAndrade/saldo-futuro/issues/118) e o item 3 do plano
-Diga: "autorizo a implementação da issue #118"
+Situação: Concluído — ciclo 011 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída

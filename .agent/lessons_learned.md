@@ -89,3 +89,7 @@ Origem: ciclo `005`, merge da PR #56. A resposta confirmou a integração da iss
 ### 2026-10-17 — O assunto do squash segue Conventional Commits, não o título da PR
 
 Origem: ciclo `005`, PRs #55, #56, #58 e #59. Os merges por squash usaram o título da PR (`[CHORE]`, `[FEATURE]`, `[FIX]`), que é o prefixo das issues, como assunto do commit. O release-please não reconheceu nenhuma das entregas e não propôs a versão; a correção exigiu `BEGIN_COMMIT_OVERRIDE` nas PRs já integradas. Ao integrar, passe explicitamente o assunto convencional da entrega (`feat(issue-N): …`, `fix(issue-N): …` ou `chore(issue-N): …`, como em `_project/README.md`) e confira o assunto resultante em `main` antes de encerrar a entrega.
+
+### 2026-10-23 — O release-please transforma referências de commit em "closes" na PR de release
+
+Origem: ciclo `011`, PR #122. O commit da issue #118 usava `Refs #118` para que a issue só fechasse no encerramento, depois da ação externa. O release-please escreveu "closes #118" no changelog e na descrição da PR de release, e o GitHub passou a vincular essa PR como fechando a issue; o merge da release a fecharia antes do aceite. Antes de integrar uma PR de release, confira as issues vinculadas para fechamento (`gh pr view N --json closingIssuesReferences`); se alguma deve fechar depois, retire o vínculo da descrição com decisão do responsável e use no squash uma mensagem sem palavra de fechamento.

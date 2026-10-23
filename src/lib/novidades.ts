@@ -17,7 +17,7 @@ export const VERSAO_ATUAL: string = pacote.version;
 export const HISTORICO: readonly Novidade[] = [
   {
     versao: "0.8.0",
-    publicadaEm: null,
+    publicadaEm: "2026-10-23",
     notas: ["Agora é possível comparar a carteira com o IGP-M, além do CDI e do IPCA."],
   },
   {

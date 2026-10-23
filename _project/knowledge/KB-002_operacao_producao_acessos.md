@@ -6,7 +6,7 @@ tags:
   - acesso
 author: "Thiago Andrade e Claude"
 module: "Operação"
-last_updated: "2026-10-22"
+last_updated: "2026-10-23"
 origin_cycle: "001"
 ---
 
@@ -415,3 +415,5 @@ Consultadas em 2026-10-12 e conferidas na execução de 2026-10-13. São documen
 | 2026-10-18 | `006` | Encerramento: virada registrada em 2026-10-18 |
 | 2026-10-21 | `010` | Issue #104: armadilha 7 separa Audience, Branding e a exceção de identidade básica; GC2, GC4, P2 e a verificação "Recusa" condicionados ao status da Audience; roteiro O1 a O6 da publicação, com resultado mínimo e parada por impedimento externo. Página inicial informada ao Google: `/termos`, por decisão do responsável; `/entrar` fica só com logo e login. O resultado real entra no encerramento do ciclo |
 | 2026-10-22 | `010` | Encerramento: resultado da publicação da Audience (O1 a O6) registrado na subseção "Resultado da execução"; Branding não solicitado |
+| 2026-10-22 | `011` | Issue #117: V1 sem a premissa de repositório privado; o repositório é público desde 2026-10-22 (ADR-003, emenda do ciclo `011`) |
+| 2026-10-23 | `011` | Encerramento: `db push` da migração do IGP-M (S12) e primeira sincronização do IGP-M feitos pelo responsável, com a cobertura iniciando junto com a do IPCA e indo até setembro de 2026 |

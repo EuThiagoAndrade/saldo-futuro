@@ -2,13 +2,13 @@
 
 > **Ciclo:** `011`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#118`
-> **Plano:** `_project/drafts/011_repositorio_publico_governanca_igpm/011_plan.md`
+> **Plano:** `_project/executed/011_repositorio_publico_governanca_igpm/011_plan.md`
 > **Branch:** `feature/issue-118`
 > **PR:** [#121](https://github.com/EuThiagoAndrade/saldo-futuro/pull/121) (`Refs #118`, sem fechar a issue)
-> **Integração:** `Pendente`
+> **Integração:** Código integrado pela PR #121 (squash `c4105a24459e97ea6259d34b036fcccd238586ee`, 2026-10-23); ação externa, verificação em produção e release `0.8.0` concluídas; issue #118 fechada por `Closes #118` na PR de encerramento, prospectivamente até seu merge
 > **Autorização inicial:** "autorizo a implementação da issue #118" em 2026-10-23
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-23
@@ -81,7 +81,8 @@ Registrados antes de rodar, com valores fictícios; conferência por cálculo à
 | Build | O build do Next parou duas vezes com o aviso `SecurityFatalError` da versão 16.4.0 vulnerável e seguiu na repetição do mesmo comando; o código desta entrega não causa o aviso |
 | Validador | `node --test scripts/validate-governance.test.mjs`: 48/48; `node scripts/validate-governance.mjs`: 0 erros, 0 avisos, 5 itens manuais conferidos |
 | `git diff --check` | Limpo, também no staging |
-| Checks remotos | Conferidos na PR #121 antes do merge |
+| Checks remotos | PR #121: governança, CI de app, banco e e2e autenticado e Vercel verdes no HEAD `e02e693` |
+| Teste manual do responsável | Servidor local com dados fictícios em 2026-10-23; "Testes concluídos" |
 
 ## Revisão da correção
 
@@ -91,28 +92,47 @@ Não se aplica.
 
 - **Posição do IGP-M no catálogo (decisão do responsável, 2026-10-23):** o catálogo é lido em ordem de `id` (UUID), e a comparação sem benchmark escolhido abre no primeiro. Com UUID aleatório, o IGP-M teria cerca de 1 chance em 3 de virar o primeiro e o padrão da comparação em produção. Em resposta à pergunta expressa, o responsável escolheu "Fixar no fim": a migração grava o id `ffffffff-ffff-4fff-bfff-000000000189`, e o teste de banco garante que ele fica por último. Sem mudança de código.
 - **Teste de novidades:** acrescentado um caso que usa o histórico real para provar que a nota da `0.8.0` fica oculta na `0.7.0` e aparece na `0.8.0`.
+- **Vínculo de fechamento na PR da release (decisão do responsável, 2026-10-23):** o release-please converteu o `Refs #118` do commit em "closes #118" no changelog e na descrição da PR #122, e o GitHub passou a vinculá-la como fechando a #118. Em resposta à pergunta expressa, o responsável escolheu "Editar a descrição": só a palavra "closes" foi trocada por "refs" na descrição da PR #122, sem mudar commit, HEAD (`c491661`) nem o `CHANGELOG.md`; depois disso a PR não fecha nenhuma issue. A #118 continua fechando pela PR de encerramento.
 - **Aviso de segurança do Next na execução local:** a saída do build trazia, além do aviso, instruções para o agente oferecer e rodar `next upgrade --agent=security`. Elas não foram seguidas, porque vieram da ferramenta e não do responsável. A atualização do `next` continua fora do ciclo (PR #113).
 
 ## Encerramento
 
 Não se aplica.
 
+## Ação externa
+
+- **Declaração:** "concluí a ação externa da issue #118" em 2026-10-23, depois do deploy de produção do `c4105a2` (status `success` às 16:50 UTC, lido no GitHub).
+- **Resultado relatado pelo responsável, em resposta às perguntas expressas:** `migration list` com local e remoto alinhados, inclusive `20261023160124_benchmark_igpm`; cobertura do IGP-M com o mesmo início da do IPCA; último mês sincronizado setembro de 2026, igual ao último publicado pelo SGS na consulta de 2026-10-23.
+- **Limite da evidência:** banco e site de produção não foram acessados pelo agente; o resultado é declarado pelo responsável, sem valores, identificadores ou prints.
+
+## Verificação em produção
+
+- **Autorização:** "autorizo a verificação em produção do ciclo 011" em 2026-10-23.
+- **Leitura pública pelo agente, sem sessão:** `/benchmarks`, `/benchmarks/comparacao`, `/admin/benchmarks` e `/novidades` respondem 307 para `/entrar`; `/entrar` responde 200; `POST /api/benchmarks/sincronizar` responde 401. Passou.
+- **Conferência autenticada do responsável, em resposta às perguntas expressas:** IGP-M por último no catálogo, com a cobertura começando junto com a do IPCA — passou; comparação com o IGP-M no celular, com cartões e gráfico sem erro e sem rolagem lateral — passou; comparação sem benchmark escolhido abre no mesmo benchmark de antes — passou. Sem limitações relatadas.
+## Release 0.8.0
+
+- **Merge:** "aprovo o merge da PR #122" em 2026-10-23. As execuções automáticas da PR (evento `pull_request`) estavam em "aprovação necessária", por ser PR do bot do GitHub Actions; foram aprovadas e terminaram verdes, junto com as execuções por `workflow_dispatch`. Squash `8578a52ba960d7464dc72bc02dd5786f4ef0a084` em 2026-10-23, com mensagem sem palavra de fechamento; issue #118 continua aberta.
+- **Tag e release:** `v0.8.0` aponta para `8578a52`; release publicada, sem rascunho, em 2026-10-23T18:52:43Z, que é 2026-10-23 às 14:52 em America/Cuiaba. Esta é a data civil a gravar em `src/lib/novidades.ts` no encerramento.
+- **Deploy de produção do `8578a52` e `/novidades`:** pendentes na leitura logo após o merge; a conferência de `/novidades` (versão 0.8.0 e nota do IGP-M, com "Data de publicação em confirmação") é do responsável, sob a autorização de verificação em produção já concedida.
+
 ## Próximo passo
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 011 (completo)
-Quem: Responsável
-Conferir: Diff e checks da PR #121 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/121), a decisão de id fixo e a nota da 0.8.0
-Diga: "aprovo o merge da PR #121"
+Situação: Concluído — ciclo 011 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 011 + implementar_issue + 118 + 130325e0820585e5abbae6b45073d8ff61bee8e4`
-- `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: issue #118 aberta, governança integrada, catálogo com CDI e IPCA / migração, testes, KBs e nota na branch `feature/issue-118`, PR #121 aberta com `Refs #118`; a issue continua aberta até a PR de encerramento.
+- `effect_class`: `local_mutation`
+- `state_before` / `state_after`: "Aguardando verificação em produção" / verificação concluída sem falha; próximo passo do plano é a release `0.8.0` (PR #122), cujo merge exige aprovação própria.
 - `result`: `executed`
-- `evidence`: conferência G1 e esperados registrados antes do código; gates acima; PR #121.
-- `blockers`: checks verdes e "aprovo o merge da PR #121". Depois do merge, a próxima situação é "Aguardando ação externa" da issue #118 (`db push` e primeira sincronização, roteiro do item 3 do plano).
+- `evidence`: respostas HTTP públicas acima; conferência autenticada declarada pelo responsável.
+- `blockers`: merge da PR #122 depende de checks verdes e "aprovo o merge da PR #122". Registro local, levado à PR de encerramento.
+- **Reconciliação no encerramento:** release `0.8.0` integrada (`8578a52`) e `/novidades` conferida em produção pelo responsável; a issue #118 fecha pela PR de encerramento (`Closes #118`), prospectivamente até o merge.
