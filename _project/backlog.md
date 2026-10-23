@@ -116,8 +116,8 @@ Observado em telas como Lançamentos (`src/app/(app)/lancamentos/page.tsx`) e na
 ## BL-005 — Visualização intuitiva de alocação patrimonial por ativo com detalhamento legível
 
 > **Criado em:** `2026-10-20`
-> **Atualizado em:** `2026-10-20`
-> **Estado:** `Disponível`
+> **Atualizado em:** `2026-10-22`
+> **Estado:** `Encaminhado`
 
 ### Problema e benefício esperado
 
@@ -129,7 +129,7 @@ Observado em `GraficoDistribuicao` (`src/components/graficos/graficos.tsx`). A p
 
 ### Encaminhamentos
 
-—
+- ciclo 010 — 2026-10-22 — integral
 
 ### Restante
 
@@ -138,12 +138,13 @@ Observado em `GraficoDistribuicao` (`src/components/graficos/graficos.tsx`). A p
 ### Registro
 
 - 2026-10-20 — Pedido explícito de guardar a necessidade levantada no registro temporário de melhorias; captura local.
+- 2026-10-22 — Retorno pós-integração da seleção original do ciclo 010; necessidade integralmente encaminhada (issue #107, PR #112).
 
 ## BL-006 — Reorganização da tela de ativos com fluxo de criação dedicado e gestão de listas
 
 > **Criado em:** `2026-10-20`
-> **Atualizado em:** `2026-10-20`
-> **Estado:** `Disponível`
+> **Atualizado em:** `2026-10-22`
+> **Estado:** `Encaminhado`
 
 ### Problema e benefício esperado
 
@@ -155,7 +156,7 @@ Observado em `src/app/(app)/ativos/page.tsx` e `src/components/formularios/novo-
 
 ### Encaminhamentos
 
-—
+- ciclo 010 — 2026-10-22 — integral
 
 ### Restante
 
@@ -164,12 +165,13 @@ Observado em `src/app/(app)/ativos/page.tsx` e `src/components/formularios/novo-
 ### Registro
 
 - 2026-10-20 — Pedido explícito de guardar a necessidade; captura local.
+- 2026-10-22 — Retorno pós-integração da seleção original do ciclo 010; necessidade integralmente encaminhada (issue #106, PR #111).
 
 ## BL-007 — Expansão do catálogo de benchmarks com o índice de inflação IGP-M
 
 > **Criado em:** `2026-10-20`
-> **Atualizado em:** `2026-10-20`
-> **Estado:** `Disponível`
+> **Atualizado em:** `2026-10-23`
+> **Estado:** `Encaminhado`
 
 ### Problema e benefício esperado
 
@@ -181,7 +183,7 @@ Observado no catálogo de benchmarks em `supabase/migrations/20261014193630_benc
 
 ### Encaminhamentos
 
-—
+- ciclo 011 — 2026-10-23 — integral
 
 ### Restante
 
@@ -190,6 +192,7 @@ Observado no catálogo de benchmarks em `supabase/migrations/20261014193630_benc
 ### Registro
 
 - 2026-10-20 — Pedido explícito de guardar a necessidade; captura local.
+- 2026-10-23 — Retorno pós-integração da seleção original do ciclo 011; necessidade integralmente encaminhada (issue #118, PR #121).
 
 ## BL-008 — Suporte a séries de benchmark de nível e cotação para o Dólar PTAX
 
@@ -273,8 +276,8 @@ Identificado em `src/app/(app)/lancamentos/page.tsx` (filtro de lançamentos), `
 ## BL-011 — Tela de novidades com histórico de versões e notas de lançamento acessíveis
 
 > **Criado em:** `2026-10-20`
-> **Atualizado em:** `2026-10-20`
-> **Estado:** `Disponível`
+> **Atualizado em:** `2026-10-22`
+> **Estado:** `Encaminhado`
 
 ### Problema e benefício esperado
 
@@ -286,7 +289,7 @@ Observado na navegação (`src/components/navegacao.tsx`). A proposta prevê um 
 
 ### Encaminhamentos
 
-—
+- ciclo 010 — 2026-10-22 — integral
 
 ### Restante
 
@@ -295,12 +298,13 @@ Observado na navegação (`src/components/navegacao.tsx`). A proposta prevê um 
 ### Registro
 
 - 2026-10-20 — Pedido explícito de guardar a necessidade; captura local.
+- 2026-10-22 — Retorno pós-integração da seleção original do ciclo 010; necessidade integralmente encaminhada (issue #105, PR #110).
 
 ## BL-012 — Páginas públicas de privacidade e termos para transição da tela de consentimento Google OAuth para produção
 
 > **Criado em:** `2026-10-20`
-> **Atualizado em:** `2026-10-20`
-> **Estado:** `Disponível`
+> **Atualizado em:** `2026-10-22`
+> **Estado:** `Encaminhado`
 
 ### Problema e benefício esperado
 
@@ -312,7 +316,7 @@ Registrado em `_project/knowledge/KB-002_operacao_producao_acessos.md` (passo GC
 
 ### Encaminhamentos
 
-—
+- ciclo 010 — 2026-10-22 — integral
 
 ### Restante
 
@@ -321,6 +325,7 @@ Registrado em `_project/knowledge/KB-002_operacao_producao_acessos.md` (passo GC
 ### Registro
 
 - 2026-10-20 — Pedido explícito de guardar a necessidade; captura local.
+- 2026-10-22 — Retorno pós-integração da seleção original do ciclo 010; necessidade integralmente encaminhada (issue #104, PRs #108 e #114; ação externa no Google concluída em 2026-10-22).
 
 ## BL-013 — Alinhar a margem do gráfico de evolução patrimonial aos gráficos vizinhos
 
