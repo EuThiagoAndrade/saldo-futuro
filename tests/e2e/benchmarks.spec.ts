@@ -18,6 +18,7 @@ test.describe("séries de benchmark", () => {
   let admin: SupabaseClient;
   let cdi: string;
   let ipca: string;
+  let igpm: string;
   let modo = "sucesso";
   let chamadas = 0;
   const fonte = createServer((request, response) => {
@@ -36,12 +37,13 @@ test.describe("séries de benchmark", () => {
   test.beforeAll(async () => {
     limparSeries();
     await new Promise<void>((resolve, reject) => { fonte.once("error", reject); fonte.listen(43141, "127.0.0.1", resolve); });
-    u = await criarUsuarios("benchmarks", { admin: "admin", cr44a: "user", cr44b: "user", cr45a: "user", cr45b: "user", cr47: "user", vazio: "user" });
+    u = await criarUsuarios("benchmarks", { admin: "admin", cr44a: "user", cr44b: "user", cr45a: "user", cr45b: "user", cr47: "user", igpm: "user", igpmk3: "user", vazio: "user" });
     admin = await clienteDoUsuario(u.admin);
     const { data, error } = await admin.from("benchmarks").select("id").eq("nome", "CDI").single();
     expect(error).toBeNull();
     cdi = data!.id;
     ipca = (await admin.from("benchmarks").select("id").eq("nome", "IPCA").single()).data!.id;
+    igpm = (await admin.from("benchmarks").select("id").eq("nome", "IGP-M").single()).data!.id;
   });
   test.afterAll(async () => {
     limparSeries();
@@ -173,6 +175,40 @@ test.describe("séries de benchmark", () => {
       await expect(cartao(page, "% do IPCA")).toContainText("N/D");
       await expect(cartao(page, "Diferença")).toContainText(diferenca);
     }
+  });
+
+  // IGP-M (ciclo 011, BL-007): série mensal de taxa (SGS 189) com a regra existente da KB-004 9.3.
+  // Valores fictícios; esperados calculados à mão na task da issue #118 antes da execução.
+  test("IGP-M: catálogo, administração, comparação mensal e K3", async ({ page }) => {
+    limparSeries();
+    await entrar(page, u.admin);
+    await page.goto("/benchmarks");
+    await expect(page.getByRole("heading", { level: 2, name: "IGP-M", exact: true })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Comparar com IGP-M" })).toBeVisible();
+    await page.goto("/admin/benchmarks");
+    await expect(page.getByTestId("cobertura-IGP-M")).toContainText("Ainda sem cobertura");
+    await expect(page.getByRole("button", { name: "Sincronizar IGP-M", exact: true })).toBeVisible();
+
+    await carteira("igpm", [1010000, 1030200]);
+    await serie(igpm, [{ data: "2026-01-01", valor: "1.2" }, { data: "2026-02-01", valor: "0.4" }]);
+    await entrar(page, u.igpm);
+    await comparar(page, igpm);
+    await expect(cartao(page, "Rentabilidade da carteira")).toContainText("+3,02%");
+    await expect(cartao(page, "Rentabilidade do IGP-M")).toContainText("+1,60%");
+    await expect(cartao(page, "Diferença")).toContainText("+1,42 p.p.");
+    await expect(cartao(page, "% do IGP-M")).toContainText("188,19%");
+    await expect(cartao(page, "Taxa de acerto")).toContainText("50,00%");
+    await page.getByText("Ver os números").click();
+    await expect(page.getByRole("figure").getByRole("row", { name: /fevereiro de 2026/ })).toContainText("103,02");
+    await expect(page.getByRole("figure").getByRole("row", { name: /fevereiro de 2026/ })).toContainText("101,60");
+
+    limparSeries();
+    await carteira("igpmk3", [1012000]);
+    await serie(igpm, [{ data: "2026-01-01", valor: "-0.5" }]);
+    await entrar(page, u.igpmk3);
+    await comparar(page, igpm);
+    await expect(cartao(page, "% do IGP-M")).toContainText("N/D");
+    await expect(cartao(page, "Diferença")).toContainText("+1,70 p.p.");
   });
 
   test("CR-47: mês parcial rotulado, três medidas N/D e nenhuma série parcial desenhada; axe", async ({ page }) => {

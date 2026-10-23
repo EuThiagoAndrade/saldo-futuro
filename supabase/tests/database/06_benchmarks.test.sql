@@ -3,7 +3,7 @@
 -- Valores fictícios de 0,04% ao dia; e-mails em example.com.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(43);
+select plan(45);
 
 create function pg_temp.act_as(p_sub uuid) returns void language plpgsql as $$
 begin
@@ -50,6 +50,10 @@ select table_privs_are('public', t, 'anon', array[]::text[], 'anon sem privilég
 from unnest(array['benchmarks', 'valores_benchmark', 'coberturas_benchmark']) t;
 select results_eq($$ select codigo_sgs, nome, periodicidade from public.benchmarks where codigo_sgs in (12, 433) order by codigo_sgs $$,
   $$ values (12, 'CDI', 'diaria'), (433, 'IPCA', 'mensal') $$, 'D9: catálogo semeado com CDI (12, diária) e IPCA (433, mensal)');
+select results_eq($$ select codigo_sgs, nome, periodicidade from public.benchmarks where codigo_sgs = 189 $$,
+  $$ values (189, 'IGP-M', 'mensal') $$, 'ciclo 011 (BL-007): IGP-M (189, mensal) acrescentado ao catálogo');
+select is((select codigo_sgs from public.benchmarks where codigo_sgs in (12, 189, 433) order by id desc limit 1), 189,
+  'ciclo 011: IGP-M fica por último na ordem de id do catálogo, depois de CDI e IPCA');
 
 -- 2. Usuário comum: lê, não grava, não carrega
 select pg_temp.act_as('00000000-0000-4000-8000-0000000000d1');

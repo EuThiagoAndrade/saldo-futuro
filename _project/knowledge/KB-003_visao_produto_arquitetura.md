@@ -6,7 +6,7 @@ tags:
   - referência
 author: "Thiago Andrade e Claude"
 module: "Produto"
-last_updated: "2026-10-22"
+last_updated: "2026-10-23"
 origin_cycle: "002"
 ---
 
@@ -35,7 +35,7 @@ O Saldo Futuro é um sistema web de gestão de investimentos pessoais, multiusu�
   - o schema da carteira, com escrita só por funções do banco;
   - lançamentos, estorno, transferência e fechamento mensal;
   - consolidação, Modified Dietz, acumulado e drawdown;
-  - benchmarks (CDI e IPCA) com a sincronização com o SGS e a comparação com a carteira;
+  - benchmarks (CDI e IPCA; IGP-M desde o ciclo `011`) com a sincronização com o SGS e a comparação com a carteira;
   - tudo especificado na KB-004 e testado contra os mesmos casos de referência;
 - as telas (ciclo `004`):
   - Início com patrimônio do último mês fechado, aportes líquidos do mês aberto, períodos, distribuição e gráficos em SVG próprio com tabelas equivalentes;
@@ -180,7 +180,7 @@ Definida em `supabase/migrations/20261014185205_carteira.sql`; as regras estão 
 
 Definidos em `supabase/migrations/20261014193630_benchmarks.sql`.
 
-- `public.benchmarks`: catálogo global, semeado com CDI (SGS 12, diária) e IPCA (SGS 433, mensal).
+- `public.benchmarks`: catálogo global, semeado com CDI (SGS 12, diária) e IPCA (SGS 433, mensal); o IGP-M (SGS 189, mensal) entrou no ciclo `011` por `supabase/migrations/20261023160124_benchmark_igpm.sql`, com id fixo para ficar por último na ordem do catálogo.
 - `public.valores_benchmark`: valores como publicados.
 - `public.coberturas_benchmark`: a cobertura de cada carga.
 - Qualquer usuário autenticado lê. Só a função `carregar_benchmark`, executada pelo admin, grava.

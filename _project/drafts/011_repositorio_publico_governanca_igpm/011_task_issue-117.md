@@ -2,13 +2,13 @@
 
 > **Ciclo:** `011`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `chore`
 > **Issue:** `#117`
 > **Plano:** `_project/drafts/011_repositorio_publico_governanca_igpm/011_plan.md`
 > **Branch:** `chore/issue-117`
 > **PR:** [#120](https://github.com/EuThiagoAndrade/saldo-futuro/pull/120)
-> **Integração:** `Pendente`
+> **Integração:** PR #120 integrada por squash em 2026-10-22 (horário de Cuiabá); issue #117 fechada como concluída
 > **Autorização inicial:** "autorizo a implementação da issue #117" em 2026-10-22
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-22
@@ -60,7 +60,7 @@ Não se aplica.
 | Testes | `node --test scripts/validate-governance.test.mjs`: 48/48. `npm run typecheck`: sem erros. `npm run lint`: 0 erros e 3 avisos, todos de um script local antigo em `local/` (ignorado pelo Git), idênticos no `main` sem estas mudanças |
 | Validador | `node scripts/validate-governance.mjs`: 0 erros, 0 avisos, 5 itens manuais conferidos |
 | `git diff --check` | Limpo, também no staging |
-| Checks remotos | Conferidos na PR #120 antes do merge |
+| Checks remotos | PR #120: governança, CI de app, banco e e2e autenticado e Vercel verdes no HEAD integrado |
 
 ## Revisão da correção
 
@@ -79,10 +79,10 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 011 (completo)
+Situação: Aguardando autorização de implementação — ciclo 011 (completo)
 Quem: Responsável
-Conferir: Diff e checks da PR #120 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/120)
-Diga: "aprovo o merge da PR #120"
+Conferir: Issue #118 (https://github.com/EuThiagoAndrade/saldo-futuro/issues/118) e o item 3 do plano
+Diga: "autorizo a implementação da issue #118"
 ```
 
 ## Handoff de saída
@@ -94,3 +94,4 @@ Diga: "aprovo o merge da PR #120"
 - `result`: `executed`
 - `evidence`: diff da PR #120; gates locais acima.
 - `blockers`: checks verdes e "aprovo o merge da PR #120". A issue #118 depende desta integração.
+- **Reconciliação pós-merge (registrada na entrega da #118):** "aprovo o merge da PR #120" em 2026-10-22; o merge esperou o check de banco terminar e foi feito com os cinco checks verdes no HEAD `5fce0b2`; squash integrado em `main`; issue #117 `CLOSED` como concluída. Situação seguinte: autorização da issue #118, já concedida.

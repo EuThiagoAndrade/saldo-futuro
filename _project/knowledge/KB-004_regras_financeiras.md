@@ -6,7 +6,7 @@ tags:
   - referência
 author: "Thiago Andrade e Claude"
 module: "Regras financeiras"
-last_updated: "2026-10-21"
+last_updated: "2026-10-23"
 origin_cycle: "003"
 ---
 
@@ -199,6 +199,7 @@ Vi = 0 com M > 0 não é `N/D`: a fórmula vale normalmente (K5).
 - Cada benchmark tem código SGS e uma única periodicidade, `diaria` ou `mensal`, imutáveis depois de criados; uma série diferente é outro benchmark (D8).
 - Valores únicos por benchmark e data. A série mensal é datada no dia 1 do mês.
 - Catálogo inicial: CDI (SGS 12, diária, % ao dia) e IPCA (SGS 433, mensal, % ao mês) (D9).
+- Acrescentado no ciclo `011` (BL-007): IGP-M (SGS 189, mensal, % ao mês, fonte FGV), série de taxa com a mesma regra mensal de 9.3; não é série de nível (9.5).
 - O valor `v` de uma série de taxa é um percentual do período: o fator do período é 1 + v/100.
 
 #### 9.2 Sincronização e cobertura (D10, K4)
