@@ -17,7 +17,7 @@ export const VERSAO_ATUAL: string = pacote.version;
 export const HISTORICO: readonly Novidade[] = [
   {
     versao: "0.7.0",
-    publicadaEm: null,
+    publicadaEm: "2026-10-22",
     notas: [
       "Política de privacidade e termos de uso publicados, com links na tela de entrada e em Conta.",
       "Nova página Novidades, no menu, com a versão do aplicativo e o que mudou em cada versão.",

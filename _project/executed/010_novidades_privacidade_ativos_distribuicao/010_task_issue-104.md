@@ -5,14 +5,14 @@
 > **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#104`
-> **Plano:** `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_plan.md`
+> **Plano:** `_project/executed/010_novidades_privacidade_ativos_distribuicao/010_plan.md`
 > **Branch:** `feature/issue-104`
 > **PR:** [#108](https://github.com/EuThiagoAndrade/saldo-futuro/pull/108)
-> **Integração:** `Conferida no GitHub — PR #108 MERGED em 2026-10-21; etapa externa pendente`
+> **Integração:** `Conferida no GitHub — PR #108 MERGED em 2026-10-21; ação externa concluída em 2026-10-22; fechamento da issue pela PR de encerramento do ciclo 010 (Closes #104), prospectivo até o merge`
 > **Autorização inicial:** "autorizo a implementação da issue #104" em 2026-10-21
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-21
-> **Última atualização:** 2026-10-21
+> **Última atualização:** 2026-10-22
 > **handoff_schema_version:** `2`
 
 ## Objetivo
@@ -100,16 +100,20 @@ Em 2026-10-21, o responsável declarou "Revisei os textos de /privacidade e /ter
 
 **Fatos distintos até o encerramento:** o código da entrega está integrado; a etapa externa (roteiro O1 a O6 da KB-002, com `/termos` como página inicial) ainda não começou e só começa depois de integrar as quatro entregas do ciclo. O resultado externo, a atualização factual da KB-002 e o fechamento da #104 entram na PR de encerramento; até lá, o próximo passo do ciclo fica no artefato ativo (task da issue em curso).
 
-## Próximo passo
+## Ação externa e fechamento
 
-Etapa pendente desta issue, condicionada à integração das quatro entregas (#104 a #107); antes disso, vale o bloco da task da issue em curso.
+Em 2026-10-22, depois de integradas as quatro entregas (PRs #108, #110, #111 e #112), o responsável executou o roteiro O1 a O6 da KB-002 e declarou "concluí a ação externa da issue #104". Resultado mínimo comprovado pelo responsável: Audience em produção e login de conta autorizada fora da lista de teste do Google, com a recusa de conta fora da lista do app; escopos só de identidade básica, domínio verificado e Branding não solicitado. A tabela sanitizada, a conferência pública pelo agente e a conferência autenticada do responsável estão na task `010_task_issue-107.md` (seções "Ação externa da issue #104" e "Verificação em produção"). Nenhum ID, e-mail ou print entrou nos registros.
+
+Os fatos entraram na KB-002 nesta PR de encerramento, e a PR fecha a issue #104 por `Closes #104`. Sem esse fechamento a issue permaneceria aberta; o resultado mínimo foi comprovado, então a condição do critério de aceite final está atendida.
+
+## Próximo passo
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando ação externa — ciclo 010 (completo)
-Quem: Responsável
-Conferir: Roteiro O1 a O6 da KB-002 (_project/knowledge/KB-002_operacao_producao_acessos.md), somente depois de integrar as quatro entregas do ciclo; issue #104 (https://github.com/EuThiagoAndrade/saldo-futuro/issues/104)
-Diga: "concluí a ação externa da issue #104"
+Situação: Concluído — ciclo 010 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
@@ -120,4 +124,4 @@ Diga: "concluí a ação externa da issue #104"
 - `state_before` / `state_after`: PR #108 OPEN com a revisão R2-2 registrada / PR #108 MERGED por squash em main, issue #104 OPEN, task Concluída quanto ao código e etapa externa pendente
 - `result`: `already_executed_and_reconciled`
 - `evidence`: aprovação "aprovo o merge da PR #108" em 2026-10-21; checks verdes no head `372a520`; assunto conferido em main; `gh issue view 104` com estado OPEN
-- `blockers`: nenhum para o código. Ação externa só depois das quatro entregas; fechamento da #104 pela PR de encerramento
+- `blockers`: nenhum. Ação externa concluída em 2026-10-22 e fechamento da #104 por `Closes #104` na PR de encerramento do ciclo 010 (ver `010_task_closure.md`)

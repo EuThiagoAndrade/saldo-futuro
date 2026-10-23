@@ -6,7 +6,7 @@ tags:
   - acesso
 author: "Thiago Andrade e Claude"
 module: "Operação"
-last_updated: "2026-10-21"
+last_updated: "2026-10-22"
 origin_cycle: "001"
 ---
 
@@ -98,7 +98,7 @@ Concluída a configuração, o agente registra as evidências do Gate V-C. Cada 
 
 ### Publicação da tela de consentimento (ciclo 010)
 
-Roteiro da ação externa da issue #104 (BL-012), executado pelo responsável **depois** de integrar e publicar as quatro entregas do ciclo `010`. O agente não abre o console, não muda escopos, domínios ou listas e só confere por leitura páginas públicas, depois da autorização de verificação em produção. Nenhum ID de projeto ou de cliente, credencial, e-mail de conta ou print com dado real entra nas evidências: só categorias, estados e passou/falhou.
+Roteiro da ação externa da issue #104 (BL-012), executado pelo responsável **depois** de integrar e publicar as quatro entregas do ciclo `010`. Executado em 2026-10-22 (ver "Resultado da execução" abaixo). O agente não abre o console, não muda escopos, domínios ou listas e só confere por leitura páginas públicas, depois da autorização de verificação em produção. Nenhum ID de projeto ou de cliente, credencial, e-mail de conta ou print com dado real entra nas evidências: só categorias, estados e passou/falhou.
 
 **Resultado mínimo:** Audience publicada **e** login de uma conta autorizada na lista do app, fora da lista de teste do Google, comprovado pelo responsável. Branding é opcional. Sem o resultado mínimo, a issue não é concluída: a situação passa a "Parado" para decisão.
 
@@ -120,6 +120,22 @@ Três domínios distintos aparecem no console; não os confunda:
 | O6. Dizer "concluí a ação externa da issue #104" com o estado real da Audience e do Branding e os resultados sanitizados | Responsável | Conversa | A frase não transforma pendência em prova: sem O4 e O5, "Parado". Os fatos entram na task da última issue do ciclo e, no encerramento, nesta KB e na task da issue #104 |
 
 O [guia de verificação do Google](https://support.google.com/cloud/answer/13464321?hl=en) pede página inicial no domínio verificado que identifique o app, descreva sua funcionalidade e leve à política de privacidade, e não aceita uma página que seja só de login. O [guia de público do app](https://support.google.com/cloud/answer/15549945?hl=en) define Testando, produção e a exceção de identidade básica. O [guia do Supabase](https://supabase.com/docs/guides/auth/social-login/auth-google) trata o domínio próprio de Auth e o Branding como melhorias opcionais.
+
+#### Resultado da execução (2026-10-22)
+
+O responsável executou O1 a O6 depois das quatro entregas e declarou "concluí a ação externa da issue #104". Resultado sanitizado, sem ID, e-mail ou print:
+
+| Passo | Resultado declarado |
+| :-- | :-- |
+| O1 — páginas no ar | ok |
+| O2 — escopos | só identidade básica |
+| O3 — domínio | verificado |
+| O4 — Audience | em produção |
+| O4 — Branding | não solicitado |
+| O5 — login de conta autorizada no app, fora da lista de teste do Google | passou |
+| O5 — recusa de conta fora da lista do app | passou |
+
+Resultado mínimo atendido: Audience publicada e login fora da lista de teste. Com a Audience em produção, a lista do app basta para autorizar um e-mail (P2). O agente só conferiu por leitura as páginas públicas (`/entrar`, `/privacidade` e `/termos`); console e login são evidência declarada pelo responsável. Branding permanece opcional e não solicitado.
 
 ### Vercel
 
@@ -385,7 +401,7 @@ Consultadas em 2026-10-12 e conferidas na execução de 2026-10-13. São documen
 - Google, verificação do app e página inicial: <https://support.google.com/cloud/answer/13464321?hl=en>. Consultado em 2026-10-21. Função: página inicial no domínio verificado, descrição da funcionalidade, link da política e recusa de página só de login. Limite: não diz quais exigências o console deste projeto vai mostrar.
 - Google, público do app (Testando, produção e exceção de identidade básica): <https://support.google.com/cloud/answer/15549945?hl=en>. Consultado em 2026-10-21. Função: lista de teste, expiração de 7 dias e exceção para nome, e-mail e perfil. Limite: o comportamento efetivo é conferido em O5.
 - Google, políticas OAuth: <https://developers.google.com/identity/protocols/oauth2/policies> e verificação de marca: <https://developers.google.com/identity/protocols/oauth2/production-readiness/brand-verification>. Consultados no plano `010`, em 2026-10-21.
-- Plano `010`, `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_plan.md`, item 1 e roteiro da ação externa: origem de O1 a O6.
+- Plano `010`, `_project/executed/010_novidades_privacidade_ativos_distribuicao/010_plan.md`, item 1 e roteiro da ação externa: origem de O1 a O6.
 
 ## Histórico
 
@@ -398,3 +414,4 @@ Consultadas em 2026-10-12 e conferidas na execução de 2026-10-13. São documen
 | 2026-10-18 | `006` | Issue #76: contagem `posicoesImplicitasZero` no resumo da simulação (M10 revisada) |
 | 2026-10-18 | `006` | Encerramento: virada registrada em 2026-10-18 |
 | 2026-10-21 | `010` | Issue #104: armadilha 7 separa Audience, Branding e a exceção de identidade básica; GC2, GC4, P2 e a verificação "Recusa" condicionados ao status da Audience; roteiro O1 a O6 da publicação, com resultado mínimo e parada por impedimento externo. Página inicial informada ao Google: `/termos`, por decisão do responsável; `/entrar` fica só com logo e login. O resultado real entra no encerramento do ciclo |
+| 2026-10-22 | `010` | Encerramento: resultado da publicação da Audience (O1 a O6) registrado na subseção "Resultado da execução"; Branding não solicitado |

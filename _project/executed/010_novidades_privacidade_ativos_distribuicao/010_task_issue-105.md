@@ -5,7 +5,7 @@
 > **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#105`
-> **Plano:** `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_plan.md`
+> **Plano:** `_project/executed/010_novidades_privacidade_ativos_distribuicao/010_plan.md`
 > **Branch:** `feature/issue-105`
 > **PR:** [#110](https://github.com/EuThiagoAndrade/saldo-futuro/pull/110)
 > **Integração:** `Conferida no GitHub — PR #110 MERGED em 2026-10-21`
@@ -95,14 +95,14 @@ Em 2026-10-21, o responsável declarou "As notas da 0.7.0 estão aprovadas. apro
 
 ## Próximo passo
 
-Entrega integrada; o próximo passo do ciclo fica no artefato ativo (task da issue em curso).
+Entrega integrada e ciclo 010 encerrado; o encerramento está em `010_task_closure.md`.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando autorização de implementação — ciclo 010 (completo)
-Quem: Responsável
-Conferir: Issue #106 (https://github.com/EuThiagoAndrade/saldo-futuro/issues/106) e item 3 do plano
-Diga: "autorizo a implementação da issue #106"
+Situação: Concluído — ciclo 010 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída

@@ -2,17 +2,17 @@
 
 > **Ciclo:** `010`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#107`
-> **Plano:** `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_plan.md`
+> **Plano:** `_project/executed/010_novidades_privacidade_ativos_distribuicao/010_plan.md`
 > **Branch:** `feature/issue-107`
 > **PR:** [#112](https://github.com/EuThiagoAndrade/saldo-futuro/pull/112)
-> **Integração:** `Pendente`
+> **Integração:** `Conferida no GitHub — PR #112 MERGED em 2026-10-22; verificação em produção e release 0.7.0 concluídas; encerramento do ciclo prospectivo até o merge da PR de encerramento`
 > **Autorização inicial:** "autorizo a implementação da issue #107" em 2026-10-21
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-21
-> **Última atualização:** 2026-10-21
+> **Última atualização:** 2026-10-22
 > **handoff_schema_version:** `2`
 
 ## Objetivo
@@ -75,7 +75,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 | Governança | `node scripts/validate-governance.mjs --root` sobre a exportação do HEAD: 0 erros, 0 avisos, cinco itens manuais; `node --test scripts/validate-governance.test.mjs` 48/48 |
 | G3 | Fixtures, testes e capturas só com nomes e valores fictícios; contas `distribuicao107.*`, `visual107.comum` e `d13next.*`, todas `@example.com`, removidas no fim |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos | Todos verdes no head `78dec2c3fe99fbb8913adbacd16642f070924000`: lint, tipos, testes, build e e2e de preview; Supabase local, testes de banco e e2e de autenticação; governança; Vercel |
 
 ## Revisão da correção
 
@@ -95,24 +95,79 @@ Não se aplica (trilha normal).
 
 Não se aplica: o ciclo é completo e o encerramento tem PR própria.
 
+## Reconciliação da integração
+
+Em 2026-10-22, o responsável declarou "aprovo o merge da PR #112". A nota da `0.7.0` e a ordem dos negativos e omitidos estavam listadas para revisão na descrição da PR e nesta task, sem pedido de ajuste. O agente conferiu todos os checks verdes no head `78dec2c` e a PR `CLEAN`, fez o squash travado nesse HEAD, com o assunto `feat(issue-107): mostrar distribuição patrimonial em rosca acessível (#112)`, conferido em `main`, e a issue #107 fechou como concluída. O deploy de produção da `main` terminou com sucesso. Ao conferir o deploy, o agente fez um único GET anônimo de `/termos` no domínio de produção (resposta 200), antes da autorização de verificação em produção; foi informado ao responsável e não se repetiu. Não registra o SHA do próprio merge.
+
+## Ação externa da issue #104
+
+Esta task é o artefato ativo da etapa externa e da verificação em produção, como o plano define; o código das quatro entregas está integrado (PRs #108, #110, #111 e #112).
+
+Em 2026-10-22, o responsável executou o roteiro O1 a O6 da KB-002 e declarou "concluí a ação externa da issue #104", com o resultado sanitizado:
+
+| Passo | Resultado declarado |
+| :-- | :-- |
+| O1 — páginas no ar | ok |
+| O2 — escopos | só identidade básica |
+| O3 — domínio | verificado |
+| O4 — Audience | em produção |
+| O4 — Branding | não solicitado |
+| O5 — login de conta autorizada no app, fora da lista de teste do Google | passou |
+| O5 — recusa de conta fora da lista do app | passou |
+
+**Resultado mínimo comprovado pelo responsável:** Audience publicada e login fora da lista de teste. Branding fica como não solicitado, sem impedir o resultado. A frase não substitui o que o agente pode conferir por leitura: o console e o login são evidência declarada, e a conferência pública das páginas pelo agente fica para a verificação em produção, que depende da autorização própria. Nenhum ID, e-mail ou print entrou neste registro. O fechamento da issue #104, a reconciliação da task #104 e os fatos da KB-002 entram na PR de encerramento.
+
+## Verificação em produção
+
+Autorização: "autorizo a verificação em produção do ciclo 010" em 2026-10-22. Deploy de produção da `main` em `baabb6a` concluído com sucesso. Leitura anônima pelo agente, sem login e sem dados:
+
+| Item | Resultado |
+| :-- | :-- |
+| `/entrar`, `/privacidade` e `/termos` | 200, sem redirecionamento; títulos e descrições da metadata corretos |
+| `/entrar` | Logo e "Entrar com Google" centralizados e links para `/privacidade` e `/termos`; sem campo de senha e sem aviso de preview, como em produção (conferência visual em 375 px) |
+| `/privacidade` e `/termos` | Links cruzados; contato publicado idêntico ao do código revisado (comparação sem exibir o endereço) |
+| `/termos` como página inicial no Google | Identifica o app, tem a seção "O que é o Saldo Futuro" com a funcionalidade e leva à política |
+| Proteção sem sessão | `/`, `/novidades`, `/ativos`, `/ativos/novo`, `/conta` e `/admin` respondem 307 para `/entrar` |
+
+**Limitações:** o agente não entra na aplicação em produção; login, lista de acesso, Novidades, Ativos e a rosca dependem da conferência autenticada do responsável, declarada abaixo quando ocorrer. Antes da autorização, um GET anônimo de `/termos` já tinha sido feito (ver "Reconciliação da integração").
+
+**Conferência autenticada do responsável** (2026-10-22, evidência declarada, no celular, sem lançamento de teste e sem dados reais na resposta): "1 passou; 2 passou; 3 passou; 4 passou; 5 passou. Sem limitações."
+
+| Item | Resultado declarado |
+| :-- | :-- |
+| 1 — login com a conta do responsável e Conta com os links legais | passou |
+| 2 — Novidades em Mais com a versão `0.6.0` e o histórico indisponível | passou |
+| 3 — Ativos com Novo ativo no topo e abas com contadores | passou |
+| 4 — Início com a rosca, Outros e "Ver os números" | passou |
+| 5 — Ocultar valores na rosca, com percentuais visíveis | passou |
+
+**Verificação em produção concluída**, sem falha relevante.
+
+## Preparação da release 0.7.0
+
+- **PR real do release-please:** [#109](https://github.com/EuThiagoAndrade/saldo-futuro/pull/109), `chore(main): release 0.7.0`, head `0eb07ea` sobre `baabb6a` (a `main` com as quatro entregas). Altera só `package.json`, `package-lock.json`, `.release-please-manifest.json` (`0.6.0` → `0.7.0`) e `CHANGELOG.md`, com as quatro entregas (#108, #110, #111 e #112). Nenhuma edição manual na PR. As notas da `0.7.0` já estão em `src/lib/novidades.ts` desde as PRs dos itens.
+- **Checks por `workflow_dispatch` em 2026-10-22:** governança verde; CI "Lint, types, tests, build and preview e2e" verde; CI "Supabase local, database tests and auth e2e" sem resultado. Na primeira tentativa o job bateu o limite de 20 minutos com o e2e quase no fim (148 de cerca de 175 testes passando, com preparação lenta do runner; nas PRs do ciclo o job levou de 10 a 13 minutos). Na repetição, o GitHub não iniciou o job: "The job was not started because recent account payments have failed or your spending limit needs to be increased. Please check the 'Billing & plans' section in your settings". As execuções `pull_request` da PR ficam em `action_required`, como em toda PR do bot. Vercel verde.
+- **Sem checks verdes, o merge da release não pode ocorrer.** Resolver a cobrança ou o limite de gastos do GitHub Actions é configuração da conta do responsável; o agente não lê nem altera essa configuração.
+- **Resolução (2026-10-22):** o responsável tornou o repositório público (o Actions passa a ser gratuito em repositório público) depois de uma auditoria somente leitura do histórico, das issues e das PRs, sem segredo nem dado real encontrado, e ajustou as proteções do GitHub. O CI e a governança da PR #109 foram disparados por `workflow_dispatch` no head `0eb07ea` e passaram, inclusive o job de banco (execuções 39869022365 e 39869026053). O ruleset recusava o merge por exigir checks com nomes de arquivo; o responsável corrigiu os três checks obrigatórios e as execuções `pull_request` que estavam em `action_required` rodaram e ficaram verdes, conforme o responsável informou. Com a PR `CLEAN` conferida pelo agente, o agente fez o squash após "aprovo o merge da PR #109" (commit `aa808ce`). O release-please publicou a release `v0.7.0` em 2026-10-22 às 23:41 UTC (19:41 em America/Cuiaba) e o CI da `main` ficou verde.
+
 ## Próximo passo
+
+Entrega integrada e ciclo 010 encerrado; o encerramento está em `010_task_closure.md`.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 010 (completo)
-Quem: Responsável
-Conferir: Checks e diff da PR #112 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/112); nota da 0.7.0 e ordem de apresentação dos negativos e omitidos em "Decisões incidentais"
-Diga: "aprovo o merge da PR #112"
+Situação: Concluído — ciclo 010 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
-
-Depois do merge, esta task passa a ser o artefato ativo da etapa externa: a situação é "Aguardando ação externa" da issue #104, pelo roteiro O1 a O6 da KB-002, com `/termos` como página inicial no Google. A PR #109 do release-please continua sem integrar até a etapa de release do plano.
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 010 + implementar_issue + 107/Item-4-BL-005 + d02c1ea18d68743b5a572393fa688eeca6d611ec`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 010 + preparar_release + 0.7.0/PR-109 + 0eb07ea`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: plano Em Execução, #104 a #106 integradas, #107 aberta sem branch nem PR / branch `feature/issue-107` publicada, PR #112 aberta e task Aguardando integração
+- `state_before` / `state_after`: PR #109 conferida e Parada por bloqueio de cobrança do GitHub Actions / PR #109 integrada por squash em `main` (`aa808ce`), release `v0.7.0` publicada e CI da `main` verde
 - `result`: `executed`
-- `evidence`: autorização "autorizo a implementação da issue #107" em 2026-10-21; `git fetch` com `main` igual a `origin/main` em `d02c1ea`; consulta sem PR ou branch da #107; PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/112 criada via `gh`; validações da tabela de evidências
-- `blockers`: checks remotos verdes no HEAD final e "aprovo o merge da PR #112"
+- `evidence`: execuções 39869022365 (CI) e 39869026053 (governança) no head `0eb07ea`; aprovação "aprovo o merge da PR #109" em 2026-10-22; PR `MERGED` e release `v0.7.0` conferidas no GitHub
+- `blockers`: nenhum. Encerramento do ciclo na PR própria (ver `010_task_closure.md`)

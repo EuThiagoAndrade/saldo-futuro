@@ -1307,7 +1307,7 @@ Estas regras foram aprovadas no plano do ciclo `006` e implementadas na simulaç
 | Plano do ciclo `003` | Decisões P1 a P18 e D1 a D14 | `_project/executed/003_regras_financeiras/003_plan.md`, `v3` aprovada em 2026-10-14 | Autoridade das decisões; esta KB as especifica |
 | Plano do ciclo `004` | Decisões P17 a P19 (apresentação do Início) | `_project/executed/004_telas_produto/004_plan.md`, `v4` aprovada em 2026-10-14 | Autoridade das decisões; a seção 15 as especifica |
 | Plano do ciclo `006` | Regras M1 a M10 da simulação da migração (issue #63) M6 revisada com a exceção à K12 (issue #73) e M10 revisada com a posição implícita zero (issue #76) | `_project/executed/006_migracao_dados_virada/006_plan.md`, `v3` aprovada em 2026-10-17, `v4` e `v5` aprovadas em 2026-10-18 | Autoridade das decisões; a seção 16 as especifica |
-| Plano do ciclo `010` | Regra da distribuição por ativo (Q1 a Q3, alternativa A e desempate por UUID) e casos CR-53 a CR-61 | `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_plan.md`, `v2` aprovada em 2026-10-21 | Autoridade das decisões; a seção 15 as especifica |
+| Plano do ciclo `010` | Regra da distribuição por ativo (Q1 a Q3, alternativa A e desempate por UUID) e casos CR-53 a CR-61 | `_project/executed/010_novidades_privacidade_ativos_distribuicao/010_plan.md`, `v2` aprovada em 2026-10-21 | Autoridade das decisões; a seção 15 as especifica |
 | `design-system/DESIGN.md`, seções 6.3 a 6.5 | Formato brasileiro, sinal e `N/D` | Versão vigente em `main` | Contrato visual |
 
 ## Histórico
