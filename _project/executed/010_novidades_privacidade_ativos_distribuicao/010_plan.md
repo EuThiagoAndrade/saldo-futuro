@@ -1,10 +1,10 @@
 # Plano de Implementação — Novidades, privacidade, tela de ativos e distribuição patrimonial
 
 > **Ciclo:** `010`
-> **Status:** `Em Execução`
+> **Status:** `Concluído`
 > **Versão:** `v2`
 > **Data de criação:** 2026-10-21
-> **Última atualização:** 2026-10-21
+> **Última atualização:** 2026-10-22
 > **Tipo:** `feature`
 > **Prioridade:** `P2`
 > **Nível:** `completo`
@@ -276,7 +276,7 @@ Caminhos novos são propostas de implementação, não arquivos já existentes.
 
 | Entrega | Existentes a alterar | Novos previstos |
 | :-- | :-- | :-- |
-| Plano | `_project/cycles.md` | Este plano em `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_plan.md` |
+| Plano | `_project/cycles.md` | Este plano em `_project/executed/010_novidades_privacidade_ativos_distribuicao/010_plan.md` |
 | BL-012 | `src/app/entrar/page.tsx`, `src/app/(app)/conta/page.tsx`, `tests/e2e/preview.spec.ts`, `tests/e2e/navegacao.spec.ts`, `tests/e2e/botoes.spec.ts`, KB-002/003 | `src/app/privacidade/page.tsx`, `src/app/termos/page.tsx`, `tests/e2e/paginas-publicas.spec.ts` |
 | BL-011 | `src/components/navegacao.tsx`, `src/components/icones.tsx` se necessário, `tests/e2e/navegacao.spec.ts`, `tests/e2e/botoes.spec.ts`, DESIGN.md, KB-003 | `src/app/(app)/novidades/page.tsx`, `src/lib/novidades.ts` com notas de BL-012/011, `tests/e2e/novidades.spec.ts` |
 | BL-006 | `src/app/(app)/ativos/page.tsx`, `src/app/(app)/ativos/acoes.ts`, `src/components/formularios/novo-ativo.tsx`, `tests/e2e/carteira.spec.ts` e demais chamadores do cadastro, `tests/e2e/navegacao.spec.ts`, `tests/e2e/botoes.spec.ts`, `tests/e2e/navegacao-desempenho.spec.ts`, `tests/e2e/apoio/MEDICAO.md`, `src/lib/novidades.ts` (sua nota), DESIGN.md, KB-003 | `src/app/(app)/ativos/novo/page.tsx`, e2e focal de abas se não couber no existente |
@@ -351,10 +351,10 @@ Para BL-012, a PR de código usa vínculo de referência, sem fechamento automá
 
 | Campo | Valor |
 | :-- | :-- |
-| Issue(s) | [#104 — BL-012](https://github.com/EuThiagoAndrade/saldo-futuro/issues/104), código integrado, aberta até a ação externa; [#105 — BL-011](https://github.com/EuThiagoAndrade/saldo-futuro/issues/105), fechada pela PR #110; [#106 — BL-006](https://github.com/EuThiagoAndrade/saldo-futuro/issues/106), fechada pela PR #111; [#107 — BL-005](https://github.com/EuThiagoAndrade/saldo-futuro/issues/107), implementação autorizada em 2026-10-21 |
-| PR(s) | [#103 — publicação documental do plano](https://github.com/EuThiagoAndrade/saldo-futuro/pull/103), integrada em 2026-10-21 por squash (`c0e906eb96f5030fce27db734a43938b41e6a783`); [#108 — BL-012](https://github.com/EuThiagoAndrade/saldo-futuro/pull/108), integrada em 2026-10-21 por squash, sem fechar a #104; [#110 — BL-011](https://github.com/EuThiagoAndrade/saldo-futuro/pull/110), integrada em 2026-10-21 por squash; [#111 — BL-006](https://github.com/EuThiagoAndrade/saldo-futuro/pull/111), integrada em 2026-10-22 por squash; [#112 — BL-005](https://github.com/EuThiagoAndrade/saldo-futuro/pull/112), aberta |
-| Branch(es) | `chore/cycle-010-plan` (PR documental do plano); `feature/issue-104` (BL-012); `feature/issue-105` (BL-011); `feature/issue-106` (BL-006); `feature/issue-107` (BL-005) |
-| Task(s) | `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_task_issue-104.md`; `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_task_issue-105.md`; `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_task_issue-106.md`; `_project/drafts/010_novidades_privacidade_ativos_distribuicao/010_task_issue-107.md` |
+| Issue(s) | [#104 — BL-012](https://github.com/EuThiagoAndrade/saldo-futuro/issues/104), código integrado e ação externa concluída em 2026-10-22, fechada por `Closes #104` na [PR de encerramento](https://github.com/EuThiagoAndrade/saldo-futuro/pull/114); [#105 — BL-011](https://github.com/EuThiagoAndrade/saldo-futuro/issues/105), fechada pela PR #110; [#106 — BL-006](https://github.com/EuThiagoAndrade/saldo-futuro/issues/106), fechada pela PR #111; [#107 — BL-005](https://github.com/EuThiagoAndrade/saldo-futuro/issues/107), fechada pela PR #112 |
+| PR(s) | [#103 — publicação documental do plano](https://github.com/EuThiagoAndrade/saldo-futuro/pull/103), integrada em 2026-10-21 por squash (`c0e906eb96f5030fce27db734a43938b41e6a783`); [#108 — BL-012](https://github.com/EuThiagoAndrade/saldo-futuro/pull/108), integrada em 2026-10-21 por squash, sem fechar a #104; [#110 — BL-011](https://github.com/EuThiagoAndrade/saldo-futuro/pull/110), integrada em 2026-10-21 por squash; [#111 — BL-006](https://github.com/EuThiagoAndrade/saldo-futuro/pull/111), integrada em 2026-10-22 por squash; [#112 — BL-005](https://github.com/EuThiagoAndrade/saldo-futuro/pull/112), integrada em 2026-10-22 por squash; [#109 — release `0.7.0`](https://github.com/EuThiagoAndrade/saldo-futuro/pull/109), integrada em 2026-10-22 por squash (`aa808ce`), com a release `v0.7.0` publicada; [PR de encerramento](https://github.com/EuThiagoAndrade/saldo-futuro/pull/114), prospectiva até seu merge |
+| Branch(es) | `chore/cycle-010-plan` (PR documental do plano); `feature/issue-104` (BL-012); `feature/issue-105` (BL-011); `feature/issue-106` (BL-006); `feature/issue-107` (BL-005); `chore/cycle-010-closure` (encerramento) |
+| Task(s) | `_project/executed/010_novidades_privacidade_ativos_distribuicao/010_task_issue-104.md`; `_project/executed/010_novidades_privacidade_ativos_distribuicao/010_task_issue-105.md`; `_project/executed/010_novidades_privacidade_ativos_distribuicao/010_task_issue-106.md`; `_project/executed/010_novidades_privacidade_ativos_distribuicao/010_task_issue-107.md`; `_project/executed/010_novidades_privacidade_ativos_distribuicao/010_task_closure.md` |
 | Destino após conclusão | `_project/executed/010_novidades_privacidade_ativos_distribuicao/010_plan.md` |
 
 ## Registro de aprovação
@@ -400,26 +400,32 @@ Validação desta atualização: 48/48 testes de governança passaram; validador
 - **Issue #106 (BL-006):** "autorizo a implementação da issue #106" em 2026-10-21. Branch `feature/issue-106`, task `010_task_issue-106.md` (artefato ativo) e [PR #111](https://github.com/EuThiagoAndrade/saldo-futuro/pull/111), com `Closes #106`.
 - **Issue #106 integrada:** PR #111 por squash em 2026-10-22, depois de repetir o job de CI que falhou por porta ocupada no runner.
 - **Issue #107 (BL-005):** "autorizo a implementação da issue #107" em 2026-10-21. Regra e casos CR-53 a CR-61 registrados na KB-004 e no JSON antes do código (commit `3e1cfc8`); branch `feature/issue-107`, task `010_task_issue-107.md` (artefato ativo) e [PR #112](https://github.com/EuThiagoAndrade/saldo-futuro/pull/112), com `Closes #107`.
+- **Issue #107 integrada:** PR #112 por squash em 2026-10-22; deploy de produção da `main` com sucesso. As quatro entregas de código estão em `main`.
+- **Ação externa da issue #104:** "concluí a ação externa da issue #104" em 2026-10-22, com o resultado mínimo (Audience em produção e login de conta autorizada fora da lista de teste do Google) e Branding não solicitado; detalhes sanitizados na task `010_task_issue-107.md`, artefato ativo desta etapa.
+- **Verificação em produção:** autorizada em 2026-10-22. Parte pública conferida pelo agente (páginas legais, `/entrar` e proteção das rotas), registrada na task da #107; conferência autenticada do responsável aprovada nos cinco itens, sem limitações.
+- **Release `0.7.0`:** PR #109 conferida; checks por `workflow_dispatch` com governança e CI de app verdes, mas o job de banco sem resultado (limite de 20 minutos na primeira tentativa e, na repetição, job não iniciado por bloqueio de cobrança do GitHub Actions da conta). Parado até o responsável decidir; detalhes na task da #107.
+- **Release `0.7.0` integrada:** repositório tornado público pelo responsável após auditoria somente leitura do histórico, das issues e das PRs (sem segredo nem dado real) e com as proteções do GitHub ajustadas; CI e governança da PR #109 verdes por `workflow_dispatch` e pelas execuções da PR; "aprovo o merge da PR #109" em 2026-10-22 e squash `aa808ce`; release `v0.7.0` publicada em 2026-10-22 às 23:41 UTC (19:41 em America/Cuiaba).
+- **Encerramento:** autorizado pela aprovação do plano; "A publicação OAuth do Google (roteiro O1 a O6 da KB-002) já foi feito! Pode montar a PR de encerramento do ciclo 010" em 2026-10-22. Branch `chore/cycle-010-closure`, task `010_task_closure.md`, [PR de encerramento](https://github.com/EuThiagoAndrade/saldo-futuro/pull/114) com `Closes #104`: data real `2026-10-22` em `src/lib/novidades.ts`, consolidação nas KB-002 e KB-003 e movimentação para `executed/`, prospectivas até o merge.
 
 ## Próximo passo
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 010 (completo)
-Quem: Responsável
-Conferir: Checks e diff da PR #112 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/112); nota da 0.7.0 e ordem dos negativos e omitidos na task 010_task_issue-107.md
-Diga: "aprovo o merge da PR #112"
+Situação: Concluído — ciclo 010 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 010 + implementar_issue + 107/Item-4-BL-005 + d02c1ea18d68743b5a572393fa688eeca6d611ec`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 010 + atualizar_docs + encerramento + aa808ce110f81ab6080393c8350c4ef65c44a019`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: #104 a #106 integradas, #107 aberta sem branch nem PR / branch `feature/issue-107` publicada, PR #112 aberta e task da #107 Aguardando integração
+- `state_before` / `state_after`: quatro entregas e release `0.7.0` integradas, ação externa e verificação em produção concluídas, ciclo em `drafts/` / ciclo e plano `Concluído` em `executed/`, prospectivos até o merge da PR de encerramento
 - `result`: `executed`
-- `evidence`: autorização de implementação da #107 em 2026-10-21; base conferida igual a `origin/main` em `d02c1ea`; KB-004 e casos registrados antes do código; PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/112 criada via `gh`; validações registradas na task
-- `blockers`: checks remotos verdes no HEAD final; "aprovo o merge da PR #112". Depois do merge, Aguardando ação externa da issue #104; PR #109 do release-please sem integrar até a etapa de release
+- `evidence`: PRs #108, #110, #111, #112 e #109 `MERGED` e release `v0.7.0` conferidas no GitHub; ação externa e conferência autenticada declaradas pelo responsável; gates da PR de encerramento na task `010_task_closure.md`
+- `blockers`: checks verdes no tip final e "aprovo o merge da PR de encerramento"; antes disso a situação efetiva é Aguardando merge
 
 ## Revisão crítica
 
@@ -554,6 +560,6 @@ Nenhum.
 
 ## Pós-mortem
 
-- **Data de conclusão:** —
-- **Desvios:** —
-- **Lições comprovadas:** —
+- **Data de conclusão:** 2026-10-22, prospectiva até o merge da PR de encerramento.
+- **Desvios:** a página inicial informada ao Google passou a ser `/termos`, e `/entrar` ficou só com logo e login, por decisão do responsável na revisão da PR #108; a release esperou um bloqueio de cobrança do GitHub Actions, resolvido ao tornar o repositório público; o ruleset novo exigia checks com nomes de arquivo e uma aprovação extra para commits de bot, o que travou o merge da release até o responsável corrigir. Nenhum desvio de escopo de produto ou de regra financeira.
+- **Lições comprovadas:** a publicação OAuth só pôde ser feita depois de integrar as páginas legais; um ruleset com checks obrigatórios precisa usar os nomes reais dos checks, não os nomes dos arquivos de workflow. Nenhuma lição nova de política: o que é reutilizável fica nas KBs.

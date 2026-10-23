@@ -6,7 +6,7 @@ tags:
   - referência
 author: "Thiago Andrade e Claude"
 module: "Produto"
-last_updated: "2026-10-21"
+last_updated: "2026-10-22"
 origin_cycle: "002"
 ---
 
@@ -65,18 +65,18 @@ O Saldo Futuro é um sistema web de gestão de investimentos pessoais, multiusu�
   - cartões em uma coluna abaixo de `md` e duas a partir de `md`, inclusive com menu lateral; preenchimento local `px-1 py-4 md:px-3`, mantendo quantia integral em uma linha e fonte de 24/32 px, peso 600;
   - contenção do domínio integral de centavos seguros a partir de 360 px CSS úteis de layout (`document.documentElement.clientWidth`), descontada a barra vertical: janela de 375 px para barra clássica de 15 px; janela de 360 com essa barra deixa 345 úteis e fica abaixo do mínimo validado.
 
-- páginas públicas (ciclo `010`, em execução; estado final consolidado no encerramento):
+- páginas públicas (ciclo `010`):
   - `/privacidade` e `/termos`, estáticas e fora da área autenticada, respondem sem sessão e sem backend, com data de atualização, contato do responsável e links entre si (`src/app/privacidade/`, `src/app/termos/` e `src/components/pagina-legal.tsx`);
   - `/entrar` mostra só o logo e o login centralizados e leva às duas páginas, também no preview sem backend, onde o login continua indisponível; Conta oferece os mesmos links (`src/components/links-legais.tsx`), sem novo destino na navegação principal;
   - a página inicial informada ao Google é `/termos`, que identifica o app, descreve a funcionalidade e leva à política; para as pessoas, a entrada continua em `/entrar`;
-  - a publicação da tela de consentimento do Google é ação do responsável, pelo roteiro O1 a O6 da KB-002, depois das quatro entregas do ciclo;
-- versão e novidades (ciclo `010`, em execução):
+  - a Audience da tela de consentimento do Google foi publicada em produção pelo responsável em 2026-10-22, pelo roteiro O1 a O6 da KB-002, com escopos só de identidade básica e login de conta autorizada fora da lista de teste comprovado; Branding não foi solicitado;
+- versão e novidades (ciclo `010`):
   - `/novidades`, autenticada para `admin` e `user`, em Mais e no menu lateral, mostra a versão corrente lida do `package.json` e o histórico manual de `src/lib/novidades.ts`, a partir da `0.7.0`, em linguagem simples;
-  - uma entrada só aparece depois que sua versão é lançada no build; sem data comprovada da release, mostra "Data de publicação em confirmação", e a data real entra no encerramento do ciclo. Versão sem entrada não tem notas, sem erro; nenhum teste exige nota por versão, e a página não leva ao changelog técnico.
-- tela de ativos (ciclo `010`, em execução):
+  - uma entrada só aparece depois que sua versão é lançada no build; a `0.7.0` foi publicada em 2026-10-22 e sua data está registrada em `src/lib/novidades.ts`; uma entrada sem data comprovada mostra "Data de publicação em confirmação". Versão sem entrada não tem notas, sem erro; nenhum teste exige nota por versão, e a página não leva ao changelog técnico.
+- tela de ativos (ciclo `010`):
   - `/ativos` tem Novo ativo no topo e as abas "Em uso" e "Desativados" como links (`/ativos` e `/ativos?aba=desativados`), lidas no servidor, com contadores e só a lista selecionada; valor ausente ou desconhecido abre Em uso. No celular, Em uso é uma lista densa com o nome completo; no desktop, tabela (DESIGN.md 6.7 e 6.12);
   - o cadastro fica em `/ativos/novo`, com a mesma validação e a RPC `criar_ativo`; o sucesso volta a `/ativos` sem mensagem extra, e a recusa aparece no próprio formulário. A desativação continua pela confirmação e pela RPC `desativar_ativo`, com as mesmas restrições (trânsito sem ação, saldo zero obrigatório).
-- distribuição por ativo (ciclo `010`, em execução):
+- distribuição por ativo (ciclo `010`):
   - o Início desenha a distribuição de M em rosca SVG no servidor (`src/components/graficos/rosca.tsx`; ADR-005, emenda), no lugar das barras horizontais, que saíram do código;
   - a participação vem de `src/lib/financeiro/distribuicao.ts`: só saldos positivos formam a base, em `bigint`, com 10000 centésimos de p.p. repartidos pelo maior resto antes de agrupar Outros e desempate por saldo, nome e UUID (KB-004, seção 15, CR-53 a CR-61); negativos ficam listados fora da rosca e zeros não aparecem;
   - legenda com nome completo, participação e valor, Outros retrátil com os componentes, e "Ver os números" com Resumo e Detalhe por ativo separados; "Ocultar valores" esconde toda quantia no servidor e mantém as participações (DESIGN.md 2.3 e 6.13).
@@ -233,3 +233,4 @@ O plano executado do ciclo `001` (`_project/executed/001_fundacao_aplicacao/001_
 | 2026-10-21 | `010` | Issue #105: `/novidades` com versão do `package.json` e histórico manual a partir da `0.7.0`, em Mais e no menu lateral |
 | 2026-10-21 | `010` | Issue #106: cadastro em `/ativos/novo` e `/ativos` com abas por URL, contadores e lista densa no celular |
 | 2026-10-21 | `010` | Issue #107: distribuição por ativo em rosca, com participação pelo maior resto sobre os saldos positivos (KB-004, seção 15) |
+| 2026-10-22 | `010` | Encerramento: release `0.7.0` publicada, Audience do Google em produção, data da release registrada em `/novidades` e estado final das páginas públicas, das novidades, de Ativos e da rosca consolidado |
