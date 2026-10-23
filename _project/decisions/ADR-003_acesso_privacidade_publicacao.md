@@ -6,7 +6,7 @@ tags:
   - acesso
 author: "Thiago Andrade e Claude"
 module: "Segurança"
-last_updated: "2026-10-13"
+last_updated: "2026-10-22"
 origin_cycle: "000"
 ---
 
@@ -14,11 +14,11 @@ origin_cycle: "000"
 
 ## Status
 
-Aceito. O modelo de acesso é implantado a partir do ciclo `001`; as políticas de privacidade e publicação valem desde o ciclo `000`.
+Aceito. O modelo de acesso é implantado a partir do ciclo `001`; as políticas de privacidade e publicação valem desde o ciclo `000`. Emendado no ciclo `011` (publicação do repositório).
 
 ## Contexto
 
-O Saldo Futuro guarda carteiras de investimento de vários usuários. Um vazamento entre usuários ou a exposição de dados reais no repositório é um dano irreversível. O repositório é privado durante o desenvolvimento e será tornado público depois, e o histórico do Git é permanente.
+O Saldo Futuro guarda carteiras de investimento de vários usuários. Um vazamento entre usuários ou a exposição de dados reais no repositório é um dano irreversível. O repositório era privado durante o desenvolvimento e seria tornado público depois; é público desde 2026-10-22 (emenda do ciclo `011`, abaixo). O histórico do Git é permanente.
 
 As decisões abaixo foram aprovadas pelo responsável em 2026-10-11 e 2026-10-12 (decisões 1 e 4 do Gate A do plano `000`).
 
@@ -46,9 +46,10 @@ Enforcement: barreira G3 em `_project/README.md`.
 ### Publicação do repositório (decisão 1)
 
 - O produto se chama Saldo Futuro e mora no repositório `saldo-futuro`.
-- O repositório permanece privado até a estabilização do produto.
-- Antes de torná-lo público, um ciclo próprio audita todo o histórico do Git em busca de dados do usuário e segredos. A abertura depende de autorização explícita do responsável após essa auditoria.
+- ~~O repositório permanece privado até a estabilização do produto.~~ Substituído pela emenda do ciclo `011`.
+- ~~Antes de torná-lo público, um ciclo próprio audita todo o histórico do Git em busca de dados do usuário e segredos. A abertura depende de autorização explícita do responsável após essa auditoria.~~ Substituído pela emenda do ciclo `011`.
 - Licença MIT, já registrada em `LICENSE` desde o commit raiz.
+- **Emenda do ciclo `011` (2026-10-22):** o repositório é público desde 2026-10-22. O responsável o abriu porque os GitHub Actions foram bloqueados pelo limite de minutos do plano gratuito, que vale só para repositórios privados; em repositório público, o uso de runners padrão é gratuito ([cobrança do GitHub Actions](https://docs.github.com/en/billing/concepts/product-billing/github-actions), lida em 2026-10-22). A abertura antecedeu o ciclo de auditoria previsto: houve antes uma auditoria somente leitura, feita pelo agente a pedido do responsável, sem registro de método nem evidência. A auditoria registrada é a do ciclo `011` (`_project/drafts/011_repositorio_publico_governanca_igpm/011_research_auditoria_historico.md`, que vai para `executed/` no encerramento): nenhum segredo e nenhum dado do usuário no histórico Git e no texto público do GitHub. As políticas de privacidade acima continuam valendo sem mudança; com o repositório público, todo commit, issue e PR é publicação imediata.
 
 ## Consequências
 
@@ -74,5 +75,6 @@ Enforcement: barreira G3 em `_project/README.md`.
 ## Referências
 
 - Plano do ciclo `000`, seção "Decisões aprovadas antes da redação (Gate A)".
+- Plano do ciclo `011` (decisões Q1 a Q4) e o registro da auditoria do histórico, para a emenda da publicação.
 - `.agent/ai_behavior.md`, seção "Privacidade de dados financeiros".
 - `_project/README.md`, barreiras G2 e G3.

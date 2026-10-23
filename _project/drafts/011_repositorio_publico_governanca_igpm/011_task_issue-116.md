@@ -2,13 +2,13 @@
 
 > **Ciclo:** `011`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `chore`
 > **Issue:** `#116`
 > **Plano:** `_project/drafts/011_repositorio_publico_governanca_igpm/011_plan.md`
 > **Branch:** `chore/issue-116`
 > **PR:** [#119](https://github.com/EuThiagoAndrade/saldo-futuro/pull/119)
-> **Integração:** `Pendente`
+> **Integração:** PR #119 integrada por squash em 2026-10-22 (horário de Cuiabá); issue #116 fechada como concluída
 > **Autorização inicial:** "autorizo a implementação da issue #116" em 2026-10-22
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-22
@@ -59,7 +59,7 @@ Não se aplica.
 | Validador | `node scripts/validate-governance.mjs`: 0 erros, 0 avisos, 5 itens manuais conferidos (sem dado do usuário no registro, frases de autorização reais, barreiras coerentes) |
 | `git diff --check` | Limpo, também no staging |
 | G3 do entregável | Registro, task e plano revistos: só totais, categorias e critérios; nenhum valor, e-mail ou local de ocorrência. Inventário em `local/`, confirmado por `git check-ignore` |
-| Checks remotos | Conferidos na PR #119 antes do merge |
+| Checks remotos | PR #119: governança, CI de app, banco e e2e autenticado e Vercel verdes no HEAD integrado |
 
 ## Revisão da correção
 
@@ -79,10 +79,10 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 011 (completo)
+Situação: Aguardando autorização de implementação — ciclo 011 (completo)
 Quem: Responsável
-Conferir: Diff e checks da PR #119 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/119) e a conclusão do registro da auditoria
-Diga: "aprovo o merge da PR #119"
+Conferir: Issue #117 (https://github.com/EuThiagoAndrade/saldo-futuro/issues/117) e o item 2 do plano
+Diga: "autorizo a implementação da issue #117"
 ```
 
 ## Handoff de saída
@@ -94,3 +94,4 @@ Diga: "aprovo o merge da PR #119"
 - `result`: `executed`
 - `evidence`: registro da auditoria; SHA-256 do inventário; decisão do responsável sobre C8; gates locais acima; PR #119.
 - `blockers`: checks verdes e "aprovo o merge da PR #119". A issue #117 depende desta integração.
+- **Reconciliação pós-merge (registrada na entrega da #117):** "aprovo o merge da PR #119" em 2026-10-22; checks verdes no HEAD `e545467`; squash integrado em `main`; issue #116 `CLOSED` como concluída. Situação seguinte: autorização da issue #117, já concedida.

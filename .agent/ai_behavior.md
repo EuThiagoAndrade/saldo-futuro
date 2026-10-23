@@ -131,7 +131,7 @@ O worktree externo e exclusivo do backlog é uma segunda árvore do mesmo reposi
 
 ## Privacidade de dados financeiros
 
-O repositório é privado até a estabilização e depois se torna público (ADR-003). O histórico do Git é permanente: um dado que entra em qualquer commit deve ser tratado como publicado.
+O repositório é público desde 2026-10-22 (ADR-003, emenda do ciclo `011`). O histórico do Git é permanente: um dado que entra em qualquer commit deve ser tratado como publicado.
 
 - **Dados do usuário** são: valores, saldos, quantidades, posições, nomes dos ativos que ele detém, instituições onde mantém contas, e-mails e prints de telas com dados reais.
 - Dados do usuário nunca aparecem em issues, PRs, tasks, commits, comentários, logs, prints, fixtures, seeds ou mensagens a ferramentas externas.

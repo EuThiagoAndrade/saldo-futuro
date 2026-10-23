@@ -127,7 +127,7 @@ O agente não tem acesso à Vercel. Itens para o responsável conferir e relatar
 
 - Integrar a correção do `next` (a PR #113 do Dependabot leva a 16.4.1), porque a aplicação pública em produção tem alertas críticos abertos.
 - Usar o e-mail `noreply` do GitHub nos próximos commits e, se quiser, ativar o bloqueio de pushes que exponham o e-mail pessoal nas configurações da conta. Os commits já publicados não mudam.
-- Avaliar desativar a permissão de o `GITHUB_TOKEN` aprovar PRs e fixar ações por SHA.
+- Avaliar fixar ações por SHA. **Correção de 2026-10-22 (issue #117):** a versão anterior desta lista sugeria também avaliar desativar a permissão de o `GITHUB_TOKEN` aprovar PRs; a sugestão foi retirada, porque a KB-002 (passo G1) exige essa opção habilitada para o release-please abrir a PR de release.
 - Avaliar os padrões não-provedor do secret scanning, se disponíveis no plano.
 
 ## Limitações

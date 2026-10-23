@@ -141,7 +141,7 @@ Resultado mínimo atendido: Audience publicada e login fora da lista de teste. C
 
 | Passo | Quem | Onde | Evidência |
 | :-- | :-- | :-- | :-- |
-| V1. Importar o repositório `saldo-futuro`, framework Next.js, sem alterar os comandos padrão, e fazer o primeiro deploy **sem variáveis**: ele sai como "Preview sem backend", o que é esperado. O repositório é privado: se ele não aparecer, ajuste as permissões do app do GitHub na Vercel (Adjust GitHub App Permissions) | Responsável | Painel da Vercel, Add New, Project | Item marcado |
+| V1. Importar o repositório `saldo-futuro`, framework Next.js, sem alterar os comandos padrão, e fazer o primeiro deploy **sem variáveis**: ele sai como "Preview sem backend", o que é esperado. Se o repositório não aparecer, ajuste as permissões do app do GitHub na Vercel (Adjust GitHub App Permissions). O repositório é público desde 2026-10-22 (ADR-003, emenda do ciclo `011`) | Responsável | Painel da Vercel, Add New, Project | Item marcado |
 | V2. Definir as três variáveis **somente em Production** (em Environments, desmarque Preview e Development) e, em seguida, **refazer o deploy sem usar o cache de build** | Responsável | Settings, Environment Variables; depois Deployments, Redeploy | Item marcado, conferido de novo no Gate V-C; veja a tabela abaixo. Depois do novo deploy, `/entrar` mostra o botão do Google, sem campo de senha e sem "Preview sem backend" |
 | V3. Adicionar o domínio `investimentos.euthiagoandrade.com.br` ao projeto | Responsável | Settings, Domains; a Vercel mostra o destino do `CNAME` | Item marcado |
 | V4. Conferir o cron | Responsável | Settings, Cron Jobs: deve listar `/api/keepalive`, diário (`17 8 * * *`, em UTC), depois do deploy que contém o `vercel.json` | Item marcado |
