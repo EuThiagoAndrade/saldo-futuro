@@ -1,7 +1,7 @@
 # Plano de Implementação — Repositório público na governança e benchmark IGP-M
 
 > **Ciclo:** `011`
-> **Status:** `Aprovado`
+> **Status:** `Em Execução`
 > **Versão:** `v2`
 > **Data de criação:** 2026-10-22
 > **Última atualização:** 2026-10-22
@@ -293,9 +293,9 @@ Commits `chore(issue-N):` ou `feat(issue-N):`; documentação `docs(cycle-011):`
 
 | Campo | Valor |
 | :-- | :-- |
-| Issue(s) | — |
-| PR(s) | — |
-| Branch(es) | — |
+| Issue(s) | [#116 — auditoria](https://github.com/EuThiagoAndrade/saldo-futuro/issues/116); [#117 — governança](https://github.com/EuThiagoAndrade/saldo-futuro/issues/117); [#118 — IGP-M, BL-007](https://github.com/EuThiagoAndrade/saldo-futuro/issues/118), que fecha pela PR de encerramento |
+| PR(s) | [#115 — publicação documental do plano](https://github.com/EuThiagoAndrade/saldo-futuro/pull/115), integrada em 2026-10-23 por squash (`07adff78c33d8b5565e5ef77d425ced33a3f6d01`) |
+| Branch(es) | `chore/cycle-011-plan` (PR documental do plano) |
 | Destino após conclusão | `_project/executed/011_repositorio_publico_governanca_igpm/011_plan.md` |
 
 ## Registro de aprovação
@@ -307,25 +307,46 @@ Commits `chore(issue-N):` ou `feat(issue-N):`; documentação `docs(cycle-011):`
 - **Alcance:** aprovação do plano e publicação da PR documental (ideação, plano e índice); criação das três issues somente depois da integração documental e da apresentação/confirmação dos payloads; encerramento ao final. Não concede aprovação de merge, autorização de implementação, ação externa nem acesso a produção.
 - **Estado reconciliado:** esta seção resolve a proposta D-A descrita em "Decisões e autoridades", que fica preservada como alternativa. O ciclo permanece `Planejamento` até a primeira implementação autorizada.
 
+## Registro de criação das issues
+
+- **Data e autorização:** 2026-10-22 (horário de Cuiabá), "Pode criar as issues", em resposta aos três textos apresentados depois do merge da PR #115. A manifestação confirma a publicação dos payloads, não a implementação.
+- **Precondições conferidas:** plano `v2` `Aprovado`, com aprovação humana posterior à rodada 2 e D-A1 registrada; PR #115 `MERGED` em `07adff78c33d8b5565e5ef77d425ced33a3f6d01`, presente em `main` local e remota, com todos os checks verdes no HEAD integrado. Consulta via `gh` por título, antes de criar, sem issue equivalente.
+- **Templates aplicados:** `.github/ISSUE_TEMPLATE/chore.yml` (Contexto, Mudanças previstas, Critérios de aceite, Dependências e autorizações, Ciclo e plano relacionados) nas issues 1 e 2; `.github/ISSUE_TEMPLATE/feature_request.yml` (Contexto, Escopo, Critérios de aceite, Ciclo e plano relacionados, Dependências, riscos e autorizações) na issue 3, nessa ordem.
+- **Resultado:** três issues criadas sequencialmente via `gh issue create --body-file`, sem labels ou responsáveis. Cada título e corpo foi relido via `gh issue view` e comparado ao payload confirmado: iguais, todas `OPEN`. Os hashes usam o corpo em UTF-8, LF e uma quebra final.
+
+| Ordem | Item | Issue e título | SHA-256 do corpo confirmado |
+| :-- | :-- | :-- | :-- |
+| 1 | Item 1 | [#116 — Auditar o histórico público e as configurações do repositório](https://github.com/EuThiagoAndrade/saldo-futuro/issues/116) | `cc6b9f14a7ad7d6ae820d67687a219317a34b9ffad552e3903a12c6e3ef35225` |
+| 2 | Item 2 | [#117 — Alinhar a governança ao repositório público](https://github.com/EuThiagoAndrade/saldo-futuro/issues/117) | `ea843a5258419e08f95343cd4a969171607f5bd2e86ce5fd95620b97f16f2b73` |
+| 3 | Item 3 (BL-007) | [#118 — Incluir o IGP-M no catálogo de benchmarks (BL-007)](https://github.com/EuThiagoAndrade/saldo-futuro/issues/118) | `63692589ef1df4234141f3cb112e6c0688d2c9ac87136a36b754c54f6192ed38` |
+
+A sequência é #116 → #117 → #118, cada uma com autorização própria. #116 e #117 fecham pelas próprias PRs; #118 é referenciada pela PR de código (`Refs #118`) e fecha pela PR de encerramento, conforme "Decomposição em issues e PRs".
+
+Estado corrente: plano `Aprovado` e ciclo `Planejamento`; nenhuma branch, task, código, ação externa ou operação em produção iniciada. A fila do backlog não foi alterada. Estes registros locais acompanham a próxima entrega autorizada, sem commit direto em `main`.
+
+## Registro de execução
+
+- **Issue #116 (auditoria):** "autorizo a implementação da issue #116" em 2026-10-22. A primeira entrega autorizada levou o plano a `Em Execução` e o ciclo a `Em execução`; o "Estado corrente" do Registro de criação das issues fica como histórico. Branch `chore/issue-116`, task `011_task_issue-116.md` (artefato ativo da entrega), registro `011_research_auditoria_historico.md` e [PR #119](https://github.com/EuThiagoAndrade/saldo-futuro/pull/119), com `Closes #116`. Auditoria concluída sem achado; a classificação do e-mail pessoal nos metadados de autoria foi decidida pelo responsável ("Aceitar como autoria", critério C8).
+
 ## Próximo passo
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 011 (completo)
+Situação: Aguardando autorização de implementação — ciclo 011 (completo)
 Quem: Responsável
-Conferir: Diff e checks da PR documental #115 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/115); confirmar checks verdes no HEAD atual antes de integrar
-Diga: "aprovo o merge da PR #115"
+Conferir: Issue #116 (https://github.com/EuThiagoAndrade/saldo-futuro/issues/116) e o item 1 deste plano
+Diga: "autorizo a implementação da issue #116"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 011 + atualizar_docs + 011_plan/aprovacao-publicacao + v2/d48083755f6442e852b184d1aec03f0d66e1e650`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 011 + criar_issues + chore-chore-feature/itens-1-3 + v2/07adff78c33d8b5565e5ef77d425ced33a3f6d01`
 - `effect_class`: `remote_mutation`
-- `state_before` / `state_after`: antes, ciclo `011` em `Planejamento` e plano `v2` em `Em Revisão`, rodada 2 `APTO PARA APROVAÇÃO`, "Aguardando aprovação do plano", sem branch ou PR do ciclo. Depois, plano `v2` `Aprovado` com manifestação humana posterior e D-A1 registrada; branch `chore/cycle-011-plan` publicada e PR #115 aberta, "Aguardando merge". Ciclo permanece `Planejamento` até a primeira implementação autorizada.
+- `state_before` / `state_after`: plano `v2` `Aprovado`, PR #115 integrada, nenhuma issue do ciclo / três issues `OPEN` (#116, #117, #118) iguais aos payloads confirmados; plano e índice com os vínculos, ainda locais.
 - `result`: `executed`
-- `evidence`: manifestação humana de 2026-10-22 no "Registro de aprovação"; rodada 2 apta anterior à manifestação; branch `chore/cycle-011-plan` sobre `main` `d48083755f6442e852b184d1aec03f0d66e1e650`; commit inicial `a0447f568a5b33bc3fb5a2022e159c866dc81677` publicado; PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/115 criada via `gh` e conferida `OPEN`, base `main`, somente ideação, plano e índice. 48/48 testes locais e validador sem erros ou avisos. O estado dos checks é conferido no GitHub no HEAD atual antes de qualquer merge.
-- `blockers`: merge pendente de checks verdes e de "aprovo o merge da PR #115". Criação das issues aguarda a integração documental e a confirmação dos payloads. Nenhuma implementação, issue, ação externa, verificação em produção ou merge executado.
+- `evidence`: confirmação humana "Pode criar as issues"; URLs das issues; comparação título/corpo via `gh issue view` e hashes acima; PR #115 `MERGED`.
+- `blockers`: implementação depende de "autorizo a implementação da issue #116".
 
 ## Revisão crítica
 
