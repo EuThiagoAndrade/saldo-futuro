@@ -67,6 +67,7 @@ test.describe("área autenticada", () => {
     await barra.getByRole("button", { name: "Mais" }).click();
     const folha = page.getByRole("dialog", { name: "Mais" });
     await expect(folha.getByRole("link", { name: "Transferências" })).toBeVisible();
+    await expect(folha.getByRole("link", { name: "Cadastros" })).toBeVisible();
     await expect(folha.getByRole("link", { name: "Novidades" })).toBeVisible();
     await expect(folha.getByRole("link", { name: "Conta" })).toBeVisible();
     await expect(folha.getByRole("link", { name: "Administração" })).toHaveCount(0);
@@ -79,12 +80,12 @@ test.describe("área autenticada", () => {
     await page.setViewportSize(DESKTOP);
     await entrar(page, u.comum);
     const menu = page.getByRole("navigation", { name: "Menu lateral" });
-    for (const item of ["Início", "Lançamentos", "Ativos", "Benchmarks", "Transferências", "Novidades", "Conta"]) {
+    for (const item of ["Início", "Lançamentos", "Ativos", "Benchmarks", "Transferências", "Cadastros", "Novidades", "Conta"]) {
       await expect(menu.getByRole("link", { name: item })).toBeVisible();
     }
     await expect(menu.getByRole("link", { name: "Administração" })).toHaveCount(0);
     // Os documentos legais ficam em Conta e no login, não na navegação (#104).
-    await expect(menu.getByRole("link")).toHaveCount(8);
+    await expect(menu.getByRole("link")).toHaveCount(9);
     await expect(menu.getByRole("link", { name: "Saldo Futuro" })).toBeVisible();
     await expect(page.getByRole("banner").getByRole("link", { name: "Saldo Futuro" })).toBeHidden();
     await expect(page.getByRole("link", { name: "Saldo Futuro" })).toHaveCount(1);

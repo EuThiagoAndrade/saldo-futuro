@@ -21,7 +21,7 @@ Dar ao usuário as telas para incluir, rever, renomear e excluir as próprias in
 
 ## Escopo autorizado
 
-Item 2 do plano: rotas `/ativos/instituicoes` e `/ativos/classes`, links no topo de `/ativos`, leituras, ações com `zod`, mensagens das recusas novas, unitários e e2e. Fora: campos no cadastro, edição e lista do ativo (issue #128), navegação principal e qualquer cálculo com os campos.
+Item 2 do plano, com a emenda E-1 de 2026-10-23: rota `/cadastros` com as abas "Instituições" e "Classes", destino "Cadastros" em Mais e no menu lateral, leituras, ações com `zod`, mensagens das recusas novas, DESIGN.md 6.1 e 6.12, KB-003 (navegação), unitários e e2e. Fora: campos no cadastro, edição e lista do ativo (issue #128), outras mudanças de navegação e qualquer cálculo com os campos.
 
 ## Origem no backlog
 
@@ -47,8 +47,9 @@ Não se aplica.
 - [x] `src/lib/leitura.ts` e `src/lib/telas/leituras.ts`: ordem total de `instituicoes` e `classes_ativo` e leituras das entradas e dos vínculos dos ativos.
 - [x] `src/lib/telas/acoes-catalogo.ts` e as ações de cada rota: incluir, renomear e excluir só pelas funções do banco, com `zod` e sessão conferida primeiro; mensagens novas em `mensagemDeRecusa`.
 - [x] `src/components/pagina-catalogo.tsx` e `src/components/formularios/catalogo.tsx`: inclusão no topo, lista densa, renomear em linha e exclusão pela confirmação de ação destrutiva; com vínculo, Excluir desabilitado com a explicação ao lado.
-- [x] Links "Instituições" e "Classes" no topo de `/ativos`.
-- [x] Unitários (`catalogos.test.ts`) e e2e (`ativos-catalogos.spec.ts`).
+- [x] ~~Links "Instituições" e "Classes" no topo de `/ativos`.~~ Substituído pela emenda E-1 (ver "Decisões incidentais e desvios").
+- [x] Emenda E-1: `/cadastros` com abas por URL (`src/app/(app)/cadastros/`), destino "Cadastros" em Mais e no menu lateral com ícone próprio, links retirados de `/ativos` (igual a `main`), DESIGN.md 6.1 e 6.12, KB-003 e e2e `cadastros.spec.ts` e `navegacao.spec.ts`.
+- [x] Unitários (`catalogos.test.ts`) e e2e (`cadastros.spec.ts`, antes `ativos-catalogos.spec.ts`).
 
 ## Evidências
 
@@ -59,8 +60,9 @@ Não se aplica.
 | `npm test` | 31 arquivos, 362 testes, todos passando (4 novos em `catalogos.test.ts`) |
 | `npm run build` | Passou (build do Playwright, com o Supabase local) |
 | `npx supabase test db` | 8 arquivos, 342 asserções, `PASS` (sem mudança de banco) |
-| `npm run test:e2e` (com Supabase local) | Suíte completa: 188 passaram, 12 ignorados (condicionais do ambiente) e 1 instável — o mesmo "as páginas da entrega não têm violações de acessibilidade em 360 px" da #126, que excedeu 30 s e passou na repetição. `ativos` e `ativos-catalogos` isolados: 15 de 15 |
-| Conferência visual | Prévia local com usuário fictício: Instituições (inclusão, lista, renomear em linha, Esc), Classes a 375 px e `/ativos` com os links no celular; sem erro no console. Usuário de teste removido depois |
+| `npm run test:e2e` (com Supabase local) | Depois da emenda E-1, sobre o build de produção: 188 passaram, 12 ignorados (condicionais do ambiente) e 1 instável — o mesmo "as páginas da entrega não têm violações de acessibilidade em 360 px" da #126, que excedeu 30 s e passou na repetição. Uma tentativa contra o servidor de desenvolvimento falhou no login de todos os testes (o servidor de desenvolvimento não hidrata a página acessada por `127.0.0.1`, que o Playwright usa) e foi descartada por ser do ambiente |
+| Conferência visual | Prévia local com usuário fictício: primeira versão (Instituições e Classes em Ativos) e, depois da emenda E-1, `/cadastros` com as duas abas a 375 px e a folha "Mais" com Cadastros depois de Transferências |
+| Teste do responsável | Em 2026-10-23, o responsável testou localmente por `http://localhost:3000/` e relatou: "Fiz os teste localmente por http://localhost:3000/ e passou." |
 | Validador | `node --test scripts/validate-governance.test.mjs` 48/48; `node scripts/validate-governance.mjs` sem erros |
 | `git diff --check` | Sem erros |
 | Checks remotos | Pendente |
@@ -70,6 +72,9 @@ Não se aplica.
 Não se aplica.
 
 ## Decisões incidentais e desvios
+
+- **Emenda E-1 (2026-10-23).** Depois de testar localmente a primeira versão desta PR, o responsável apontou que Instituições e Classes dentro de Ativos confundem o usuário no celular, porque as instituições não são ativos. A mudança foi registrada como emenda do plano ("Faça uma emenda registrada no plano (recomendo).") e aplicada nesta mesma PR, antes do merge: destino "Cadastros" em Mais, logo depois de Transferências, e no menu lateral, com as abas "Instituições" (padrão) e "Classes" (`?aba=classes`). Nome e posição seguem a proposta apresentada, sem objeção do responsável. Banco, regras e isolamento não mudam.
+- **Cache do servidor de desenvolvimento.** Depois de trocar a chave `rota` por `aba` em `catalogos.ts`, o servidor de desenvolvimento em execução continuou servindo a versão antiga do módulo (link de aba sem destino); reiniciá-lo resolveu. Não afeta build nem produção.
 
 - **Renomear em linha.** O plano deixava "formulário em linha ou diálogo, conforme DESIGN.md", e o DESIGN.md não tem padrão para edição de um nome. A entrega usa só elementos existentes (campo de 6.8, botões de 6.9): "Renomear" abre o campo com o nome atual e o foco nele; "Salvar nome" envia; "Cancelar" ou Esc fecham sem enviar e devolvem o foco ao botão. Proposta: registrar esse uso no DESIGN.md na issue #128, que já emenda 6.7 e 6.8.
 - **Uso conta ativos desativados.** O banco recusa excluir uma entrada usada por qualquer ativo, inclusive desativado; a tela conta do mesmo jeito ("Usada em N ativos") e explica a recusa antes do clique.

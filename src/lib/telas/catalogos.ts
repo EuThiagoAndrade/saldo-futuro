@@ -1,8 +1,9 @@
 import { ordenarPorNome } from "./combobox";
 
-// Catálogos de instituições e classes do usuário (ciclo 012, issue #127, BL-009). Os nomes só
-// descrevem os ativos; nenhum cálculo os lê. A identidade do nome (repetido ou não) é decidida
-// pelo banco, por lower(btrim(nome)); aqui só se ordena e se conta o uso.
+// Catálogos de instituições e classes do usuário (ciclo 012, issue #127, BL-009), nas abas de
+// /cadastros (emenda E-1 do plano). Os nomes só descrevem os ativos; nenhum cálculo os lê. A
+// identidade do nome (repetido ou não) é decidida pelo banco, por lower(btrim(nome)); aqui só se
+// ordena e se conta o uso.
 
 export type TipoCatalogo = "instituicoes" | "classes";
 
@@ -25,7 +26,7 @@ export interface LinhaCatalogo extends EntradaCatalogo {
 export const CATALOGOS = {
   instituicoes: {
     titulo: "Instituições",
-    rota: "/ativos/instituicoes",
+    aba: "/cadastros",
     singular: "instituição",
     coluna: "instituicao_id",
     descricao: "Onde ficam os seus ativos. Os nomes aparecem como opção no cadastro do ativo e servem só para descrevê-lo.",
@@ -37,7 +38,7 @@ export const CATALOGOS = {
   },
   classes: {
     titulo: "Classes",
-    rota: "/ativos/classes",
+    aba: "/cadastros?aba=classes",
     singular: "classe",
     coluna: "classe_id",
     descricao:

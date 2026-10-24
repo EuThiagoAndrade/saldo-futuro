@@ -8,7 +8,7 @@ import { CATALOGOS, type TipoCatalogo } from "./catalogos";
 
 // Escrita dos catálogos (ciclo 012, issue #127): só pelas funções do banco, com a sessão do
 // usuário (D3). A sessão é conferida antes de qualquer leitura da entrada (D2). As ações de
-// app/(app)/ativos/instituicoes e app/(app)/ativos/classes só escolhem o catálogo.
+// app/(app)/cadastros só escolhem o catálogo.
 
 const FUNCOES = {
   instituicoes: { criar: "criar_instituicao", renomear: "renomear_instituicao", excluir: "excluir_instituicao", parametro: "p_instituicao" },

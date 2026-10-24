@@ -2,7 +2,7 @@
 
 > **Status:** Canônico
 > **Versão:** v1
-> **Última atualização:** 2026-10-21
+> **Última atualização:** 2026-10-23
 > **Ciclo de origem:** `000` (issue #3)
 > **Escopo:** interface web do Saldo Futuro
 > **Fonte normativa:** este documento é a autoridade do contrato visual e de interação. A partir do ciclo `001`, a aplicação implementa seus tokens em Tailwind CSS 4. A página `design-system/referencia.html` demonstra o contrato com dados fictícios e não define layout final de telas (ciclo `004`).
@@ -268,7 +268,8 @@ A partir do ciclo `001`, a aplicação implementa os tokens em configuração CS
 
 - Cada item tem ícone de 24 px e rótulo `caption`; o rótulo nunca é omitido.
 - O item ativo usa ícone e rótulo em `primary` e um indicador `primary-subtle` atrás do ícone, além de `aria-current="page"`.
-- "Mais" abre uma folha inferior com os demais destinos, nesta ordem: Transferências, Novidades (ciclo `010`), Conta e Administração. Os mesmos destinos aparecem abaixo do divisor do menu lateral. Novidades vale para os dois perfis; o destino de administração só aparece para o perfil `admin`. Com um destino de "Mais" aberto, o próprio botão "Mais" fica em `primary`.
+- "Mais" abre uma folha inferior com os demais destinos, nesta ordem: Transferências, Cadastros (ciclo `012`), Novidades (ciclo `010`), Conta e Administração. Os mesmos destinos aparecem abaixo do divisor do menu lateral. Novidades e Cadastros valem para os dois perfis; o destino de administração só aparece para o perfil `admin`. Com um destino de "Mais" aberto, o próprio botão "Mais" fica em `primary`.
+- Cadastros reúne as listas de apoio do usuário (instituições e classes de ativo), fora de Ativos, porque não são ativos: os ativos estão nas instituições e são descritos pelas classes (ciclo `012`, emenda E-1).
 - Política de privacidade e termos de uso não são destinos da navegação: ficam como links de texto na tela de entrada e em Conta (ciclo `010`).
 - A área de toque de cada item cobre toda a sua posição na barra (no mínimo 44 × 44 px).
 
@@ -376,7 +377,7 @@ Um valor que não pôde ser carregado mostra o estado de erro, nunca o último v
 
 ### 6.12 Abas por navegação
 
-Usadas para alternar entre partes de uma mesma lista lidas pelo servidor, como "Em uso" e "Desativados" em Ativos (ciclo `010`).
+Usadas para alternar entre partes de uma mesma lista lidas pelo servidor, como "Em uso" e "Desativados" em Ativos (ciclo `010`) e "Instituições" e "Classes" em Cadastros (`?aba=classes`, ciclo `012`).
 
 - São links com endereço próprio (por exemplo, `?aba=desativados`) dentro de um `nav` rotulado, não o padrão `tab` do ARIA: recarregar, voltar e avançar preservam a aba, e o teclado usa Tab e Enter como em qualquer link. Um valor ausente ou desconhecido abre a primeira aba.
 - Cada aba tem pelo menos 44 px de altura, rótulo `label` e um contador em etiqueta neutra (`neutral` sobre `neutral-subtle`, `caption` peso 500).

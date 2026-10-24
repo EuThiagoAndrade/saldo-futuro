@@ -2,7 +2,7 @@
 
 // Navegação (DESIGN.md 6.1 e 4.3; D1 do ciclo 004). Abaixo de lg, barra inferior fixa com
 // Início, Lançamentos, Ativos, Benchmarks e Mais; "Mais" abre uma folha com os demais destinos
-// (Transferências, Novidades, Conta e, para o admin, Administração).
+// (Transferências, Cadastros, Novidades, Conta e, para o admin, Administração).
 // A partir de lg, menu lateral de 240 px com os mesmos itens e os destinos de "Mais" abaixo de
 // um divisor. Administração só aparece para o admin. Este componente vem depois do conteúdo no
 // DOM, para a ordem de foco seguir a ordem visual.
@@ -16,6 +16,7 @@ import {
   IconeAdministracao,
   IconeAtivos,
   IconeBenchmarks,
+  IconeCadastros,
   IconeConta,
   IconeInicio,
   IconeLancamentos,
@@ -40,6 +41,8 @@ const PRINCIPAIS: Destino[] = [
 function destinosDeMais(admin: boolean): Destino[] {
   const destinos: Destino[] = [
     { href: "/transferencias", rotulo: "Transferências", Icone: IconeTransferencias },
+    // Cadastros (ciclo 012, emenda E-1): instituições e classes, fora de Ativos.
+    { href: "/cadastros", rotulo: "Cadastros", Icone: IconeCadastros },
     { href: "/novidades", rotulo: "Novidades", Icone: IconeNovidades },
     { href: "/conta", rotulo: "Conta", Icone: IconeConta },
   ];
