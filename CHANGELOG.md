@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.9.0](https://github.com/EuThiagoAndrade/saldo-futuro/compare/v0.8.0...v0.9.0) (2026-10-24)
+
+
+### Features
+
+* **issue-126:** guardar instituições, classes e detalhes dos ativos no banco ([#129](https://github.com/EuThiagoAndrade/saldo-futuro/issues/129)) ([6abbb01](https://github.com/EuThiagoAndrade/saldo-futuro/commit/6abbb01980b7453af1179ea07d7769cc896021d8)), closes [#126](https://github.com/EuThiagoAndrade/saldo-futuro/issues/126)
+* **issue-127:** cadastrar instituições e classes de ativos ([#131](https://github.com/EuThiagoAndrade/saldo-futuro/issues/131)) ([f365ff4](https://github.com/EuThiagoAndrade/saldo-futuro/commit/f365ff4a6a34193642b1e574fe9bd9e731497cb1))
+
 ## [0.8.0](https://github.com/EuThiagoAndrade/saldo-futuro/compare/v0.7.0...v0.8.0) (2026-10-23)
 
 
