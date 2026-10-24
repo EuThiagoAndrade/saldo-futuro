@@ -2,6 +2,7 @@ import "server-only";
 import type { Evento, TipoAjuste } from "../financeiro/eventos";
 import { type Cliente, ErroLeitura, lerComposicao, lerTabela, marcaCarteira } from "../leitura";
 import { deLinhaEvento, type LinhaEvento } from "./carteira";
+import type { EntradaCatalogo, VinculoDoAtivo } from "./catalogos";
 import { ordenarPorNome } from "./combobox";
 import { mesDaColuna, type PosicaoLida } from "./fechamento";
 
@@ -19,6 +20,19 @@ export interface Ativo {
 
 export function lerAtivos(cliente: Cliente, sinal?: AbortSignal): Promise<Ativo[]> {
   return lerTabela<Ativo>(cliente, "ativos", { colunas: "id, nome, tipo_ajuste, sistema, ativo, desativado_em", sinal });
+}
+
+// Catálogos do usuário (ciclo 012, issue #127): instituições e classes, e o uso pelos ativos.
+export function lerInstituicoes(cliente: Cliente, sinal?: AbortSignal): Promise<EntradaCatalogo[]> {
+  return lerTabela<EntradaCatalogo>(cliente, "instituicoes", { colunas: "id, nome", sinal });
+}
+
+export function lerClasses(cliente: Cliente, sinal?: AbortSignal): Promise<EntradaCatalogo[]> {
+  return lerTabela<EntradaCatalogo>(cliente, "classes_ativo", { colunas: "id, nome", sinal });
+}
+
+export function lerVinculosDosAtivos(cliente: Cliente, sinal?: AbortSignal): Promise<VinculoDoAtivo[]> {
+  return lerTabela<VinculoDoAtivo>(cliente, "ativos", { colunas: "instituicao_id, classe_id", sinal });
 }
 
 export async function lerEventos(cliente: Cliente, sinal?: AbortSignal): Promise<Evento[]> {

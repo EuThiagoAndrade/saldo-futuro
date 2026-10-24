@@ -208,7 +208,7 @@ Definidos em `supabase/migrations/20261014193630_benchmarks.sql`.
 ### Interface e PWA
 
 - A aplicação usa os tokens e a fonte IBM Plex Sans do `design-system/DESIGN.md` (`src/app/globals.css`).
-- O grupo `src/app/(app)/` oferece Início, Lançamentos, Ativos, Benchmarks, Transferências, Novidades, Conta e Administração (só para admin), com barra inferior no celular e menu lateral no desktop. O logo está no menu lateral, no login e, no celular, à esquerda do cabeçalho.
+- O grupo `src/app/(app)/` oferece Início, Lançamentos, Ativos, Benchmarks, Transferências, Cadastros (instituições e classes, desde o ciclo `012`), Novidades, Conta e Administração (só para admin), com barra inferior no celular e menu lateral no desktop. O logo está no menu lateral, no login e, no celular, à esquerda do cabeçalho.
 - As leituras usadas em cálculo são completas e paginadas; composições de carteira e benchmark conferem marcas antes/depois, repetindo no máximo três vezes. Dentro do servidor Next, cada fase passa um `AbortSignal` próprio às consultas, porque o Next devolve a mesma resposta para GET idênticos no mesmo pedido; os componentes de cada marca são lidos em paralelo, sem sobrepor as fases (`src/lib/leitura.ts`). Dado indisponível aparece como `N/D`, sem virar zero. As regras de apresentação do Início estão na seção 15 da KB-004, com CR-51/CR-52.
 - É instalável como PWA pelo menu do navegador, sem service worker e sem modo offline (`src/app/manifest.ts`; ADR-002).
 

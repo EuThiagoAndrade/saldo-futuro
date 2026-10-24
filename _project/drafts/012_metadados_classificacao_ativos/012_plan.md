@@ -11,6 +11,7 @@
 > **Autorização inicial:** "confirmo o nível completo e autorizo a ideação do ciclo 012" em 2026-10-23
 > **Autorização do rascunho:** "autorizo o rascunho do plano do ciclo 012" em 2026-10-23
 > **Autorização da correção:** "corrija o plano do ciclo 012" em 2026-10-23 (achados R1-1 a R1-4)
+> **Emenda:** E-1 em 2026-10-23, "Faça uma emenda registrada no plano (recomendo).", sobre a PR #131 ainda não integrada (ver "Emenda E-1")
 > **Modo contínuo:** `—`
 > **Revisão formal:** `Concluída` (rodada 2, sobre a `v2`)
 > **Veredito da revisão:** `APTO PARA APROVAÇÃO` (rodada 2, sobre a `v2`)
@@ -58,7 +59,7 @@ Referência: `_project/backlog.md` no commit da fila `5298473`. Destino em prepa
 - Classes iniciais criadas para cada usuário (existentes e novos): Renda fixa, Renda variável, Fundos, Cripto e Outros.
 - Colunas descritivas em `public.ativos`: instituição, classe e os quatro indicadores em três estados.
 - Funções de criar, renomear e excluir instituições e classes; função nova de cadastro do ativo com os campos; função de edição só dos campos descritivos, aceita também para ativos desativados.
-- Telas: Instituições e Classes; cadastro e edição do ativo com seletores que permitem cadastrar ali mesmo; classe e instituição nas duas abas de `/ativos`.
+- Telas: Instituições e Classes, num destino "Cadastros" da navegação (emenda E-1); cadastro e edição do ativo com seletores que permitem cadastrar ali mesmo; classe e instituição nas duas abas de `/ativos`.
 - Testes de banco, unitários e e2e; DESIGN.md, KB-003 e KB-004 (4.1); nota de novidades da `0.9.0`.
 - Release `0.9.0` e encerramento prospectivo em PRs próprias.
 
@@ -68,7 +69,7 @@ Referência: `_project/backlog.md` no commit da fila `5298473`. Destino em prepa
 - A carga retroativa dos ativos existentes e qualquer script versionado para ela.
 - Editar nome ou tipo de ajuste de um ativo; remover a função `criar_ativo(text, tipo_ajuste)` atual.
 - BL-008 (PTAX) e os demais itens do backlog; publicar o retorno do backlog durante o ciclo.
-- Mudança na navegação principal (Instituições e Classes ficam dentro de Ativos).
+- Mudança na navegação principal além do destino "Cadastros" em Mais e no menu lateral (emenda E-1). ~~Instituições e Classes ficam dentro de Ativos.~~ (substituído pela emenda E-1)
 
 ## Decisões e autoridades
 
@@ -82,6 +83,15 @@ Em 2026-10-23, depois da discussão de prós e contras, o responsável disse: "V
 | Q4 — Edição | Página própria só com os campos descritivos (D1); ativos desativados também são editáveis. |
 | Q5 — Exibição | Classe e instituição nas duas abas de `/ativos`, sem filtro. |
 | Q6 — Restante | Visões analíticas por classe ou instituição ficam no Restante do BL-009. |
+
+**Emenda E-1 — Cadastros na navegação (2026-10-23).** Antes do merge da PR #131, depois de testar localmente, o responsável disse que os cadastros dentro de Ativos confundem o usuário no celular, porque as instituições não são ativos (os ativos estão nas instituições), e propôs levá-los para "Mais", num item "Cadastros" com Instituições e Classes. Depois da análise, escolheu registrar a mudança como emenda: "Faça uma emenda registrada no plano (recomendo)." Efeitos:
+
+- destino **"Cadastros"** em "Mais" (celular) e abaixo do divisor do menu lateral (desktop), logo depois de Transferências, com ícone próprio;
+- rota `/cadastros`, com as abas por URL "Instituições" (padrão) e "Classes" (`?aba=classes`), no padrão do DESIGN.md 6.12; o conteúdo de cada aba é o do item 2;
+- os links "Instituições" e "Classes" saem do topo de `/ativos`, e as rotas `/ativos/instituicoes` e `/ativos/classes` deixam de existir;
+- emendas do DESIGN.md 6.1 (destinos de "Mais") e 6.12 (exemplo de Cadastros) e da KB-003 (navegação) entram na própria PR #131.
+
+Banco, regras, isolamento (G2) e cálculo (G1) não mudam. A emenda não passou por nova rodada de revisão formal, por decisão do responsável; o diff da PR #131 é a evidência revisável. Os textos substituídos ficam riscados ou anotados, sem apagar o histórico.
 
 **Decisões de projeto do autor, sujeitas à revisão e à aprovação:**
 
@@ -143,7 +153,7 @@ Cada merge tem aprovação própria. A cadeia para ("Parado") por falta de autor
 
 O `04_carteira` só muda se alguma asserção existente depender da lista de colunas; a task registra o motivo.
 
-**Issue 2 — telas de Instituições e Classes.** Unitários da validação e das mensagens de recusa; e2e em `tests/e2e/ativos-catalogos.spec.ts`: criar, renomear, recusa de nome repetido, exclusão bloqueada em uso (botão desabilitado com explicação) e permitida sem uso; classes iniciais presentes; acessibilidade (axe) a 360 px e no desktop; sem rolagem horizontal.
+**Issue 2 — telas de Instituições e Classes.** Unitários da validação e das mensagens de recusa; e2e em `tests/e2e/cadastros.spec.ts` (emenda E-1: destino em Mais e no menu lateral, abas por URL): criar, renomear, recusa de nome repetido, exclusão bloqueada em uso (botão desabilitado com explicação) e permitida sem uso; classes iniciais presentes; acessibilidade (axe) a 360 px e no desktop; sem rolagem horizontal.
 
 **Issue 3 — campos do ativo.** Unitários da política do seletor com criação (`src/lib/telas/combobox.ts` ou módulo novo): a opção "Cadastrar «texto»" aparece quando nenhuma entrada tem a mesma identidade do texto (caixa e espaços nas pontas ignorados, acentos preservados), mesmo que a busca sem acento mostre opções parecidas — com "Classe Ação" cadastrada, digitar "Classe Acao" lista "Classe Ação" e oferece "Cadastrar «Classe Acao»", e digitar " classe ação " lista "Classe Ação" sem oferecer cadastro; confirmá-la envia o nome como novo; editar o texto desfaz. E2e em `tests/e2e/ativos.spec.ts` e no novo arquivo: cadastro com classe e instituição existentes; com instituição criada ali mesmo; sem nenhum campo descritivo; indicadores em três estados dentro de "Mais detalhes"; edição de ativo em uso e desativado; trânsito sem "Editar"; classe e instituição nas duas abas, no celular e no desktop; "Ocultar valores" não afeta os campos; teclado do seletor; axe. Os testes de `seletor-ativo.spec.ts` rodam inalterados.
 
@@ -190,9 +200,9 @@ O `04_carteira` só muda se alguma asserção existente depender da lista de col
 
 **Ação técnica:**
 
-- Rotas `/ativos/instituicoes` e `/ativos/classes`, com links "Instituições" e "Classes" (botão de texto) no topo de `/ativos`, ao lado de Novo ativo. "Voltar para Ativos" como em `/ativos/novo`.
+- ~~Rotas `/ativos/instituicoes` e `/ativos/classes`, com links "Instituições" e "Classes" (botão de texto) no topo de `/ativos`, ao lado de Novo ativo. "Voltar para Ativos" como em `/ativos/novo`.~~ Substituído pela emenda E-1: rota `/cadastros` com as abas "Instituições" e "Classes", aberta pelo destino "Cadastros" em Mais e no menu lateral.
 - Cada tela: formulário curto de inclusão (nome), lista em ordem alfabética pt-BR com o número de ativos que usam cada entrada, "Renomear" (formulário em linha ou diálogo, conforme DESIGN.md) e "Excluir" pela confirmação de ação destrutiva (6.10). Com ativos vinculados, Excluir fica desabilitado com a explicação ao lado (6.9).
-- Leituras novas em `src/lib/telas/leituras.ts` e ações em `src/app/(app)/ativos/instituicoes/acoes.ts` e `.../classes/acoes.ts`, com `zod` e as mensagens novas em `mensagemDeRecusa`.
+- Leituras novas em `src/lib/telas/leituras.ts` e ações em `src/app/(app)/cadastros/acoes.ts` (emenda E-1), com `zod` e as mensagens novas em `mensagemDeRecusa`.
 
 **Critérios de aceite:**
 
@@ -231,7 +241,7 @@ Caminhos novos são propostas.
 | :-- | :-- | :-- |
 | Plano | `_project/cycles.md` | Este plano; a ideação entra na PR documental |
 | Item 1 | KB-003, `supabase/tests/database/03_funcoes.test.sql` | `supabase/migrations/<AAAAMMDDHHMMSS>_metadados_ativos.sql`, `supabase/tests/database/08_metadados_ativos.test.sql`, task |
-| Item 2 | `src/app/(app)/ativos/page.tsx`, `src/lib/telas/leituras.ts`, `src/lib/telas/carteira.ts` | `src/app/(app)/ativos/instituicoes/`, `src/app/(app)/ativos/classes/`, `tests/e2e/ativos-catalogos.spec.ts`, task |
+| Item 2 | `src/lib/telas/leituras.ts`, `src/lib/telas/carteira.ts`, `src/lib/leitura.ts`; pela emenda E-1, `src/components/navegacao.tsx`, `src/components/icones.tsx`, `tests/e2e/navegacao.spec.ts`, `design-system/DESIGN.md` (6.1 e 6.12) e KB-003 | `src/app/(app)/cadastros/` (emenda E-1), `tests/e2e/cadastros.spec.ts`, task |
 | Item 3 | `src/app/(app)/ativos/acoes.ts`, `src/app/(app)/ativos/page.tsx`, `src/components/formularios/novo-ativo.tsx`, `src/components/combobox-ativo.tsx`, `src/lib/telas/combobox.ts`, `src/lib/telas/leituras.ts`, `src/lib/novidades.ts`, `tests/e2e/ativos.spec.ts`, `design-system/DESIGN.md`, KB-003, KB-004 | `src/app/(app)/ativos/[id]/editar/page.tsx`, formulário de edição, testes unitários, task |
 | Encerramento | Este plano, `_project/cycles.md`, tasks, KB-002 se aplicável, `src/lib/novidades.ts` (data real) | `012_task_closure.md`; movimento para `executed/` |
 
@@ -278,7 +288,7 @@ Commits `feat(issue-N):`; documentação `docs(cycle-012):`.
 3. Payloads e criação das três issues.
 4. Issue 1 → merge → ação externa (`db push`).
 5. Issue 2 → merge; issue 3 → merge.
-6. Verificação em produção pelo agente, somente leitura: `/ativos/instituicoes`, `/ativos/classes` e `/ativos/<id>/editar` sem sessão redirecionam ao login.
+6. Verificação em produção pelo agente, somente leitura: `/cadastros` (emenda E-1) e `/ativos/<id>/editar` sem sessão redirecionam ao login.
 7. Verificação autenticada pelo responsável: as cinco classes iniciais aparecem; um ativo recebe classe, instituição criada ali mesmo e um indicador; a edição de um ativo desativado salva; a lista mostra os campos no celular. Relato sim/não, sem nomes reais.
 8. Release `0.9.0`, com merge aprovado.
 9. Encerramento prospectivo, com merge aprovado; depois, a pedido, o retorno no BL-009.
@@ -328,6 +338,8 @@ Estado corrente: plano `Aprovado` e ciclo `Planejamento`; nenhuma branch, task, 
 ## Registro de execução
 
 - **Issue #126 (banco):** "autorizo a implementação da issue #126" em 2026-10-23. A primeira entrega autorizada levou o plano a `Em Execução` e o ciclo a `Em execução`; o "Estado corrente" do Registro de criação das issues fica como histórico. Branch `feature/issue-126`, task `012_task_issue-126.md` (artefato ativo da entrega) e [PR #129](https://github.com/EuThiagoAndrade/saldo-futuro/pull/129), com `Refs #126`. Desvio registrado na task: as chaves dos ativos para instituições e classes usam `NO ACTION` em vez de `RESTRICT` (P-1), para preservar a exclusão do usuário em cascata.
+- **Ação externa da #126:** "concluí a ação externa da issue #126" em 2026-10-23; `migration list` alinhado, relatado pelo responsável; `/ativos` abre em produção; cadastro em produção não conferido (detalhes na task da #126).
+- **Issue #127 (telas de Instituições e Classes):** "autorizo a implementação da issue #127" em 2026-10-23. Branch `feature/issue-127`, task `012_task_issue-127.md` e [PR #131](https://github.com/EuThiagoAndrade/saldo-futuro/pull/131), com `Closes #127`. Antes do merge, a emenda E-1 levou as telas para `/cadastros`, na mesma PR.
 
 ## Próximo passo
 

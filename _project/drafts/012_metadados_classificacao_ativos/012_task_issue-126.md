@@ -8,7 +8,7 @@
 > **Plano:** `_project/drafts/012_metadados_classificacao_ativos/012_plan.md`
 > **Branch:** `feature/issue-126`
 > **PR:** [#129](https://github.com/EuThiagoAndrade/saldo-futuro/pull/129) (`Refs #126`, sem fechar a issue)
-> **Integração:** `Pendente`
+> **Integração:** Código integrado pela PR #129 (squash `6abbb01980b7453af1179ea07d7769cc896021d8`, 2026-10-23); ação externa concluída em 2026-10-23; a issue #126 fecha por `Closes #126` na PR de encerramento
 > **Autorização inicial:** "autorizo a implementação da issue #126" em 2026-10-23
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-23
@@ -48,7 +48,7 @@ Não se aplica.
 - [x] `03_funcoes.test.sql`: oito assinaturas nas duas listas explícitas e na asserção de `security definer`; cinco auxiliares de `private` na asserção de não executáveis; controle negativo preservado; `plan(15)` sem mudança.
 - [x] Bloco de preenchimento da migração exercitado à parte, em transação revertida, com um perfil fictício sem classes: o perfil recebeu as cinco.
 - [x] KB-003: seção de metadados dos ativos, funções, contagem de asserções e linha do histórico.
-- [ ] Ação externa (`db push`) pelo responsável, depois do merge.
+- [x] Ação externa (`db push`) pelo responsável, depois do merge (ver "Ação externa").
 
 ## Evidências
 
@@ -64,6 +64,13 @@ Não se aplica.
 | Validador | `node --test scripts/validate-governance.test.mjs` 48/48; `node scripts/validate-governance.mjs` sem erros |
 | `git diff --check` | Sem erros |
 | Checks remotos | Pendente |
+
+## Ação externa
+
+- **Data e frase:** 2026-10-23, "concluí a ação externa da issue #126", depois do merge da PR #129 (todos os checks verdes no HEAD `13f224a`; `main` em `6abbb01`).
+- **Passo 1 (`db push` e `migration list`):** relatado pelo responsável como "local e remoto alinhados", inclusive com `20261024000829_metadados_ativos`. O agente não acessou o banco de produção.
+- **Passo 2 (`/ativos` em produção):** a tela abre; o cadastro pelo formulário atual **não foi conferido** em produção, por escolha do responsável, para não criar dado real. A compatibilidade de `criar_ativo` depois da migração está provada pela asserção "criar_ativo continua criando o ativo com os campos novos nulos" (`08_metadados_ativos`) e pelos e2e de cadastro com a migração aplicada no Supabase local.
+- **Resultado:** precondição das issues #127 e #128 atendida (o schema novo está em produção).
 
 ## Revisão da correção
 
@@ -84,19 +91,19 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 012 (completo)
+Situação: Aguardando autorização de implementação — ciclo 012 (completo)
 Quem: Responsável
-Conferir: Checks e diff da PR #129 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/129)
-Diga: "aprovo o merge da PR #129"
+Conferir: Issue #127 (https://github.com/EuThiagoAndrade/saldo-futuro/issues/127) e o escopo do item 2 do plano
+Diga: "autorizo a implementação da issue #127"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 012 + implementar_issue + 126 + 8aa86ca264c2c8ef45de519b8c9de1eeb79099c3`
-- `effect_class`: `remote_mutation`
-- `state_before`: plano `v2` `Aprovado`, ciclo `Planejamento`, issue #126 aberta, sem branch nem task.
-- `state_after`: plano `Em Execução`, ciclo `Em execução`; branch `feature/issue-126` publicada e PR #129 aberta com `Refs #126`; task `Aguardando integração`.
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 012 + implementar_issue + 126/acao-externa + 6abbb01980b7453af1179ea07d7769cc896021d8`
+- `effect_class`: `local_mutation`
+- `state_before`: PR #129 integrada; "Aguardando ação externa" da #126.
+- `state_after`: ação externa relatada (migração alinhada em produção; tela abre; cadastro não conferido em produção); próxima issue #127 aguardando autorização.
 - `result`: `executed`
-- `evidence`: "Evidências" acima; diff da PR #129.
-- `blockers`: merge pendente de checks verdes e de "aprovo o merge da PR #129"; depois do merge, ação externa (`db push`) antes das issues #127 e #128.
+- `evidence`: seção "Ação externa"; PR #129 `MERGED` em `6abbb01`; checks verdes.
+- `blockers`: implementação da #127 pendente de "autorizo a implementação da issue #127".

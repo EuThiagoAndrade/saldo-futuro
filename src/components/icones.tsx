@@ -72,6 +72,14 @@ export const IconeTransferencias = (p: Props) => (
   </Icone>
 );
 
+// Cadastros (ciclo 012, emenda E-1): pasta, para as listas de apoio (instituições e classes).
+export const IconeCadastros = (p: Props) => (
+  <Icone {...p}>
+    <path d="M3 7.5A1.5 1.5 0 0 1 4.5 6H9l2 2h8.5A1.5 1.5 0 0 1 21 9.5v8a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5z" />
+    <path d="M8 13h8" />
+  </Icone>
+);
+
 export const IconeConta = (p: Props) => (
   <Icone {...p}>
     <circle cx="12" cy="8" r="4" />
