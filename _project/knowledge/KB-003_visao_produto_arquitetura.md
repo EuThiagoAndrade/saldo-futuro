@@ -155,10 +155,10 @@ Regras que valem para toda mudança futura (barreira G2, `_project/README.md`):
 - toda função tem `search_path` fixo e `execute` revogado de `public`;
 - o `admin` gerencia acessos, mas não tem bypass sobre dados de outros usuários.
 
-Os testes pgTAP em `supabase/tests/database/` provam isso com usuários fictícios e um administrador, em 239 asserções:
+Os testes pgTAP em `supabase/tests/database/` provam isso com usuários fictícios e um administrador, em 342 asserções:
 
 - isolamento do acesso (36), hook e gatilho (20) e funções (15, com a lista explícita do que `authenticated` executa);
-- carteira (112), concorrência com duas sessões (13) e benchmarks (43).
+- carteira (112), concorrência com duas sessões (13), benchmarks (45), migração no trânsito (22) e metadados dos ativos (79).
 
 ### Carteira (ciclo `003`, G1 e G2)
 
@@ -172,9 +172,23 @@ Definida em `supabase/migrations/20261014185205_carteira.sql`; as regras estão 
 | `public.consolidados_mensais` | Uma linha por mês fechado: Vi, Vf e os componentes da identidade contábil |
 | `public.posicoes_mensais` | Saldo inicial, saldo final e ajuste de cada ativo no mês fechado |
 
-- O usuário só lê as próprias linhas. Toda escrita passa por funções `security definer` que tomam primeiro a mesma trava por usuário: `criar_ativo`, `desativar_ativo`, `lancar_evento`, `estornar_evento`, `transferir`, `corrigir_transferencia`, `fechar_mes` e `reabrir_mes`.
+- O usuário só lê as próprias linhas. Toda escrita passa por funções `security definer` que tomam primeiro a mesma trava por usuário: `criar_ativo`, `desativar_ativo`, `lancar_evento`, `estornar_evento`, `transferir`, `corrigir_transferencia`, `fechar_mes` e `reabrir_mes`; desde o ciclo `012`, também as funções dos metadados dos ativos (seção seguinte).
 - Quantias são `bigint` com faixa ±(2⁵³ − 1); as somas no banco são feitas em `numeric`.
 - Nenhum percentual é gravado: rentabilidade, acumulado e comparações são calculados na leitura, em `src/lib/financeiro/`.
+
+### Metadados dos ativos (ciclo `012`, G2)
+
+Definidos em `supabase/migrations/20261024000829_metadados_ativos.sql` (issue #126, BL-009). São só descritivos: nenhum cálculo os lê.
+
+| Objeto | Função |
+| :-- | :-- |
+| `public.instituicoes` | Instituições do usuário, com nome único por identidade `lower(btrim(nome))` (caixa e espaços nas pontas ignorados, acentos preservados) |
+| `public.classes_ativo` | Classes de alocação do usuário, com a mesma regra de nome; todo perfil novo recebe Renda fixa, Renda variável, Fundos, Cripto e Outros por gatilho em `public.profiles`, e os perfis existentes as receberam na migração |
+| `public.ativos` (colunas novas) | `instituicao_id` e `classe_id`, por chave composta `(user_id, id)`, e `previdencia`, `liquidez_imediata`, `exposicao_cambial` e `isento_ir` em três estados (nulo é não informado); o trânsito não recebe nenhum |
+
+- Leitura só das próprias linhas; escrita só por `criar_instituicao`, `renomear_instituicao`, `excluir_instituicao`, `criar_classe`, `renomear_classe`, `excluir_classe`, `cadastrar_ativo` e `editar_detalhes_ativo`.
+- Exclusão de instituição ou classe só sem ativo vinculado (`recusado_em_uso`); renomear é livre, salvo nome repetido.
+- `cadastrar_ativo` e `editar_detalhes_ativo` aceitam o id de uma entrada ou um nome novo, que reaproveita a entrada de mesma identidade ou a cria na mesma transação. A edição substitui todos os campos descritivos, aceita ativo desativado e recusa o trânsito. `criar_ativo` continua disponível, sem os campos.
 
 ### Benchmarks (ciclo `003`)
 
@@ -236,3 +250,4 @@ O plano executado do ciclo `001` (`_project/executed/001_fundacao_aplicacao/001_
 | 2026-10-22 | `010` | Encerramento: release `0.7.0` publicada, Audience do Google em produção, data da release registrada em `/novidades` e estado final das páginas públicas, das novidades, de Ativos e da rosca consolidado |
 | 2026-10-23 | `011` | Issue #118 (BL-007): IGP-M (SGS 189, mensal) no catálogo de benchmarks, por último na ordem do catálogo, com a regra mensal existente da KB-004 |
 | 2026-10-23 | `011` | Encerramento: release `0.8.0` publicada e data registrada em `/novidades`; IGP-M em produção com a cobertura iniciando junto com a do IPCA |
+| 2026-10-23 | `012` | Issue #126 (BL-009): instituições e classes por usuário e campos descritivos dos ativos no banco, com funções e testes de isolamento; telas nas issues seguintes |
