@@ -68,6 +68,7 @@ Ela deliberadamente não decide:
 #### 4.1 Ativos
 
 - Cada ativo pertence a um usuário e tem um atributo explícito de tipo de ajuste: `rendimento` ou `marcacao` (P9).
+- Desde o ciclo `012` (BL-009), o ativo pode ter atributos **só descritivos**: instituição, classe de alocação e os indicadores previdência, liquidez imediata, exposição cambial e isenção de IR (sim, não ou não informado). **Nenhuma regra desta KB os lê**: fechamento, consolidação, retorno, benchmarks e distribuição não mudam com eles. "Exposição cambial" é uma anotação e não se confunde com o evento `cambio`; "Isento de IR" também é só anotação, sem efeito fiscal no produto. O trânsito não tem nenhum desses atributos.
 - Cada usuário tem exatamente um ativo de sistema "Em trânsito", criado só pelas funções do banco (D3). Ele não tem tipo de ajuste.
 - Um ativo é desativado logicamente; nunca é apagado. Ativo desativado não recebe lançamentos novos nem entra nas pendências do fechamento. A desativação só é aceita com saldo calculado atual zero (o saldo final do último mês fechado mais os eventos posteriores), para que nenhum patrimônio fique fora da carteira.
 
@@ -1323,3 +1324,4 @@ Estas regras foram aprovadas no plano do ciclo `006` e implementadas na simulaç
 | 2026-10-18 | `006` | Issue #76: M10 revisada (`v5` do plano), posição implícita zero, e caso CR-M08 |
 | 2026-10-18 | `006` | Encerramento: a seção 4.5 passa a citar o ciclo `006`, que fez a migração (antes, `005`) |
 | 2026-10-21 | `010` | Issue #107: distribuição por ativo na seção 15 (participação em centésimos de p.p. pelo maior resto, antes de agrupar, com desempate por saldo, nome e UUID), exceções nas seções 1 e 2, convenções e casos CR-53 a CR-61 na seção 14 |
+| 2026-10-23 | `012` | Issue #128 (BL-009): seção 4.1 registra os atributos descritivos do ativo (instituição, classe e indicadores) e que nenhuma regra desta KB os lê |

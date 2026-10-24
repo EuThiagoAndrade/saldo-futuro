@@ -3,6 +3,8 @@
 // Seletor de ativo com busca (ciclo 009, BL-010): combobox com lista, no padrão da WAI-ARIA 1.2.
 // O ID da opção confirmada vai num campo oculto com o `name` do formulário; a política de seleção
 // está em `@/lib/telas/combobox` (DESIGN.md 6.8). A busca só funciona depois da hidratação.
+// O mesmo componente serve aos seletores de instituição e classe (ciclo 012, issue #128): com
+// `nomeNovo`, oferece "Cadastrar «texto»" e envia o nome novo nesse segundo campo oculto.
 
 import { useEffect, useId, useReducer, useRef, useState, type KeyboardEvent } from "react";
 import { classeCampo } from "@/components/campos";
@@ -15,6 +17,7 @@ import {
   listaFiltrada,
   mensagemDeValidade,
   mover,
+  nomeNovoEnviado,
   type Configuracao,
   type EstadoCombo,
   type Opcao,
@@ -40,6 +43,9 @@ export function ComboboxAtivo({
   obrigatorio = false,
   mensagemObrigatoria = "Escolha um ativo.",
   placeholder,
+  nomeNovo,
+  foraDaLista = "Escolha um ativo da lista.",
+  semResultado = "Nenhum ativo encontrado.",
 }: {
   id: string;
   /** `name` enviado pelo formulário, com o ID da opção confirmada. */
@@ -52,8 +58,18 @@ export function ComboboxAtivo({
   /** Mensagem do campo obrigatório vazio; a mesma do servidor. */
   mensagemObrigatoria?: string;
   placeholder?: string;
+  /** Com criação: `name` do campo oculto que leva o nome novo da opção "Cadastrar «texto»". */
+  nomeNovo?: string;
+  /** Mensagem do texto sem seleção confirmada. */
+  foraDaLista?: string;
+  /** Mensagem da lista vazia. */
+  semResultado?: string;
 }) {
-  const configuracao: Configuracao = { opcoes, opcaoVazia: opcaoVazia === undefined ? undefined : { id: "", nome: opcaoVazia } };
+  const configuracao: Configuracao = {
+    opcoes,
+    opcaoVazia: opcaoVazia === undefined ? undefined : { id: "", nome: opcaoVazia },
+    criar: nomeNovo !== undefined,
+  };
   const [estado, despachar] = useReducer(
     (e: EstadoCombo, a: Acao): EstadoCombo => {
       switch (a.tipo) {
@@ -76,7 +92,7 @@ export function ComboboxAtivo({
 
   const lista = listaFiltrada(configuracao, estado.filtro);
   const listaAberta = estado.aberta && lista.length > 0;
-  const mensagem = mensagemDeValidade(estado, obrigatorio, mensagemObrigatoria);
+  const mensagem = mensagemDeValidade(estado, obrigatorio, mensagemObrigatoria, foraDaLista);
 
   useEffect(() => {
     campo.current?.setCustomValidity(mensagem);
@@ -131,6 +147,7 @@ export function ComboboxAtivo({
         aria-invalid={invalido ? true : undefined}
         aria-describedby={invalido ? idErro : undefined}
         autoComplete="off"
+        maxLength={nomeNovo === undefined ? undefined : 100}
         required={obrigatorio}
         placeholder={placeholder}
         value={estado.texto}
@@ -145,6 +162,7 @@ export function ComboboxAtivo({
         onInvalid={() => setTentou(true)}
       />
       <input type="hidden" name={nome} value={valorEnviado(estado)} />
+      {nomeNovo === undefined ? null : <input type="hidden" name={nomeNovo} value={nomeNovoEnviado(estado)} />}
       {listaAberta ? (
         <ul
           id={idLista}
@@ -156,7 +174,7 @@ export function ComboboxAtivo({
               key={`${opcao.id}-${i}`}
               id={`${idLista}-${i}`}
               role="option"
-              aria-selected={estado.confirmada !== null && estado.confirmada.id === opcao.id}
+              aria-selected={estado.confirmada !== null && estado.confirmada.id === opcao.id && !!estado.confirmada.nova === !!opcao.nova}
               // Mantém o foco no campo ao tocar na opção.
               onMouseDown={(evento) => evento.preventDefault()}
               onClick={() => {
@@ -165,13 +183,13 @@ export function ComboboxAtivo({
               }}
               className={`flex min-h-11 cursor-pointer items-center px-3 text-base/6 text-text ${i === estado.ativa ? "bg-primary-subtle" : "hover:bg-surface-subtle"}`}
             >
-              {opcao.nome}
+              {opcao.nova ? `Cadastrar «${opcao.nome}»` : opcao.nome}
             </li>
           ))}
         </ul>
       ) : estado.aberta ? (
         <p role="status" className="absolute z-20 mt-1 w-full rounded-md border border-border bg-surface px-3 py-3 text-sm/5 text-text-secondary shadow-overlay">
-          Nenhum ativo encontrado.
+          {semResultado}
         </p>
       ) : null}
       {invalido ? (

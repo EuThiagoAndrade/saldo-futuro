@@ -319,6 +319,7 @@ A variação sempre combina **sinal**, **ícone** e **cor**; a cor sozinha nunca
 - Abaixo de `md`: a mesma informação vira uma lista de cartões, um por linha da tabela, com o campo principal no topo e os demais como pares rótulo e valor.
 - A ordenação e os filtros são os mesmos nas duas formas.
 - **Exceção: lista densa de Ativos (ciclo `010`).** Abaixo de `md`, os ativos em uso formam uma lista contínua numa única superfície `surface` com contorno `border` e divisores `border` entre as linhas, em vez de um cartão por ativo. Cada linha traz o nome completo em `body` peso 500, com quebra de linha e nunca truncado, o tipo e os metadados em `body-sm` `text-secondary` na segunda linha e a ação à direita, com pelo menos 44 px de altura. O ativo de sistema não tem ação; a segunda linha diz que ele só recebe transferências. Desativados usam a mesma lista, com nome e data, sem ação. A partir de `md`, a tabela continua.
+- **Emenda do ciclo `012` à lista de Ativos.** A segunda linha dos ativos em uso traz tipo, classe e instituição, separados por " · ", omitindo o que não foi informado; à direita, "Editar" (link com aparência de botão de texto) acima de "Desativar". Os desativados passam a mostrar na segunda linha a classe, a instituição e a data da desativação, com "Editar" à direita (44 px). O trânsito continua sem ação. Na tabela, Classe e Instituição são colunas próprias, com "—" quando não informadas, e a coluna de ações traz Editar e Desativar. A frase anterior sobre desativados "sem ação" fica substituída por esta.
 
 ### 6.8 Formulário
 
@@ -327,6 +328,9 @@ A variação sempre combina **sinal**, **ícone** e **cor**; a cor sozinha nunca
 - Campos de data usam o seletor nativo.
 - Erro de validação: mensagem em `loss` abaixo do campo, contorno `loss` e `aria-invalid="true"` com `aria-describedby` apontando para a mensagem.
 - O botão principal fica ao alcance do polegar: no fim do formulário no celular e alinhado à direita no desktop.
+- **Seção retrátil "Mais detalhes" (ciclo `012`).** Campos opcionais e pouco usados ficam num `<details>` com resumo "Mais detalhes" em `label` `primary`, altura mínima de 44 px, contorno `border` e conteúdo separado por uma linha `border`. Fecha por padrão e abre já aberto quando algum campo dentro dele estiver preenchido. Uma frase em `body-sm` `text-secondary` no topo explica a natureza dos campos.
+- **Rádio de três estados (ciclo `012`).** Um indicador opcional usa um `fieldset` com `legend` e três rádios em linha, "Sim", "Não" e "Não informado", cada um com alvo de 44 px; "Não informado" é o padrão e nunca equivale a "Não".
+- **Renomear em linha (ciclo `012`).** Numa lista de entradas com nome, "Renomear" (botão de texto) troca o nome pelo campo com o valor atual e o foco nele, com "Salvar nome" (secundário) e "Cancelar" (texto). Esc ou Cancelar fecham sem enviar e devolvem o foco ao botão; a recusa aparece abaixo do campo; o sucesso fecha o campo e a lista volta com o nome novo.
 
 #### Seletor de ativo com busca (combobox)
 
@@ -340,6 +344,15 @@ O seletor de ativo é um campo de texto com lista, no padrão combobox da WAI-AR
 - **Filtro:** no filtro de Lançamentos, "Todos os ativos" é a primeira opção, tem valor vazio e é confirmável; texto vazio equivale a ela. O valor inicial vem da URL: um ID da lista começa confirmado com o nome do ativo; vazio ou desconhecido começa em "Todos os ativos".
 - **Reset:** o evento `reset` do formulário devolve o campo ao estado inicial (texto, valor, lista fechada e erro limpos).
 - **Dependência de JavaScript:** a busca só funciona depois da hidratação. Antes dela, o campo não envia valor.
+
+#### Seletor com criação (ciclo `012`)
+
+Os seletores de classe e de instituição do ativo usam o mesmo componente e a mesma política, com estas diferenças:
+
+- **Opcional:** campo vazio significa "não informado"; o texto sem seleção confirmada impede o envio com "Escolha uma classe da lista ou cadastre uma nova." (ou "uma instituição").
+- **Criação:** quando nenhuma opção tem a mesma **identidade** do texto, a última opção é "Cadastrar «texto»". Confirmada como qualquer outra, ela envia o nome num segundo campo oculto, sem ID, e a entrada só é criada no envio do formulário.
+- **Duas regras de nome:** a **busca** ignora acentos, caixa e espaços nas pontas e só filtra a lista; a **identidade** ignora caixa e espaços nas pontas, mas preserva acentos, e decide se o texto já é uma entrada (a mesma regra do banco, que é a autoridade). Com "Classe Ação" cadastrada, digitar "Classe Acao" lista "Classe Ação" e também oferece "Cadastrar «Classe Acao»"; digitar " classe ação " lista "Classe Ação" sem oferecer cadastro.
+- **Lista vazia:** sem entradas e sem texto, aparece "Nenhuma classe cadastrada. Digite um nome para cadastrar." (ou "instituição").
 
 ### 6.9 Botões
 

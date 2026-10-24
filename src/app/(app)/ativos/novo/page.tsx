@@ -4,13 +4,16 @@ import { FormNovoAtivo } from "@/components/formularios/novo-ativo";
 import { PreviewNotice } from "@/components/preview-notice";
 import { backend } from "@/lib/config";
 import { exigirSessao } from "@/lib/sessao";
+import { ordenarPorNome } from "@/lib/telas/combobox";
+import { lerClasses, lerInstituicoes } from "@/lib/telas/leituras";
 
 export const metadata = { title: "Novo ativo — Saldo Futuro" };
 
 // Cadastro de ativo em rota própria (BL-006, ciclo 010); a lista fica em /ativos.
 export default async function NovoAtivoPage() {
   if (!backend) return <PreviewNotice />;
-  await exigirSessao();
+  const { supabase } = await exigirSessao();
+  const [classes, instituicoes] = await Promise.all([lerClasses(supabase), lerInstituicoes(supabase)]);
 
   return (
     <div className="flex max-w-xl flex-col gap-6">
@@ -20,7 +23,7 @@ export default async function NovoAtivoPage() {
         </Link>
         <h1 className="text-2xl/8 font-semibold text-text">Novo ativo</h1>
       </div>
-      <FormNovoAtivo />
+      <FormNovoAtivo classes={ordenarPorNome(classes)} instituicoes={ordenarPorNome(instituicoes)} />
     </div>
   );
 }
