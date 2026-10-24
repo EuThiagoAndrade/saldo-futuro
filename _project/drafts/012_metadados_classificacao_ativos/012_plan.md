@@ -340,6 +340,7 @@ Estado corrente: plano `Aprovado` e ciclo `Planejamento`; nenhuma branch, task, 
 - **Issue #126 (banco):** "autorizo a implementação da issue #126" em 2026-10-23. A primeira entrega autorizada levou o plano a `Em Execução` e o ciclo a `Em execução`; o "Estado corrente" do Registro de criação das issues fica como histórico. Branch `feature/issue-126`, task `012_task_issue-126.md` (artefato ativo da entrega) e [PR #129](https://github.com/EuThiagoAndrade/saldo-futuro/pull/129), com `Refs #126`. Desvio registrado na task: as chaves dos ativos para instituições e classes usam `NO ACTION` em vez de `RESTRICT` (P-1), para preservar a exclusão do usuário em cascata.
 - **Ação externa da #126:** "concluí a ação externa da issue #126" em 2026-10-23; `migration list` alinhado, relatado pelo responsável; `/ativos` abre em produção; cadastro em produção não conferido (detalhes na task da #126).
 - **Issue #127 (telas de Instituições e Classes):** "autorizo a implementação da issue #127" em 2026-10-23. Branch `feature/issue-127`, task `012_task_issue-127.md` e [PR #131](https://github.com/EuThiagoAndrade/saldo-futuro/pull/131), com `Closes #127`. Antes do merge, a emenda E-1 levou as telas para `/cadastros`, na mesma PR.
+- **Issue #128 (campos no ativo):** "autorizo a implementação da issue #128" em 2026-10-23. Branch `feature/issue-128`, task `012_task_issue-128.md` e [PR #132](https://github.com/EuThiagoAndrade/saldo-futuro/pull/132), com `Closes #128`.
 
 ## Próximo passo
 

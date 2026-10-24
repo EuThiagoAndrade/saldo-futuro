@@ -16,10 +16,20 @@ export interface Ativo {
   sistema: "transito" | null;
   ativo: boolean;
   desativado_em: string | null;
+  // Campos descritivos (ciclo 012, issue #128): nenhum cálculo os lê.
+  instituicao_id: string | null;
+  classe_id: string | null;
+  previdencia: boolean | null;
+  liquidez_imediata: boolean | null;
+  exposicao_cambial: boolean | null;
+  isento_ir: boolean | null;
 }
 
+const COLUNAS_ATIVO =
+  "id, nome, tipo_ajuste, sistema, ativo, desativado_em, instituicao_id, classe_id, previdencia, liquidez_imediata, exposicao_cambial, isento_ir";
+
 export function lerAtivos(cliente: Cliente, sinal?: AbortSignal): Promise<Ativo[]> {
-  return lerTabela<Ativo>(cliente, "ativos", { colunas: "id, nome, tipo_ajuste, sistema, ativo, desativado_em", sinal });
+  return lerTabela<Ativo>(cliente, "ativos", { colunas: COLUNAS_ATIVO, sinal });
 }
 
 // Catálogos do usuário (ciclo 012, issue #127): instituições e classes, e o uso pelos ativos.

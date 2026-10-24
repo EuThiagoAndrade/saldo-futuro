@@ -16,6 +16,14 @@ export const VERSAO_ATUAL: string = pacote.version;
 
 export const HISTORICO: readonly Novidade[] = [
   {
+    versao: "0.9.0",
+    publicadaEm: null,
+    notas: [
+      "Agora dá para registrar a classe, a instituição e outros detalhes de cada ativo, no cadastro ou pelo botão Editar na tela de Ativos.",
+      "Nova página Cadastros, em Mais, para manter as suas instituições e classes de ativo.",
+    ],
+  },
+  {
     versao: "0.8.0",
     publicadaEm: "2026-10-23",
     notas: ["Agora é possível comparar a carteira com o IGP-M, além do CDI e do IPCA."],

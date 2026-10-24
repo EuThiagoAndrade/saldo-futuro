@@ -71,6 +71,11 @@ describe("histórico do produto", () => {
     expect(novidadesPublicadas("0.7.0", HISTORICO).map((n) => n.versao)).toEqual(["0.7.0"]);
     expect(novidadesPublicadas("0.8.0", HISTORICO).map((n) => n.versao)).toEqual(["0.8.0", "0.7.0"]);
   });
+
+  it("a nota da 0.9.0 (detalhes dos ativos) só aparece quando a 0.9.0 for lançada", () => {
+    expect(novidadesPublicadas("0.8.0", HISTORICO).map((n) => n.versao)).not.toContain("0.9.0");
+    expect(novidadesPublicadas("0.9.0", HISTORICO).map((n) => n.versao)).toEqual(["0.9.0", "0.8.0", "0.7.0"]);
+  });
 });
 
 describe("dataExtensaBr", () => {
