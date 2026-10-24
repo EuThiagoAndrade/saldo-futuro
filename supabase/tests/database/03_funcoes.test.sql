@@ -35,7 +35,15 @@ select is_empty(
            'corrigir_transferencia(uuid,date)',
            'fechar_mes(date,jsonb)',
            'reabrir_mes(date)',
-           'carregar_benchmark(uuid,date,date,jsonb)']))) $$,
+           'carregar_benchmark(uuid,date,date,jsonb)',
+           'criar_instituicao(text)',
+           'renomear_instituicao(uuid,text)',
+           'excluir_instituicao(uuid)',
+           'criar_classe(text)',
+           'renomear_classe(uuid,text)',
+           'excluir_classe(uuid)',
+           'cadastrar_ativo(text,tipo_ajuste,uuid,text,uuid,text,boolean,boolean,boolean,boolean)',
+           'editar_detalhes_ativo(uuid,uuid,text,uuid,text,boolean,boolean,boolean,boolean)']))) $$,
   'anon e authenticated só executam as funções previstas (lista explícita de assinaturas)');
 
 -- A lista é fechada: uma função nova executável por authenticated reprova a asserção acima.
@@ -51,7 +59,10 @@ select isnt_empty(
          'criar_ativo(text,tipo_ajuste)', 'desativar_ativo(uuid)', 'lancar_evento(uuid,date,tipo_evento,bigint)',
          'lancar_migracao_transito(date,bigint)', 'estornar_evento(uuid,date)', 'transferir(uuid,uuid,date,bigint)',
          'corrigir_transferencia(uuid,date)', 'fechar_mes(date,jsonb)', 'reabrir_mes(date)',
-         'carregar_benchmark(uuid,date,date,jsonb)']) $$,
+         'carregar_benchmark(uuid,date,date,jsonb)', 'criar_instituicao(text)', 'renomear_instituicao(uuid,text)',
+         'excluir_instituicao(uuid)', 'criar_classe(text)', 'renomear_classe(uuid,text)', 'excluir_classe(uuid)',
+         'cadastrar_ativo(text,tipo_ajuste,uuid,text,uuid,text,boolean,boolean,boolean,boolean)',
+         'editar_detalhes_ativo(uuid,uuid,text,uuid,text,boolean,boolean,boolean,boolean)']) $$,
   'uma função fora da lista executável por authenticated é detectada');
 drop function public.funcao_nao_listada();
 
@@ -64,15 +75,22 @@ select is_empty(
        'public.lancar_migracao_transito(date,bigint)'::regprocedure,
        'public.estornar_evento(uuid,date)'::regprocedure, 'public.transferir(uuid,uuid,date,bigint)'::regprocedure,
        'public.corrigir_transferencia(uuid,date)'::regprocedure, 'public.fechar_mes(date,jsonb)'::regprocedure,
-       'public.reabrir_mes(date)'::regprocedure, 'public.carregar_benchmark(uuid,date,date,jsonb)'::regprocedure)
+       'public.reabrir_mes(date)'::regprocedure, 'public.carregar_benchmark(uuid,date,date,jsonb)'::regprocedure,
+       'public.criar_instituicao(text)'::regprocedure, 'public.renomear_instituicao(uuid,text)'::regprocedure,
+       'public.excluir_instituicao(uuid)'::regprocedure, 'public.criar_classe(text)'::regprocedure,
+       'public.renomear_classe(uuid,text)'::regprocedure, 'public.excluir_classe(uuid)'::regprocedure,
+       'public.cadastrar_ativo(text,public.tipo_ajuste,uuid,text,uuid,text,boolean,boolean,boolean,boolean)'::regprocedure,
+       'public.editar_detalhes_ativo(uuid,uuid,text,uuid,text,boolean,boolean,boolean,boolean)'::regprocedure)
        and (not p.prosecdef or has_function_privilege('anon', p.oid, 'EXECUTE')) $$,
-  'as funções da carteira e a carga de benchmark são security definer e anon não as executa');
+  'as funções da carteira, dos metadados dos ativos e a carga de benchmark são security definer e anon não as executa');
 select is_empty(
   $$ select p.oid::regprocedure from pg_proc p join pg_namespace n on n.oid = p.pronamespace
      where n.nspname = 'private' and p.proname in ('travar_carteira', 'hoje', 'ultimo_mes_fechado',
-       'conferir_data_lancamento', 'saldo_atual', 'apurar_mes', 'na_faixa', 'benchmark_imutavel')
+       'conferir_data_lancamento', 'saldo_atual', 'apurar_mes', 'na_faixa', 'benchmark_imutavel',
+       'conferir_nome', 'resolver_instituicao', 'resolver_classe', 'criar_classes_iniciais',
+       'classes_iniciais_do_perfil')
        and (has_function_privilege('authenticated', p.oid, 'EXECUTE') or has_function_privilege('anon', p.oid, 'EXECUTE')) $$,
-  'os auxiliares da carteira e dos benchmarks em private não são executáveis pela Data API');
+  'os auxiliares da carteira, dos metadados e dos benchmarks em private não são executáveis pela Data API');
 
 select function_privs_are('private', 'is_admin', array[]::name[], 'authenticated', array['EXECUTE'],
   'authenticated executa is_admin');

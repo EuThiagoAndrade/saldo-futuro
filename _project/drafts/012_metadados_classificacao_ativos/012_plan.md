@@ -1,7 +1,7 @@
 # Plano de Implementação — Metadados descritivos e classificação de ativos
 
 > **Ciclo:** `012`
-> **Status:** `Aprovado`
+> **Status:** `Em Execução`
 > **Versão:** `v2`
 > **Data de criação:** 2026-10-23
 > **Última atualização:** 2026-10-23
@@ -294,7 +294,7 @@ Commits `feat(issue-N):`; documentação `docs(cycle-012):`.
 
 | Campo | Valor |
 | :-- | :-- |
-| Issue(s) | — |
+| Issue(s) | [#126](https://github.com/EuThiagoAndrade/saldo-futuro/issues/126), [#127](https://github.com/EuThiagoAndrade/saldo-futuro/issues/127) e [#128](https://github.com/EuThiagoAndrade/saldo-futuro/issues/128) |
 | PR(s) | — |
 | Branch(es) | — |
 | Destino após conclusão | `_project/executed/012_metadados_classificacao_ativos/012_plan.md` |
@@ -308,26 +308,47 @@ Commits `feat(issue-N):`; documentação `docs(cycle-012):`.
 - **Alcance:** aprovação do plano e publicação da PR documental (ideação, plano e índice); criação das três issues somente depois da integração documental e da apresentação/confirmação dos payloads; encerramento ao final. Não concede aprovação de merge, autorização de implementação, ação externa nem acesso a produção.
 - **Estado do ciclo:** permanece `Planejamento` até a primeira implementação autorizada.
 
+## Registro de criação das issues
+
+- **Data e autorização:** 2026-10-23, "Confirmo os payloads; crie as três issues do ciclo 012.", em resposta aos três textos apresentados depois do merge da PR #125. A manifestação confirma a publicação dos payloads, não a implementação.
+- **Precondições conferidas:** plano `v2` `Aprovado`, com aprovação humana posterior à rodada 2; PR #125 `MERGED` em `8aa86ca264c2c8ef45de519b8c9de1eeb79099c3`, presente em `main` local e remota, com todos os checks verdes no HEAD integrado. Consulta via `gh` por "BL-009" no título, antes de criar, sem issue equivalente.
+- **Template aplicado:** `.github/ISSUE_TEMPLATE/feature_request.yml` (Contexto, Escopo, Critérios de aceite, Ciclo e plano relacionados, Dependências, riscos e autorizações), nessa ordem, nas três issues.
+- **Resultado:** três issues criadas sequencialmente via `gh issue create --body-file`, sem labels ou responsáveis. Cada título e corpo foi relido via `gh issue view` e comparado ao payload confirmado: iguais (a única diferença é a quebra de linha final acrescentada pela leitura), todas `OPEN`. Os hashes usam o corpo confirmado em UTF-8, LF e uma quebra final.
+
+| Ordem | Item | Issue e título | SHA-256 do corpo confirmado |
+| :-- | :-- | :-- | :-- |
+| 1 | Item 1 | [#126 — Guardar instituições, classes e detalhes dos ativos no banco (BL-009)](https://github.com/EuThiagoAndrade/saldo-futuro/issues/126) | `29284b73b85285a159820cf819e87ba044f32a682567e8c5b75779ac9adf5b01` |
+| 2 | Item 2 | [#127 — Cadastrar instituições e classes de ativos (BL-009)](https://github.com/EuThiagoAndrade/saldo-futuro/issues/127) | `496f5fac6ee264e3e98cd1e842c06c9db53a1716354fb87cb9d03cd396765564` |
+| 3 | Item 3 | [#128 — Registrar instituição, classe e detalhes no ativo (BL-009)](https://github.com/EuThiagoAndrade/saldo-futuro/issues/128) | `1e2b2902473a6850263e0a8711c52d2be726b03c2187e6d55998e1aad89a6d40` |
+
+A sequência é #126 → ação externa (`db push`) → #127 → #128, cada uma com autorização própria. #127 e #128 fecham pelas próprias PRs; #126 é referenciada pela PR de código (`Refs #126`) e fecha pela PR de encerramento, conforme "Decomposição em issues e PRs".
+
+Estado corrente: plano `Aprovado` e ciclo `Planejamento`; nenhuma branch, task, código, ação externa ou operação em produção iniciada. A fila do backlog não foi alterada. Estes registros locais acompanham a próxima entrega autorizada, sem commit direto em `main`.
+
+## Registro de execução
+
+- **Issue #126 (banco):** "autorizo a implementação da issue #126" em 2026-10-23. A primeira entrega autorizada levou o plano a `Em Execução` e o ciclo a `Em execução`; o "Estado corrente" do Registro de criação das issues fica como histórico. Branch `feature/issue-126`, task `012_task_issue-126.md` (artefato ativo da entrega) e [PR #129](https://github.com/EuThiagoAndrade/saldo-futuro/pull/129), com `Refs #126`. Desvio registrado na task: as chaves dos ativos para instituições e classes usam `NO ACTION` em vez de `RESTRICT` (P-1), para preservar a exclusão do usuário em cascata.
+
 ## Próximo passo
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 012 (completo)
+Situação: Aguardando autorização de implementação — ciclo 012 (completo)
 Quem: Responsável
-Conferir: Diff e checks da PR documental #125 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/125); confirmar checks verdes no HEAD atual antes de integrar
-Diga: "aprovo o merge da PR #125"
+Conferir: Issue #126 (https://github.com/EuThiagoAndrade/saldo-futuro/issues/126) e o escopo do item 1 do plano
+Diga: "autorizo a implementação da issue #126"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 012 + atualizar_docs + 012_plan/aprovacao-publicacao + v2/b35679f5aa113a631df88b3aadfad07f310c8de8`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 012 + criar_issues + feature/itens-1-2-3 + v2/8aa86ca264c2c8ef45de519b8c9de1eeb79099c3`
 - `effect_class`: `remote_mutation`
-- `state_before`: ciclo `012` em `Planejamento`; plano `v2` em `Em Revisão`, rodada 2 `APTO PARA APROVAÇÃO`, "Aguardando aprovação do plano"; sem branch ou PR do ciclo.
-- `state_after`: plano `v2` `Aprovado`, com manifestação humana posterior; branch `chore/cycle-012-plan` publicada e PR documental #125 aberta, "Aguardando merge". Ciclo permanece `Planejamento`.
+- `state_before`: plano `v2` `Aprovado`; PR documental #125 integrada; nenhuma issue do ciclo; "Aguardando merge" gravado antes do merge.
+- `state_after`: issues #126, #127 e #128 `OPEN`, com corpos iguais aos payloads confirmados; plano `Aprovado` e ciclo `Planejamento`; "Aguardando autorização de implementação" da #126.
 - `result`: `executed`
-- `evidence`: manifestação humana de 2026-10-23 no "Registro de aprovação"; rodada 2 apta anterior à manifestação; branch `chore/cycle-012-plan` sobre `main` `b35679f5aa113a631df88b3aadfad07f310c8de8`; PR criada via `gh`, base `main`, somente ideação, plano e índice; 48/48 testes locais e validador sem erros ou avisos. Os checks são conferidos no GitHub no HEAD atual antes de qualquer merge.
-- `blockers`: merge pendente de checks verdes e de "aprovo o merge da PR #125". Criação das issues aguarda a integração documental e a confirmação dos payloads. Nenhuma implementação, issue, ação externa ou merge executado.
+- `evidence`: "Registro de criação das issues" acima; `gh issue view` das três issues; PR #125 `MERGED` em `8aa86ca`.
+- `blockers`: implementação pendente de "autorizo a implementação da issue #126"; #127 e #128 dependem também da ação externa da #126.
 
 ## Revisão crítica
 
