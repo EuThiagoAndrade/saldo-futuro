@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { botaoPrincipal } from "@/components/botoes";
+import { botaoPrincipal, botaoTexto } from "@/components/botoes";
 import { Confirmacao } from "@/components/confirmacao";
 import { EstadoVazio } from "@/components/estados";
 import { PreviewNotice } from "@/components/preview-notice";
@@ -157,9 +157,18 @@ export default async function AtivosPage({ searchParams }: { searchParams: Promi
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl/8 font-semibold text-text">Ativos</h1>
-        <Link href="/ativos/novo" className={botaoPrincipal}>
-          Novo ativo
-        </Link>
+        {/* Instituições e Classes (ciclo 012, issue #127) ficam ao lado de Novo ativo, sem mudar a navegação principal. */}
+        <div className="flex flex-wrap items-center gap-2">
+          <Link href="/ativos/instituicoes" className={botaoTexto}>
+            Instituições
+          </Link>
+          <Link href="/ativos/classes" className={botaoTexto}>
+            Classes
+          </Link>
+          <Link href="/ativos/novo" className={botaoPrincipal}>
+            Novo ativo
+          </Link>
+        </div>
       </div>
 
       <nav aria-label="Situação dos ativos">

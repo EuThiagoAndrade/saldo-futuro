@@ -31,6 +31,8 @@ export const ORDENS = {
   valores_benchmark: ["benchmark_id", "data"],
   coberturas_benchmark: ["benchmark_id"],
   benchmarks: ["id"],
+  instituicoes: ["id"],
+  classes_ativo: ["id"],
 } as const satisfies Record<string, readonly string[]>;
 
 export type Tabela = keyof typeof ORDENS;
