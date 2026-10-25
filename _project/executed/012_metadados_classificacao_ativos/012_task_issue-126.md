@@ -2,17 +2,17 @@
 
 > **Ciclo:** `012`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#126`
-> **Plano:** `_project/drafts/012_metadados_classificacao_ativos/012_plan.md`
+> **Plano:** `_project/executed/012_metadados_classificacao_ativos/012_plan.md`
 > **Branch:** `feature/issue-126`
 > **PR:** [#129](https://github.com/EuThiagoAndrade/saldo-futuro/pull/129) (`Refs #126`, sem fechar a issue)
-> **Integração:** Código integrado pela PR #129 (squash `6abbb01980b7453af1179ea07d7769cc896021d8`, 2026-10-23); ação externa concluída em 2026-10-23; a issue #126 fecha por `Closes #126` na PR de encerramento
+> **Integração:** Código integrado pela PR #129 (squash `6abbb01980b7453af1179ea07d7769cc896021d8`, 2026-10-23); ação externa concluída em 2026-10-23; issue #126 fechada por `Closes #126` na PR de encerramento, prospectivamente até seu merge
 > **Autorização inicial:** "autorizo a implementação da issue #126" em 2026-10-23
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-23
-> **Última atualização:** 2026-10-23
+> **Última atualização:** 2026-10-24
 > **handoff_schema_version:** `2`
 
 ## Objetivo
@@ -91,19 +91,19 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando autorização de implementação — ciclo 012 (completo)
-Quem: Responsável
-Conferir: Issue #127 (https://github.com/EuThiagoAndrade/saldo-futuro/issues/127) e o escopo do item 2 do plano
-Diga: "autorizo a implementação da issue #127"
+Situação: Concluído — ciclo 012 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 012 + implementar_issue + 126/acao-externa + 6abbb01980b7453af1179ea07d7769cc896021d8`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 012 + atualizar_docs + 126/encerramento + f5b2be822445834149f6326f8157dcada2137fed`
 - `effect_class`: `local_mutation`
-- `state_before`: PR #129 integrada; "Aguardando ação externa" da #126.
-- `state_after`: ação externa relatada (migração alinhada em produção; tela abre; cadastro não conferido em produção); próxima issue #127 aguardando autorização.
+- `state_before`: PR #129 integrada e ação externa relatada; task "Aguardando integração" com a #126 aberta.
+- `state_after`: task `Concluída`, com a #126 fechada pela PR de encerramento, prospectivamente até seu merge.
 - `result`: `executed`
-- `evidence`: seção "Ação externa"; PR #129 `MERGED` em `6abbb01`; checks verdes.
-- `blockers`: implementação da #127 pendente de "autorizo a implementação da issue #127".
+- `evidence`: PR #129 `MERGED` em `6abbb01`; seção "Ação externa"; verificação em produção na task da #128.
+- `blockers`: nenhum para esta task; o merge da PR de encerramento segue com aprovação própria.

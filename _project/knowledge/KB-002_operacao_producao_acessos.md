@@ -6,7 +6,7 @@ tags:
   - acesso
 author: "Thiago Andrade e Claude"
 module: "Operação"
-last_updated: "2026-10-23"
+last_updated: "2026-10-24"
 origin_cycle: "001"
 ---
 
@@ -417,3 +417,4 @@ Consultadas em 2026-10-12 e conferidas na execução de 2026-10-13. São documen
 | 2026-10-22 | `010` | Encerramento: resultado da publicação da Audience (O1 a O6) registrado na subseção "Resultado da execução"; Branding não solicitado |
 | 2026-10-22 | `011` | Issue #117: V1 sem a premissa de repositório privado; o repositório é público desde 2026-10-22 (ADR-003, emenda do ciclo `011`) |
 | 2026-10-23 | `011` | Encerramento: `db push` da migração do IGP-M (S12) e primeira sincronização do IGP-M feitos pelo responsável, com a cobertura iniciando junto com a do IPCA e indo até setembro de 2026 |
+| 2026-10-24 | `012` | Encerramento: `db push` da migração dos metadados dos ativos (S12) feito pelo responsável antes de as telas que a leem entrarem na `main`, com local e remoto alinhados |

@@ -6,7 +6,7 @@ tags:
   - referência
 author: "Thiago Andrade e Claude"
 module: "Produto"
-last_updated: "2026-10-23"
+last_updated: "2026-10-24"
 origin_cycle: "002"
 ---
 
@@ -72,7 +72,7 @@ O Saldo Futuro é um sistema web de gestão de investimentos pessoais, multiusu�
   - a Audience da tela de consentimento do Google foi publicada em produção pelo responsável em 2026-10-22, pelo roteiro O1 a O6 da KB-002, com escopos só de identidade básica e login de conta autorizada fora da lista de teste comprovado; Branding não foi solicitado;
 - versão e novidades (ciclo `010`):
   - `/novidades`, autenticada para `admin` e `user`, em Mais e no menu lateral, mostra a versão corrente lida do `package.json` e o histórico manual de `src/lib/novidades.ts`, a partir da `0.7.0`, em linguagem simples;
-  - uma entrada só aparece depois que sua versão é lançada no build; a `0.7.0` foi publicada em 2026-10-22 e a `0.8.0` em 2026-10-23, com as datas registradas em `src/lib/novidades.ts`; uma entrada sem data comprovada mostra "Data de publicação em confirmação". Versão sem entrada não tem notas, sem erro; nenhum teste exige nota por versão, e a página não leva ao changelog técnico.
+  - uma entrada só aparece depois que sua versão é lançada no build; a `0.7.0` foi publicada em 2026-10-22, a `0.8.0` em 2026-10-23 e a `0.9.0` em 2026-10-24, com as datas registradas em `src/lib/novidades.ts`; uma entrada sem data comprovada mostra "Data de publicação em confirmação". Versão sem entrada não tem notas, sem erro; nenhum teste exige nota por versão, e a página não leva ao changelog técnico.
 - tela de ativos (ciclo `010`):
   - `/ativos` tem Novo ativo no topo e as abas "Em uso" e "Desativados" como links (`/ativos` e `/ativos?aba=desativados`), lidas no servidor, com contadores e só a lista selecionada; valor ausente ou desconhecido abre Em uso. No celular, Em uso é uma lista densa com o nome completo; no desktop, tabela (DESIGN.md 6.7 e 6.12);
   - o cadastro fica em `/ativos/novo`, com a mesma validação; o sucesso volta a `/ativos` sem mensagem extra, e a recusa aparece no próprio formulário. A desativação continua pela confirmação e pela RPC `desativar_ativo`, com as mesmas restrições (trânsito sem ação, saldo zero obrigatório).
@@ -259,3 +259,4 @@ O plano executado do ciclo `001` (`_project/executed/001_fundacao_aplicacao/001_
 | 2026-10-23 | `012` | Issue #126 (BL-009): instituições e classes por usuário e campos descritivos dos ativos no banco, com funções e testes de isolamento; telas nas issues seguintes |
 | 2026-10-23 | `012` | Issue #127: `/cadastros` em Mais e no menu lateral, com as abas Instituições e Classes (emenda E-1 do plano) |
 | 2026-10-23 | `012` | Issue #128: classe, instituição e indicadores no cadastro e na edição do ativo e nas duas abas de Ativos |
+| 2026-10-24 | `012` | Encerramento: release `0.9.0` publicada e data registrada em `/novidades`; migração dos metadados em produção e conferência autenticada de Cadastros, do cadastro e da edição do ativo |
