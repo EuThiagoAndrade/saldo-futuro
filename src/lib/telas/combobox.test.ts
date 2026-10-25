@@ -1,7 +1,7 @@
 import { expect, it } from "vitest";
 import {
-  abrir, confirmar, type Configuracao, editar, escapar, estadoInicial, listaFiltrada, mensagemDeValidade, mover, normalizar,
-  ordenarPorNome, sair, valorEnviado,
+  abrir, confirmar, type Configuracao, editar, escapar, estadoInicial, identidade, listaFiltrada, mensagemDeValidade, mover,
+  nomeNovoEnviado, normalizar, ordenarPorNome, sair, valorEnviado,
 } from "./combobox";
 
 // Somente nomes fictícios.
@@ -140,4 +140,53 @@ it("nomes iguais aparecem como opções distintas e a seleção é pelo ID", () 
   const dupla: Configuracao = { opcoes: [{ id: "x1", nome: "Caixa" }, { id: "x2", nome: "Caixa" }] };
   expect(listaFiltrada(dupla, "caixa")).toHaveLength(2);
   expect(valorEnviado(confirmar(estadoInicial(dupla), dupla.opcoes[1]))).toBe("x2");
+});
+
+// Seletor com criação (ciclo 012, issue #128): instituição e classe do ativo.
+const ACENTO = { id: "id-acento", nome: "Classe Ação" };
+const criacao: Configuracao = { opcoes: [ACENTO, B], criar: true };
+const nomes = (l: { nome: string; nova?: boolean }[]) => l.map((o) => (o.nova ? `+${o.nome}` : o.nome));
+
+it("identidade ignora caixa e espaços nas pontas e preserva acentos, como o banco", () => {
+  expect(identidade("  Classe AÇÃO ")).toBe("classe ação");
+  expect(identidade("Classe Acao")).not.toBe(identidade("Classe Ação"));
+});
+
+it("oferece Cadastrar só quando nenhuma opção tem a mesma identidade do texto", () => {
+  // A busca sem acento lista a entrada parecida, e o cadastro continua oferecido.
+  expect(nomes(listaFiltrada(criacao, "Classe Acao"))).toEqual(["Classe Ação", "+Classe Acao"]);
+  // Mesma identidade (caixa e espaços nas pontas): sem oferta de cadastro.
+  expect(nomes(listaFiltrada(criacao, " classe ação "))).toEqual(["Classe Ação"]);
+  expect(nomes(listaFiltrada(criacao, "FUNDO BETA"))).toEqual(["Fundo Beta"]);
+  // Texto vazio lista tudo, sem cadastro; sem criação, nunca há a opção.
+  expect(nomes(listaFiltrada(criacao, "  "))).toEqual(["Classe Ação", "Fundo Beta"]);
+  expect(nomes(listaFiltrada({ opcoes: [ACENTO] }, "Nova"))).toEqual([]);
+});
+
+it("confirmar Cadastrar envia o nome como novo, sem ID, e editar o texto desfaz", () => {
+  let e = editar(criacao, estadoInicial(criacao), "  Corretora Nova ");
+  const lista = listaFiltrada(criacao, e.filtro);
+  expect(lista[e.ativa]).toEqual({ id: "", nome: "Corretora Nova", nova: true });
+  e = confirmar(e, lista[e.ativa]);
+  expect(valorEnviado(e)).toBe("");
+  expect(nomeNovoEnviado(e)).toBe("Corretora Nova");
+  expect(mensagemDeValidade(e, false, "", "Escolha uma instituição da lista ou cadastre uma nova.")).toBe("");
+  e = editar(criacao, e, "Corretora Nov");
+  expect(nomeNovoEnviado(e)).toBe("");
+  expect(mensagemDeValidade(e, false, "", "Escolha uma instituição da lista ou cadastre uma nova.")).toBe(
+    "Escolha uma instituição da lista ou cadastre uma nova.",
+  );
+  // Esc com a lista fechada volta à última confirmação, inclusive a de cadastro.
+  e = escapar(sair(e));
+  expect(nomeNovoEnviado(e)).toBe("Corretora Nova");
+});
+
+it("escolher uma opção existente envia o ID e nenhum nome novo; vazio é não informado", () => {
+  let e = confirmar(editar(criacao, estadoInicial(criacao), "beta"), B);
+  expect(valorEnviado(e)).toBe("id-b");
+  expect(nomeNovoEnviado(e)).toBe("");
+  e = editar(criacao, e, "");
+  expect(valorEnviado(e)).toBe("");
+  expect(mensagemDeValidade(e, false, "")).toBe("");
+  expect(estadoInicial(criacao, "id-acento").texto).toBe("Classe Ação");
 });

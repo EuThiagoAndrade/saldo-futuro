@@ -2,10 +2,16 @@
 // puras: o componente só liga o estado ao DOM. Só há seleção confirmada quando a pessoa escolhe
 // uma opção da lista; qualquer edição do texto depois disso desfaz a seleção, e o valor enviado
 // é sempre o ID da última opção confirmada, ou vazio.
+//
+// Seletores com criação (ciclo 012, issue #128): instituição e classe do ativo oferecem a opção
+// final "Cadastrar «texto»" quando nenhuma opção tem a mesma identidade do texto. Confirmada, ela
+// envia o nome como novo, sem ID, e o banco reaproveita a entrada de mesma identidade ou a cria.
 
 export interface Opcao {
   id: string;
   nome: string;
+  /** Opção "Cadastrar «nome»": envia o nome como novo, sem ID. */
+  nova?: boolean;
 }
 
 export interface EstadoCombo {
@@ -26,11 +32,21 @@ export interface Configuracao {
   opcoes: readonly Opcao[];
   /** Opção sem valor no topo da lista, como "Todos os ativos" no filtro. */
   opcaoVazia?: Opcao;
+  /** Oferece "Cadastrar «texto»" quando nenhuma opção tem a mesma identidade do texto. */
+  criar?: boolean;
 }
 
 /** Minúsculas, sem acentos nem diferença de caixa: "Ação" e "acao" são o mesmo texto. */
 export function normalizar(texto: string): string {
   return texto.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLocaleLowerCase("pt-BR");
+}
+
+/**
+ * Identidade de um nome, a mesma do banco (lower(btrim(nome))): ignora caixa e espaços nas pontas
+ * e preserva acentos. Decide só se o texto já é uma entrada; a busca usa `normalizar`.
+ */
+export function identidade(texto: string): string {
+  return texto.trim().toLocaleLowerCase("pt-BR");
 }
 
 /** Ordem de apresentação: pelo nome exibido, em pt-BR; nomes iguais mantêm a ordem recebida. */
@@ -42,10 +58,18 @@ function todas(c: Configuracao): Opcao[] {
   return c.opcaoVazia ? [c.opcaoVazia, ...c.opcoes] : [...c.opcoes];
 }
 
-/** Opções que correspondem ao filtro (substring); filtro vazio lista tudo. */
+/**
+ * Opções que correspondem ao filtro (substring, sem acento); filtro vazio lista tudo. Com criação,
+ * a última opção é "Cadastrar «texto»", se nenhuma opção tiver a mesma identidade do texto.
+ */
 export function listaFiltrada(c: Configuracao, filtro: string): Opcao[] {
   const busca = normalizar(filtro.trim());
-  return todas(c).filter((o) => busca === "" || normalizar(o.nome).includes(busca));
+  const lista = todas(c).filter((o) => busca === "" || normalizar(o.nome).includes(busca));
+  const nome = filtro.trim();
+  if (c.criar && nome !== "" && !c.opcoes.some((o) => identidade(o.nome) === identidade(nome))) {
+    lista.push({ id: "", nome, nova: true });
+  }
+  return lista;
 }
 
 /** Estado inicial: um ID que está na lista começa confirmado; senão, a opção vazia (se houver) ou nada. */
@@ -58,6 +82,11 @@ export function estadoInicial(c: Configuracao, valorInicial = ""): EstadoCombo {
 /** O valor enviado: o ID da seleção confirmada, ou vazio. */
 export function valorEnviado(e: EstadoCombo): string {
   return e.confirmada?.id ?? "";
+}
+
+/** O nome novo enviado: o da opção "Cadastrar «nome»" confirmada, ou vazio. */
+export function nomeNovoEnviado(e: EstadoCombo): string {
+  return e.confirmada?.nova ? e.confirmada.nome : "";
 }
 
 export function editar(c: Configuracao, e: EstadoCombo, texto: string): EstadoCombo {
@@ -101,8 +130,13 @@ export function mover(c: Configuracao, e: EstadoCombo, tecla: "ArrowDown" | "Arr
 }
 
 /** Mensagem de validade do campo de texto; vazia quando o campo está válido. */
-export function mensagemDeValidade(e: EstadoCombo, obrigatorio: boolean, mensagemObrigatoria: string): string {
+export function mensagemDeValidade(
+  e: EstadoCombo,
+  obrigatorio: boolean,
+  mensagemObrigatoria: string,
+  foraDaLista = "Escolha um ativo da lista.",
+): string {
   if (e.confirmada) return "";
-  if (e.texto.trim() !== "") return "Escolha um ativo da lista.";
+  if (e.texto.trim() !== "") return foraDaLista;
   return obrigatorio ? mensagemObrigatoria : "";
 }

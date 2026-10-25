@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { botaoPrincipal } from "@/components/botoes";
+import { botaoPrincipal, botaoTexto } from "@/components/botoes";
 import { Confirmacao } from "@/components/confirmacao";
 import { EstadoVazio } from "@/components/estados";
 import { PreviewNotice } from "@/components/preview-notice";
@@ -7,7 +7,7 @@ import { dataBr } from "@/lib/apresentacao/datas";
 import { backend } from "@/lib/config";
 import { hojeEmCuiaba } from "@/lib/financeiro/datas";
 import { exigirSessao } from "@/lib/sessao";
-import { type Ativo, lerAtivos } from "@/lib/telas/leituras";
+import { type Ativo, lerAtivos, lerClasses, lerInstituicoes } from "@/lib/telas/leituras";
 import { desativarAtivo } from "./acoes";
 
 export const metadata = { title: "Ativos — Saldo Futuro" };
@@ -15,7 +15,8 @@ export const metadata = { title: "Ativos — Saldo Futuro" };
 // Lista de ativos (BL-006, ciclo 010): Novo ativo no topo, cadastro em /ativos/novo e abas
 // "Em uso" e "Desativados" lidas no servidor pela URL (?aba=desativados). As abas são links de
 // navegação com aria-current, não o padrão "tab" do ARIA; só a lista selecionada é renderizada
-// (DESIGN.md 6.12).
+// (DESIGN.md 6.12). Classe e instituição aparecem nas duas abas, e Editar abre os campos
+// descritivos (ciclo 012, issue #128; DESIGN.md 6.7).
 
 type Aba = "em-uso" | "desativados";
 
@@ -49,6 +50,25 @@ function Desativar({ ativo }: { ativo: Ativo }) {
 
 const TRANSITO = "Só recebe transferências";
 
+/** Nome da classe e da instituição de cada ativo; ausente é null. */
+interface Detalhes {
+  classe: (ativo: Ativo) => string | null;
+  instituicao: (ativo: Ativo) => string | null;
+}
+
+function Editar({ ativo }: { ativo: Ativo }) {
+  return (
+    <Link href={`/ativos/${ativo.id}/editar`} className={botaoTexto} aria-label={`Editar ${ativo.nome}`}>
+      Editar
+    </Link>
+  );
+}
+
+/** Classe e instituição informadas, separadas por " · " (no celular, ausente é omitido). */
+function informados(ativo: Ativo, d: Detalhes): string[] {
+  return [d.classe(ativo), d.instituicao(ativo)].filter((v): v is string => v !== null);
+}
+
 function LinkDaAba({ aba, atual, contagem, children }: { aba: Aba; atual: Aba; contagem: number; children: string }) {
   const selecionada = aba === atual;
   return (
@@ -65,7 +85,7 @@ function LinkDaAba({ aba, atual, contagem, children }: { aba: Aba; atual: Aba; c
   );
 }
 
-function EmUso({ ativos }: { ativos: Ativo[] }) {
+function EmUso({ ativos, detalhes }: { ativos: Ativo[]; detalhes: Detalhes }) {
   if (ativos.length === 0) {
     return (
       <EstadoVazio titulo="Nenhum ativo em uso">
@@ -85,6 +105,12 @@ function EmUso({ ativos }: { ativos: Ativo[] }) {
               Tipo de ajuste
             </th>
             <th scope="col" className="p-3 font-medium">
+              Classe
+            </th>
+            <th scope="col" className="p-3 font-medium">
+              Instituição
+            </th>
+            <th scope="col" className="p-3 font-medium">
               <span className="sr-only">Ações</span>
             </th>
           </tr>
@@ -94,26 +120,36 @@ function EmUso({ ativos }: { ativos: Ativo[] }) {
             <tr key={ativo.id} className="border-b border-border last:border-0">
               <td className="p-3 text-base/6 break-words">{nome(ativo)}</td>
               <td className="p-3 text-base/6 text-text-secondary">{tipoDoAtivo(ativo)}</td>
+              <td className="p-3 text-base/6 break-words text-text-secondary">{detalhes.classe(ativo) ?? "—"}</td>
+              <td className="p-3 text-base/6 break-words text-text-secondary">{detalhes.instituicao(ativo) ?? "—"}</td>
               <td className="p-3 text-right">
-                {ativo.sistema === "transito" ? <span className="text-sm/5 text-text-secondary">{TRANSITO}</span> : <Desativar ativo={ativo} />}
+                {ativo.sistema === "transito" ? (
+                  <span className="text-sm/5 text-text-secondary">{TRANSITO}</span>
+                ) : (
+                  <div className="flex items-start justify-end gap-2">
+                    <Editar ativo={ativo} />
+                    <Desativar ativo={ativo} />
+                  </div>
+                )}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      {/* Lista densa no celular (DESIGN.md 6.7): nome completo com quebra, tipo na segunda linha e ação de 44 px. */}
+      {/* Lista densa no celular (DESIGN.md 6.7): nome completo com quebra, tipo, classe e instituição na segunda linha e ações de 44 px. */}
       <ul className="divide-y divide-border rounded-md border border-border bg-surface md:hidden">
         {ativos.map((ativo) => (
           <li key={ativo.id} className="flex items-center gap-3 px-4 py-2">
             <div className="min-w-0 flex-1 py-1">
               <p className="text-base/6 font-medium break-words text-text">{nome(ativo)}</p>
-              <p className="text-sm/5 text-text-secondary">
-                {tipoDoAtivo(ativo)}
+              <p className="text-sm/5 break-words text-text-secondary">
+                {[tipoDoAtivo(ativo), ...informados(ativo, detalhes)].join(" · ")}
                 {ativo.sistema === "transito" ? ` · ${TRANSITO}` : null}
               </p>
             </div>
             {ativo.sistema === "transito" ? null : (
-              <div className="shrink-0">
+              <div className="flex shrink-0 flex-col items-end gap-1">
+                <Editar ativo={ativo} />
                 <Desativar ativo={ativo} />
               </div>
             )}
@@ -124,7 +160,7 @@ function EmUso({ ativos }: { ativos: Ativo[] }) {
   );
 }
 
-function Desativados({ ativos }: { ativos: Ativo[] }) {
+function Desativados({ ativos, detalhes }: { ativos: Ativo[]; detalhes: Detalhes }) {
   if (ativos.length === 0) {
     return (
       <EstadoVazio titulo="Nenhum ativo desativado">
@@ -135,9 +171,16 @@ function Desativados({ ativos }: { ativos: Ativo[] }) {
   return (
     <ul className="divide-y divide-border rounded-md border border-border bg-surface">
       {ativos.map((ativo) => (
-        <li key={ativo.id} className="px-4 py-3">
-          <p className="text-base/6 break-words text-text">{ativo.nome}</p>
-          <p className="text-sm/5 text-text-secondary">Desativado em {desativadoEm(ativo)}</p>
+        <li key={ativo.id} className="flex items-center gap-3 px-4 py-2">
+          <div className="min-w-0 flex-1 py-1">
+            <p className="text-base/6 break-words text-text">{ativo.nome}</p>
+            <p className="text-sm/5 break-words text-text-secondary">
+              {[...informados(ativo, detalhes), `Desativado em ${desativadoEm(ativo)}`].join(" · ")}
+            </p>
+          </div>
+          <div className="shrink-0">
+            <Editar ativo={ativo} />
+          </div>
         </li>
       ))}
     </ul>
@@ -149,7 +192,13 @@ export default async function AtivosPage({ searchParams }: { searchParams: Promi
   const { supabase } = await exigirSessao();
   const { aba: parametro } = await searchParams;
   const aba: Aba = parametro === "desativados" ? "desativados" : "em-uso";
-  const ativos = await lerAtivos(supabase);
+  const [ativos, classes, instituicoes] = await Promise.all([lerAtivos(supabase), lerClasses(supabase), lerInstituicoes(supabase)]);
+  const nomeDaClasse = new Map(classes.map((c) => [c.id, c.nome]));
+  const nomeDaInstituicao = new Map(instituicoes.map((i) => [i.id, i.nome]));
+  const detalhes: Detalhes = {
+    classe: (a) => (a.classe_id ? (nomeDaClasse.get(a.classe_id) ?? null) : null),
+    instituicao: (a) => (a.instituicao_id ? (nomeDaInstituicao.get(a.instituicao_id) ?? null) : null),
+  };
   const emUso = ativos.filter((a) => a.ativo).sort((a, b) => Number(!!a.sistema) - Number(!!b.sistema) || nome(a).localeCompare(nome(b), "pt-BR"));
   const desativados = ativos.filter((a) => !a.ativo);
 
@@ -178,7 +227,7 @@ export default async function AtivosPage({ searchParams }: { searchParams: Promi
       </nav>
 
       <section id="ativos-da-aba" aria-label={aba === "em-uso" ? "Ativos em uso" : "Ativos desativados"} className="flex flex-col gap-3">
-        {aba === "em-uso" ? <EmUso ativos={emUso} /> : <Desativados ativos={desativados} />}
+        {aba === "em-uso" ? <EmUso ativos={emUso} detalhes={detalhes} /> : <Desativados ativos={desativados} detalhes={detalhes} />}
       </section>
     </div>
   );

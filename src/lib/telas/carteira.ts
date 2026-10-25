@@ -130,6 +130,7 @@ const MENSAGENS: Record<string, string> = {
   em_uso: "Só é possível excluir sem nenhum ativo vinculado, em uso ou desativado.",
   instituicao_inexistente: "Instituição não encontrada.",
   classe_inexistente: "Classe não encontrada.",
+  referencia_dupla: "Escolha uma opção da lista ou cadastre uma nova, não as duas.",
   // Fechamento (KB-004, seção 5).
   pendencia: "Informe o saldo real de todos os ativos do mês, mesmo que igual ao calculado.",
   identidade: "Os saldos não fecham com os lançamentos do mês. Confira os valores e tente de novo.",
