@@ -223,7 +223,7 @@ Observado na seção 9.5 da KB-004 ("Benchmark de valor absoluto", decisão D14)
 ## BL-009 — Metadados descritivos e classificação de ativos com aproveitamento do histórico
 
 > **Criado em:** `2026-10-20`
-> **Atualizado em:** `2026-10-20`
+> **Atualizado em:** `2026-10-24`
 > **Estado:** `Disponível`
 
 ### Problema e benefício esperado
@@ -236,15 +236,17 @@ Observado em `src/components/formularios/novo-ativo.tsx` e no schema da tabela `
 
 ### Encaminhamentos
 
-—
+- ciclo 012 — 2026-10-24 — parcial: campos descritivos do ativo (instituição, classe e detalhes opcionais), com cadastro, edição e exibição
 
 ### Restante
 
-—
+- Carga retroativa dos dados descritivos para as posições históricas migradas (passo local e manual do responsável, fora de ciclo).
+- Visões analíticas por classe de alocação ou por instituição (dependem de cálculo e de decisão própria).
 
 ### Registro
 
 - 2026-10-20 — Pedido explícito de guardar a necessidade; captura local.
+- 2026-10-24 — Retorno pós-integração da seleção parcial do ciclo 012; campos descritivos encaminhados (issues #126, #127 e #128, PRs #129, #131 e #132); carga retroativa e visões analíticas permanecem no Restante; item segue Disponível.
 
 ## BL-010 — Combobox pesquisável e ordenação alfabética uniforme para seleção de ativos
 
