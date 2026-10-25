@@ -93,3 +93,11 @@ Origem: ciclo `005`, PRs #55, #56, #58 e #59. Os merges por squash usaram o tít
 ### 2026-10-23 — O release-please transforma referências de commit em "closes" na PR de release
 
 Origem: ciclo `011`, PR #122. O commit da issue #118 usava `Refs #118` para que a issue só fechasse no encerramento, depois da ação externa. O release-please escreveu "closes #118" no changelog e na descrição da PR de release, e o GitHub passou a vincular essa PR como fechando a issue; o merge da release a fecharia antes do aceite. Antes de integrar uma PR de release, confira as issues vinculadas para fechamento (`gh pr view N --json closingIssuesReferences`); se alguma deve fechar depois, retire o vínculo da descrição com decisão do responsável e use no squash uma mensagem sem palavra de fechamento.
+
+### 2026-10-23 — Chave estrangeira com `RESTRICT` impede a exclusão do usuário em cascata
+
+Origem: ciclo `012`, issue #126. O plano previa `on delete restrict` nas chaves dos ativos para instituições e classes, para impedir excluir uma entrada em uso. `RESTRICT` é conferido no momento em que cada linha é removida: na exclusão do usuário, a cascata a partir de `auth.users` pode remover a instituição antes do ativo que a cita, e o comando inteiro falha. `NO ACTION` (o padrão) só confere no fim do comando, então a cascata funciona e a exclusão direta de uma entrada em uso continua recusada. Para proteger uma referência entre tabelas do mesmo usuário, prefira `NO ACTION` com a recusa explícita na função e teste a exclusão do usuário com dados em todas as tabelas (lição de 2026-10-14).
+
+### 2026-10-24 — O e2e precisa rodar sobre o build, não sobre o servidor de desenvolvimento aberto
+
+Origem: ciclo `012`, PR #131. Com o servidor de desenvolvimento aberto em `localhost:3000`, o Playwright local reaproveitou esse servidor (`reuseExistingServer`) e acessou `127.0.0.1`; o Next em desenvolvimento não carregou os scripts da página para essa origem, o formulário de login foi enviado sem JavaScript e todos os testes falharam antes de chegar às telas. O mesmo servidor também continuou servindo um módulo antigo depois de uma chave renomeada, até ser reiniciado. Para validar uma entrega, pare o servidor de desenvolvimento e rode o e2e sobre o build de produção (`npm run build` e `CI=1`), como no CI; uma falha geral no login é sinal de ambiente, não de regressão.

@@ -2,17 +2,17 @@
 
 > **Ciclo:** `012`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#128`
-> **Plano:** `_project/drafts/012_metadados_classificacao_ativos/012_plan.md`
+> **Plano:** `_project/executed/012_metadados_classificacao_ativos/012_plan.md`
 > **Branch:** `feature/issue-128`
 > **PR:** [#132](https://github.com/EuThiagoAndrade/saldo-futuro/pull/132) (`Closes #128`)
-> **Integração:** `Pendente`
+> **Integração:** PR #132 integrada por squash (`99b792b33a2ad5c7c47f3605ed26f544dcdd1e7f`) em 2026-10-24; issue #128 fechada como concluída; verificação em produção e release `0.9.0` concluídas
 > **Autorização inicial:** "autorizo a implementação da issue #128" em 2026-10-23
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-23
-> **Última atualização:** 2026-10-23
+> **Última atualização:** 2026-10-24
 > **handoff_schema_version:** `2`
 
 ## Objetivo
@@ -67,6 +67,19 @@ Não se aplica.
 | `git diff --check` | Sem erros |
 | Checks remotos | Pendente |
 
+## Verificação em produção
+
+- **Autorização:** "autorizo a verificação em produção do ciclo 012" em 2026-10-24, depois do merge da PR #132 (squash `99b792b33a2ad5c7c47f3605ed26f544dcdd1e7f`, todos os checks verdes).
+- **Deploy:** o deploy de produção mais recente no GitHub é o do `99b792b`, com estado `success`.
+- **Leitura pública pelo agente, sem sessão, no domínio de produção:** `/cadastros`, `/cadastros?aba=classes`, `/ativos/novo` e `/ativos/<id>/editar` respondem 307 para `/entrar`; `/entrar` responde 200; uma rota inexistente responde 404, o que mostra que as rotas novas existem no build publicado. Passou.
+- **Conferência autenticada do responsável, em resposta às perguntas expressas (2026-10-24):** classes iniciais em Cadastros — sim; ativo com classe, instituição cadastrada ali mesmo e indicador — sim; edição de ativo desativado — sim; lista no celular com os campos — sim. Sem limitações relatadas. Verificação em produção concluída.
+
+## Release 0.9.0
+
+- **Preparação:** "Pode preparar a PR #130: retire o closes da #126 da descrição, dispare os checks por workflow_dispatch na branch da release e aprove as execuções pendentes." em 2026-10-24. O trecho "closes #126" saiu da descrição (a #126 fecha pela PR de encerramento); CI e Governance rodaram por `workflow_dispatch` na branch da release; as duas execuções automáticas da PR, em "aprovação necessária" por ser PR do bot do GitHub Actions, foram aprovadas. Todos verdes no HEAD `7aa7b90`.
+- **Merge:** "aprovo o merge da PR #130" em 2026-10-24. Squash `f5b2be822445834149f6326f8157dcada2137fed`; a issue #126 continua aberta.
+- **Tag e release:** `v0.9.0` aponta para `f5b2be8`; release publicada, sem rascunho, em 2026-10-25T02:58:29Z, que é 2026-10-24 às 22:58 em America/Cuiaba. Esta é a data civil a gravar em `src/lib/novidades.ts` no encerramento.
+
 ## Revisão da correção
 
 Não se aplica.
@@ -85,19 +98,19 @@ Não se aplica. O encerramento do ciclo completo vai em PR própria, depois da v
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 012 (completo)
-Quem: Responsável
-Conferir: Checks e diff da PR #132 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/132)
-Diga: "aprovo o merge da PR #132"
+Situação: Concluído — ciclo 012 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 012 + implementar_issue + 128 + f365ff4a6a34193642b1e574fe9bd9e731497cb1`
-- `effect_class`: `remote_mutation`
-- `state_before`: issue #128 aberta; #126 e #127 integradas; sem branch nem task.
-- `state_after`: branch `feature/issue-128` publicada e PR #132 aberta com `Closes #128`; task `Aguardando integração`.
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 012 + atualizar_docs + 128/encerramento + f5b2be822445834149f6326f8157dcada2137fed`
+- `effect_class`: `local_mutation`
+- `state_before`: PR #132 aberta, "Aguardando merge".
+- `state_after`: PR #132 integrada (`99b792b`), issue #128 fechada; verificação em produção e release `0.9.0` registradas; task `Concluída`.
 - `result`: `executed`
-- `evidence`: "Evidências" acima; diff da PR #132.
-- `blockers`: merge pendente de checks verdes e de "aprovo o merge da PR #132"; depois, verificação em produção, release `0.9.0` e encerramento.
+- `evidence`: PR #132 e PR #130 `MERGED`; tag `v0.9.0` em `f5b2be8`; seções "Verificação em produção" e "Release 0.9.0".
+- `blockers`: nenhum.

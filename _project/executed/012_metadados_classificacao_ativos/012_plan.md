@@ -1,10 +1,10 @@
 # Plano de Implementação — Metadados descritivos e classificação de ativos
 
 > **Ciclo:** `012`
-> **Status:** `Em Execução`
+> **Status:** `Concluído`
 > **Versão:** `v2`
 > **Data de criação:** 2026-10-23
-> **Última atualização:** 2026-10-23
+> **Última atualização:** 2026-10-24
 > **Tipo:** `feature`
 > **Prioridade:** `P2`
 > **Nível:** `completo`
@@ -305,8 +305,8 @@ Commits `feat(issue-N):`; documentação `docs(cycle-012):`.
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | [#126](https://github.com/EuThiagoAndrade/saldo-futuro/issues/126), [#127](https://github.com/EuThiagoAndrade/saldo-futuro/issues/127) e [#128](https://github.com/EuThiagoAndrade/saldo-futuro/issues/128) |
-| PR(s) | — |
-| Branch(es) | — |
+| PR(s) | [#125](https://github.com/EuThiagoAndrade/saldo-futuro/pull/125) (plano), [#129](https://github.com/EuThiagoAndrade/saldo-futuro/pull/129), [#131](https://github.com/EuThiagoAndrade/saldo-futuro/pull/131), [#132](https://github.com/EuThiagoAndrade/saldo-futuro/pull/132), [#130](https://github.com/EuThiagoAndrade/saldo-futuro/pull/130) (release `0.9.0`) e [#133](https://github.com/EuThiagoAndrade/saldo-futuro/pull/133) (encerramento) |
+| Branch(es) | `chore/cycle-012-plan`, `feature/issue-126`, `feature/issue-127`, `feature/issue-128`, `chore/cycle-012-closure` |
 | Destino após conclusão | `_project/executed/012_metadados_classificacao_ativos/012_plan.md` |
 
 ## Registro de aprovação
@@ -341,27 +341,30 @@ Estado corrente: plano `Aprovado` e ciclo `Planejamento`; nenhuma branch, task, 
 - **Ação externa da #126:** "concluí a ação externa da issue #126" em 2026-10-23; `migration list` alinhado, relatado pelo responsável; `/ativos` abre em produção; cadastro em produção não conferido (detalhes na task da #126).
 - **Issue #127 (telas de Instituições e Classes):** "autorizo a implementação da issue #127" em 2026-10-23. Branch `feature/issue-127`, task `012_task_issue-127.md` e [PR #131](https://github.com/EuThiagoAndrade/saldo-futuro/pull/131), com `Closes #127`. Antes do merge, a emenda E-1 levou as telas para `/cadastros`, na mesma PR.
 - **Issue #128 (campos no ativo):** "autorizo a implementação da issue #128" em 2026-10-23. Branch `feature/issue-128`, task `012_task_issue-128.md` e [PR #132](https://github.com/EuThiagoAndrade/saldo-futuro/pull/132), com `Closes #128`.
+- **Verificação em produção:** "autorizo a verificação em produção do ciclo 012" em 2026-10-24. Leitura pública do agente (rotas novas pedem login, rota inexistente responde 404) e conferência autenticada do responsável nos quatro itens do passo 7, todas com "sim" (detalhes na task da #128).
+- **Release `0.9.0`:** preparação autorizada em 2026-10-24 ("closes #126" retirado da descrição, checks por `workflow_dispatch` e execuções da PR aprovadas); "aprovo o merge da PR #130" em 2026-10-24; squash `f5b2be8`; tag `v0.9.0` e release publicadas em 2026-10-24 às 22:58 em America/Cuiaba.
+- **Encerramento:** autorizado pela aprovação do plano; "continue o ciclo 012" em 2026-10-24. Branch `chore/cycle-012-closure`, task `012_task_closure.md` e [PR #133](https://github.com/EuThiagoAndrade/saldo-futuro/pull/133), com `Closes #126`, prospectiva até seu merge.
 
 ## Próximo passo
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando autorização de implementação — ciclo 012 (completo)
-Quem: Responsável
-Conferir: Issue #126 (https://github.com/EuThiagoAndrade/saldo-futuro/issues/126) e o escopo do item 1 do plano
-Diga: "autorizo a implementação da issue #126"
+Situação: Concluído — ciclo 012 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 012 + criar_issues + feature/itens-1-2-3 + v2/8aa86ca264c2c8ef45de519b8c9de1eeb79099c3`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 012 + atualizar_docs + encerramento + f5b2be822445834149f6326f8157dcada2137fed`
 - `effect_class`: `remote_mutation`
-- `state_before`: plano `v2` `Aprovado`; PR documental #125 integrada; nenhuma issue do ciclo; "Aguardando merge" gravado antes do merge.
-- `state_after`: issues #126, #127 e #128 `OPEN`, com corpos iguais aos payloads confirmados; plano `Aprovado` e ciclo `Planejamento`; "Aguardando autorização de implementação" da #126.
+- `state_before`: três entregas e release `0.9.0` integradas; ação externa da #126 e verificação em produção concluídas; ciclo `Em execução` em `drafts/`.
+- `state_after`: plano `Concluído`, tasks `Concluída` e ciclo em `executed/`, prospectivamente até o merge da PR #133, que fecha a #126.
 - `result`: `executed`
-- `evidence`: "Registro de criação das issues" acima; `gh issue view` das três issues; PR #125 `MERGED` em `8aa86ca`.
-- `blockers`: implementação pendente de "autorizo a implementação da issue #126"; #127 e #128 dependem também da ação externa da #126.
+- `evidence`: PRs #125, #129, #131, #132 e #130 `MERGED`; issues #127 e #128 fechadas; tag `v0.9.0`; task de encerramento.
+- `blockers`: checks verdes no tip final e "aprovo o merge da PR #133".
 
 ## Revisão crítica
 
@@ -432,6 +435,10 @@ Nenhum achado contestado. Nenhuma decisão do responsável mudou.
 
 ## Pós-mortem
 
-- **Data de conclusão:** —
-- **Desvios:** —
-- **Lições comprovadas:** —
+- **Data de conclusão:** 2026-10-24, prospectiva até o merge da PR de encerramento.
+- **Desvios:**
+  - Emenda E-1: as telas de Instituições e Classes saíram de Ativos para o destino "Cadastros" em Mais e no menu lateral, depois do teste local do responsável, na mesma PR #131 e antes do merge.
+  - P-1 implementada com `NO ACTION` em vez de `RESTRICT`, para que a exclusão do usuário em cascata continue possível; o efeito pedido (não excluir entrada em uso) não mudou.
+  - Na ação externa da #126, o cadastro em produção não foi conferido, por escolha do responsável; a compatibilidade foi coberta por teste de banco e e2e locais.
+  - Na lista densa do celular, valor não informado é omitido em vez de mostrar "—", registrado no DESIGN.md 6.7.
+- **Lições comprovadas:** registradas em `.agent/lessons_learned.md` (chave `RESTRICT` e cascata; e2e contra o servidor de desenvolvimento).

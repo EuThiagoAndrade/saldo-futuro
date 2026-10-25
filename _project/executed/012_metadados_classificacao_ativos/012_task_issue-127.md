@@ -2,17 +2,17 @@
 
 > **Ciclo:** `012`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#127`
-> **Plano:** `_project/drafts/012_metadados_classificacao_ativos/012_plan.md`
+> **Plano:** `_project/executed/012_metadados_classificacao_ativos/012_plan.md`
 > **Branch:** `feature/issue-127`
 > **PR:** [#131](https://github.com/EuThiagoAndrade/saldo-futuro/pull/131) (`Closes #127`)
-> **Integração:** `Pendente`
+> **Integração:** PR #131 integrada por squash (`f365ff4a6a34193642b1e574fe9bd9e731497cb1`) em 2026-10-23; issue #127 fechada como concluída
 > **Autorização inicial:** "autorizo a implementação da issue #127" em 2026-10-23
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-23
-> **Última atualização:** 2026-10-23
+> **Última atualização:** 2026-10-24
 > **handoff_schema_version:** `2`
 
 ## Objetivo
@@ -88,19 +88,19 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 012 (completo)
-Quem: Responsável
-Conferir: Checks e diff da PR #131 (https://github.com/EuThiagoAndrade/saldo-futuro/pull/131)
-Diga: "aprovo o merge da PR #131"
+Situação: Concluído — ciclo 012 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 012 + implementar_issue + 127 + 6abbb01980b7453af1179ea07d7769cc896021d8`
-- `effect_class`: `remote_mutation`
-- `state_before`: issue #127 aberta; ação externa da #126 concluída; sem branch nem task.
-- `state_after`: branch `feature/issue-127` publicada e PR #131 aberta com `Closes #127`; task `Aguardando integração`.
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 012 + atualizar_docs + 127/encerramento + f5b2be822445834149f6326f8157dcada2137fed`
+- `effect_class`: `local_mutation`
+- `state_before`: PR #131 aberta, "Aguardando merge".
+- `state_after`: PR #131 integrada (`f365ff4`), issue #127 fechada; task `Concluída`.
 - `result`: `executed`
-- `evidence`: "Evidências" acima; diff da PR #131.
-- `blockers`: merge pendente de checks verdes e de "aprovo o merge da PR #131".
+- `evidence`: PR #131 `MERGED`, com todos os checks verdes no HEAD `f3dde1a`; issue #127 `CLOSED` como concluída.
+- `blockers`: nenhum.
