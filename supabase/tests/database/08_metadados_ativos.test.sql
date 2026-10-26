@@ -1,6 +1,7 @@
 -- Metadados dos ativos (ciclo 012, issue #126): instituições e classes por usuário, campos
--- descritivos do ativo, classes iniciais e isolamento (G2) das funções sobre as entradas, o
--- ativo-alvo e as referências. Só dados fictícios: e-mails em example.com e nomes inventados.
+-- descritivos do ativo, ausência de classes iniciais (retiradas no ciclo 013) e isolamento (G2) das
+-- funções sobre as entradas, o ativo-alvo e as referências. Só dados fictícios: e-mails em
+-- example.com e nomes inventados.
 begin;
 create extension if not exists pgtap with schema extensions;
 select plan(79);
@@ -41,7 +42,7 @@ create function pg_temp.retrato(p_uid uuid) returns text language sql as $$
     from public.classes_ativo c where c.user_id = p_uid), '');
 $$;
 
--- Fixtures: um admin e dois usuários. O gatilho cria os perfis e as classes iniciais.
+-- Fixtures: um admin e dois usuários. O gatilho cria os perfis.
 insert into public.authorized_emails (email, role) values
   ('admin.metadados@example.com', 'admin'),
   ('usuario.a.metadados@example.com', 'user'),
@@ -66,23 +67,19 @@ select is_empty(
        'public.editar_detalhes_ativo(uuid,uuid,text,uuid,text,boolean,boolean,boolean,boolean)']) f
      where not has_function_privilege('authenticated', f::regprocedure, 'EXECUTE') $$,
   'authenticated executa as oito funções novas');
-select has_trigger('public', 'profiles', 'on_profile_created_classes', 'perfis têm o gatilho das classes iniciais');
+select hasnt_trigger('public', 'profiles', 'on_profile_created_classes',
+  'perfis não têm mais o gatilho das classes iniciais (ciclo 013)');
 
--- 2. Classes iniciais
-select is((select array_agg(c.nome order by c.nome) from public.classes_ativo c
-           where c.user_id = '00000000-0000-4000-8000-0000000000c1'),
-  array['Cripto', 'Fundos', 'Outros', 'Renda fixa', 'Renda variável'], 'um usuário novo recebe as cinco classes iniciais');
--- Perfil que já existia sem classes: o preenchimento da migração usa a mesma função, idempotente.
-delete from public.classes_ativo where user_id = '00000000-0000-4000-8000-0000000000c2';
-select private.criar_classes_iniciais('00000000-0000-4000-8000-0000000000c2');
-select private.criar_classes_iniciais('00000000-0000-4000-8000-0000000000c2');
-select is((select count(*) from public.classes_ativo where user_id = '00000000-0000-4000-8000-0000000000c2'), 5::bigint,
-  'o preenchimento de perfil existente cria as cinco classes uma única vez');
+-- 2. Sem classes iniciais: desde a taxonomia global (ciclo 013), um perfil novo nasce sem classes
+-- do usuário; as entradas abaixo são todas criadas pelas funções.
+select is((select count(*) from public.classes_ativo where user_id = '00000000-0000-4000-8000-0000000000c1'), 0::bigint,
+  'um usuário novo nasce sem classes');
+select hasnt_function('private', 'criar_classes_iniciais', array['uuid'], 'o auxiliar das classes iniciais foi retirado');
 
 -- 3. Cadastro e compatibilidade (usuário A)
 select pg_temp.act_as('00000000-0000-4000-8000-0000000000c1');
 select pg_temp.guarda('ia', public.criar_instituicao('Banco Exemplo'));
-select pg_temp.guarda('ca', (select c.id from public.classes_ativo c where c.nome = 'Renda fixa'));
+select pg_temp.guarda('ca', public.criar_classe('Renda fixa'));
 select pg_temp.guarda('a1', public.cadastrar_ativo('Ativo fictício A1', 'rendimento', pg_temp.id('ia'), null,
   pg_temp.id('ca'), null, true, null, false, null));
 select is((select concat_ws('|', a.instituicao_id = pg_temp.id('ia'), a.classe_id = pg_temp.id('ca'), a.previdencia,
@@ -163,8 +160,8 @@ select pg_temp.guarda('i_solta', public.criar_instituicao('Instituição sem uso
 select is(pg_temp.erro(format('select public.excluir_instituicao(%L)', pg_temp.id('i_solta'))), 'ok',
   'instituição sem uso é excluída');
 select is_empty(format('select 1 from public.instituicoes where id = %L', pg_temp.id('i_solta')), 'a instituição excluída some');
-select is(pg_temp.erro(format('select public.excluir_classe(%L)',
-  (select c.id from public.classes_ativo c where c.nome = 'Cripto'))), 'ok', 'classe sem uso é excluída');
+select pg_temp.guarda('c_solta', public.criar_classe('Cripto'));
+select is(pg_temp.erro(format('select public.excluir_classe(%L)', pg_temp.id('c_solta'))), 'ok', 'classe sem uso é excluída');
 
 -- 8. Nenhuma escrita direta
 select throws_ok($$ insert into public.instituicoes (user_id, nome) values ('00000000-0000-4000-8000-0000000000c1', 'x') $$,
@@ -177,12 +174,12 @@ select throws_ok($$ update public.ativos set classe_id = null $$, '42501', null,
 reset role;
 select pg_temp.act_as('00000000-0000-4000-8000-0000000000c2');
 select pg_temp.guarda('ib', public.criar_instituicao('Banco Exemplo'));
-select pg_temp.guarda('cb', (select c.id from public.classes_ativo c where c.nome = 'Fundos'));
+select pg_temp.guarda('cb', public.criar_classe('Fundos'));
 select pg_temp.guarda('b1', public.criar_ativo('Ativo fictício B1', 'rendimento'));
 reset role;
 select pg_temp.act_as('00000000-0000-4000-8000-0000000000c0');
 select pg_temp.guarda('iadm', public.criar_instituicao('Banco Fictício do Admin'));
-select pg_temp.guarda('cadm', (select c.id from public.classes_ativo c where c.nome = 'Fundos'));
+select pg_temp.guarda('cadm', public.criar_classe('Fundos'));
 select pg_temp.guarda('adm1', public.criar_ativo('Ativo fictício do admin', 'rendimento'));
 reset role;
 select set_config('teste.retrato_a', pg_temp.retrato('00000000-0000-4000-8000-0000000000c1'), true);

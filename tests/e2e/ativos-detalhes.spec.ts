@@ -24,6 +24,8 @@ test.describe("detalhes dos ativos (#128)", () => {
     const criada = await cliente.rpc("criar_instituicao", { p_nome: "Banco Exemplo" });
     expect(criada.error).toBeNull();
     banco = criada.data as string;
+    // Desde a taxonomia global (ciclo 013) o perfil novo não recebe classes: o preparo cria as do legado.
+    for (const nome of ["Renda fixa", "Fundos"]) expect((await cliente.rpc("criar_classe", { p_nome: nome })).error).toBeNull();
   });
   test.afterAll(async () => {
     if (u) await removerUsuarios(u);

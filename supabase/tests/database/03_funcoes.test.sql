@@ -43,7 +43,10 @@ select is_empty(
            'renomear_classe(uuid,text)',
            'excluir_classe(uuid)',
            'cadastrar_ativo(text,tipo_ajuste,uuid,text,uuid,text,boolean,boolean,boolean,boolean)',
-           'editar_detalhes_ativo(uuid,uuid,text,uuid,text,boolean,boolean,boolean,boolean)']))) $$,
+           'editar_detalhes_ativo(uuid,uuid,text,uuid,text,boolean,boolean,boolean,boolean)',
+           'cadastrar_ativo_taxonomia(text,tipo_ajuste,uuid,text,uuid,boolean,boolean,boolean,boolean)',
+           'editar_detalhes_ativo_taxonomia(uuid,uuid,text,uuid,boolean,boolean,boolean,boolean)',
+           'ler_versao_classificacao()']))) $$,
   'anon e authenticated só executam as funções previstas (lista explícita de assinaturas)');
 
 -- A lista é fechada: uma função nova executável por authenticated reprova a asserção acima.
@@ -62,7 +65,10 @@ select isnt_empty(
          'carregar_benchmark(uuid,date,date,jsonb)', 'criar_instituicao(text)', 'renomear_instituicao(uuid,text)',
          'excluir_instituicao(uuid)', 'criar_classe(text)', 'renomear_classe(uuid,text)', 'excluir_classe(uuid)',
          'cadastrar_ativo(text,tipo_ajuste,uuid,text,uuid,text,boolean,boolean,boolean,boolean)',
-         'editar_detalhes_ativo(uuid,uuid,text,uuid,text,boolean,boolean,boolean,boolean)']) $$,
+         'editar_detalhes_ativo(uuid,uuid,text,uuid,text,boolean,boolean,boolean,boolean)',
+         'cadastrar_ativo_taxonomia(text,tipo_ajuste,uuid,text,uuid,boolean,boolean,boolean,boolean)',
+         'editar_detalhes_ativo_taxonomia(uuid,uuid,text,uuid,boolean,boolean,boolean,boolean)',
+         'ler_versao_classificacao()']) $$,
   'uma função fora da lista executável por authenticated é detectada');
 drop function public.funcao_nao_listada();
 
@@ -80,17 +86,19 @@ select is_empty(
        'public.excluir_instituicao(uuid)'::regprocedure, 'public.criar_classe(text)'::regprocedure,
        'public.renomear_classe(uuid,text)'::regprocedure, 'public.excluir_classe(uuid)'::regprocedure,
        'public.cadastrar_ativo(text,public.tipo_ajuste,uuid,text,uuid,text,boolean,boolean,boolean,boolean)'::regprocedure,
-       'public.editar_detalhes_ativo(uuid,uuid,text,uuid,text,boolean,boolean,boolean,boolean)'::regprocedure)
+       'public.editar_detalhes_ativo(uuid,uuid,text,uuid,text,boolean,boolean,boolean,boolean)'::regprocedure,
+       'public.cadastrar_ativo_taxonomia(text,public.tipo_ajuste,uuid,text,uuid,boolean,boolean,boolean,boolean)'::regprocedure,
+       'public.editar_detalhes_ativo_taxonomia(uuid,uuid,text,uuid,boolean,boolean,boolean,boolean)'::regprocedure)
        and (not p.prosecdef or has_function_privilege('anon', p.oid, 'EXECUTE')) $$,
-  'as funções da carteira, dos metadados dos ativos e a carga de benchmark são security definer e anon não as executa');
+  'as funções da carteira, dos metadados e da taxonomia dos ativos e a carga de benchmark são security definer e anon não as executa');
 select is_empty(
   $$ select p.oid::regprocedure from pg_proc p join pg_namespace n on n.oid = p.pronamespace
      where n.nspname = 'private' and p.proname in ('travar_carteira', 'hoje', 'ultimo_mes_fechado',
        'conferir_data_lancamento', 'saldo_atual', 'apurar_mes', 'na_faixa', 'benchmark_imutavel',
-       'conferir_nome', 'resolver_instituicao', 'resolver_classe', 'criar_classes_iniciais',
-       'classes_iniciais_do_perfil')
+       'conferir_nome', 'resolver_instituicao', 'resolver_classe', 'normalizar_nome', 'taxonomia_equivalente',
+       'versao_classificacao_ativo')
        and (has_function_privilege('authenticated', p.oid, 'EXECUTE') or has_function_privilege('anon', p.oid, 'EXECUTE')) $$,
-  'os auxiliares da carteira, dos metadados e dos benchmarks em private não são executáveis pela Data API');
+  'os auxiliares da carteira, dos metadados, da taxonomia e dos benchmarks em private não são executáveis pela Data API');
 
 select function_privs_are('private', 'is_admin', array[]::name[], 'authenticated', array['EXECUTE'],
   'authenticated executa is_admin');
