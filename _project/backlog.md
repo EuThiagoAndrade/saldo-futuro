@@ -393,3 +393,29 @@ Necessidade debatida com o responsável em 2026-10-25 a partir de um briefing de
 ### Registro
 
 - 2026-10-25 — Pedido explícito de guardar a necessidade após o debate da taxonomia de classes de ativos; captura local.
+
+## BL-015 — Atributos complementares de classificação do ativo além da classe
+
+> **Criado em:** `2026-10-26`
+> **Atualizado em:** `2026-10-26`
+> **Estado:** `Disponível`
+
+### Problema e benefício esperado
+
+A taxonomia de classes do BL-014 classifica o ativo só pela exposição econômica e deixa de fora, de propósito, características que não são nós da árvore: veículo de acesso, indexador da remuneração, regime tributário, liquidez estimada e cobertura do FGC. Sem esses atributos, o usuário não consegue registrar nem consultar essas características de forma padronizada. O benefício esperado é poder descrever o ativo por esses atributos ortogonais, sem misturá-los à classe e sem tornar o cadastro no celular mais longo.
+
+### Contexto
+
+Necessidade apontada na ideação do ciclo 013 (decisão D11), que deixou esses atributos fora do ciclo com item separado no backlog. Os quatro indicadores atuais do ativo (previdência, liquidez imediata, exposição cambial e isenção de IR) não mudam no ciclo 013; a relação entre eles e os atributos novos fica para a decisão que selecionar este item. Ficam fora deste item: o marcador de nó descontinuado e a comparação com alocação-alvo.
+
+### Encaminhamentos
+
+—
+
+### Restante
+
+—
+
+### Registro
+
+- 2026-10-26 — Pedido explícito de capturar os atributos complementares deixados fora do ciclo 013 (D11); captura local.
