@@ -355,3 +355,41 @@ No ciclo 008, a margem maior foi adotada para acomodar rótulos monetários exte
 
 - 2026-10-20 — Pedido explícito de corrigir o recuo do gráfico de evolução patrimonial e guardar a necessidade para seleção futura; captura local.
 - 2026-10-20 — Retorno pós-integração da seleção original do ciclo 009; necessidade integralmente encaminhada (issue #94, PR #98).
+
+## BL-014 — Taxonomia hierárquica de classes de ativos mantida pelo sistema e visão de alocação por classe macro
+
+> **Criado em:** `2026-10-25`
+> **Atualizado em:** `2026-10-25`
+> **Estado:** `Disponível`
+
+### Problema e benefício esperado
+
+A classe de alocação do ativo é hoje uma lista plana, criada e renomeada por cada usuário. Isso gera nomes divergentes e mistura classe com veículo (por exemplo, "Fundos"), e o produto não tem uma visão do patrimônio por classe. O benefício esperado é uma classificação comum a todos os usuários, em até três níveis (classe macro, subclasse e tipo), mantida pelo sistema e só de leitura para o usuário, e uma visão da alocação do patrimônio por classe macro, sem tornar o cadastro no celular mais longo.
+
+### Contexto
+
+Necessidade debatida com o responsável em 2026-10-25 a partir de um briefing de análise do ciclo 012. Nada foi implementado. Decisões do debate, a confirmar no ciclo que selecionar o item:
+
+- **Nível 1:** seis classes macro: Caixa e disponibilidades; Renda fixa; Renda variável; Investimentos no exterior; Criptoativos e ativos digitais; Alternativos, moedas, outros. "Fundos" não é classe macro: é veículo.
+- **Princípio:** o nó classifica pela exposição econômica. Veículo, regime, indexador, tributação e emissor são atributos, não nós.
+- **Casos ambíguos:** stablecoin fica em Criptoativos, com exposição cambial; ouro fica em Alternativos, em qualquer veículo; previdência vai para o nó do que o plano carrega, com o indicador de previdência; ETF e fundo da mesma estratégia ficam no mesmo nó.
+- **Caixa e renda fixa:** saldo parado em conta, rendendo ou não, é Caixa; título ou aplicação adquirida é Renda fixa.
+- **Árvore e cadastro:** a árvore é global e carregada por migração. O usuário não cria nó e escolhe o nó genérico mais próximo. O ativo pode apontar para qualquer nível, e os níveis acima são derivados. O seletor tem busca e mostra o caminho completo; a lista de ativos mostra só o nome do nó. A tela de classes sai de Cadastros.
+- **Nível 3:** sem meta de quantidade. Um tipo só entra quando difere em estrutura, risco ou liquidez. Ficam fora da árvore tickers, alíquotas e nomes de gestoras ou instituições reais.
+- **Ligação ao ativo:** coluna nova, com a classe atual por usuário congelada como legado e retirada num ciclo futuro. Mapeamento pelo nome e por uma tabela de equivalência. O que não tiver correspondência fica "Sem classe", com a classe antiga mostrada como dica na reclassificação. Saem o gatilho de classes iniciais e a criação de classe durante o cadastro.
+- **Visão (G1):** parte da regra da distribuição por ativo (KB-004, seção 15) e mostra só o nível 1. O saldo negativo é tratado por ativo, fora da base. O rateio pelo maior resto é feito sobre o total de cada classe. O trânsito e os ativos sem classe têm linhas próprias. As regras ainda precisam virar casos de referência na KB-004.
+- **Entrega sugerida:** três issues em sequência: banco, depois telas de cadastro, depois a visão.
+- **Fora deste item:** os demais atributos (veículo de acesso, indexador, regime tributário, liquidez estimada, cobertura do FGC), o marcador de nó descontinuado e a comparação com alocação-alvo.
+- **Relação com BL-009:** este item cobre a parte "visões analíticas por classe de alocação" do Restante de BL-009.
+
+### Encaminhamentos
+
+—
+
+### Restante
+
+—
+
+### Registro
+
+- 2026-10-25 — Pedido explícito de guardar a necessidade após o debate da taxonomia de classes de ativos; captura local.
