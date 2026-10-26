@@ -10,7 +10,8 @@ import { clienteDoUsuario, configurado, criarUsuarios, entrar, removerUsuarios, 
 const MOVEL = { width: 360, height: 800 };
 const DESKTOP = { width: 1280, height: 900 };
 const WCAG = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
-const CLASSES_INICIAIS = ["Cripto", "Fundos", "Outros", "Renda fixa", "Renda variável"];
+// Desde a taxonomia global (ciclo 013) o perfil novo não recebe classes: o preparo cria estas, do legado.
+const CLASSES_DO_DONO = ["Cripto", "Fundos", "Outros", "Renda fixa", "Renda variável"];
 // 97 caracteres, para conferir a quebra de linha no celular.
 const LONGO = "Corretora fictícia com um nome muito comprido para conferir a quebra de linha na lista do celular";
 
@@ -23,6 +24,7 @@ test.describe("cadastros (#127)", () => {
   test.beforeAll(async () => {
     u = await criarUsuarios("catalogos127", { dono: "user", outro: "user" });
     cliente = await clienteDoUsuario(u.dono);
+    for (const nome of CLASSES_DO_DONO) expect((await cliente.rpc("criar_classe", { p_nome: nome })).error).toBeNull();
   });
   test.afterAll(async () => {
     if (u) await removerUsuarios(u);
@@ -71,8 +73,8 @@ test.describe("cadastros (#127)", () => {
   test("as classes iniciais aparecem em ordem alfabética, sem ativos", async ({ page }) => {
     await entrar(page, u.dono);
     await page.goto("/cadastros?aba=classes");
-    expect(await nomes(page, "Classes")).toEqual(CLASSES_INICIAIS);
-    for (const nome of CLASSES_INICIAIS) await expect(linha(page, "Classes", nome)).toContainText("Sem ativos");
+    expect(await nomes(page, "Classes")).toEqual(CLASSES_DO_DONO);
+    for (const nome of CLASSES_DO_DONO) await expect(linha(page, "Classes", nome)).toContainText("Sem ativos");
   });
 
   test("incluir, recusar nome repetido e renomear uma instituição", async ({ page }) => {
@@ -166,7 +168,7 @@ test.describe("cadastros (#127)", () => {
     await page.goto("/cadastros");
     await expect(page.getByRole("heading", { name: "Nenhuma instituição cadastrada" })).toBeVisible();
     await page.goto("/cadastros?aba=classes");
-    expect(await nomes(page, "Classes")).toEqual(CLASSES_INICIAIS);
+    expect(await nomes(page, "Classes")).toEqual([]);
   });
 
   test("no celular, nome longo quebra a linha, ações têm 44 px e não há rolagem horizontal", async ({ page }) => {

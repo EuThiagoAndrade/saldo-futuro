@@ -6,7 +6,7 @@ tags:
   - referência
 author: "Thiago Andrade e Claude"
 module: "Produto"
-last_updated: "2026-10-24"
+last_updated: "2026-10-26"
 origin_cycle: "002"
 ---
 
@@ -161,10 +161,10 @@ Regras que valem para toda mudança futura (barreira G2, `_project/README.md`):
 - toda função tem `search_path` fixo e `execute` revogado de `public`;
 - o `admin` gerencia acessos, mas não tem bypass sobre dados de outros usuários.
 
-Os testes pgTAP em `supabase/tests/database/` provam isso com usuários fictícios e um administrador, em 342 asserções:
+Os testes pgTAP em `supabase/tests/database/` provam isso com usuários fictícios e um administrador, em 500 asserções:
 
 - isolamento do acesso (36), hook e gatilho (20) e funções (15, com a lista explícita do que `authenticated` executa);
-- carteira (112), concorrência com duas sessões (13), benchmarks (45), migração no trânsito (22) e metadados dos ativos (79).
+- carteira (112), concorrência com duas sessões (13), benchmarks (45), migração no trânsito (22), metadados dos ativos (79) e taxonomia dos ativos (158).
 
 ### Carteira (ciclo `003`, G1 e G2)
 
@@ -189,12 +189,29 @@ Definidos em `supabase/migrations/20261024000829_metadados_ativos.sql` (issue #1
 | Objeto | Função |
 | :-- | :-- |
 | `public.instituicoes` | Instituições do usuário, com nome único por identidade `lower(btrim(nome))` (caixa e espaços nas pontas ignorados, acentos preservados) |
-| `public.classes_ativo` | Classes de alocação do usuário, com a mesma regra de nome; todo perfil novo recebe Renda fixa, Renda variável, Fundos, Cripto e Outros por gatilho em `public.profiles`, e os perfis existentes as receberam na migração |
+| `public.classes_ativo` | Classes de alocação do usuário, com a mesma regra de nome; na migração do ciclo `012`, todo perfil novo passou a receber Renda fixa, Renda variável, Fundos, Cripto e Outros por gatilho em `public.profiles`, e os perfis existentes as receberam; o gatilho saiu no ciclo `013` (legado, em retirada) |
 | `public.ativos` (colunas novas) | `instituicao_id` e `classe_id`, por chave composta `(user_id, id)`, e `previdencia`, `liquidez_imediata`, `exposicao_cambial` e `isento_ir` em três estados (nulo é não informado); o trânsito não recebe nenhum |
 
 - Leitura só das próprias linhas; escrita só por `criar_instituicao`, `renomear_instituicao`, `excluir_instituicao`, `criar_classe`, `renomear_classe`, `excluir_classe`, `cadastrar_ativo` e `editar_detalhes_ativo`.
 - Exclusão de instituição ou classe só sem ativo vinculado (`recusado_em_uso`); renomear é livre, salvo nome repetido.
 - `cadastrar_ativo` e `editar_detalhes_ativo` aceitam o id de uma entrada ou um nome novo, que reaproveita a entrada de mesma identidade ou a cria na mesma transação. A edição substitui todos os campos descritivos, aceita ativo desativado e recusa o trânsito. `criar_ativo` continua disponível, sem os campos.
+
+### Taxonomia de classes de ativos (ciclo `013`, G2) — estado intermediário
+
+Fase 1 de 2, definida em `supabase/migrations/20261026204955_taxonomia_ativos.sql` (issue #137, BL-014 e parcela de BL-009). A taxonomia global substitui, por etapas, as classes por usuário do ciclo `012`. Enquanto a fase 2 (issue seguinte, depois da ação externa E1) não retira o legado, os dois coexistem (janela de transição, D19). Nenhuma tela usa a taxonomia ainda.
+
+| Objeto | Função |
+| :-- | :-- |
+| `public.taxonomia_ativos` | Árvore global de até três níveis (`id`, `parent_id`, `nivel`, `nome`, `ordem`, sem `user_id`), com 39 nós carregados por migração: 6 classes macro, 21 subclasses e 12 tipos. UUIDs fixos, derivados do código da árvore (`a5000000-0000-4000-8000-000000NNMMKK`). O nível do pai é sempre o do filho menos um (coluna derivada `parent_nivel` na chave composta), o que impede ciclo. Nome e ordem únicos entre irmãos, inclusive nas raízes; o nome ignora caixa, acento e espaços nas pontas (`private.normalizar_nome`, sem extensão) |
+| `public.ativos.taxonomia_id` | Vínculo opcional com qualquer nó, de qualquer nível; nulo é "Sem classe". Chave sem exclusão em cascata: nó referenciado ou com filhos não é excluído. O trânsito não o recebe. `classe_id` (legado) continua, para a dica "antes: X" |
+| `public.profiles.versao_classificacao` | Marca de coerência: contador por carteira, `bigint`, que só cresce. O gatilho `ativos_versao_classificacao` o incrementa na mesma transação sempre que `taxonomia_id` muda (inclusive A → B → A, a edição antiga que zera o nó e o preenchimento); inserção sem nó não conta, porque a contagem de ativos já a detecta. O estouro aborta a transação |
+| `public.ler_versao_classificacao()` | Lê a marca do próprio usuário, como texto decimal (não perde precisão acima de 2⁵³), sob a RLS de `profiles`; sem parâmetro de dono, sem bypass do administrador |
+
+- Leitura do catálogo por qualquer usuário autenticado; nenhuma escrita pela Data API, nem pelo administrador. A manutenção é por migração revisada; mudar o catálogo em uso exige migração nova, com a própria janela de coerência.
+- Novas funções, com nomes distintos para não haver sobrecarga ambígua no PostgREST: `cadastrar_ativo_taxonomia` e `editar_detalhes_ativo_taxonomia` (recebem `p_taxonomia` no lugar de `p_classe` e `p_classe_nova`; validam o nó; o cadastro deixa `classe_id` nulo e a edição o preserva). As do ciclo `012` continuam: o cadastro antigo deixa o nó nulo e a edição antiga grava o legado e zera `taxonomia_id`, tornando o ativo "Sem classe".
+- Equivalência mínima do legado, aplicada uma única vez na migração e só nos ativos comuns, inclusive desativados: os seis nomes da classe macro, mais os aliases "Cripto" e "Outros", sem caixa, acento nem espaços nas pontas (`private.taxonomia_equivalente`). "Fundos", nomes personalizados e ausência de legado ficam nulos. Nenhum saldo, evento, posição ou indicador muda.
+- O gatilho que criava as cinco classes iniciais de cada perfil novo e seus auxiliares saíram: perfil novo nasce sem classes.
+- A fase 2 retira as funções antigas de classe e `private.resolver_classe` e deixa o legado só para leitura; só depois dela entram o seletor e a alocação por classe macro.
 
 ### Benchmarks (ciclo `003`)
 
@@ -260,3 +277,4 @@ O plano executado do ciclo `001` (`_project/executed/001_fundacao_aplicacao/001_
 | 2026-10-23 | `012` | Issue #127: `/cadastros` em Mais e no menu lateral, com as abas Instituições e Classes (emenda E-1 do plano) |
 | 2026-10-23 | `012` | Issue #128: classe, instituição e indicadores no cadastro e na edição do ativo e nas duas abas de Ativos |
 | 2026-10-24 | `012` | Encerramento: release `0.9.0` publicada e data registrada em `/novidades`; migração dos metadados em produção e conferência autenticada de Cadastros, do cadastro e da edição do ativo |
+| 2026-10-26 | `013` | Issue #137 (BL-014 e parcela de BL-009): taxonomia global de classes, vínculo opcional do ativo, marca de coerência da classificação e funções compatíveis com a janela de transição, no banco; telas nas issues seguintes |
