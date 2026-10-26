@@ -342,7 +342,7 @@ Após autorização específica, conferir com o responsável: seletor/caminhos e
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | — |
-| PR(s) | — |
+| PR(s) | [#136](https://github.com/EuThiagoAndrade/saldo-futuro/pull/136) — documental |
 | Branch(es) | `chore/cycle-013-plan` |
 | Destino após conclusão | `_project/executed/013_taxonomia_classes_alocacao/013_plan.md` |
 
@@ -350,22 +350,22 @@ Após autorização específica, conferir com o responsável: seletor/caminhos e
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 013 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 013"
+Situação: Aguardando merge — ciclo 013 (completo)
+Quem: Responsável
+Conferir: checks e diff da PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/136
+Diga: "aprovo o merge da PR #136"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 013 + aprovar_plano + 013_plan + v2`
-- `effect_class`: `local_mutation`
+- `effect_class`: `remote_mutation`
 - `state_before`: plano v2 Em Revisão, rodada 2 APTO COM RESSALVAS, aprovação pendente; main e origin/main em 757ceac7a83762771278cd47efd68f54b21fa3d7; sem PR do ciclo.
-- `state_after`: plano v2 Aprovado pela manifestação humana de 2026-10-26, com R2-1/R2-2 destinadas à unidade 3. Branch documental chore/cycle-013-plan preparada. Próxima ação já autorizada: publicar a PR documental; merge e implementação não autorizados.
+- `state_after`: plano v2 Aprovado pela manifestação humana de 2026-10-26, com R2-1/R2-2 destinadas à unidade 3. PR documental #136 publicada na branch chore/cycle-013-plan. Aguardando checks e aprovação específica do merge; implementação não autorizada.
 - `result`: `executed`
-- `evidence`: Registro de aprovação e rodada 2 preservada; autorização nesta sessão; fetch e comparação HEAD/origin/main; BL-009 e BL-014 presentes em origin/main. Gates documentais executados antes da publicação.
-- `blockers`: nenhum para publicação documental; issues dependem de integração e confirmação dos payloads.
+- `evidence`: Registro de aprovação e rodada 2 preservada; autorização nesta sessão; fetch e comparação HEAD/origin/main; BL-009 e BL-014 presentes em origin/main. Gates documentais antes da publicação: 48/48 testes, validador com 0 erros/avisos, diff --check sem erros. PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/136.
+- `blockers`: merge depende de checks verdes e aprovação específica; issues dependem de integração e confirmação dos payloads.
 ## Revisão crítica
 
 ### Rodada 1
