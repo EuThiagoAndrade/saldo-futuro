@@ -33,6 +33,7 @@ export const ORDENS = {
   benchmarks: ["id"],
   instituicoes: ["id"],
   classes_ativo: ["id"],
+  taxonomia_ativos: ["id"],
 } as const satisfies Record<string, readonly string[]>;
 
 export type Tabela = keyof typeof ORDENS;

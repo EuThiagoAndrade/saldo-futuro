@@ -1,10 +1,10 @@
--- Taxonomia global de classes de ativos, fase 1 (ciclo 013, issue #137): catálogo e suas restrições,
--- vínculo opcional do ativo, marca de coerência da classificação (R1-2), RPCs novas e antigas na
--- janela de transição, equivalência mínima do legado e isolamento (G2). Só dados fictícios:
+-- Taxonomia global de classes de ativos (ciclo 013, issues #137 e #138): catálogo e suas restrições,
+-- vínculo opcional do ativo, marca de coerência da classificação (R1-2), RPCs novas, retirada das
+-- funções antigas (fase 2), equivalência mínima do legado e isolamento (G2). Só dados fictícios:
 -- e-mails em example.com e nomes inventados.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(158);
+select plan(163);
 
 create function pg_temp.act_as(p_sub uuid) returns void language plpgsql as $$
 begin
@@ -80,8 +80,7 @@ select col_type_is('public', 'profiles', 'versao_classificacao', 'bigint', 'a ma
 select col_not_null('public', 'profiles', 'versao_classificacao', 'a marca de coerência não é nula');
 select has_trigger('public', 'ativos', 'ativos_versao_classificacao', 'ativos têm o gatilho da marca de coerência');
 select is((select count(*) from pg_proc where pronamespace = 'public'::regnamespace and proname in
-  ('cadastrar_ativo', 'editar_detalhes_ativo', 'cadastrar_ativo_taxonomia', 'editar_detalhes_ativo_taxonomia',
-   'ler_versao_classificacao')), 5::bigint,
+  ('cadastrar_ativo_taxonomia', 'editar_detalhes_ativo_taxonomia', 'ler_versao_classificacao')), 3::bigint,
   'cada função de cadastro, edição e leitura da marca tem uma única assinatura (sem sobrecarga ambígua)');
 select is_empty(
   $$ select f from unnest(array[
@@ -193,6 +192,9 @@ begin
     p_ator || ' não reinicia a marca de coerência');
   return next throws_ok($q$ update public.ativos set taxonomia_id = null $q$, '42501', null,
     p_ator || ' não escreve o vínculo do ativo direto');
+  return next throws_ok($q$ insert into public.classes_ativo (user_id, nome) values (gen_random_uuid(), 'Intrusa') $q$, '42501', null,
+    p_ator || ' não insere no legado de classes');
+  return next throws_ok($q$ update public.classes_ativo set nome = 'x' $q$, '42501', null, p_ator || ' não altera o legado de classes');
 end $$;
 select pg_temp.act_as('00000000-0000-4000-8000-0000000000d1');
 select * from pg_temp.sessao_da_api('A');
@@ -310,11 +312,17 @@ select is((select count(*) from public.ativos a where a.nome = 'Ativo fictício'
 select is(public.ler_versao_classificacao(), '3', 'cadastros recusados não mexem na marca');
 
 -- Edição nova: preserva o legado, troca o nó, limpa e aceita desativado
-select pg_temp.guarda('a_legado', public.cadastrar_ativo('Ativo A legado', 'rendimento', null, null, null, 'Classe antiga',
+select pg_temp.guarda('a_legado', public.cadastrar_ativo_taxonomia('Ativo A legado', 'rendimento', null, null, null,
   null, null, null, null));
+reset role;
+-- O legado do ciclo 012 (classe do usuário) é posto como dono do banco: nenhuma função o escreve mais.
+insert into public.classes_ativo (user_id, nome) values ('00000000-0000-4000-8000-0000000000d1', 'Classe antiga');
+update public.ativos set classe_id = (select c.id from public.classes_ativo c where c.nome = 'Classe antiga')
+  where id = pg_temp.id('a_legado');
+select pg_temp.act_as('00000000-0000-4000-8000-0000000000d1');
 select is((select concat_ws('|', a.classe_id is not null, coalesce(a.taxonomia_id::text, 'nulo')) from public.ativos a
-  where a.id = pg_temp.id('a_legado')), 't|nulo', 'o cadastro antigo cria o ativo com legado e sem nó (Sem classe)');
-select is(public.ler_versao_classificacao(), '3', 'o cadastro antigo não mexe na marca');
+  where a.id = pg_temp.id('a_legado')), 't|nulo', 'um ativo com legado e sem nó é "Sem classe"');
+select is(public.ler_versao_classificacao(), '3', 'o legado posto direto não mexe na marca');
 select public.editar_detalhes_ativo_taxonomia(pg_temp.id('a_legado'), null, null, pg_temp.no('2.4'), true, true, true, true);
 select is((select concat_ws('|', a.classe_id is not null, a.taxonomia_id = pg_temp.no('2.4'), a.previdencia) from public.ativos a
   where a.id = pg_temp.id('a_legado')), 't|t|t', 'a edição nova troca o nó e preserva o legado classe_id');
@@ -337,17 +345,21 @@ select is(pg_temp.erro(format('select public.editar_detalhes_ativo_taxonomia(%L,
   pg_temp.id('a_sem'), pg_temp.no('1.1'))), 'ok', 'um ativo desativado pode ser editado');
 select is(public.ler_versao_classificacao(), '6', 'a edição do desativado também incrementa a marca');
 
--- Janela de transição: a edição antiga limpa o nó e o cadastro antigo deixa o nó nulo
-select is(pg_temp.erro(format('select public.editar_detalhes_ativo(%L, null, null, null, %L, null, null, null, null)',
-  pg_temp.id('a_macro'), 'Classe antiga')), 'ok', 'a edição antiga continua funcionando');
-select is((select concat_ws('|', coalesce(a.taxonomia_id::text, 'nulo'), c.nome) from public.ativos a
-  join public.classes_ativo c on c.user_id = a.user_id and c.id = a.classe_id where a.id = pg_temp.id('a_macro')),
-  'nulo|Classe antiga', 'a edição antiga grava o legado e torna o ativo "Sem classe"');
-select is(public.ler_versao_classificacao(), '7', 'a edição antiga que zera o nó incrementa a marca');
-select is(pg_temp.erro(format('select public.editar_detalhes_ativo(%L, null, null, null, %L, null, null, null, null)',
-  pg_temp.id('a_macro'), 'Classe antiga')), 'ok', 'repetir a edição antiga é aceito');
-select is(public.ler_versao_classificacao(), '7', 'a edição antiga sobre ativo já sem nó não incrementa a marca');
-select is(pg_temp.erro($$ select public.criar_classe('Outra classe antiga') $$), 'ok', 'o CRUD antigo de classes continua na janela');
+-- Fase 2 (ciclo 013, issue #138): a janela de transição acabou. As funções antigas de classe e as
+-- assinaturas antigas de cadastro e edição saíram, e nada escreve mais no legado classes_ativo.
+-- (A coexistência das duas gerações foi provada no ensaio de upgrade da issue #137, sobre o schema
+-- da fase 1; o pgTAP roda sobre o schema final.)
+select hasnt_function('public', 'criar_classe', array['text'], 'criar_classe saiu');
+select hasnt_function('public', 'renomear_classe', array['uuid', 'text'], 'renomear_classe saiu');
+select hasnt_function('public', 'excluir_classe', array['uuid'], 'excluir_classe saiu');
+select hasnt_function('public', 'cadastrar_ativo', 'o cadastro antigo, com classe do usuário, saiu');
+select hasnt_function('public', 'editar_detalhes_ativo', 'a edição antiga, com classe do usuário, saiu');
+select hasnt_function('private', 'resolver_classe', 'o auxiliar das classes do usuário saiu');
+select is_empty(
+  $$ select p.oid::regprocedure from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+     where n.nspname in ('public', 'private')
+       and p.prosrc ~* '(insert\s+into|update|delete\s+from)\s+(public\.)?classes_ativo\M' $$,
+  'nenhuma função de public ou private escreve em classes_ativo');
 select pg_temp.guarda('a_basico', public.criar_ativo('Ativo A básico', 'rendimento'));
 select is((select taxonomia_id from public.ativos where id = pg_temp.id('a_basico')), null::uuid,
   'criar_ativo continua criando o ativo sem nó');

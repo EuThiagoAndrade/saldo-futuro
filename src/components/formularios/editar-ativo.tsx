@@ -16,11 +16,14 @@ export function FormEditarAtivo({
   ativo,
   rotuloAjuste,
   classes,
+  classeAtual,
   instituicoes,
 }: {
   ativo: Ativo;
   rotuloAjuste: string;
   classes: readonly Opcao[];
+  /** Caminho completo do nó atual, ou "Sem classe" com a dica do legado. */
+  classeAtual: string;
   instituicoes: readonly Opcao[];
 }) {
   const [estado, executar, pendente] = useActionState(editarAtivo, ESTADO_INICIAL);
@@ -38,13 +41,17 @@ export function FormEditarAtivo({
           <dt className="text-sm/5 font-medium text-text-secondary">Tipo de ajuste no fechamento</dt>
           <dd className="text-base/6 text-text">{rotuloAjuste}</dd>
         </div>
+        <div>
+          <dt className="text-sm/5 font-medium text-text-secondary">Classe atual</dt>
+          <dd className="text-base/6 break-words text-text">{classeAtual}</dd>
+        </div>
       </dl>
       <CamposDetalhes
         prefixo="editar"
         classes={classes}
         instituicoes={instituicoes}
         inicial={{
-          classe: ativo.classe_id,
+          classe: ativo.taxonomia_id,
           instituicao: ativo.instituicao_id,
           previdencia: ativo.previdencia,
           liquidez_imediata: ativo.liquidez_imediata,

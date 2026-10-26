@@ -342,8 +342,8 @@ Após autorização específica, conferir com o responsável: seletor/caminhos e
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | [#137](https://github.com/EuThiagoAndrade/saldo-futuro/issues/137), [#138](https://github.com/EuThiagoAndrade/saldo-futuro/issues/138) e [#139](https://github.com/EuThiagoAndrade/saldo-futuro/issues/139) (unidades 1, 2 e 3) |
-| PR(s) | [#136](https://github.com/EuThiagoAndrade/saldo-futuro/pull/136) — documental, integrada; unidade 1: ver `013_task_issue-137.md` |
-| Branch(es) | `chore/cycle-013-plan` (integrada); `feature/issue-137` |
+| PR(s) | [#136](https://github.com/EuThiagoAndrade/saldo-futuro/pull/136) — documental, integrada; unidade 1: [#140](https://github.com/EuThiagoAndrade/saldo-futuro/pull/140), integrada; unidade 2: ver `013_task_issue-138.md` |
+| Branch(es) | `chore/cycle-013-plan` e `feature/issue-137` (integradas); `feature/issue-138` |
 | Destino após conclusão | `_project/executed/013_taxonomia_classes_alocacao/013_plan.md` |
 
 ## Próximo passo

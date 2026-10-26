@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { mensagemDeRecusa } from "./carteira";
 import { linhasDoCatalogo, textoDeUso } from "./catalogos";
 
-// Catálogos de instituições e classes (ciclo 012, issue #127). Nomes fictícios.
+// Catálogo de instituições (ciclo 012, issue #127; sem classes desde o ciclo 013, issue #138). Nomes fictícios.
 
 const entradas = [
   { id: "c", nome: "Renda variável" },
@@ -21,17 +21,14 @@ describe("linhasDoCatalogo", () => {
     ]);
   });
 
-  it("conta os ativos que usam cada entrada pela coluna do catálogo", () => {
-    const vinculos = [
-      { instituicao_id: "b", classe_id: "c" },
-      { instituicao_id: "b", classe_id: null },
-      { instituicao_id: null, classe_id: "c" },
-      { instituicao_id: "a", classe_id: "c" },
-    ];
-    const usos = (tipo: "instituicoes" | "classes") =>
-      Object.fromEntries(linhasDoCatalogo(tipo, entradas, vinculos).map((l) => [l.id, l.usos]));
-    expect(usos("instituicoes")).toEqual({ a: 1, b: 2, c: 0, d: 0 });
-    expect(usos("classes")).toEqual({ a: 0, b: 0, c: 3, d: 0 });
+  it("conta os ativos que usam cada instituição", () => {
+    const vinculos = [{ instituicao_id: "b" }, { instituicao_id: "b" }, { instituicao_id: null }, { instituicao_id: "a" }];
+    expect(Object.fromEntries(linhasDoCatalogo("instituicoes", entradas, vinculos).map((l) => [l.id, l.usos]))).toEqual({
+      a: 1,
+      b: 2,
+      c: 0,
+      d: 0,
+    });
   });
 });
 
@@ -43,7 +40,7 @@ describe("textoDeUso", () => {
   });
 });
 
-describe("recusas dos catálogos", () => {
+describe("recusas do catálogo e da classe do ativo", () => {
   it("traduz os motivos novos do banco", () => {
     expect(mensagemDeRecusa({ message: "recusado_nome_repetido" })).toBe("Esse nome já está cadastrado.");
     expect(mensagemDeRecusa({ message: "recusado_nome" })).toBe("Informe um nome de 1 a 100 caracteres.");
@@ -51,6 +48,6 @@ describe("recusas dos catálogos", () => {
       "Só é possível excluir sem nenhum ativo vinculado, em uso ou desativado.",
     );
     expect(mensagemDeRecusa({ message: "recusado_instituicao_inexistente" })).toBe("Instituição não encontrada.");
-    expect(mensagemDeRecusa({ message: "recusado_classe_inexistente" })).toBe("Classe não encontrada.");
+    expect(mensagemDeRecusa({ message: "recusado_taxonomia_inexistente" })).toBe("Classe não encontrada. Escolha uma da lista.");
   });
 });

@@ -124,12 +124,12 @@ const MENSAGENS: Record<string, string> = {
   tipo_ajuste: "Escolha o tipo de ajuste do ativo.",
   transferencia_inexistente: "Transferência não encontrada.",
   nao_autenticado: "Sua sessão terminou. Entre de novo.",
-  // Instituições e classes (ciclo 012).
+  // Instituições (ciclo 012) e classe do ativo, que é um nó da taxonomia global (ciclo 013).
   nome: "Informe um nome de 1 a 100 caracteres.",
   nome_repetido: "Esse nome já está cadastrado.",
   em_uso: "Só é possível excluir sem nenhum ativo vinculado, em uso ou desativado.",
   instituicao_inexistente: "Instituição não encontrada.",
-  classe_inexistente: "Classe não encontrada.",
+  taxonomia_inexistente: "Classe não encontrada. Escolha uma da lista.",
   referencia_dupla: "Escolha uma opção da lista ou cadastre uma nova, não as duas.",
   // Fechamento (KB-004, seção 5).
   pendencia: "Informe o saldo real de todos os ativos do mês, mesmo que igual ao calculado.",

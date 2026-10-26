@@ -2,13 +2,13 @@
 
 > **Ciclo:** `013`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#137`
 > **Plano:** `_project/drafts/013_taxonomia_classes_alocacao/013_plan.md`
 > **Branch:** `feature/issue-137`
-> **PR:** [#140](https://github.com/EuThiagoAndrade/saldo-futuro/pull/140) (`Refs #137`, sem fechar a issue)
-> **Integração:** `Pendente`
+> **PR:** [#140](https://github.com/EuThiagoAndrade/saldo-futuro/pull/140) (`Refs #137`, sem fechar a issue), integrada
+> **Integração:** PR #140 integrada por squash (`c7fc48f4f4f547ce9e768d4468bef6b4689cfa2e`) em 2026-10-26, com todos os checks verdes; ação externa E1 concluída em 2026-10-26; issue #137 aberta até o encerramento do ciclo
 > **Autorização inicial:** "autorizo a implementação da issue #137" em 2026-10-26
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-26
@@ -50,8 +50,8 @@ Não se aplica.
 - [x] Fixtures do ensaio e do E1 em `tests/fixtures/taxonomia/` e ensaio local de upgrade executado (ver "Ensaio de upgrade").
 - [x] KB-003: seção do estado intermediário, contagem de asserções e linha do histórico.
 - [x] PR #140 aberta (`Refs #137`).
-- [ ] Checks remotos verdes e aprovação do merge.
-- [ ] Ação externa E1 pelo responsável, depois do merge e do deploy compatível (ver "Roteiro E1").
+- [x] Checks remotos verdes (5 de 5) e merge aprovado pelo responsável ("aprovo o merge da PR #140"); PR integrada em `c7fc48f`.
+- [x] Ação externa E1 pelo responsável, depois do merge e do deploy compatível (ver "Ação externa").
 
 ## Ensaio de upgrade (R1-6, somente local)
 
@@ -121,7 +121,21 @@ Responsável: o dono do projeto. O agente não recebe credenciais e não consult
 | `npm run test:e2e` (build, `CI=1`, Supabase local) | 210 testes: 198 passaram, 12 ignorados (condicionais do ambiente) e nenhuma falha, com `cadastros.spec.ts` e `ativos-detalhes.spec.ts` adaptados. Duas execuções anteriores, sem as variáveis `NEXT_PUBLIC_SUPABASE_*` e `SUPABASE_SECRET_KEY` no ambiente do Playwright (só em `.env.local`), ignoraram 177 testes e reprovaram os 7 de "preview sem backend", por ambiente, não por regressão; a variante sem backend é coberta pelo job de CI |
 | Validador | `node --test scripts/validate-governance.test.mjs` 48/48; `node scripts/validate-governance.mjs` sem erros |
 | `git diff --check` | Sem erros |
-| Checks remotos | Pendente |
+| Checks remotos | 5 de 5 verdes na PR #140 (governança, lint/tipos/testes/build/e2e sem backend, banco e e2e com backend, Vercel e Vercel Preview Comments) |
+
+## Ação externa
+
+- **Data e frase:** 2026-10-26, "concluí a ação externa da issue #137", depois do merge da PR #140 (`main` em `c7fc48f`) e do deploy de produção da `main`, que o agente conferiu no GitHub (ambiente `Production`, estado `success`).
+- **Contagens relatadas pelo responsável (passos 2 e 4 do roteiro):**
+
+  | Consulta | `ativos_comuns` | `ficarao_sem_no` / `sem_no` | `transito` | `transito_sem_no` | `nos_do_catalogo` |
+  | :-- | :-- | :-- | :-- | :-- | :-- |
+  | Prévia (antes do `db push`) | 30 | 9 | 1 | — | — |
+  | Posterior (depois do `db push`) | 30 | 9 | 1 | 1 | 39 |
+
+- **Conferência pelo agente:** os totais batem (30 = 30), `sem_no` é igual à previsão (9 = 9), o trânsito ficou sem nó (1 = 1) e o catálogo tem os 39 nós. O agente não acessou o banco de produção; o `db push`, o `migration list` alinhado e a conferência de `/ativos` e `/cadastros` são relatados pelo responsável.
+- **Limite da evidência (R1-7):** as contagens não provam, sozinhas, que nenhum dado financeiro mudou em produção. Essa garantia vem da revisão do SQL e da comparação das 82 linhas fictícias do ensaio local. Não se registra "ausência de diferença financeira em produção".
+- **Resultado:** precondição da issue #138 atendida (`taxonomia_id` e as funções novas estão em produção).
 
 ## Revisão da correção
 
@@ -141,12 +155,14 @@ Não se aplica.
 
 ## Próximo passo
 
+Esta task está concluída (PR #140 integrada e E1 concluída). O artefato ativo do ciclo passou a ser a task da issue #138.
+
 ```text
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 013 (completo)
 Quem: Responsável
-Conferir: checks e diff da PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/140
-Diga: "aprovo o merge da PR #140"
+Conferir: checks e diff da PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/142
+Diga: "aprovo o merge da PR #142"
 ```
 
 ## Handoff de saída
@@ -155,7 +171,7 @@ Diga: "aprovo o merge da PR #140"
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 013 + implementar_issue + 137 + baa174d12938a8776a394af46b9841c2e74afc86`
 - `effect_class`: `local_mutation`
 - `state_before`: plano `Aprovado` e integrado pela PR #136; issue #137 aberta; `main` em `baa174d`; autorização "autorizo a implementação da issue #137".
-- `state_after`: branch `feature/issue-137` com a migração 1, testes, fixtures, KB-003, task, plano `Em Execução` e ciclo `Em execução`; PR #140 publicada, aguardando checks e aprovação do merge.
+- `state_after`: PR #140 integrada em `c7fc48f` (5 de 5 checks verdes) e ação externa E1 concluída pelo responsável em 2026-10-26, com as contagens conferidas; task `Concluída`, issue #137 aberta até o encerramento. Reconciliação feita na PR da issue #138.
 - `result`: `executed`
-- `evidence`: pgTAP 500 asserções; ensaio local de upgrade; lint, tipos, 371 testes unitários, build e e2e (198 passaram, 12 ignorados).
-- `blockers`: checks remotos e aprovação específica do merge; E1 depende do merge e do deploy.
+- `evidence`: PR #140 `MERGED`; deploy de produção `success` no GitHub; seção "Ação externa" (contagens relatadas pelo responsável); pgTAP 500 asserções, ensaio local de upgrade, lint, tipos, 371 testes unitários, build e e2e (198 passaram, 12 ignorados) na entrega.
+- `blockers`: nenhum para esta task.

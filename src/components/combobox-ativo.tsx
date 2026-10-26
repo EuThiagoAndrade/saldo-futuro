@@ -181,7 +181,7 @@ export function ComboboxAtivo({
                 setTentou(false);
                 despachar({ tipo: "confirmar", opcao });
               }}
-              className={`flex min-h-11 cursor-pointer items-center px-3 text-base/6 text-text ${i === estado.ativa ? "bg-primary-subtle" : "hover:bg-surface-subtle"}`}
+              className={`flex min-h-11 cursor-pointer items-center px-3 py-2 text-base/6 break-words text-text ${i === estado.ativa ? "bg-primary-subtle" : "hover:bg-surface-subtle"}`}
             >
               {opcao.nova ? `Cadastrar «${opcao.nome}»` : opcao.nome}
             </li>

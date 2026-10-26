@@ -39,11 +39,6 @@ select is_empty(
            'criar_instituicao(text)',
            'renomear_instituicao(uuid,text)',
            'excluir_instituicao(uuid)',
-           'criar_classe(text)',
-           'renomear_classe(uuid,text)',
-           'excluir_classe(uuid)',
-           'cadastrar_ativo(text,tipo_ajuste,uuid,text,uuid,text,boolean,boolean,boolean,boolean)',
-           'editar_detalhes_ativo(uuid,uuid,text,uuid,text,boolean,boolean,boolean,boolean)',
            'cadastrar_ativo_taxonomia(text,tipo_ajuste,uuid,text,uuid,boolean,boolean,boolean,boolean)',
            'editar_detalhes_ativo_taxonomia(uuid,uuid,text,uuid,boolean,boolean,boolean,boolean)',
            'ler_versao_classificacao()']))) $$,
@@ -63,9 +58,7 @@ select isnt_empty(
          'lancar_migracao_transito(date,bigint)', 'estornar_evento(uuid,date)', 'transferir(uuid,uuid,date,bigint)',
          'corrigir_transferencia(uuid,date)', 'fechar_mes(date,jsonb)', 'reabrir_mes(date)',
          'carregar_benchmark(uuid,date,date,jsonb)', 'criar_instituicao(text)', 'renomear_instituicao(uuid,text)',
-         'excluir_instituicao(uuid)', 'criar_classe(text)', 'renomear_classe(uuid,text)', 'excluir_classe(uuid)',
-         'cadastrar_ativo(text,tipo_ajuste,uuid,text,uuid,text,boolean,boolean,boolean,boolean)',
-         'editar_detalhes_ativo(uuid,uuid,text,uuid,text,boolean,boolean,boolean,boolean)',
+         'excluir_instituicao(uuid)',
          'cadastrar_ativo_taxonomia(text,tipo_ajuste,uuid,text,uuid,boolean,boolean,boolean,boolean)',
          'editar_detalhes_ativo_taxonomia(uuid,uuid,text,uuid,boolean,boolean,boolean,boolean)',
          'ler_versao_classificacao()']) $$,
@@ -83,10 +76,7 @@ select is_empty(
        'public.corrigir_transferencia(uuid,date)'::regprocedure, 'public.fechar_mes(date,jsonb)'::regprocedure,
        'public.reabrir_mes(date)'::regprocedure, 'public.carregar_benchmark(uuid,date,date,jsonb)'::regprocedure,
        'public.criar_instituicao(text)'::regprocedure, 'public.renomear_instituicao(uuid,text)'::regprocedure,
-       'public.excluir_instituicao(uuid)'::regprocedure, 'public.criar_classe(text)'::regprocedure,
-       'public.renomear_classe(uuid,text)'::regprocedure, 'public.excluir_classe(uuid)'::regprocedure,
-       'public.cadastrar_ativo(text,public.tipo_ajuste,uuid,text,uuid,text,boolean,boolean,boolean,boolean)'::regprocedure,
-       'public.editar_detalhes_ativo(uuid,uuid,text,uuid,text,boolean,boolean,boolean,boolean)'::regprocedure,
+       'public.excluir_instituicao(uuid)'::regprocedure,
        'public.cadastrar_ativo_taxonomia(text,public.tipo_ajuste,uuid,text,uuid,boolean,boolean,boolean,boolean)'::regprocedure,
        'public.editar_detalhes_ativo_taxonomia(uuid,uuid,text,uuid,boolean,boolean,boolean,boolean)'::regprocedure)
        and (not p.prosecdef or has_function_privilege('anon', p.oid, 'EXECUTE')) $$,
@@ -95,7 +85,7 @@ select is_empty(
   $$ select p.oid::regprocedure from pg_proc p join pg_namespace n on n.oid = p.pronamespace
      where n.nspname = 'private' and p.proname in ('travar_carteira', 'hoje', 'ultimo_mes_fechado',
        'conferir_data_lancamento', 'saldo_atual', 'apurar_mes', 'na_faixa', 'benchmark_imutavel',
-       'conferir_nome', 'resolver_instituicao', 'resolver_classe', 'normalizar_nome', 'taxonomia_equivalente',
+       'conferir_nome', 'resolver_instituicao', 'normalizar_nome', 'taxonomia_equivalente',
        'versao_classificacao_ativo')
        and (has_function_privilege('authenticated', p.oid, 'EXECUTE') or has_function_privilege('anon', p.oid, 'EXECUTE')) $$,
   'os auxiliares da carteira, dos metadados, da taxonomia e dos benchmarks em private não são executáveis pela Data API');
