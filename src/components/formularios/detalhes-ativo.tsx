@@ -6,8 +6,10 @@ import type { Opcao } from "@/lib/telas/combobox";
 import { type ColunaIndicador, INDICADORES, OPCOES_INDICADOR, valorDoIndicador } from "@/lib/telas/detalhes-ativo";
 
 // Campos descritivos do ativo (ciclo 012, issue #128, BL-009), comuns ao cadastro e à edição:
-// classe e instituição como campos principais, com busca e "Cadastrar «texto»" (DESIGN.md 6.8), e
-// os quatro indicadores dentro de "Mais detalhes", fechado por padrão. Nada aqui entra em cálculo.
+// classe e instituição como campos principais, com busca (DESIGN.md 6.8), e os quatro indicadores
+// dentro de "Mais detalhes", fechado por padrão. A classe é um nó da taxonomia global (ciclo 013,
+// issue #138): seletor único, opcional, com o caminho completo, sem criação. A instituição segue
+// oferecendo "Cadastrar «texto»". Nada aqui entra em cálculo.
 export function CamposDetalhes({
   prefixo,
   classes,
@@ -16,6 +18,7 @@ export function CamposDetalhes({
 }: {
   /** Prefixo dos ids, para não repetir entre formulários. */
   prefixo: string;
+  /** Nós da taxonomia em ordem hierárquica, com o caminho completo como nome. */
   classes: readonly Opcao[];
   instituicoes: readonly Opcao[];
   inicial?: { classe: string | null; instituicao: string | null } & Record<ColunaIndicador, boolean | null>;
@@ -27,13 +30,12 @@ export function CamposDetalhes({
       <Campo id={`${prefixo}-classe`} rotulo="Classe">
         <ComboboxAtivo
           id={`${prefixo}-classe`}
-          nome="classe"
-          nomeNovo="classeNova"
+          nome="taxonomia"
           opcoes={classes}
           valorInicial={inicial?.classe ?? undefined}
-          placeholder="Opcional: busque ou cadastre"
-          foraDaLista="Escolha uma classe da lista ou cadastre uma nova."
-          semResultado="Nenhuma classe cadastrada. Digite um nome para cadastrar."
+          placeholder="Opcional: busque pela classe"
+          foraDaLista="Escolha uma classe da lista."
+          semResultado="Nenhuma classe encontrada."
         />
       </Campo>
       <Campo id={`${prefixo}-instituicao`} rotulo="Instituição">

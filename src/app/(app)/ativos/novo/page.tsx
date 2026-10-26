@@ -5,7 +5,7 @@ import { PreviewNotice } from "@/components/preview-notice";
 import { backend } from "@/lib/config";
 import { exigirSessao } from "@/lib/sessao";
 import { ordenarPorNome } from "@/lib/telas/combobox";
-import { lerClasses, lerInstituicoes } from "@/lib/telas/leituras";
+import { lerInstituicoes, lerTaxonomia } from "@/lib/telas/leituras";
 
 export const metadata = { title: "Novo ativo — Saldo Futuro" };
 
@@ -13,7 +13,7 @@ export const metadata = { title: "Novo ativo — Saldo Futuro" };
 export default async function NovoAtivoPage() {
   if (!backend) return <PreviewNotice />;
   const { supabase } = await exigirSessao();
-  const [classes, instituicoes] = await Promise.all([lerClasses(supabase), lerInstituicoes(supabase)]);
+  const [taxonomia, instituicoes] = await Promise.all([lerTaxonomia(supabase), lerInstituicoes(supabase)]);
 
   return (
     <div className="flex max-w-xl flex-col gap-6">
@@ -23,7 +23,7 @@ export default async function NovoAtivoPage() {
         </Link>
         <h1 className="text-2xl/8 font-semibold text-text">Novo ativo</h1>
       </div>
-      <FormNovoAtivo classes={ordenarPorNome(classes)} instituicoes={ordenarPorNome(instituicoes)} />
+      <FormNovoAtivo classes={taxonomia.opcoes} instituicoes={ordenarPorNome(instituicoes)} />
     </div>
   );
 }

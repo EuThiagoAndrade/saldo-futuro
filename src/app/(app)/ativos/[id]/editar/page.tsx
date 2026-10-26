@@ -6,20 +6,27 @@ import { PreviewNotice } from "@/components/preview-notice";
 import { backend } from "@/lib/config";
 import { exigirSessao } from "@/lib/sessao";
 import { ordenarPorNome } from "@/lib/telas/combobox";
-import { lerAtivos, lerClasses, lerInstituicoes } from "@/lib/telas/leituras";
+import { lerAtivos, lerClassesLegadas, lerInstituicoes, lerTaxonomia } from "@/lib/telas/leituras";
+import { classeAtualDoAtivo } from "@/lib/telas/taxonomia";
 
 export const metadata = { title: "Editar ativo — Saldo Futuro" };
 
 const ROTULO_AJUSTE = { rendimento: "Rendimento", marcacao: "Marcação a mercado" } as const;
 
-// Edição dos campos descritivos de um ativo (ciclo 012, issue #128, BL-009), aberta pelo link
+// Edição dos campos descritivos de um ativo (ciclo 012, issue #128, BL-009; classe como nó da
+// taxonomia global desde o ciclo 013, issue #138), aberta pelo link
 // Editar das duas abas de /ativos. Ativo inexistente, de outro usuário (a RLS não o devolve) ou
 // o trânsito mostram a recusa, sem formulário.
 export default async function EditarAtivoPage({ params }: { params: Promise<{ id: string }> }) {
   if (!backend) return <PreviewNotice />;
   const { supabase } = await exigirSessao();
   const { id } = await params;
-  const [ativos, classes, instituicoes] = await Promise.all([lerAtivos(supabase), lerClasses(supabase), lerInstituicoes(supabase)]);
+  const [ativos, taxonomia, legado, instituicoes] = await Promise.all([
+    lerAtivos(supabase),
+    lerTaxonomia(supabase),
+    lerClassesLegadas(supabase),
+    lerInstituicoes(supabase),
+  ]);
   const ativo = ativos.find((a) => a.id === id);
   const voltar = ativo && !ativo.ativo ? "/ativos?aba=desativados" : "/ativos";
 
@@ -39,7 +46,8 @@ export default async function EditarAtivoPage({ params }: { params: Promise<{ id
         <FormEditarAtivo
           ativo={ativo}
           rotuloAjuste={ROTULO_AJUSTE[ativo.tipo_ajuste ?? "rendimento"]}
-          classes={ordenarPorNome(classes)}
+          classes={taxonomia.opcoes}
+          classeAtual={classeAtualDoAtivo(ativo, taxonomia, new Map(legado.map((c) => [c.id, c.nome])))}
           instituicoes={ordenarPorNome(instituicoes)}
         />
       )}

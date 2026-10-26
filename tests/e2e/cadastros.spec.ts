@@ -3,15 +3,14 @@ import { expect, type Page, test } from "@playwright/test";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { clienteDoUsuario, configurado, criarUsuarios, entrar, removerUsuarios, type UsuarioDeTeste } from "./apoio/supabase";
 
-// Cadastros de instituições e classes (ciclo 012, issue #127, BL-009; emenda E-1 do plano): destino
-// em Mais e no menu lateral, com abas por URL. Usuários e nomes fictícios exclusivos deste
-// arquivo (D9 do ciclo 004).
+// Cadastro de instituições (ciclo 012, issue #127, BL-009; emenda E-1 do plano): destino em Mais e
+// no menu lateral. A aba Classes saiu no ciclo 013 (issue #138): a classe do ativo é um nó da
+// taxonomia global, e o antigo ?aba=classes abre Instituições. Usuários e nomes fictícios
+// exclusivos deste arquivo (D9 do ciclo 004).
 
 const MOVEL = { width: 360, height: 800 };
 const DESKTOP = { width: 1280, height: 900 };
 const WCAG = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
-// Desde a taxonomia global (ciclo 013) o perfil novo não recebe classes: o preparo cria estas, do legado.
-const CLASSES_DO_DONO = ["Cripto", "Fundos", "Outros", "Renda fixa", "Renda variável"];
 // 97 caracteres, para conferir a quebra de linha no celular.
 const LONGO = "Corretora fictícia com um nome muito comprido para conferir a quebra de linha na lista do celular";
 
@@ -24,21 +23,18 @@ test.describe("cadastros (#127)", () => {
   test.beforeAll(async () => {
     u = await criarUsuarios("catalogos127", { dono: "user", outro: "user" });
     cliente = await clienteDoUsuario(u.dono);
-    for (const nome of CLASSES_DO_DONO) expect((await cliente.rpc("criar_classe", { p_nome: nome })).error).toBeNull();
   });
   test.afterAll(async () => {
     if (u) await removerUsuarios(u);
   });
 
   const lista = (page: Page, nome: string) => page.getByRole("list", { name: nome }).getByRole("listitem");
-  const aba = (page: Page, nome: "Instituições" | "Classes") =>
-    page.getByRole("navigation", { name: "Tipo de cadastro" }).getByRole("link", { name: new RegExp(`^${nome}`) });
   const linha = (page: Page, catalogo: string, nome: string) =>
     lista(page, catalogo).filter({ has: page.getByText(nome, { exact: true }) });
   const nomes = async (page: Page, catalogo: string) =>
     (await lista(page, catalogo).locator("p.font-medium").allTextContents()).map((t) => t.trim());
 
-  test("Cadastros fica em Mais no celular e no menu lateral do desktop, com as abas pela URL", async ({ page }) => {
+  test("Cadastros fica em Mais no celular e no menu lateral do desktop, só com Instituições", async ({ page }) => {
     await page.setViewportSize(MOVEL);
     await entrar(page, u.dono);
     await page.goto("/ativos");
@@ -49,18 +45,11 @@ test.describe("cadastros (#127)", () => {
     await folha.getByRole("link", { name: "Cadastros" }).click();
     await expect(page).toHaveURL(/\/cadastros$/);
     await expect(page.getByRole("heading", { level: 1, name: "Cadastros" })).toBeVisible();
-    await expect(aba(page, "Instituições")).toHaveAttribute("aria-current", "page");
-    await expect(aba(page, "Instituições")).toHaveText(/Instituições\s*0/);
-    await expect(aba(page, "Classes")).toHaveText(/Classes\s*5/);
     await expect(page.getByRole("heading", { name: "Nenhuma instituição cadastrada" })).toBeVisible();
-
-    await aba(page, "Classes").click();
-    await expect(page).toHaveURL(/\/cadastros\?aba=classes$/);
-    await expect(aba(page, "Classes")).toHaveAttribute("aria-current", "page");
-    await expect(page.getByLabel("Nova classe")).toBeVisible();
-    await expect(page.getByLabel("Nova instituição")).toHaveCount(0);
-    await page.goto("/cadastros?aba=qualquer");
-    await expect(aba(page, "Instituições")).toHaveAttribute("aria-current", "page");
+    await expect(page.getByLabel("Nova instituição")).toBeVisible();
+    // Sem aba de classes: a classe do ativo é um nó da taxonomia global, escolhido no cadastro do ativo.
+    await expect(page.getByRole("navigation", { name: "Tipo de cadastro" })).toHaveCount(0);
+    await expect(page.getByLabel("Nova classe")).toHaveCount(0);
 
     await page.setViewportSize(DESKTOP);
     await page.goto("/");
@@ -70,11 +59,16 @@ test.describe("cadastros (#127)", () => {
     await expect(menu.getByRole("link", { name: "Cadastros" })).toHaveAttribute("aria-current", "page");
   });
 
-  test("as classes iniciais aparecem em ordem alfabética, sem ativos", async ({ page }) => {
+  test("o endereço antigo ?aba=classes e qualquer outro valor abrem Instituições, sem erro", async ({ page }) => {
     await entrar(page, u.dono);
-    await page.goto("/cadastros?aba=classes");
-    expect(await nomes(page, "Classes")).toEqual(CLASSES_DO_DONO);
-    for (const nome of CLASSES_DO_DONO) await expect(linha(page, "Classes", nome)).toContainText("Sem ativos");
+    for (const rota of ["/cadastros?aba=classes", "/cadastros?aba=qualquer", "/cadastros?aba=classes&aba=instituicoes"]) {
+      const resposta = await page.goto(rota);
+      expect(resposta!.status(), rota).toBe(200);
+      await expect(page.getByRole("heading", { level: 1, name: "Cadastros" })).toBeVisible();
+      await expect(page.getByLabel("Nova instituição")).toBeVisible();
+      await expect(page.getByLabel("Nova classe")).toHaveCount(0);
+      await expect(page.getByRole("list", { name: "Classes" })).toHaveCount(0);
+    }
   });
 
   test("incluir, recusar nome repetido e renomear uma instituição", async ({ page }) => {
@@ -124,15 +118,12 @@ test.describe("cadastros (#127)", () => {
   test("excluir: bloqueado com explicação quando há ativo, mesmo desativado; permitido sem uso", async ({ page }) => {
     const { data: inst } = await cliente.from("instituicoes").select("id, nome");
     const banco = inst!.find((i) => i.nome === "Banco Exemplo")!.id;
-    const { data: classes } = await cliente.from("classes_ativo").select("id, nome");
-    const fundos = classes!.find((c) => c.nome === "Fundos")!.id;
-    const { data: ativo, error } = await cliente.rpc("cadastrar_ativo", {
+    const { data: ativo, error } = await cliente.rpc("cadastrar_ativo_taxonomia", {
       p_nome: "Fundo fictício",
       p_tipo_ajuste: "rendimento",
       p_instituicao: banco,
       p_instituicao_nova: null,
-      p_classe: fundos,
-      p_classe_nova: null,
+      p_taxonomia: null,
       p_previdencia: null,
       p_liquidez_imediata: null,
       p_exposicao_cambial: null,
@@ -155,20 +146,12 @@ test.describe("cadastros (#127)", () => {
     await dialogo.getByRole("button", { name: "Excluir instituição" }).click();
     await expect(page.getByText("Corretora Exemplo", { exact: true })).toHaveCount(0);
     expect((await cliente.from("instituicoes").select("nome")).data).toEqual([{ nome: "Banco Exemplo" }]);
-
-    await page.goto("/cadastros?aba=classes");
-    await expect(linha(page, "Classes", "Fundos").getByRole("button", { name: "Excluir" })).toBeDisabled();
-    await linha(page, "Classes", "Cripto").getByRole("button", { name: "Excluir" }).click();
-    await page.getByRole("dialog", { name: "Excluir Cripto" }).getByRole("button", { name: "Excluir classe" }).click();
-    await expect(page.getByText("Cripto", { exact: true })).toHaveCount(0);
   });
 
   test("outro usuário não vê as entradas do primeiro", async ({ page }) => {
     await entrar(page, u.outro);
     await page.goto("/cadastros");
     await expect(page.getByRole("heading", { name: "Nenhuma instituição cadastrada" })).toBeVisible();
-    await page.goto("/cadastros?aba=classes");
-    expect(await nomes(page, "Classes")).toEqual([]);
   });
 
   test("no celular, nome longo quebra a linha, ações têm 44 px e não há rolagem horizontal", async ({ page }) => {
@@ -194,7 +177,7 @@ test.describe("cadastros (#127)", () => {
   });
 
   for (const tamanho of [MOVEL, DESKTOP]) {
-    test(`sem violações de acessibilidade nas duas abas em ${tamanho.width} px`, async ({ page }) => {
+    test(`sem violações de acessibilidade em Cadastros, inclusive no endereço antigo, em ${tamanho.width} px`, async ({ page }) => {
       await page.setViewportSize(tamanho);
       await entrar(page, u.dono);
       for (const rota of ["/cadastros", "/cadastros?aba=classes"]) {

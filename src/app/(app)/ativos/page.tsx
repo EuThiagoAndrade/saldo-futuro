@@ -7,7 +7,8 @@ import { dataBr } from "@/lib/apresentacao/datas";
 import { backend } from "@/lib/config";
 import { hojeEmCuiaba } from "@/lib/financeiro/datas";
 import { exigirSessao } from "@/lib/sessao";
-import { type Ativo, lerAtivos, lerClasses, lerInstituicoes } from "@/lib/telas/leituras";
+import { type Ativo, lerAtivos, lerClassesLegadas, lerInstituicoes, lerTaxonomia } from "@/lib/telas/leituras";
+import { classeDoAtivo } from "@/lib/telas/taxonomia";
 import { desativarAtivo } from "./acoes";
 
 export const metadata = { title: "Ativos — Saldo Futuro" };
@@ -16,7 +17,8 @@ export const metadata = { title: "Ativos — Saldo Futuro" };
 // "Em uso" e "Desativados" lidas no servidor pela URL (?aba=desativados). As abas são links de
 // navegação com aria-current, não o padrão "tab" do ARIA; só a lista selecionada é renderizada
 // (DESIGN.md 6.12). Classe e instituição aparecem nas duas abas, e Editar abre os campos
-// descritivos (ciclo 012, issue #128; DESIGN.md 6.7).
+// descritivos (ciclo 012, issue #128; DESIGN.md 6.7). A classe é o nome do nó da taxonomia global
+// (ciclo 013, issue #138), ou "Sem classe (antes: X)" para quem só tem o legado.
 
 type Aba = "em-uso" | "desativados";
 
@@ -192,11 +194,16 @@ export default async function AtivosPage({ searchParams }: { searchParams: Promi
   const { supabase } = await exigirSessao();
   const { aba: parametro } = await searchParams;
   const aba: Aba = parametro === "desativados" ? "desativados" : "em-uso";
-  const [ativos, classes, instituicoes] = await Promise.all([lerAtivos(supabase), lerClasses(supabase), lerInstituicoes(supabase)]);
-  const nomeDaClasse = new Map(classes.map((c) => [c.id, c.nome]));
+  const [ativos, taxonomia, legado, instituicoes] = await Promise.all([
+    lerAtivos(supabase),
+    lerTaxonomia(supabase),
+    lerClassesLegadas(supabase),
+    lerInstituicoes(supabase),
+  ]);
+  const classesLegadas = new Map(legado.map((c) => [c.id, c.nome]));
   const nomeDaInstituicao = new Map(instituicoes.map((i) => [i.id, i.nome]));
   const detalhes: Detalhes = {
-    classe: (a) => (a.classe_id ? (nomeDaClasse.get(a.classe_id) ?? null) : null),
+    classe: (a) => classeDoAtivo(a, taxonomia, classesLegadas),
     instituicao: (a) => (a.instituicao_id ? (nomeDaInstituicao.get(a.instituicao_id) ?? null) : null),
   };
   const emUso = ativos.filter((a) => a.ativo).sort((a, b) => Number(!!a.sistema) - Number(!!b.sistema) || nome(a).localeCompare(nome(b), "pt-BR"));

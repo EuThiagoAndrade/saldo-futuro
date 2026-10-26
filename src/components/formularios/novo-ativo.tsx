@@ -9,7 +9,8 @@ import type { Opcao } from "@/lib/telas/combobox";
 import { ESTADO_INICIAL } from "@/lib/telas/acao";
 
 // Formulário de /ativos/novo (BL-006, ciclo 010). A recusa aparece aqui, sem sair da página; o
-// sucesso redireciona para /ativos. Classe, instituição e indicadores vêm do ciclo 012 (#128).
+// sucesso redireciona para /ativos. Classe (nó da taxonomia, ciclo 013), instituição e indicadores
+// vêm do ciclo 012 (#128).
 export function FormNovoAtivo({ classes, instituicoes }: { classes: readonly Opcao[]; instituicoes: readonly Opcao[] }) {
   const [estado, executar, pendente] = useActionState(criarAtivo, ESTADO_INICIAL);
 

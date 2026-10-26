@@ -77,10 +77,10 @@ O Saldo Futuro é um sistema web de gestão de investimentos pessoais, multiusu�
   - `/ativos` tem Novo ativo no topo e as abas "Em uso" e "Desativados" como links (`/ativos` e `/ativos?aba=desativados`), lidas no servidor, com contadores e só a lista selecionada; valor ausente ou desconhecido abre Em uso. No celular, Em uso é uma lista densa com o nome completo; no desktop, tabela (DESIGN.md 6.7 e 6.12);
   - o cadastro fica em `/ativos/novo`, com a mesma validação; o sucesso volta a `/ativos` sem mensagem extra, e a recusa aparece no próprio formulário. A desativação continua pela confirmação e pela RPC `desativar_ativo`, com as mesmas restrições (trânsito sem ação, saldo zero obrigatório).
 - detalhes dos ativos (ciclo `012`, BL-009):
-  - o cadastro usa a RPC `cadastrar_ativo`, com classe e instituição em seletores com busca que oferecem "Cadastrar «texto»" (a entrada nova é criada no envio, na mesma transação) e os quatro indicadores em "Mais detalhes", retrátil e fechado por padrão (DESIGN.md 6.8);
+  - o cadastro usa a RPC `cadastrar_ativo_taxonomia` (desde o ciclo `013`; antes, `cadastrar_ativo`), com a classe num seletor único com busca pelo caminho completo, sem criação (um nó da taxonomia global, de qualquer nível, ou nenhum), a instituição num seletor que oferece "Cadastrar «texto»" (a entrada nova é criada no envio, na mesma transação) e os quatro indicadores em "Mais detalhes", retrátil e fechado por padrão (DESIGN.md 6.8);
   - `/ativos/[id]/editar`, aberto por Editar nas duas abas, altera só os campos descritivos, também de ativo desativado, pela RPC `editar_detalhes_ativo`; nome e tipo de ajuste aparecem só para leitura, e o trânsito não tem edição;
-  - as duas abas de `/ativos` mostram classe e instituição (colunas no desktop; segunda linha no celular, omitindo o que não foi informado) (DESIGN.md 6.7);
-  - `/cadastros`, em Mais e no menu lateral, mantém as instituições e as classes do usuário, com as abas "Instituições" e "Classes", inclusão, renomear em linha e exclusão só sem ativo vinculado;
+  - as duas abas de `/ativos` mostram classe e instituição (colunas no desktop; segunda linha no celular, omitindo o que não foi informado) (DESIGN.md 6.7); a classe é o nome do nó, ou "Sem classe (antes: X)" para quem só tem a classe do legado (ciclo `013`);
+  - `/cadastros`, em Mais e no menu lateral, mantém as instituições do usuário, com inclusão, renomear em linha e exclusão só sem ativo vinculado; a aba "Classes" saiu no ciclo `013`, e o endereço antigo `?aba=classes` abre Instituições;
   - os campos só descrevem os ativos; nenhum cálculo os lê (KB-004, 4.1).
 - distribuição por ativo (ciclo `010`):
   - o Início desenha a distribuição de M em rosca SVG no servidor (`src/components/graficos/rosca.tsx`; ADR-005, emenda), no lugar das barras horizontais, que saíram do código;
@@ -161,10 +161,10 @@ Regras que valem para toda mudança futura (barreira G2, `_project/README.md`):
 - toda função tem `search_path` fixo e `execute` revogado de `public`;
 - o `admin` gerencia acessos, mas não tem bypass sobre dados de outros usuários.
 
-Os testes pgTAP em `supabase/tests/database/` provam isso com usuários fictícios e um administrador, em 500 asserções:
+Os testes pgTAP em `supabase/tests/database/` provam isso com usuários fictícios e um administrador, em 493 asserções:
 
 - isolamento do acesso (36), hook e gatilho (20) e funções (15, com a lista explícita do que `authenticated` executa);
-- carteira (112), concorrência com duas sessões (13), benchmarks (45), migração no trânsito (22), metadados dos ativos (79) e taxonomia dos ativos (158).
+- carteira (112), concorrência com duas sessões (13), benchmarks (45), migração no trânsito (22), metadados dos ativos (67) e taxonomia dos ativos (163).
 
 ### Carteira (ciclo `003`, G1 e G2)
 
@@ -189,16 +189,16 @@ Definidos em `supabase/migrations/20261024000829_metadados_ativos.sql` (issue #1
 | Objeto | Função |
 | :-- | :-- |
 | `public.instituicoes` | Instituições do usuário, com nome único por identidade `lower(btrim(nome))` (caixa e espaços nas pontas ignorados, acentos preservados) |
-| `public.classes_ativo` | Classes de alocação do usuário, com a mesma regra de nome; na migração do ciclo `012`, todo perfil novo passou a receber Renda fixa, Renda variável, Fundos, Cripto e Outros por gatilho em `public.profiles`, e os perfis existentes as receberam; o gatilho saiu no ciclo `013` (legado, em retirada) |
+| `public.classes_ativo` | Classes de alocação do usuário, com a mesma regra de nome; na migração do ciclo `012`, todo perfil novo passou a receber Renda fixa, Renda variável, Fundos, Cripto e Outros por gatilho em `public.profiles`, e os perfis existentes as receberam; o gatilho saiu no ciclo `013` e, desde a fase 2, a tabela é legado só de leitura (dica "antes: X"), sem nenhuma função que a escreva |
 | `public.ativos` (colunas novas) | `instituicao_id` e `classe_id`, por chave composta `(user_id, id)`, e `previdencia`, `liquidez_imediata`, `exposicao_cambial` e `isento_ir` em três estados (nulo é não informado); o trânsito não recebe nenhum |
 
-- Leitura só das próprias linhas; escrita só por `criar_instituicao`, `renomear_instituicao`, `excluir_instituicao`, `criar_classe`, `renomear_classe`, `excluir_classe`, `cadastrar_ativo` e `editar_detalhes_ativo`.
-- Exclusão de instituição ou classe só sem ativo vinculado (`recusado_em_uso`); renomear é livre, salvo nome repetido.
-- `cadastrar_ativo` e `editar_detalhes_ativo` aceitam o id de uma entrada ou um nome novo, que reaproveita a entrada de mesma identidade ou a cria na mesma transação. A edição substitui todos os campos descritivos, aceita ativo desativado e recusa o trânsito. `criar_ativo` continua disponível, sem os campos.
+- Leitura só das próprias linhas; escrita só por `criar_instituicao`, `renomear_instituicao`, `excluir_instituicao`, `cadastrar_ativo_taxonomia` e `editar_detalhes_ativo_taxonomia`. As funções de classe do ciclo `012` (`criar_classe`, `renomear_classe`, `excluir_classe`) e as assinaturas antigas de `cadastrar_ativo` e `editar_detalhes_ativo` saíram na fase 2 do ciclo `013`.
+- Exclusão de instituição só sem ativo vinculado (`recusado_em_uso`); renomear é livre, salvo nome repetido.
+- `cadastrar_ativo_taxonomia` e `editar_detalhes_ativo_taxonomia` aceitam, para a instituição, o id de uma entrada ou um nome novo, que reaproveita a entrada de mesma identidade ou a cria na mesma transação; a classe é o id de um nó da taxonomia ou nada. A edição substitui todos os campos descritivos, aceita ativo desativado e recusa o trânsito. `criar_ativo` continua disponível, sem os campos.
 
-### Taxonomia de classes de ativos (ciclo `013`, G2) — estado intermediário
+### Taxonomia de classes de ativos (ciclo `013`, G2)
 
-Fase 1 de 2, definida em `supabase/migrations/20261026204955_taxonomia_ativos.sql` (issue #137, BL-014 e parcela de BL-009). A taxonomia global substitui, por etapas, as classes por usuário do ciclo `012`. Enquanto a fase 2 (issue seguinte, depois da ação externa E1) não retira o legado, os dois coexistem (janela de transição, D19). Nenhuma tela usa a taxonomia ainda.
+Definida em duas migrações. A fase 1, `supabase/migrations/20261026204955_taxonomia_ativos.sql` (issue #137, BL-014 e parcela de BL-009), criou o catálogo e as funções novas e deixou as do ciclo `012` coexistindo (janela de transição, D19); está em produção desde a ação externa E1. A fase 2, `supabase/migrations/20261026215542_taxonomia_ativos_fase2.sql` (issue #138), retira as funções antigas depois do deploy da aplicação nova (ação externa E2). A taxonomia global substitui as classes por usuário: o cadastro e a edição do ativo já a usam (seletor único, sem criação), e a alocação por classe macro é da unidade seguinte (issue #139).
 
 | Objeto | Função |
 | :-- | :-- |
@@ -208,10 +208,11 @@ Fase 1 de 2, definida em `supabase/migrations/20261026204955_taxonomia_ativos.sq
 | `public.ler_versao_classificacao()` | Lê a marca do próprio usuário, como texto decimal (não perde precisão acima de 2⁵³), sob a RLS de `profiles`; sem parâmetro de dono, sem bypass do administrador |
 
 - Leitura do catálogo por qualquer usuário autenticado; nenhuma escrita pela Data API, nem pelo administrador. A manutenção é por migração revisada; mudar o catálogo em uso exige migração nova, com a própria janela de coerência.
-- Novas funções, com nomes distintos para não haver sobrecarga ambígua no PostgREST: `cadastrar_ativo_taxonomia` e `editar_detalhes_ativo_taxonomia` (recebem `p_taxonomia` no lugar de `p_classe` e `p_classe_nova`; validam o nó; o cadastro deixa `classe_id` nulo e a edição o preserva). As do ciclo `012` continuam: o cadastro antigo deixa o nó nulo e a edição antiga grava o legado e zera `taxonomia_id`, tornando o ativo "Sem classe".
+- Funções novas, com nomes distintos para não haver sobrecarga ambígua no PostgREST: `cadastrar_ativo_taxonomia` e `editar_detalhes_ativo_taxonomia` (recebem `p_taxonomia` no lugar de `p_classe` e `p_classe_nova`; validam o nó, com `recusado_taxonomia_inexistente`; o cadastro deixa `classe_id` nulo e a edição o preserva). Na janela da fase 1, as do ciclo `012` coexistiam: o cadastro antigo deixava o nó nulo e a edição antiga gravava o legado e zerava `taxonomia_id`, tornando o ativo "Sem classe". A fase 2 as retirou, junto com `private.resolver_classe`, sem `cascade`.
 - Equivalência mínima do legado, aplicada uma única vez na migração e só nos ativos comuns, inclusive desativados: os seis nomes da classe macro, mais os aliases "Cripto" e "Outros", sem caixa, acento nem espaços nas pontas (`private.taxonomia_equivalente`). "Fundos", nomes personalizados e ausência de legado ficam nulos. Nenhum saldo, evento, posição ou indicador muda.
 - O gatilho que criava as cinco classes iniciais de cada perfil novo e seus auxiliares saíram: perfil novo nasce sem classes.
-- A fase 2 retira as funções antigas de classe e `private.resolver_classe` e deixa o legado só para leitura; só depois dela entram o seletor e a alocação por classe macro.
+- Legado depois da fase 2: `classes_ativo` e `ativos.classe_id` ficam só de leitura (o usuário só tem `SELECT`, nem o administrador escreve) e servem à dica "antes: X"; saem num ciclo futuro, por migração nova. Como o `supabase test db` roda sobre o schema final, a coexistência das duas gerações de funções é provada nos ensaios locais de upgrade (fixtures em `tests/fixtures/taxonomia/`), não no pgTAP.
+- Interface (issue #138): a classe do ativo é um seletor único e opcional, com o caminho completo (" › ") em ordem hierárquica, busca por trecho do caminho sem acento nem caixa (o nome de um ancestral lista os descendentes) e sem criação; as listas mostram só o nome do nó (`src/lib/telas/taxonomia.ts`; DESIGN.md 6.7 e 6.8).
 
 ### Benchmarks (ciclo `003`)
 
@@ -231,7 +232,7 @@ Definidos em `supabase/migrations/20261014193630_benchmarks.sql`.
 ### Interface e PWA
 
 - A aplicação usa os tokens e a fonte IBM Plex Sans do `design-system/DESIGN.md` (`src/app/globals.css`).
-- O grupo `src/app/(app)/` oferece Início, Lançamentos, Ativos, Benchmarks, Transferências, Cadastros (instituições e classes, desde o ciclo `012`), Novidades, Conta e Administração (só para admin), com barra inferior no celular e menu lateral no desktop. O logo está no menu lateral, no login e, no celular, à esquerda do cabeçalho.
+- O grupo `src/app/(app)/` oferece Início, Lançamentos, Ativos, Benchmarks, Transferências, Cadastros (instituições; as classes saíram no ciclo `013`), Novidades, Conta e Administração (só para admin), com barra inferior no celular e menu lateral no desktop. O logo está no menu lateral, no login e, no celular, à esquerda do cabeçalho.
 - As leituras usadas em cálculo são completas e paginadas; composições de carteira e benchmark conferem marcas antes/depois, repetindo no máximo três vezes. Dentro do servidor Next, cada fase passa um `AbortSignal` próprio às consultas, porque o Next devolve a mesma resposta para GET idênticos no mesmo pedido; os componentes de cada marca são lidos em paralelo, sem sobrepor as fases (`src/lib/leitura.ts`). Dado indisponível aparece como `N/D`, sem virar zero. As regras de apresentação do Início estão na seção 15 da KB-004, com CR-51/CR-52.
 - É instalável como PWA pelo menu do navegador, sem service worker e sem modo offline (`src/app/manifest.ts`; ADR-002).
 
@@ -278,3 +279,5 @@ O plano executado do ciclo `001` (`_project/executed/001_fundacao_aplicacao/001_
 | 2026-10-23 | `012` | Issue #128: classe, instituição e indicadores no cadastro e na edição do ativo e nas duas abas de Ativos |
 | 2026-10-24 | `012` | Encerramento: release `0.9.0` publicada e data registrada em `/novidades`; migração dos metadados em produção e conferência autenticada de Cadastros, do cadastro e da edição do ativo |
 | 2026-10-26 | `013` | Issue #137 (BL-014 e parcela de BL-009): taxonomia global de classes, vínculo opcional do ativo, marca de coerência da classificação e funções compatíveis com a janela de transição, no banco; telas nas issues seguintes |
+| 2026-10-26 | `013` | Issue #137 integrada (PR #140) e ação externa E1 concluída: taxonomia global em produção, com 39 nós e o preenchimento do legado |
+| 2026-10-26 | `013` | Issue #138 (BL-014 e parcela de BL-009): seletor único de classe da taxonomia no cadastro e na edição, aba Classes retirada de Cadastros e migração da fase 2, que fecha o legado para escrita; E2 depois do deploy |

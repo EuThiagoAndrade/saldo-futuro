@@ -5,6 +5,7 @@ import { deLinhaEvento, type LinhaEvento } from "./carteira";
 import type { EntradaCatalogo, VinculoDoAtivo } from "./catalogos";
 import { ordenarPorNome } from "./combobox";
 import { mesDaColuna, type PosicaoLida } from "./fechamento";
+import { montarTaxonomia, type NoTaxonomia, type Taxonomia } from "./taxonomia";
 
 // Leituras completas das telas da carteira (D13): todas as linhas, na ordem declarada, com a
 // sessão do usuário (a RLS restringe às próprias linhas).
@@ -18,6 +19,9 @@ export interface Ativo {
   desativado_em: string | null;
   // Campos descritivos (ciclo 012, issue #128): nenhum cálculo os lê.
   instituicao_id: string | null;
+  // Classe: nó da taxonomia global (ciclo 013); classe_id é o legado do ciclo 012, só de leitura,
+  // lido apenas para a dica "antes: X" de quem ficou sem nó.
+  taxonomia_id: string | null;
   classe_id: string | null;
   previdencia: boolean | null;
   liquidez_imediata: boolean | null;
@@ -26,23 +30,29 @@ export interface Ativo {
 }
 
 const COLUNAS_ATIVO =
-  "id, nome, tipo_ajuste, sistema, ativo, desativado_em, instituicao_id, classe_id, previdencia, liquidez_imediata, exposicao_cambial, isento_ir";
+  "id, nome, tipo_ajuste, sistema, ativo, desativado_em, instituicao_id, taxonomia_id, classe_id, previdencia, liquidez_imediata, exposicao_cambial, isento_ir";
 
 export function lerAtivos(cliente: Cliente, sinal?: AbortSignal): Promise<Ativo[]> {
   return lerTabela<Ativo>(cliente, "ativos", { colunas: COLUNAS_ATIVO, sinal });
 }
 
-// Catálogos do usuário (ciclo 012, issue #127): instituições e classes, e o uso pelos ativos.
+// Catálogo de instituições do usuário (ciclo 012, issue #127) e uso pelos ativos.
 export function lerInstituicoes(cliente: Cliente, sinal?: AbortSignal): Promise<EntradaCatalogo[]> {
   return lerTabela<EntradaCatalogo>(cliente, "instituicoes", { colunas: "id, nome", sinal });
 }
 
-export function lerClasses(cliente: Cliente, sinal?: AbortSignal): Promise<EntradaCatalogo[]> {
+/** Legado do ciclo 012, só de leitura: serve à dica "antes: X" dos ativos que ficaram sem classe. */
+export function lerClassesLegadas(cliente: Cliente, sinal?: AbortSignal): Promise<EntradaCatalogo[]> {
   return lerTabela<EntradaCatalogo>(cliente, "classes_ativo", { colunas: "id, nome", sinal });
 }
 
+/** Taxonomia global de classes (ciclo 013): a árvore inteira, validada; árvore incoerente é erro de leitura. */
+export async function lerTaxonomia(cliente: Cliente, sinal?: AbortSignal): Promise<Taxonomia> {
+  return montarTaxonomia(await lerTabela<NoTaxonomia>(cliente, "taxonomia_ativos", { colunas: "id, parent_id, nivel, nome, ordem", sinal }));
+}
+
 export function lerVinculosDosAtivos(cliente: Cliente, sinal?: AbortSignal): Promise<VinculoDoAtivo[]> {
-  return lerTabela<VinculoDoAtivo>(cliente, "ativos", { colunas: "instituicao_id, classe_id", sinal });
+  return lerTabela<VinculoDoAtivo>(cliente, "ativos", { colunas: "instituicao_id", sinal });
 }
 
 export async function lerEventos(cliente: Cliente, sinal?: AbortSignal): Promise<Evento[]> {

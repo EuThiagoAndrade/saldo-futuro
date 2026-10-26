@@ -1,21 +1,21 @@
 import { ordenarPorNome } from "./combobox";
 
-// Catálogos de instituições e classes do usuário (ciclo 012, issue #127, BL-009), nas abas de
-// /cadastros (emenda E-1 do plano). Os nomes só descrevem os ativos; nenhum cálculo os lê. A
-// identidade do nome (repetido ou não) é decidida pelo banco, por lower(btrim(nome)); aqui só se
-// ordena e se conta o uso.
+// Catálogo de instituições do usuário (ciclo 012, issue #127, BL-009), em /cadastros (emenda E-1
+// do plano). Os nomes só descrevem os ativos; nenhum cálculo os lê. A identidade do nome (repetido
+// ou não) é decidida pelo banco, por lower(btrim(nome)); aqui só se ordena e se conta o uso. As
+// classes do usuário saíram de Cadastros no ciclo 013 (issue #138): a classe do ativo é um nó da
+// taxonomia global.
 
-export type TipoCatalogo = "instituicoes" | "classes";
+export type TipoCatalogo = "instituicoes";
 
 export interface EntradaCatalogo {
   id: string;
   nome: string;
 }
 
-/** Referências dos ativos (em uso ou desativados) às entradas dos catálogos. */
+/** Referências dos ativos (em uso ou desativados) às entradas do catálogo. */
 export interface VinculoDoAtivo {
   instituicao_id: string | null;
-  classe_id: string | null;
 }
 
 export interface LinhaCatalogo extends EntradaCatalogo {
@@ -35,19 +35,6 @@ export const CATALOGOS = {
     rotuloCampo: "Nova instituição",
     rotuloIncluir: "Incluir instituição",
     incluida: "Instituição incluída.",
-  },
-  classes: {
-    titulo: "Classes",
-    aba: "/cadastros?aba=classes",
-    singular: "classe",
-    coluna: "classe_id",
-    descricao:
-      "Classes de alocação dos seus ativos, como renda fixa ou cripto. Elas aparecem como opção no cadastro do ativo e servem só para descrevê-lo.",
-    vazio: "Nenhuma classe cadastrada",
-    textoVazio: "Inclua a primeira acima. Depois, ela aparece como opção no cadastro dos ativos.",
-    rotuloCampo: "Nova classe",
-    rotuloIncluir: "Incluir classe",
-    incluida: "Classe incluída.",
   },
 } as const satisfies Record<TipoCatalogo, Record<string, string>>;
 

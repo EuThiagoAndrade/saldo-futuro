@@ -269,7 +269,7 @@ A partir do ciclo `001`, a aplicação implementa os tokens em configuração CS
 - Cada item tem ícone de 24 px e rótulo `caption`; o rótulo nunca é omitido.
 - O item ativo usa ícone e rótulo em `primary` e um indicador `primary-subtle` atrás do ícone, além de `aria-current="page"`.
 - "Mais" abre uma folha inferior com os demais destinos, nesta ordem: Transferências, Cadastros (ciclo `012`), Novidades (ciclo `010`), Conta e Administração. Os mesmos destinos aparecem abaixo do divisor do menu lateral. Novidades e Cadastros valem para os dois perfis; o destino de administração só aparece para o perfil `admin`. Com um destino de "Mais" aberto, o próprio botão "Mais" fica em `primary`.
-- Cadastros reúne as listas de apoio do usuário (instituições e classes de ativo), fora de Ativos, porque não são ativos: os ativos estão nas instituições e são descritos pelas classes (ciclo `012`, emenda E-1).
+- Cadastros reúne as listas de apoio do usuário, hoje as instituições, fora de Ativos, porque não são ativos: os ativos estão nas instituições (ciclo `012`, emenda E-1). A aba Classes saiu no ciclo `013`: a classe do ativo é um nó da taxonomia global, escolhido no cadastro do ativo.
 - Política de privacidade e termos de uso não são destinos da navegação: ficam como links de texto na tela de entrada e em Conta (ciclo `010`).
 - A área de toque de cada item cobre toda a sua posição na barra (no mínimo 44 × 44 px).
 
@@ -320,6 +320,7 @@ A variação sempre combina **sinal**, **ícone** e **cor**; a cor sozinha nunca
 - A ordenação e os filtros são os mesmos nas duas formas.
 - **Exceção: lista densa de Ativos (ciclo `010`).** Abaixo de `md`, os ativos em uso formam uma lista contínua numa única superfície `surface` com contorno `border` e divisores `border` entre as linhas, em vez de um cartão por ativo. Cada linha traz o nome completo em `body` peso 500, com quebra de linha e nunca truncado, o tipo e os metadados em `body-sm` `text-secondary` na segunda linha e a ação à direita, com pelo menos 44 px de altura. O ativo de sistema não tem ação; a segunda linha diz que ele só recebe transferências. Desativados usam a mesma lista, com nome e data, sem ação. A partir de `md`, a tabela continua.
 - **Emenda do ciclo `012` à lista de Ativos.** A segunda linha dos ativos em uso traz tipo, classe e instituição, separados por " · ", omitindo o que não foi informado; à direita, "Editar" (link com aparência de botão de texto) acima de "Desativar". Os desativados passam a mostrar na segunda linha a classe, a instituição e a data da desativação, com "Editar" à direita (44 px). O trânsito continua sem ação. Na tabela, Classe e Instituição são colunas próprias, com "—" quando não informadas, e a coluna de ações traz Editar e Desativar. A frase anterior sobre desativados "sem ação" fica substituída por esta.
+- **Emenda do ciclo `013` à classe na lista de Ativos.** A classe é o **nome do nó** da taxonomia global escolhido (só o último elemento do caminho, como "CDB"), nunca o caminho completo, nas duas abas, na tabela e na lista do celular. Sem nó e com classe do legado, o texto é "Sem classe (antes: X)", com X o nome da classe antiga; sem nó e sem legado, a classe é omitida no celular e "—" na tabela, como "não informado". Um nó que não existe é erro de leitura da página, nunca "Sem classe".
 
 ### 6.8 Formulário
 
@@ -353,6 +354,17 @@ Os seletores de classe e de instituição do ativo usam o mesmo componente e a m
 - **Criação:** quando nenhuma opção tem a mesma **identidade** do texto, a última opção é "Cadastrar «texto»". Confirmada como qualquer outra, ela envia o nome num segundo campo oculto, sem ID, e a entrada só é criada no envio do formulário.
 - **Duas regras de nome:** a **busca** ignora acentos, caixa e espaços nas pontas e só filtra a lista; a **identidade** ignora caixa e espaços nas pontas, mas preserva acentos, e decide se o texto já é uma entrada (a mesma regra do banco, que é a autoridade). Com "Classe Ação" cadastrada, digitar "Classe Acao" lista "Classe Ação" e também oferece "Cadastrar «Classe Acao»"; digitar " classe ação " lista "Classe Ação" sem oferecer cadastro.
 - **Lista vazia:** sem entradas e sem texto, aparece "Nenhuma classe cadastrada. Digite um nome para cadastrar." (ou "instituição").
+
+#### Seletor de classe da taxonomia (ciclo `013`)
+
+O campo "Classe" do ativo deixou de ser um seletor com criação e passou a escolher um nó da taxonomia global (até três níveis, mantida por migração). Usa o mesmo componente e a mesma política do seletor de ativo, com estas diferenças:
+
+- **Um campo só, opcional:** escolher uma classe macro, uma subclasse ou um tipo não acrescenta campo nem etapa ao formulário. Qualquer nó de qualquer nível é uma escolha válida, inclusive um pai que tem filhos. Campo vazio significa "Sem classe"; limpar o texto e sair (Esc) apaga a escolha anterior.
+- **Caminho completo:** cada opção mostra o caminho inteiro, com " › " entre os níveis ("Renda fixa › Crédito bancário › CDB"), em ordem hierárquica (cada pai antes dos filhos, irmãos na ordem da árvore), não alfabética. O campo mostra o caminho do nó confirmado. As opções quebram a linha, nunca truncam nem rolam na horizontal, e têm pelo menos 44 px de altura.
+- **Busca pelo caminho:** a busca por trecho, sem acento nem caixa, vale para o caminho inteiro; digitar o nome de um ancestral lista o nó e todos os descendentes ("credito bancario" lista a subclasse e os seus tipos).
+- **Sem criação:** não existe "Cadastrar «texto»". Texto sem seleção confirmada impede o envio com "Escolha uma classe da lista.", e um texto que não é de nenhum nó mostra "Nenhuma classe encontrada.". O servidor ainda recusa um ID de nó inexistente ("Classe não encontrada. Escolha uma da lista.").
+- **Na edição:** acima dos campos, "Classe atual" mostra, com quebra de linha, o caminho completo do nó, ou "Sem classe" com "(antes: X)" quando o ativo só tem a classe do legado. O campo abre já com o nó confirmado.
+- **Cadastros:** a aba Classes saiu; o endereço antigo `?aba=classes` abre Instituições.
 
 ### 6.9 Botões
 
@@ -390,7 +402,7 @@ Um valor que não pôde ser carregado mostra o estado de erro, nunca o último v
 
 ### 6.12 Abas por navegação
 
-Usadas para alternar entre partes de uma mesma lista lidas pelo servidor, como "Em uso" e "Desativados" em Ativos (ciclo `010`) e "Instituições" e "Classes" em Cadastros (`?aba=classes`, ciclo `012`).
+Usadas para alternar entre partes de uma mesma lista lidas pelo servidor, como "Em uso" e "Desativados" em Ativos (ciclo `010`). Em Cadastros, a aba "Classes" (`?aba=classes`, ciclo `012`) saiu no ciclo `013`, e a página mostra só as instituições, sem abas.
 
 - São links com endereço próprio (por exemplo, `?aba=desativados`) dentro de um `nav` rotulado, não o padrão `tab` do ARIA: recarregar, voltar e avançar preservam a aba, e o teclado usa Tab e Enter como em qualquer link. Um valor ausente ou desconhecido abre a primeira aba.
 - Cada aba tem pelo menos 44 px de altura, rótulo `label` e um contador em etiqueta neutra (`neutral` sobre `neutral-subtle`, `caption` peso 500).
