@@ -1,7 +1,7 @@
 # Plano de Implementação — Análises por instituição e níveis de classe
 
 > **Ciclo:** `015`
-> **Status:** `Aprovado`
+> **Status:** `Em Execução`
 > **Versão:** `v2`
 > **Data de criação:** 2026-10-27
 > **Última atualização:** 2026-10-27
@@ -12,6 +12,7 @@
 > **Autorização do rascunho:** "autorizo o rascunho do plano do ciclo 015" em 2026-10-27
 > **Autorização da correção:** "corrija o plano do ciclo 015" em 2026-10-27
 > **Modo contínuo:** `—`
+> **Autorização de implementação da unidade A:** "autorizo a implementação da issue #151" em 2026-10-27; recebida; execução iniciada na branch `feature/issue-151`, task `015_task_issue-151.md`.
 > **Revisão formal:** `Concluída`
 > **Veredito da revisão:** `APTO PARA APROVAÇÃO`
 > **Aprovação humana pós-revisão:** `Aprovada em 2026-10-27`
@@ -260,23 +261,39 @@ Mapa prospectivo, não lista de mudanças já executadas:
 
 ## Decomposição em issues e PRs
 
-Nenhuma issue foi criada. A publicação documental, autorizada pela aprovação pós-revisão, está na [PR #150](https://github.com/EuThiagoAndrade/saldo-futuro/pull/150), aberta contra main na branch `chore/cycle-015-plan`. Os títulos abaixo são payloads propostos; descrição/aceite/barreiras serão apresentados para confirmação depois do plano integrado.
+As issues A–D foram criadas após a integração da [PR #150](https://github.com/EuThiagoAndrade/saldo-futuro/pull/150) e a confirmação dos payloads em 2026-10-27. Os corpos efetivos foram publicados conforme o formulário `.github/ISSUE_TEMPLATE/feature_request.yml` e estão registrados em “Registro de criação das issues”. A unidade A (#151) foi autorizada e iniciada; B–D continuam sem autorização.
 
-| Unidade | Título proposto | Dependência | Entrega e fechamento |
+| Unidade | Issue e título | Dependência | Entrega e fechamento |
 | :-- | :-- | :-- | :-- |
 | Documental | Plano do ciclo 015 | Veredito apto e aprovação posterior | Branch `chore/cycle-015-plan`; PR de ideação/plano/registro, sem issue própria; merge com autorização específica |
-| A | [FEATURE] Garantir coerência de metadados e edição transacional do nome do ativo | Documental integrada; issue e autorização | Uma PR de banco; `Refs #N`, issue aberta até E1 e encerramento |
-| B | [FEATURE] Calcular alocação por instituição e níveis de classe | Documental integrada; issue e autorização; A antes na sequência recomendada | Uma PR de regras, KB e testes; pode fechar no merge |
-| C | [FEATURE] Editar nome do ativo e proteger análises do Início | A integrada, E1 concluída; issue e autorização | Uma PR de aplicação/leituras; pode fechar no merge |
-| D | [FEATURE] Exibir análises por instituição e detalhamento de classes | B e C integradas; E1 concluída; issue e autorização | Uma PR de análises/documentação; pode fechar no merge; V rastreado no encerramento |
+| A — [#151](https://github.com/EuThiagoAndrade/saldo-futuro/issues/151) | [FEATURE] Garantir coerência de metadados e edição transacional do nome do ativo | Documental integrada; autorização de implementação | Uma PR de banco; `Refs #151`, issue aberta até E1 e encerramento |
+| B — [#152](https://github.com/EuThiagoAndrade/saldo-futuro/issues/152) | [FEATURE] Calcular alocação por instituição e níveis de classe | Documental integrada; autorização de implementação; A antes na sequência recomendada | Uma PR de regras, KB e testes; pode fechar no merge |
+| C — [#153](https://github.com/EuThiagoAndrade/saldo-futuro/issues/153) | [FEATURE] Editar nome do ativo e proteger análises do Início | A integrada, E1 concluída; autorização de implementação | Uma PR de aplicação/leituras; pode fechar no merge |
+| D — [#154](https://github.com/EuThiagoAndrade/saldo-futuro/issues/154) | [FEATURE] Exibir análises por instituição e detalhamento de classes | B e C integradas; E1 concluída; autorização de implementação | Uma PR de análises/documentação; pode fechar no merge; V rastreado no encerramento |
 | Release | Release proposta pelo release-please | Entregas integradas e verificadas; versão concreta conferida | PR do bot, checks próprios e merge próprio; conferir fechamento indevido da issue A |
 | Encerramento | Encerrar ciclo 015 | A–D, E1, V e release comprovados | Branch `chore/cycle-015-closure`, sem issue recursiva; fechamento de A se ainda aberta, documentação viva e movimento prospectivo para `executed/` |
 
 Issues usam branch `feature/issue-N` e commit `feat(issue-N):`; documentação usa `docs(cycle-015):` ou `chore(cycle-015):`. Tasks `015_task_issue-N.md`, instanciadas do template no início da implementação. Não usar prefixo de ferramenta nem registrar SHA do próprio merge. Na aprovação do plano, a publicação documental é coberta; não publicar agora.
 
+## Registro de criação das issues
+
+- **Data e autorização:** 2026-10-27, “Pode criar as issues.”, após a apresentação e confirmação dos quatro payloads.
+- **Precondições conferidas:** plano v2 `Aprovado`; PR #150 integrada em `main` pelo commit `200be5df7d84521d9bcd911d4f0e0500e4dddfe8`; checks verdes no head `2d5ab192e93d79e43a896d2fee7765a87ab72ec2`; busca `gh issue list` pelos quatro títulos sem duplicatas.
+- **Template aplicado:** `.github/ISSUE_TEMPLATE/feature_request.yml` — Contexto, Escopo, Critérios de aceite, Ciclo e plano relacionados, Dependências, riscos e autorizações, nessa ordem; sem labels ou responsáveis.
+- **Resultado:** quatro issues criadas sequencialmente por `gh issue create --body-file`, relidas com `gh issue view` e conferidas como `OPEN`.
+
+| Unidade | Issue criada | Payload efetivo |
+| :-- | :-- | :-- |
+| A | [#151 — Garantir coerência de metadados e edição transacional do nome do ativo](https://github.com/EuThiagoAndrade/saldo-futuro/issues/151) | Corpo confirmado publicado sem alteração |
+| B | [#152 — Calcular alocação por instituição e níveis de classe](https://github.com/EuThiagoAndrade/saldo-futuro/issues/152) | Corpo confirmado publicado sem alteração |
+| C | [#153 — Editar nome do ativo e proteger análises do Início](https://github.com/EuThiagoAndrade/saldo-futuro/issues/153) | Corpo confirmado publicado sem alteração |
+| D | [#154 — Exibir análises por instituição e detalhamento de classes](https://github.com/EuThiagoAndrade/saldo-futuro/issues/154) | Corpo confirmado publicado sem alteração |
+
+- **Estado ao criar as issues (histórico):** ciclo permanecia em `Planejamento`; issues A–D abertas; nenhuma implementação, branch de issue, task ou ação externa iniciada. Este registro local acompanha a próxima entrega autorizada; sem commit direto em `main`.
+
 ## Dependências e blockers
 
-Rodada 1 emitiu `REQUER NOVA RODADA`, com um bloqueador e três ressalvas; a correção v2 respondeu R1-1 a R1-4 e a Rodada 2 confirmou todos resolvidos, com `APTO PARA APROVAÇÃO` e nenhum achado novo. A aprovação humana posterior foi recebida em 2026-10-27 e registrada acima. D1/D2 permanecem. A PR documental #150 foi publicada; sua integração exige checks verdes no head corrente e aprovação própria do merge. Depois dela, confirmação dos payloads e autorizações por issue continuam pendentes. Ferramentas, Docker e Supabase precisam ser conferidos na implementação; sua disponibilidade ainda não foi testada para este ciclo. Nenhum pacote ou checkout externo novo é previsto.
+Rodada 1 emitiu `REQUER NOVA RODADA`, com um bloqueador e três ressalvas; a correção v2 respondeu R1-1 a R1-4 e a Rodada 2 confirmou todos resolvidos, com `APTO PARA APROVAÇÃO` e nenhum achado novo. A aprovação humana posterior foi recebida em 2026-10-27 e registrada acima. D1/D2 permanecem. A PR documental #150 foi integrada; os payloads foram confirmados e as issues #151–#154 estão abertas. A autorização da #151 foi recebida e sua execução está registrada em `015_task_issue-151.md`. Docker e Supabase local foram conferidos; E1 e autorizações de B–D continuam pendentes. Nenhum pacote ou checkout externo novo é previsto.
 
 ### E1 — Ação externa depois da unidade A
 
@@ -337,9 +354,9 @@ Após autorização específica e deploy compatível confirmado, o responsável 
 
 | Campo | Valor |
 | :-- | :-- |
-| Issue(s) | — (A–D propostas, ainda não criadas) |
-| PR(s) | [#150 — publicação documental](https://github.com/EuThiagoAndrade/saldo-futuro/pull/150), aberta; nenhuma implementação iniciada |
-| Branch(es) | `chore/cycle-015-plan`, publicação documental sobre `84f0a5ea107f33e0de5c506b3ea0825346f6e58e`, base main conferida no remoto |
+| Issue(s) | [#151 (A)](https://github.com/EuThiagoAndrade/saldo-futuro/issues/151), [#152 (B)](https://github.com/EuThiagoAndrade/saldo-futuro/issues/152), [#153 (C)](https://github.com/EuThiagoAndrade/saldo-futuro/issues/153), [#154 (D)](https://github.com/EuThiagoAndrade/saldo-futuro/issues/154) — abertas |
+| PR(s) | [#150 — publicação documental](https://github.com/EuThiagoAndrade/saldo-futuro/pull/150), integrada pelo commit `200be5df7d84521d9bcd911d4f0e0500e4dddfe8`; unidade A em execução, conforme task #151 |
+| Branch(es) | `chore/cycle-015-plan`, publicação documental integrada a `main` |
 | Revisão de origem | `84f0a5ea107f33e0de5c506b3ea0825346f6e58e`, com ideação e reserva locais preexistentes |
 | Destino após conclusão | `_project/executed/015_analises_instituicao_niveis_classe/015_plan.md` |
 
@@ -347,13 +364,15 @@ Após autorização específica e deploy compatível confirmado, o responsável 
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 015 (completo)
-Quem: Responsável
-Conferir: checks e diff da PR #150 — https://github.com/EuThiagoAndrade/saldo-futuro/pull/150; somente ideação, plano aprovado e registro do ciclo
-Diga: "aprovo o merge da PR #150"
+Situação: Pronto para continuar — ciclo 015 (completo)
+Quem: Qualquer ferramenta, a pedido do responsável
+Conferir: —
+Diga: "continue o ciclo 015"
 ```
 
 ## Handoff de saída
+
+### Handoff da publicação documental — aprovar_plano
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 015 + aprovar_plano + 015_plan + v2`
@@ -363,6 +382,17 @@ Diga: "aprovo o merge da PR #150"
 - `result`: `executed`
 - `evidence`: frase de aprovação e veredito da Rodada 2 registrados; `git fetch origin` e consulta de PRs por branch confirmaram base e ausência de duplicidade; escopo, decisões e rodadas preservados. Push e criação confirmados em https://github.com/EuThiagoAndrade/saldo-futuro/pull/150; `gh pr view 150` conferiu branch/base, estado aberto e exatamente ideação, plano e registro. Gates documentais da aprovação: 48/48 testes de governança com TEMP/TMP locais ao processo em `local/tmp-governance-015`; validador com 0 erros e 0 avisos; `git diff --cached --check` e `git diff --check` passaram; staging limitado aos três documentos. Estado dos checks do head corrente é conferido no GitHub antes do merge. Nenhum dado real incluído.
 - `blockers`: nenhum impedimento local conhecido; checks verdes e aprovação específica do merge documental são precondições pendentes de integração; confirmação de payloads e autorizações de implementação continuam separadas.
+
+### Handoff da criação das issues — criar_issues
+
+- `handoff_schema_version: 2`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 015 + criar_issues + A-D + revisão de origem 2d5ab192e93d79e43a896d2fee7765a87ab72ec2`
+- `effect_class: remote_mutation`
+- `state_before`: plano v2 Aprovado e PR #150 integrada; payloads A–D apresentados e confirmação recebida em 2026-10-27; nenhuma issue correspondente encontrada.
+- `state_after`: issues #151–#154 abertas e verificadas; corpos iguais aos payloads confirmados; registro local atualizado em `015_plan.md` e `cycles.md`, sem commit ou push; ciclo em Planejamento; nenhuma implementação iniciada; próximo passo aguarda autorização específica para #151.
+- `result: executed`
+- `evidence`: autorização recebida em 2026-10-27 após a apresentação dos payloads; busca por cada título via `gh issue list` sem duplicatas; formulário Feature conferido; issues criadas via `gh issue create --body-file` e números, títulos, estados e corpos conferidos via `gh issue view`: [#151](https://github.com/EuThiagoAndrade/saldo-futuro/issues/151), [#152](https://github.com/EuThiagoAndrade/saldo-futuro/issues/152), [#153](https://github.com/EuThiagoAndrade/saldo-futuro/issues/153), [#154](https://github.com/EuThiagoAndrade/saldo-futuro/issues/154).
+- `blockers`: nenhum para a criação; a implementação aguarda autorização da issue #151; E1 e as dependências de C/D permanecem pendentes.
 
 ### Histórico — handoff da correção v2
 

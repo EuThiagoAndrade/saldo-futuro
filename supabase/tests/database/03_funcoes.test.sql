@@ -41,7 +41,8 @@ select is_empty(
            'excluir_instituicao(uuid)',
            'cadastrar_ativo_taxonomia(text,tipo_ajuste,uuid,text,uuid,boolean,boolean,boolean,boolean)',
            'editar_detalhes_ativo_taxonomia(uuid,uuid,text,uuid,boolean,boolean,boolean,boolean)',
-           'ler_versao_classificacao()']))) $$,
+           'ler_versao_classificacao()', 'ler_versao_metadados()',
+           'editar_ativo_com_nome(uuid,text,uuid,text,uuid,boolean,boolean,boolean,boolean)']))) $$,
   'anon e authenticated só executam as funções previstas (lista explícita de assinaturas)');
 
 -- A lista é fechada: uma função nova executável por authenticated reprova a asserção acima.
@@ -61,7 +62,8 @@ select isnt_empty(
          'excluir_instituicao(uuid)',
          'cadastrar_ativo_taxonomia(text,tipo_ajuste,uuid,text,uuid,boolean,boolean,boolean,boolean)',
          'editar_detalhes_ativo_taxonomia(uuid,uuid,text,uuid,boolean,boolean,boolean,boolean)',
-         'ler_versao_classificacao()']) $$,
+         'ler_versao_classificacao()', 'ler_versao_metadados()',
+           'editar_ativo_com_nome(uuid,text,uuid,text,uuid,boolean,boolean,boolean,boolean)']) $$,
   'uma função fora da lista executável por authenticated é detectada');
 drop function public.funcao_nao_listada();
 
