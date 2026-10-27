@@ -76,6 +76,7 @@ Não se aplica.
 - **Cor de `chart-7` (R2-1).** O plano propunha `#376C3B`, quase o verde de `gain`. Foi usado `#1F6E9C`, azul aço: contraste 5,5722:1 contra `surface`, ΔE76 de 52,0 para `gain`, 77,8 para `loss`, 20,2 para `chart-5` e 25,9 para `chart-2`. `chart-8` ficou como no plano (6,4514:1).
 - **Leitura só na visão por classe.** A marca da classificação e a árvore só são lidas quando a visão por classe é pedida; a visão por ativo continua com a composição de antes, sem custo novo.
 - **Negativos com a classe entre parênteses.** Na lista de negativos e na tabela, o nome do ativo traz a classe, para que se saiba de qual linha ele saiu.
+- **Reconciliação da task #138** feita nesta PR (task `Concluída`, seção "Ação externa" com a contagem posterior da E2, relatada pelo responsável nesta sessão), como a da #137 foi feita na PR da #138.
 - **Classe incoerente.** Nó inexistente ou caminho inválido mostra um estado de erro só no lugar da rosca por classe, sem número; o resto do Início continua. A leitura que muda além das tentativas mostra o erro de dados que mudaram, como as outras composições.
 
 ## Encerramento
@@ -101,4 +102,4 @@ Diga: "aprovo o merge da PR #147"
 - `state_after`: entrega commitada na branch `feature/issue-139` e publicada na PR #147 (`Refs #139`); gates locais verdes; aguardando checks remotos e aprovação específica do merge.
 - `result`: `executed`
 - `evidence`: seção "Evidências" e https://github.com/EuThiagoAndrade/saldo-futuro/pull/147.
-- `blockers`: o merge depende de checks verdes e de "aprovo o merge da PR #147". A task da #138 ainda não registra a E2 (contagens a pedir ao responsável).
+- `blockers`: o merge depende de checks verdes e de "aprovo o merge da PR #147".

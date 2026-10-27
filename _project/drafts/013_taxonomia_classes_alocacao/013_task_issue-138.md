@@ -2,13 +2,13 @@
 
 > **Ciclo:** `013`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#138`
 > **Plano:** `_project/drafts/013_taxonomia_classes_alocacao/013_plan.md`
 > **Branch:** `feature/issue-138`
 > **PR:** [#142](https://github.com/EuThiagoAndrade/saldo-futuro/pull/142) (`Refs #138`, sem fechar a issue)
-> **Integração:** `Pendente`
+> **Integração:** PR #142 integrada por squash (`3dd60910ace387d03a2cff878f2ea0e9acd816a6`) em 2026-10-26, com deploy de produção às 22:21 UTC; ação externa E2 concluída em 2026-10-26; issue #138 aberta até o encerramento do ciclo
 > **Autorização inicial:** "autorizo a implementação da issue #138" em 2026-10-26
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-26
@@ -52,8 +52,8 @@ Não se aplica.
 - [x] KB-003 (estado final da taxonomia, funções, legado, interface, contagem de asserções e histórico); task #137 reconciliada (PR #140 integrada e E1 concluída).
 - [x] Ensaios locais de upgrade da fase 2 e e2e no schema da fase 1 (ver "Ensaio de upgrade").
 - [x] PR #142 aberta (`Refs #138`).
-- [ ] Checks remotos verdes e aprovação do merge.
-- [ ] Deploy novo confirmado e ação externa E2 pelo responsável (ver "Roteiro E2"). **A migração não pode ser aplicada antes do deploy desta PR.**
+- [x] Checks remotos verdes e merge aprovado pelo responsável; PR #142 integrada em `3dd6091`.
+- [x] Deploy novo confirmado (ambiente `Production` do commit `3dd6091`, 22:21 UTC) e ação externa E2 pelo responsável (ver "Ação externa").
 
 ## Ensaio de upgrade (somente local)
 
@@ -119,6 +119,21 @@ Responsável: o dono do projeto. O agente não recebe credenciais e não consult
 5. Conferir que a aplicação nova continua operando com o banco novo: abrir `/ativos`, `/ativos/novo` e `/cadastros` e ver o seletor de classe com o caminho completo. **Não** cadastrar nem editar dado real só para teste; a escrita pelas funções novas está provada nos ensaios locais.
 6. Declarar "concluí a ação externa da issue #138". O agente confere o que for acessível e registra a limitação das verificações feitas só pelo responsável. Sem E2, a unidade 3 (#139) não começa.
 
+## Ação externa
+
+- **Data:** E2 feita pelo responsável em 2026-10-26, depois do merge da PR #142 e do deploy de produção da `main` em `3dd6091`, que o agente conferiu no GitHub (ambiente `Production`, 2026-10-26T22:21:45Z). A conclusão foi declarada numa sessão anterior, sem as contagens no repositório; elas foram pedidas de novo e relatadas pelo responsável na sessão da issue #139, em 2026-10-26.
+- **Contagem prévia (antes do push):** não registrada. Já não pode ser refeita, porque a migração foi aplicada.
+- **Contagem posterior** (`tests/fixtures/taxonomia/e2_posterior.sql`, relatada pelo responsável):
+
+  | `classes_legadas` | `ativos_com_legado` | `ativos_com_no` | `ativos_comuns` | `funcoes_antigas` | `funcoes_novas` | `auxiliar_antigo` | `escrita_no_legado` | `leitura_do_legado` |
+  | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- |
+  | 6 | 21 | 21 | 30 | 0 | 3 | 0 | 0 | 1 |
+
+- **`migration list`:** local e remoto alinhados nas dez migrações, inclusive `20261026215542` (fase 2) e `20261027002132` (ampliação do ciclo `014`), conforme a saída colada pelo responsável.
+- **Conferência pelo agente:** as cinco colunas de estrutura batem com o esperado do roteiro: as funções antigas e o auxiliar `resolver_classe` saíram, as três funções novas existem, o legado `classes_ativo` não tem nenhum privilégio de escrita para os papéis da Data API e só `authenticated` o lê. As quatro contagens de dados não têm a prévia para comparar; `ativos_comuns` (30) é igual ao total da E1. O agente não acessou o banco de produção.
+- **Limite da evidência:** sem a prévia, não há comparação antes/depois das contagens de dados. A preservação dos dados pela migração 2, que só retira funções, é sustentada pela revisão do SQL e pelo retrato de 81 linhas idêntico no ensaio local.
+- **Resultado:** precondição da issue #139 atendida (legado só de leitura e aplicação nova em produção).
+
 ## Evidências
 
 | Validação | Resultado |
@@ -132,7 +147,7 @@ Responsável: o dono do projeto. O agente não recebe credenciais e não consult
 | `npm run test:e2e` (build, `CI=1`, Supabase local com as variáveis exportadas) | 213 testes: 201 passaram e 12 ignorados (condicionais do ambiente), nenhuma falha. No schema da fase 1, `cadastros.spec.ts` e `ativos-detalhes.spec.ts`: 20 passaram |
 | Validador | `node --test scripts/validate-governance.test.mjs` 48/48; `node scripts/validate-governance.mjs` sem erros |
 | `git diff --check` | Sem erros |
-| Checks remotos | Pendente |
+| Checks remotos | Verdes na PR #142 antes do merge |
 
 ## Revisão da correção
 
@@ -153,12 +168,14 @@ Não se aplica.
 
 ## Próximo passo
 
+Esta task está concluída (PR #142 integrada e E2 concluída). O artefato ativo do ciclo passou a ser a task da issue #139.
+
 ```text
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 013 (completo)
 Quem: Responsável
-Conferir: checks e diff da PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/142
-Diga: "aprovo o merge da PR #142"
+Conferir: checks e diff da PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/147
+Diga: "aprovo o merge da PR #147"
 ```
 
 ## Handoff de saída
@@ -167,7 +184,7 @@ Diga: "aprovo o merge da PR #142"
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 013 + implementar_issue + 138 + c7fc48f4f4f547ce9e768d4468bef6b4689cfa2e`
 - `effect_class`: `remote_mutation`
 - `state_before`: plano `Em Execução`; PR #140 integrada em `c7fc48f` e E1 concluída em 2026-10-26; issue #138 aberta; autorização "autorizo a implementação da issue #138".
-- `state_after`: branch `feature/issue-138` com a migração 2, testes de banco, seletor e telas, e2e, DESIGN.md, KB-003, task, task #137 reconciliada; PR #142 publicada, aguardando checks e aprovação do merge.
+- `state_after`: PR #142 integrada em `3dd6091`, com deploy de produção, e ação externa E2 concluída pelo responsável em 2026-10-26, com a contagem posterior conferida; task `Concluída`, issue #138 aberta até o encerramento. Reconciliação feita na PR da issue #139.
 - `result`: `executed`
 - `evidence`: pgTAP 493 asserções; ensaios locais de upgrade (aplicação nova antes e depois, retrato idêntico); lint, tipos, 382 testes unitários, build e e2e (201 passaram, 12 ignorados).
-- `blockers`: checks remotos e aprovação específica do merge; E2 depende do merge e do deploy novo comprovado.
+- `blockers`: nenhum para esta task. A contagem prévia da E2 não foi registrada e não pode ser refeita (ver "Ação externa").
