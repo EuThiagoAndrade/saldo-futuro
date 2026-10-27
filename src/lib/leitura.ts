@@ -85,6 +85,8 @@ export async function lerTudo<T>(pagina: Pagina<T>, opcoes: OpcoesLeitura = {}):
 /* eslint-disable @typescript-eslint/no-explicit-any -- o cliente não tem tipos gerados do schema */
 type Consulta = any;
 export type Cliente = Pick<SupabaseClient, "from">;
+/** Cliente que também chama funções de leitura, como a marca da classificação (ciclo 013). */
+export type ClienteComRpc = Pick<SupabaseClient, "from" | "rpc">;
 
 /** Lê uma tabela inteira, na ordem declarada em ORDENS, com filtro opcional. */
 export function lerTabela<T>(
@@ -146,6 +148,18 @@ export async function marcaCarteira(cliente: Cliente, sinal?: AbortSignal): Prom
     ativos,
     ultimaDesativacao: desativacao.data?.[0]?.desativado_em ?? null,
   };
+}
+
+/**
+ * Marca da classificação dos ativos (ciclo 013, R1-2): contador por carteira, que só cresce e é
+ * incrementado na mesma transação de toda mudança de taxonomia_id, inclusive A → B → A. Vem como
+ * texto decimal, comparado como texto, sem passar por number. O catálogo da taxonomia fica fora:
+ * só muda por migração.
+ */
+export async function versaoClassificacao(cliente: ClienteComRpc, sinal?: AbortSignal): Promise<string> {
+  const { data, error } = await fresca(cliente.rpc("ler_versao_classificacao"), sinal);
+  if (error || typeof data !== "string" || !/^\d+$/.test(data)) throw new ErroLeitura("pagina", error?.message ?? "versão da classificação inválida");
+  return data;
 }
 
 export interface MarcaBenchmark {

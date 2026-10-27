@@ -19,6 +19,7 @@ export const HISTORICO: readonly Novidade[] = [
     versao: "0.10.0",
     publicadaEm: null,
     notas: [
+      "No Início, a distribuição do patrimônio agora também pode ser vista por classe: Caixa, Renda fixa, Renda variável, Exterior, Cripto e Alternativos, além de Em trânsito e Sem classe. Use Por ativo e Por classe, acima do gráfico.",
       "A lista de classes de ativo ficou bem mais completa: produtos do Tesouro, poupança, estratégias de fundos, segmentos de fundos imobiliários, investimentos no exterior, criptoativos, imóveis e outros alternativos. Busque pelo nome na classe do ativo.",
     ],
   },

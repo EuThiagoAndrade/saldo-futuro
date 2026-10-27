@@ -1,6 +1,6 @@
 import "server-only";
 import type { Evento, TipoAjuste } from "../financeiro/eventos";
-import { type Cliente, ErroLeitura, lerComposicao, lerTabela, marcaCarteira } from "../leitura";
+import { type Cliente, type ClienteComRpc, ErroLeitura, lerComposicao, lerTabela, marcaCarteira, versaoClassificacao } from "../leitura";
 import { deLinhaEvento, type LinhaEvento } from "./carteira";
 import type { EntradaCatalogo, VinculoDoAtivo } from "./catalogos";
 import { ordenarPorNome } from "./combobox";
@@ -178,20 +178,44 @@ export interface InsumosDoInicio {
   posicoes: PosicaoLida[];
 }
 
+async function lerCarteiraDoInicio(cliente: Cliente, sinal: AbortSignal): Promise<InsumosDoInicio> {
+  return {
+    ativos: await lerAtivos(cliente, sinal),
+    eventos: await lerEventos(cliente, sinal),
+    consolidados: (await lerTabela<{ mes: string; vi: number; vf: number }>(cliente, "consolidados_mensais", { colunas: "mes, vi, vf", sinal })).map(
+      (c) => ({ ...c, mes: mesDaColuna(c.mes) }),
+    ),
+    posicoes: await lerTabela<PosicaoLida>(cliente, "posicoes_mensais", {
+      colunas: "mes, ativo_id, saldo_inicial, saldo_final, ajuste, tipo_ajuste",
+      sinal,
+    }),
+  };
+}
+
 /** Insumos do Início, lidos como uma composição coerente (D13). */
 export async function lerInsumosDoInicio(cliente: Cliente): Promise<InsumosDoInicio> {
   const { insumos } = await lerComposicao(
     (sinal) => marcaCarteira(cliente, sinal),
+    (_marca, sinal) => lerCarteiraDoInicio(cliente, sinal),
+  );
+  return insumos;
+}
+
+/**
+ * Insumos do Início com a visão por classe macro (ciclo 013, issue #139): os mesmos da carteira,
+ * mais a árvore da taxonomia. A marca soma à da carteira a versão da classificação (R1-2), lida
+ * junto com ela antes e depois: uma reclassificação durante a leitura descarta tudo e repete, até
+ * 3 tentativas, nunca misturando classe velha com posições novas. O catálogo fica fora da marca.
+ */
+export async function lerInsumosDoInicioPorClasse(cliente: ClienteComRpc): Promise<InsumosDoInicio & { nos: NoTaxonomia[] }> {
+  const { insumos } = await lerComposicao(
+    async (sinal) => {
+      const [carteira, classificacao] = await Promise.all([marcaCarteira(cliente, sinal), versaoClassificacao(cliente, sinal)]);
+      return { carteira, classificacao };
+    },
     async (_marca, sinal) => ({
-      ativos: await lerAtivos(cliente, sinal),
-      eventos: await lerEventos(cliente, sinal),
-      consolidados: (await lerTabela<{ mes: string; vi: number; vf: number }>(cliente, "consolidados_mensais", { colunas: "mes, vi, vf", sinal })).map(
-        (c) => ({ ...c, mes: mesDaColuna(c.mes) }),
-      ),
-      posicoes: await lerTabela<PosicaoLida>(cliente, "posicoes_mensais", {
-        colunas: "mes, ativo_id, saldo_inicial, saldo_final, ajuste, tipo_ajuste",
-        sinal,
-      }),
+      ...(await lerCarteiraDoInicio(cliente, sinal)),
+      nos: await lerTabela<NoTaxonomia>(cliente, "taxonomia_ativos", { colunas: "id, parent_id, nivel, nome, ordem", sinal }),
     }),
   );
   return insumos;

@@ -313,8 +313,9 @@ Os casos usam só dados fictícios. Cada caso tem o mesmo identificador `CR-NN` 
 - quantias em centavos inteiros; razões como frações (0.01 = 1%), escritas com a representação decimal mais curta do `float64`;
 - os valores esperados ficam na lista **Esperado**, um por linha, no formato `` `chave`: `valor` ``, e são sempre o último bloco do caso;
 - `recusado_<motivo>` indica recusa sem gravação; `aceito`, uma operação aceita;
-- a coluna "Entrega" indica a issue cujos testes executam o caso (B, C, D ou os ciclos `004`, `006` e `010`);
+- a coluna "Entrega" indica a issue cujos testes executam o caso (B, C, D ou os ciclos `004`, `006`, `010` e `013`);
 - nos casos da distribuição (CR-53 a CR-61, ciclo `010`), a participação `participacao_<alias>_centesimos_pp` é um inteiro de centésimos de ponto percentual, de 0 a 10000, escrito como texto decimal; `base_positiva_centavos`, `patrimonio_liquido_centavos` e `outros_centavos` são centavos em texto decimal exato; `principais`, `componentes_outros`, `sem_percentual` e `omitidos` são listas de aliases em JSON compacto, na ordem de apresentação; subcenários usam os prefixos `s1_`, `s2_` e `s3_`.
+- nos casos da alocação por classe macro (CR-C01 a CR-C12, ciclo `013`), as linhas usam os aliases `CX` (Caixa e disponibilidades), `RF` (Renda fixa), `RV` (Renda variável), `EX` (Investimentos no exterior), `CT` (Criptoativos e ativos digitais), `AL` (Alternativos, moedas, outros), `T` (Em trânsito) e `SC` (Sem classe); `participacao_<linha>_centesimos_pp` e `saldo_<linha>_centavos` seguem as convenções acima; `linhas` é a lista das linhas positivas, na ordem de apresentação; `sem_percentual` e `omitidos` listam aliases de ativos. Nas entradas do JSON, cada posição traz o nó atual do ativo (`no`) ou o ativo de sistema (`sistema`).
 
 A conferência independente está em `_project/executed/003_regras_financeiras/003_validation_casos_referencia.md`.
 
@@ -1116,6 +1117,162 @@ Casos da regra de participação da seção 15 (ciclo `010`, BL-005). Os nomes s
   - `participacao_U3_centesimos_pp`: `3333`
   - `principais`: `["U1","U2","U3"]`
 
+#### CR-C01 — Negativo fora da linha da classe
+
+- **Entrega:** ciclo `013`. **Regras:** 15 (alocação por classe macro).
+- **Entrada:** RF A = 5.000.000, RF B = −500.000 e RV C = 5.000.000.
+- **Passo a passo:** B é negativo e sai antes de agrupar: RF soma só A. S = 10.000.000; RF e RV têm 5.000 unidades cada (50,00%), sem sobra. RF não é liquidada em 4.500.000. Saldos iguais: a ordem fixa põe RF antes de RV; B fica listado à parte, sem participação.
+- **Esperado:**
+  - `base_positiva_centavos`: `10000000`
+  - `saldo_RF_centavos`: `5000000`
+  - `participacao_RF_centesimos_pp`: `5000`
+  - `participacao_RV_centesimos_pp`: `5000`
+  - `linhas`: `["RF","RV"]`
+  - `sem_percentual`: `["B"]`
+
+#### CR-C02 — Soma por classe antes do rateio
+
+- **Entrega:** ciclo `013`. **Regras:** 15 (alocação por classe macro).
+- **Entrada:** RF A = 10.000.000, RF B = 10.000.000 e RV C = 10.000.000.
+- **Passo a passo:** As linhas somam antes do rateio: RF = 20.000.000 e RV = 10.000.000; S = 30.000.000. RF: 200.000.000.000 ÷ 30.000.000 = 6.666, resto 20.000.000; RV: 3.333, resto 10.000.000. Pisos somam 9.999; a unidade vai ao maior resto, RF: 66,67% e 33,33%. Renomear ou reordenar A, B e C não muda o resultado.
+- **Esperado:**
+  - `base_positiva_centavos`: `30000000`
+  - `participacao_RF_centesimos_pp`: `6667`
+  - `participacao_RV_centesimos_pp`: `3333`
+  - `linhas`: `["RF","RV"]`
+
+#### CR-C03 — Trânsito em linha própria
+
+- **Entrega:** ciclo `013`. **Regras:** 15 (alocação por classe macro).
+- **Entrada:** RF = 6.000.000, RV = 3.000.000 e o trânsito T = 1.000.000.
+- **Passo a passo:** S = 10.000.000; RF = 6.000, RV = 3.000 e T = 1.000, exatos. O trânsito tem linha própria e não entra em Caixa.
+- **Esperado:**
+  - `base_positiva_centavos`: `10000000`
+  - `participacao_RF_centesimos_pp`: `6000`
+  - `participacao_RV_centesimos_pp`: `3000`
+  - `participacao_T_centesimos_pp`: `1000`
+  - `linhas`: `["RF","RV","T"]`
+
+#### CR-C04 — Empate de resto pela ordem fixa
+
+- **Entrega:** ciclo `013`. **Regras:** 15 (alocação por classe macro).
+- **Entrada:** RF = 10.000.000, RV = 10.000.000 e CT = 10.000.000.
+- **Passo a passo:** S = 30.000.000; cada linha tem piso 3.333 e resto 10.000.000. Sobra 1 unidade com os restos empatados: a ordem fixa a dá a RF. RF = 3.334, RV = 3.333 e CT = 3.333; a apresentação, com saldos iguais, segue a mesma ordem fixa.
+- **Esperado:**
+  - `base_positiva_centavos`: `30000000`
+  - `participacao_RF_centesimos_pp`: `3334`
+  - `participacao_RV_centesimos_pp`: `3333`
+  - `participacao_CT_centesimos_pp`: `3333`
+  - `linhas`: `["RF","RV","CT"]`
+
+#### CR-C05 — Trânsito negativo e Sem classe zerado fora das linhas
+
+- **Entrega:** ciclo `013`. **Regras:** 15 (alocação por classe macro).
+- **Entrada:** RF = 5.000.000, RV = 5.000.000, trânsito T = −200.000 e S, sem classe, = 0.
+- **Passo a passo:** S = 10.000.000; RF e RV com 5.000 cada. O trânsito negativo fica à parte, sem participação; o ativo sem classe e saldo zero é omitido. Nenhuma linha de T ou de Sem classe.
+- **Esperado:**
+  - `base_positiva_centavos`: `10000000`
+  - `participacao_RF_centesimos_pp`: `5000`
+  - `participacao_RV_centesimos_pp`: `5000`
+  - `linhas`: `["RF","RV"]`
+  - `sem_percentual`: `["T"]`
+  - `omitidos`: `["S"]`
+
+#### CR-C06 — Oito linhas, sem agrupamento residual
+
+- **Entrega:** ciclo `013`. **Regras:** 15 (alocação por classe macro).
+- **Entrada:** Um positivo de 100 em cada uma das seis classes macro (por nós de nível 2 e 3), no trânsito e num ativo sem classe.
+- **Passo a passo:** S = 800; oito linhas de 1.000.000 ÷ 800 = 1.250 unidades cada, sem resto. Com saldos iguais, a apresentação segue a ordem fixa 1 a 8. Não há agrupamento residual em Outros.
+- **Esperado:**
+  - `base_positiva_centavos`: `800`
+  - `participacao_CX_centesimos_pp`: `1250`
+  - `participacao_RF_centesimos_pp`: `1250`
+  - `participacao_RV_centesimos_pp`: `1250`
+  - `participacao_EX_centesimos_pp`: `1250`
+  - `participacao_CT_centesimos_pp`: `1250`
+  - `participacao_AL_centesimos_pp`: `1250`
+  - `participacao_T_centesimos_pp`: `1250`
+  - `participacao_SC_centesimos_pp`: `1250`
+  - `linhas`: `["CX","RF","RV","EX","CT","AL","T","SC"]`
+
+#### CR-C07 — Sem saldo positivo
+
+- **Entrega:** ciclo `013`. **Regras:** 15 (alocação por classe macro).
+- **Entrada:** (s1) RF A = −100, trânsito T = −50 e S, sem classe, = 0. (s2) nenhuma posição.
+- **Passo a passo:** (s1) S = 0: não há divisão, participação, rosca nem total de 100%; os negativos continuam listados, do mais negativo ao menos negativo (A, T), e S é omitido. (s2) S = 0 e nada a listar.
+- **Esperado:**
+  - `s1_base_positiva_centavos`: `0`
+  - `s1_linhas`: `[]`
+  - `s1_sem_percentual`: `["A","T"]`
+  - `s1_omitidos`: `["S"]`
+  - `s2_base_positiva_centavos`: `0`
+  - `s2_linhas`: `[]`
+  - `s2_sem_percentual`: `[]`
+
+#### CR-C08 — Uma única linha positiva é o anel completo
+
+- **Entrega:** ciclo `013`. **Regras:** 15 (alocação por classe macro).
+- **Entrada:** (s1) S, sem classe, = 1. (s2) trânsito T = 1, RF A = 0 e RV B = 0.
+- **Passo a passo:** S = 1 nos dois subcenários; a única linha positiva tem 10.000 unidades (100,00%) e é um anel completo. Zeros não aparecem.
+- **Esperado:**
+  - `s1_base_positiva_centavos`: `1`
+  - `s1_participacao_SC_centesimos_pp`: `10000`
+  - `s1_linhas`: `["SC"]`
+  - `s2_base_positiva_centavos`: `1`
+  - `s2_participacao_T_centesimos_pp`: `10000`
+  - `s2_linhas`: `["T"]`
+
+#### CR-C09 — Base acima do inteiro seguro
+
+- **Entrega:** ciclo `013`. **Regras:** 15 (alocação por classe macro).
+- **Entrada:** RF A = 9.007.199.254.740.991, RV B = 9.007.199.254.740.991 e CT C = −9.007.199.254.740.991.
+- **Passo a passo:** S = 18.014.398.509.481.982, acima do inteiro seguro, só como valor intermediário em `bigint`. RF e RV com 5.000 cada; C fica à parte. Soma e formatação sem passar por `number`.
+- **Esperado:**
+  - `base_positiva_centavos`: `18014398509481982`
+  - `participacao_RF_centesimos_pp`: `5000`
+  - `participacao_RV_centesimos_pp`: `5000`
+  - `linhas`: `["RF","RV"]`
+  - `sem_percentual`: `["C"]`
+
+#### CR-C10 — Empate de resto pela ordem fixa com saldos diferentes
+
+- **Entrega:** ciclo `013`. **Regras:** 15 (alocação por classe macro).
+- **Entrada:** Caixa A = 1, RF B = 1 e RV C = 4.
+- **Passo a passo:** S = 6. Caixa: 10.000 ÷ 6 = 1.666, resto 4; RF: 1.666, resto 4; RV: 40.000 ÷ 6 = 6.666, resto 4. Sobram 2 unidades com os três restos empatados: pela ordem fixa (P6), vão a Caixa e RF, mesmo com saldos diferentes. Caixa = 1.667, RF = 1.667 e RV = 6.666. A alternativa descartada (empate pela ordem de apresentação, maior saldo primeiro) daria RV = 6.667, Caixa = 1.667 e RF = 1.666. Apresentação por saldo: RV, Caixa e RF. É a diferença deliberada em relação à distribuição por ativo, cujo empate de resto segue a ordem de apresentação.
+- **Esperado:**
+  - `base_positiva_centavos`: `6`
+  - `participacao_CX_centesimos_pp`: `1667`
+  - `participacao_RF_centesimos_pp`: `1667`
+  - `participacao_RV_centesimos_pp`: `6666`
+  - `linhas`: `["RV","CX","RF"]`
+
+#### CR-C11 — Classificação atual com os saldos de M
+
+- **Entrega:** ciclo `013`. **Regras:** 15 (alocação por classe macro).
+- **Entrada:** (s1) A = 100 num tipo de nível 3 de Renda fixa e B = 100 ligado direto à classe macro Renda fixa. (s2) as mesmas posições de M, depois que A passa a Renda variável.
+- **Passo a passo:** (s1) A sobe dois pais até Renda fixa: S = 200 e RF = 10.000. (s2) Pela classificação atual (P2), M passa a RF = 5.000 e RV = 5.000, sem mudar posição nem fechamento. A alternativa descartada, congelar a classe por mês, manteria M em RF = 10.000 até o fechamento seguinte.
+- **Esperado:**
+  - `s1_base_positiva_centavos`: `200`
+  - `s1_participacao_RF_centesimos_pp`: `10000`
+  - `s1_linhas`: `["RF"]`
+  - `s2_base_positiva_centavos`: `200`
+  - `s2_participacao_RF_centesimos_pp`: `5000`
+  - `s2_participacao_RV_centesimos_pp`: `5000`
+  - `s2_linhas`: `["RF","RV"]`
+
+#### CR-C12 — Linha acima do inteiro seguro
+
+- **Entrega:** ciclo `013`. **Regras:** 15 (alocação por classe macro).
+- **Entrada:** RF A = 9.007.199.254.740.991, RF B = 9.007.199.254.740.991 e RV C = −9.007.199.254.740.991.
+- **Passo a passo:** A linha RF soma 18.014.398.509.481.982, acima do inteiro seguro, e é a base inteira: RF = 10.000. C fica à parte. O patrimônio líquido, 9.007.199.254.740.991, continua na faixa. O valor da linha é formatado exatamente, R$ 180.143.985.094.819,82, sem passar por `number`.
+- **Esperado:**
+  - `base_positiva_centavos`: `18014398509481982`
+  - `saldo_RF_centavos`: `18014398509481982`
+  - `participacao_RF_centesimos_pp`: `10000`
+  - `patrimonio_liquido_centavos`: `9007199254740991`
+  - `linhas`: `["RF"]`
+  - `sem_percentual`: `["C"]`
+
 ### 15. Apresentação do Início (P17 a P19 do ciclo `004`)
 
 Regras de apresentação decididas pelo responsável em 2026-10-14, na correção da rodada 1 do plano do ciclo `004`. Elas só escolhem os limites e o que somar; os cálculos são os das seções 7 e 8.
@@ -1147,6 +1304,15 @@ Todo período passa pelo período efetivo (K8) e pela regra do `N/D` (K1) da se�
 5. **Agrupamento.** O rateio é feito uma única vez entre todos os positivos, antes de agrupar (alternativa A). Com até cinco positivos, cada um é uma fatia. Com seis ou mais, os cinco primeiros da ordem são fatias e os demais formam Outros, cujos saldo e participação são as somas exatas dos componentes. Os componentes de Outros mantêm a participação sobre S, não sobre o grupo.
 6. **Sem positivos.** Com S = 0, não há divisão, participação nem total de 100%; os negativos continuam listados.
 7. **Apresentação.** A participação aparece com duas casas, sem sinal, pela posição da vírgula sobre o inteiro (seção 2, exceção). Legenda e tabela usam os mesmos inteiros, sem novo arredondamento. Negativos aparecem com nome e quantia, sem participação. A geometria da rosca, as cores e a ocultação de valores são do `DESIGN.md` e da ADR-005.
+
+**Alocação por classe macro (ciclo `013`, BL-014).** Decidida pelo responsável em 2026-10-26: D4.2, D12 e D13 na ideação do ciclo `013`, e P2 e P6 no Registro de aprovação do plano. É só alocação e apresentação do mês M, ao lado da distribuição por ativo, que não muda. Casos CR-C01 a CR-C12.
+
+1. **Linha de cada ativo.** O ativo de sistema Em trânsito tem linha própria, com precedência. Um ativo sem nó (vínculo nulo) é Sem classe. Os demais seguem a classe macro do nó atual, de qualquer nível, subindo no máximo dois pais; nó inexistente ou caminho inválido torna a visão indisponível, nunca Sem classe. Há oito linhas, numa **ordem fixa**: Caixa e disponibilidades, Renda fixa, Renda variável, Investimentos no exterior, Criptoativos e ativos digitais, Alternativos, moedas, outros, Em trânsito e Sem classe.
+2. **Classificação atual (P2).** Vale o nó de hoje com os saldos de M; reclassificar um ativo redistribui a visão de M sem mudar posição, fechamento ou retorno. Não há histórico de classificação.
+3. **Entradas e negativos.** Todas as posições de M, inclusive de ativos desativados, passam pela fronteira e viram `bigint`, como na distribuição por ativo. Os saldos negativos saem **por ativo, antes de agrupar**: nunca reduzem a linha da sua classe e são listados à parte, com a ordem e os desempates do item 3 da distribuição por ativo, sem participação. Zeros são omitidos.
+4. **Linhas e base.** Cada linha soma os saldos positivos dos seus ativos; linha sem positivo não aparece. S é a soma das linhas, em `bigint`; uma linha e a base podem passar da faixa de uma posição (CR-C09, CR-C12).
+5. **Participação (P6).** Com S > 0, cada linha de valor V tem piso ⌊V × 10000 ÷ S⌋ e resto (V × 10000) mod S. As unidades que faltam vão aos maiores restos; **empate de resto pela ordem fixa do item 1, mesmo com saldos diferentes** (CR-C10). É uma diferença deliberada em relação à distribuição por ativo, cujo empate de resto segue a ordem de apresentação. As linhas somam exatamente 10000.
+6. **Apresentação.** Linhas por saldo decrescente; empate de saldo pela ordem fixa. Não há rateio por ativo nem agrupamento em Outros: até oito linhas. Com S = 0, não há participação nem rosca; os negativos continuam listados.
 
 ### 16. Migração da origem (M1 a M10 do ciclo `006`)
 
@@ -1310,6 +1476,7 @@ Estas regras foram aprovadas no plano do ciclo `006` e implementadas na simulaç
 | Plano do ciclo `004` | Decisões P17 a P19 (apresentação do Início) | `_project/executed/004_telas_produto/004_plan.md`, `v4` aprovada em 2026-10-14 | Autoridade das decisões; a seção 15 as especifica |
 | Plano do ciclo `006` | Regras M1 a M10 da simulação da migração (issue #63) M6 revisada com a exceção à K12 (issue #73) e M10 revisada com a posição implícita zero (issue #76) | `_project/executed/006_migracao_dados_virada/006_plan.md`, `v3` aprovada em 2026-10-17, `v4` e `v5` aprovadas em 2026-10-18 | Autoridade das decisões; a seção 16 as especifica |
 | Plano do ciclo `010` | Regra da distribuição por ativo (Q1 a Q3, alternativa A e desempate por UUID) e casos CR-53 a CR-61 | `_project/executed/010_novidades_privacidade_ativos_distribuicao/010_plan.md`, `v2` aprovada em 2026-10-21 | Autoridade das decisões; a seção 15 as especifica |
+| Plano do ciclo `013` | Regra da alocação por classe macro (D4.2, D12 e D13 da ideação; P2 e P6 do Registro de aprovação) e casos CR-C01 a CR-C12 | `_project/drafts/013_taxonomia_classes_alocacao/013_plan.md`, `v2` aprovada em 2026-10-26 | Autoridade das decisões; a seção 15 as especifica |
 | `design-system/DESIGN.md`, seções 6.3 a 6.5 | Formato brasileiro, sinal e `N/D` | Versão vigente em `main` | Contrato visual |
 
 ## Histórico
@@ -1325,3 +1492,4 @@ Estas regras foram aprovadas no plano do ciclo `006` e implementadas na simulaç
 | 2026-10-18 | `006` | Encerramento: a seção 4.5 passa a citar o ciclo `006`, que fez a migração (antes, `005`) |
 | 2026-10-21 | `010` | Issue #107: distribuição por ativo na seção 15 (participação em centésimos de p.p. pelo maior resto, antes de agrupar, com desempate por saldo, nome e UUID), exceções nas seções 1 e 2, convenções e casos CR-53 a CR-61 na seção 14 |
 | 2026-10-23 | `012` | Issue #128 (BL-009): seção 4.1 registra os atributos descritivos do ativo (instituição, classe e indicadores) e que nenhuma regra desta KB os lê |
+| 2026-10-26 | `013` | Issue #139 (BL-014 e parcela de BL-009): alocação por classe macro na seção 15 (classificação atual, negativos por ativo antes de agrupar, empate de resto pela ordem fixa das oito linhas), convenção e casos CR-C01 a CR-C12 na seção 14 |

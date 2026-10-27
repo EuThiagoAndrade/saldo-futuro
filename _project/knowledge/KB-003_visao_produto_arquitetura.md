@@ -86,6 +86,11 @@ O Saldo Futuro é um sistema web de gestão de investimentos pessoais, multiusu�
   - o Início desenha a distribuição de M em rosca SVG no servidor (`src/components/graficos/rosca.tsx`; ADR-005, emenda), no lugar das barras horizontais, que saíram do código;
   - a participação vem de `src/lib/financeiro/distribuicao.ts`: só saldos positivos formam a base, em `bigint`, com 10000 centésimos de p.p. repartidos pelo maior resto antes de agrupar Outros e desempate por saldo, nome e UUID (KB-004, seção 15, CR-53 a CR-61); negativos ficam listados fora da rosca e zeros não aparecem;
   - legenda com nome completo, participação e valor, Outros retrátil com os componentes, e "Ver os números" com Resumo e Detalhe por ativo separados; "Ocultar valores" esconde toda quantia no servidor e mantém as participações (DESIGN.md 2.3 e 6.13).
+- distribuição por classe macro (ciclo `013`, issue #139, BL-014 e parcela de BL-009):
+  - o Início alterna "Por ativo" (padrão) e "Por classe" por links `?distribuicao=ativo` e `?distribuicao=classe`, que preservam o período; o formulário de período preserva a visão; parâmetro ausente ou inválido abre Por ativo; só a visão escolhida é lida e renderizada (DESIGN.md 6.12, variante sem contador);
+  - a alocação vem de `src/lib/financeiro/alocacao.ts`, função irmã da distribuição por ativo: cada ativo com posição em M segue a classe macro do nó atual (subindo no máximo dois pais), o trânsito tem linha própria e só o vínculo nulo é Sem classe; negativos saem por ativo antes de agrupar; participação pelo maior resto entre as linhas, com empate pela ordem fixa das oito linhas, sem Outros (KB-004, seção 15, CR-C01 a CR-C12);
+  - a leitura (`lerInsumosDoInicioPorClasse`, em `src/lib/telas/leituras.ts`) junta à marca da carteira a versão da classificação (`ler_versao_classificacao`, texto decimal): uma reclassificação durante a leitura descarta tudo e repete, até 3 tentativas, e depois a tela mostra o erro de dados que mudaram; nó inexistente torna só a visão por classe indisponível;
+  - rosca e tabela "Por classe" com cores fixas por linha (`chart-7` e `chart-8` novos; DESIGN.md 2.3 e 6.13) e a mesma ocultação de valores.
 
 Permanecem fora da entrega:
 
@@ -198,7 +203,7 @@ Definidos em `supabase/migrations/20261024000829_metadados_ativos.sql` (issue #1
 
 ### Taxonomia de classes de ativos (ciclo `013`, G2)
 
-Definida em duas migrações. A fase 1, `supabase/migrations/20261026204955_taxonomia_ativos.sql` (issue #137, BL-014 e parcela de BL-009), criou o catálogo e as funções novas e deixou as do ciclo `012` coexistindo (janela de transição, D19); está em produção desde a ação externa E1. A fase 2, `supabase/migrations/20261026215542_taxonomia_ativos_fase2.sql` (issue #138), retira as funções antigas depois do deploy da aplicação nova (ação externa E2). A taxonomia global substitui as classes por usuário: o cadastro e a edição do ativo já a usam (seletor único, sem criação), e a alocação por classe macro é da unidade seguinte (issue #139).
+Definida em duas migrações. A fase 1, `supabase/migrations/20261026204955_taxonomia_ativos.sql` (issue #137, BL-014 e parcela de BL-009), criou o catálogo e as funções novas e deixou as do ciclo `012` coexistindo (janela de transição, D19); está em produção desde a ação externa E1. A fase 2, `supabase/migrations/20261026215542_taxonomia_ativos_fase2.sql` (issue #138), retira as funções antigas depois do deploy da aplicação nova (ação externa E2). A taxonomia global substitui as classes por usuário: o cadastro e a edição do ativo já a usam (seletor único, sem criação), e a alocação por classe macro está no Início desde a issue #139 (ver "Início").
 
 | Objeto | Função |
 | :-- | :-- |
@@ -285,3 +290,4 @@ O plano executado do ciclo `001` (`_project/executed/001_fundacao_aplicacao/001_
 | 2026-10-26 | `013` | Issue #138 (BL-014 e parcela de BL-009): seletor único de classe da taxonomia no cadastro e na edição, aba Classes retirada de Cadastros e migração da fase 2, que fecha o legado para escrita; E2 depois do deploy |
 | 2026-10-26 | `014` | Issue #144: árvore da taxonomia ampliada de 39 para 133 nós por migração só de inserção, com orientações de enquadramento; os 39 nós anteriores não mudam; `db push` pela ação externa E1 |
 | 2026-10-26 | `014` | Encerramento: ação externa E1 concluída, com o catálogo de produção em 133 nós (6, 23 e 104); a release `0.10.0`, que inclui a ampliação, e a data da nota em `/novidades` ficam com o encerramento do ciclo `013` |
+| 2026-10-26 | `013` | Issue #139 (BL-014 e parcela de BL-009): distribuição por classe macro no Início, com alternador Por ativo / Por classe, leitura coerente com a versão da classificação e cores `chart-7` e `chart-8` |
