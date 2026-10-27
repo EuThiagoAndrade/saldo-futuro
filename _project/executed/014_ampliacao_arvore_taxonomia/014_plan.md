@@ -1,7 +1,7 @@
 # Plano de Implementação — Ampliação da árvore da taxonomia de classes de ativos
 
 > **Ciclo:** `014`
-> **Status:** `Em Execução`
+> **Status:** `Concluído`
 > **Versão:** `v3`
 > **Data de criação:** 2026-10-26
 > **Última atualização:** 2026-10-26
@@ -409,32 +409,32 @@ Paralelismo com o ciclo `013`: a unidade 3 (#139) e este ciclo podem tocar a KB-
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | [#144](https://github.com/EuThiagoAndrade/saldo-futuro/issues/144) (unidade 1) |
-| PR(s) | [#143](https://github.com/EuThiagoAndrade/saldo-futuro/pull/143) — documental, integrada; unidade 1: [#145](https://github.com/EuThiagoAndrade/saldo-futuro/pull/145) |
-| Branch(es) | `chore/cycle-014-plan` (integrada); `feature/issue-144` |
+| PR(s) | [#143](https://github.com/EuThiagoAndrade/saldo-futuro/pull/143) — documental, integrada; unidade 1: [#145](https://github.com/EuThiagoAndrade/saldo-futuro/pull/145), integrada; encerramento: PR de `chore/cycle-014-closure` (ver `014_task_closure.md`) |
+| Branch(es) | `chore/cycle-014-plan` e `feature/issue-144` (integradas); `chore/cycle-014-closure` |
 | Destino após conclusão | `_project/executed/014_ampliacao_arvore_taxonomia/014_plan.md` |
 
 ## Próximo passo
 
-O artefato ativo do ciclo passou a ser a task `014_task_issue-144.md`; este bloco a acompanha.
+O ciclo termina com o merge da PR de encerramento (`014_task_closure.md`), prospectivamente.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 014 (completo)
-Quem: Responsável
-Conferir: checks e diff da PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/145
-Diga: "aprovo o merge da PR #145"
+Situação: Concluído — ciclo 014 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 014 + criar_issues + feature/unidade-1 + 014_plan v3`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 014 + atualizar_docs + encerramento + c34124d784737587357a71526252ced2cb0f1c4d`
 - `effect_class`: `remote_mutation`
-- `state_before`: plano v3 Aprovado; PR documental #143 integrada por squash em `346a93aa686bcb6c3851b7edcdc18ceb0916aa46`, com checks verdes; nenhuma issue do ciclo (busca por título vazia); payload confirmado pelo responsável.
-- `state_after`: issue #144 aberta com o payload confirmado, no formulário Feature; plano com a issue registrada localmente em `main`, sem commit (segue na branch da entrega, como no ciclo `013`); implementação não autorizada.
+- `state_before`: plano `Em Execução`; PR #145 integrada em `c34124d` com 5 de 5 checks verdes; ação externa E1 concluída e conferida; issue #144 aberta; release `0.10.0` (PR #141) adiada pelo responsável para o encerramento do ciclo `013`.
+- `state_after`: plano `Concluído`, tasks `Concluída`, ciclo em `executed/` e `cycles.md` `Concluído`, prospectivamente até o merge da PR de encerramento, que fecha a #144.
 - `result`: `executed`
-- `evidence`: https://github.com/EuThiagoAndrade/saldo-futuro/issues/144 conferida por `gh issue view` (aberta, título igual ao payload); PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/143 integrada.
-- `blockers`: a implementação depende de "autorizo a implementação da issue #144".
+- `evidence`: ver `014_task_closure.md`.
+- `blockers`: checks verdes e aprovação específica do merge da PR de encerramento.
 
 ## Revisão crítica
 
@@ -583,6 +583,6 @@ Nenhum novo bloqueador ou ressalva nesta rodada.
 
 ## Pós-mortem
 
-- **Data de conclusão:** —
-- **Desvios:** —
-- **Lições comprovadas:** —
+- **Data de conclusão:** 2026-10-26, prospectiva, com o merge da PR de encerramento.
+- **Desvios:** (1) a diretriz de cobertura ampla chegou depois do rascunho v1 e relaxou N5 e o item 1 da N7; a árvore foi refeita na v2 (87 → 133 nós), dentro dos critérios mantidos. (2) A busca "CREDITO bancario" do e2e lista oito opções, não sete, porque "Cédulas de crédito bancário" casa pelo caminho inteiro; a expectativa do teste foi corrigida, sem mudar código nem árvore. (3) A release `0.10.0` (PR #141), que inclui esta entrega, ficou para o encerramento do ciclo `013`, por decisão do responsável; a data da nota em `/novidades` é registrada lá.
+- **Lições comprovadas:** expectativas de testes sobre uma busca em catálogo devem ser derivadas do catálogo inteiro, não só dos filhos do pai procurado (registrada em `.agent/lessons_learned.md`).

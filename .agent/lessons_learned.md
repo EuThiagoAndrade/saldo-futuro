@@ -101,3 +101,7 @@ Origem: ciclo `012`, issue #126. O plano previa `on delete restrict` nas chaves 
 ### 2026-10-24 — O e2e precisa rodar sobre o build, não sobre o servidor de desenvolvimento aberto
 
 Origem: ciclo `012`, PR #131. Com o servidor de desenvolvimento aberto em `localhost:3000`, o Playwright local reaproveitou esse servidor (`reuseExistingServer`) e acessou `127.0.0.1`; o Next em desenvolvimento não carregou os scripts da página para essa origem, o formulário de login foi enviado sem JavaScript e todos os testes falharam antes de chegar às telas. O mesmo servidor também continuou servindo um módulo antigo depois de uma chave renomeada, até ser reiniciado. Para validar uma entrega, pare o servidor de desenvolvimento e rode o e2e sobre o build de produção (`npm run build` e `CI=1`), como no CI; uma falha geral no login é sinal de ambiente, não de regressão.
+
+### 2026-10-26 — Expectativas de busca num catálogo vêm do catálogo inteiro
+
+Origem: ciclo `014`, issue #144. Ao ampliar a taxonomia, o e2e da busca "credito bancario" foi atualizado com os filhos novos de Crédito bancário (sete opções), mas a busca vale para o caminho inteiro e também devolveu "Renda fixa › Crédito corporativo › Cédulas de crédito bancário", de outro pai. A primeira execução reprovou e o comportamento estava certo. Ao mudar um catálogo pesquisável, derive a lista esperada aplicando a mesma regra de busca a todos os itens do catálogo (por exemplo, por script sobre a migração), e não só aos descendentes do item procurado.
