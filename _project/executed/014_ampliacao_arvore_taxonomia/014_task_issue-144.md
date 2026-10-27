@@ -2,13 +2,13 @@
 
 > **Ciclo:** `014`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#144`
-> **Plano:** `_project/drafts/014_ampliacao_arvore_taxonomia/014_plan.md`
+> **Plano:** `_project/executed/014_ampliacao_arvore_taxonomia/014_plan.md`
 > **Branch:** `feature/issue-144`
 > **PR:** [#145](https://github.com/EuThiagoAndrade/saldo-futuro/pull/145) (`Refs #144`, sem fechar a issue)
-> **Integração:** `Pendente`
+> **Integração:** PR #145 integrada por squash (`c34124d784737587357a71526252ced2cb0f1c4d`) em 2026-10-26, com todos os checks verdes; ação externa E1 concluída em 2026-10-26; issue #144 aberta até o encerramento do ciclo
 > **Autorização inicial:** "autorizo a implementação da issue #144" em 2026-10-26
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-26
@@ -50,8 +50,8 @@ Não se aplica.
 - [x] Fixtures `upgrade_013_fase2.sql` e `e1_014_contagens.sql` e ensaio local de atualização (ver seção própria).
 - [x] KB-003 (contagens de asserções e de nós, ampliação, orientações de enquadramento, histórico) e nota nas novidades.
 - [x] PR #145 aberta (`Refs #144`).
-- [ ] Checks remotos verdes e aprovação do merge.
-- [ ] Ação externa E1 pelo responsável, depois do merge.
+- [x] Checks remotos verdes (5 de 5) e merge aprovado pelo responsável ("aprovo o merge da PR #145"); PR integrada por squash em `c34124d`.
+- [x] Ação externa E1 pelo responsável, depois do merge (ver "Ação externa").
 
 ## Ensaio de atualização (somente local)
 
@@ -79,6 +79,18 @@ Responsável: o dono do projeto. O agente não recebe credenciais e não consult
 5. Na aplicação, abrir o cadastro de ativo e buscar "tesouro" no campo Classe, sem gravar nada; os cinco produtos do Tesouro aparecem.
 6. Declarar "concluí a ação externa da issue #144". O agente confere o que for acessível e registra o que só o responsável verificou.
 
+## Ação externa
+
+- **Data e frase:** 2026-10-26, "concluí a ação externa da issue #144", depois do merge da PR #145 (`main` em `c34124d`).
+- **Contagens relatadas pelo responsável** (consulta `tests/fixtures/taxonomia/e1_014_contagens.sql`, só o catálogo):
+
+  | Consulta | `nos` | `nivel_1` | `nivel_2` | `nivel_3` | `amostra_original` |
+  | :-- | :-- | :-- | :-- | :-- | :-- |
+  | Antes do `db push` | 39 | 6 | 21 | 12 | 3 |
+  | Depois do `db push` | 133 | 6 | 23 | 104 | 3 |
+
+- **Conferência pelo agente:** os números batem com o esperado nos dois momentos: o catálogo passou de 39 para 133 nós, com 2 subclasses e 92 tipos a mais, e os três nós originais da amostra continuam com o mesmo UUID e nome. O agente não acessou o banco de produção; o `db push`, o `migration list` e a conferência no aplicativo são do responsável.
+
 ## Evidências
 
 | Validação | Resultado |
@@ -92,7 +104,7 @@ Responsável: o dono do projeto. O agente não recebe credenciais e não consult
 | `npm run test:e2e` (`CI=1`, Supabase local, com as variáveis do Supabase local no ambiente) | 213 testes: 200 passaram, 13 ignorados (condicionais do ambiente), nenhuma falha. A primeira execução reprovou o caso de busca "CREDITO bancario" (ver "Decisões incidentais") e, depois de uma queda do servidor local no meio da execução (conexão recusada em `127.0.0.1:3000` e processo encerrado), 75 testes por ambiente; a segunda, com a expectativa corrigida, passou inteira |
 | Validador | `node --test scripts/validate-governance.test.mjs` 48/48; `node scripts/validate-governance.mjs` com 0 erros e 0 avisos |
 | `git diff --check` | Sem erros |
-| Checks remotos | Pendente |
+| Checks remotos | 5 de 5 verdes na PR #145 (governança, lint/tipos/testes/build/e2e sem backend, banco e e2e com backend, Vercel e Vercel Preview Comments) |
 
 ## Revisão da correção
 
@@ -112,12 +124,14 @@ Não se aplica.
 
 ## Próximo passo
 
+Esta task está concluída (PR #145 integrada e E1 concluída). O artefato ativo do ciclo passou a ser `014_task_closure.md`.
+
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 014 (completo)
-Quem: Responsável
-Conferir: checks e diff da PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/145
-Diga: "aprovo o merge da PR #145"
+Situação: Concluído — ciclo 014 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
@@ -126,7 +140,7 @@ Diga: "aprovo o merge da PR #145"
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 014 + implementar_issue + 144 + 346a93aa686bcb6c3851b7edcdc18ceb0916aa46`
 - `effect_class`: `remote_mutation`
 - `state_before`: plano `Aprovado` e integrado pela PR #143; issue #144 aberta; `main` em `346a93a`; autorização "autorizo a implementação da issue #144".
-- `state_after`: entrega commitada na branch `feature/issue-144` e publicada na PR #145 (`Refs #144`); gates locais verdes; aguardando checks remotos e aprovação específica do merge; E1 depois do merge.
+- `state_after`: PR #145 integrada em `c34124d` (5 de 5 checks verdes) e ação externa E1 concluída pelo responsável em 2026-10-26, com as contagens conferidas; task `Concluída`, issue #144 aberta até o encerramento. Reconciliação feita na PR de encerramento.
 - `result`: `executed`
 - `evidence`: seção "Evidências", ensaio local e https://github.com/EuThiagoAndrade/saldo-futuro/pull/145.
-- `blockers`: o merge depende de checks verdes e de "aprovo o merge da PR #145".
+- `blockers`: nenhum para esta task.
