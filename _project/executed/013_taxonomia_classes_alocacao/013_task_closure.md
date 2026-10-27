@@ -7,7 +7,7 @@
 > **Issue:** — (encerramento documental sem issue recursiva; fecha a #137, a #138 e a #139 por `Closes`)
 > **Plano:** `_project/executed/013_taxonomia_classes_alocacao/013_plan.md`
 > **Branch:** `chore/cycle-013-closure`
-> **PR:** A preencher ao abrir a PR
+> **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/148
 > **Integração:** prospectiva; válida somente depois do merge desta PR, conferido no GitHub
 > **Autorização inicial:** "aprovo o plano do ciclo 013" em 2026-10-26 (o encerramento é autorizado pela aprovação do plano); "autorizo a verificação em produção do ciclo 013" e "Siga para o encerramento" em 2026-10-27
 > **Modo contínuo:** `—`
@@ -78,7 +78,7 @@ Não se aplica: sem correção pela trilha curta.
 
 ## Encerramento
 
-Esta task descreve a preparação do encerramento do ciclo completo. Estado `Concluída`, plano `Concluído` e `cycles.md` `Concluído` são prospectivos até o merge desta PR. Antes disso, a situação efetiva é Aguardando merge quando só faltar integração; checks e a frase "aprovo o merge da PR #N" continuam obrigatórios.
+Esta task descreve a preparação do encerramento do ciclo completo. Estado `Concluída`, plano `Concluído` e `cycles.md` `Concluído` são prospectivos até o merge desta PR. Antes disso, a situação efetiva é Aguardando merge quando só faltar integração (PR #148); checks e a frase "aprovo o merge da PR #N" continuam obrigatórios.
 
 ## Próximo passo
 
