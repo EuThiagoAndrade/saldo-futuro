@@ -2,12 +2,12 @@
 
 > **Ciclo:** `015`
 > **Trilha:** `normal`
-> **Estado:** `Em andamento`
+> **Estado:** `Aguardando integração`
 > **Tipo:** `feature`
 > **Issue:** `#152`
 > **Plano:** `_project/drafts/015_analises_instituicao_niveis_classe/015_plan.md`
 > **Branch:** `feature/issue-152`
-> **PR:** —
+> **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/156
 > **Integração:** `Pendente`
 > **Autorização inicial:** "autorizo a implementação da issue #152" em 2026-10-27
 > **Modo contínuo:** `—`
@@ -54,7 +54,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 - [x] Mutação proposital do desempate (instituições e classes) reprovou CR-015-02, CR-015-08 e CR-015-16; restaurada.
 - [x] Task da unidade A reconciliada com a integração da PR #155.
 - [x] Gates locais concluídos e staging revisado.
-- [ ] PR publicada.
+- [x] PR #156 publicada (`Closes #152` no corpo); integração exige aprovação própria.
 
 ## Evidências
 
@@ -63,7 +63,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 | Testes | Unitários: 447/447 (42 novos); financeiro: 156/156; governança: 48/48; lint sem erros (3 avisos preexistentes em `local/`), typecheck e build passaram; e2e autenticado sobre build com Supabase local: 208 passed, 12 skipped (preview sem backend), 1 flaky aprovado no retry (saída de worker no Windows, código 3221226505, o mesmo da unidade A); saída 0, dois workers. Banco: não executado, sem alteração de banco |
 | Validador | 0 erros, 0 avisos; conferências manuais realizadas (G3: só nomes e valores fictícios nos textos, no JSON e nos testes) |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos | Em execução; conferir o head atual na PR #156 antes do merge |
 
 ## Revisão da correção
 
@@ -88,8 +88,8 @@ Não se aplica — ciclo completo; encerramento em PR própria.
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 015 (completo)
 Quem: Responsável
-Conferir: checks e diff da PR da issue #152
-Diga: "aprovo o merge da PR #N"
+Conferir: checks, diff e KB-004 da PR #156 — https://github.com/EuThiagoAndrade/saldo-futuro/pull/156
+Diga: "aprovo o merge da PR #156"
 ```
 
 ## Handoff de saída
@@ -98,7 +98,7 @@ Diga: "aprovo o merge da PR #N"
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 015 + implementar_issue + 152 + 1e216d7a8497673dd9cfd209fa6767e0680fe395`
 - `effect_class`: `remote_mutation`
 - `state_before`: plano aprovado, #152 autorizada, unidade A integrada pela PR #155.
-- `state_after`: em preparação — a preencher ao publicar a PR.
-- `result`: `not_executed`
-- `evidence`: a preencher ao publicar a PR.
-- `blockers`: nenhum até aqui.
+- `state_after`: unidade B implementada e validada localmente; PR #156 publicada na branch feature/issue-152; aguardando integração.
+- `result`: `executed`
+- `evidence`: 447 testes unitários, 48 de governança, lint, typecheck, build e e2e (208 passed, 12 skipped, 1 flaky no retry); 16 casos independentes; evidências acima.
+- `blockers`: nenhum para publicar; merge depende de checks verdes e aprovação própria.
