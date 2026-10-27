@@ -2,11 +2,15 @@ import { createClient } from "@supabase/supabase-js";
 import { describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 import { lerComparacao } from "./telas/leitura-benchmarks";
-import { lerInsumosDoFechamento, lerInsumosDoInicio } from "./telas/leituras";
+import { ErroLeitura } from "./leitura";
+import { lerInsumosDoFechamento, lerInsumosDoInicio, lerInsumosDoInicioPorClasse } from "./telas/leituras";
 
 // D13 dentro do servidor Next. O Next 16.4.0 memoriza por pedido os GET/HEAD com mesmos URL e
 // cabeçalhos (next/dist/server/lib/dedupe-fetch.js) e só não o faz quando o fetch recebe signal.
 // Aqui a mesma regra envolve uma Data API falsa, e o cliente Supabase real faz as consultas.
+
+const RF = "a5000000-0000-4000-8000-000000020000";
+const RV = "a5000000-0000-4000-8000-000000030000";
 
 function deduplicarComoNext(fetchReal: typeof fetch): typeof fetch {
   const memoria = new Map<string, Promise<Response>>();
@@ -24,20 +28,33 @@ function deduplicarComoNext(fetchReal: typeof fetch): typeof fetch {
  * Data API com uma linha por tabela; troca de versão logo depois do primeiro transporte indicado. A
  * versão 2 é uma escrita que muda vários componentes da marca: refechamento e um evento novo.
  * Requisições em voo ao mesmo tempo formam um lote, atendido na ordem de chegada ou na inversa: o
- * banco pode ler consultas paralelas em qualquer ordem.
+ * banco pode ler consultas paralelas em qualquer ordem. Com a escrita "classificacao", a versão 2 só
+ * reclassifica o ativo (ciclo 013, issue #139): muda o nó e a marca da classificação, nada mais.
  */
-function dataApi(trocarApos: (transporte: string, indice: number) => boolean, ordem: "chegada" | "inversa" = "chegada") {
+function dataApi(
+  trocarApos: (transporte: string, indice: number) => boolean,
+  ordem: "chegada" | "inversa" = "chegada",
+  escrita: "carteira" | "classificacao" = "carteira",
+  marcaDaClassificacao?: () => string,
+) {
   let versao = 1;
   const transportes: string[] = [];
-  const linhas = (tabela: string, filtros: URLSearchParams): object[] => {
-    const v = versao === 1 ? 1010000 : 1020000;
+  const linhas = (tabela: string, filtros: URLSearchParams): object[] | string => {
+    const carteira = escrita === "carteira" ? versao : 1;
+    const classificacao = escrita === "classificacao" ? versao : 1;
+    const v = carteira === 1 ? 1010000 : 1020000;
     switch (tabela) {
-      case "consolidados_mensais": return [{ mes: "2026-01-01", fechado_em: `v${versao}`, vi: 1000000, vf: v }];
+      case "consolidados_mensais": return [{ mes: "2026-01-01", fechado_em: `v${carteira}`, vi: 1000000, vf: v }];
       case "posicoes_mensais": return [{ mes: "2026-01-01", ativo_id: "a1", saldo_inicial: 1000000, saldo_final: v, ajuste: 0, tipo_ajuste: null }];
-      case "ativos": return filtros.has("desativado_em") ? [] : [{ id: "a1", nome: "Ativo fictício", tipo_ajuste: null, sistema: null, ativo: true, desativado_em: null }];
+      case "ativos":
+        return filtros.has("desativado_em")
+          ? []
+          : [{ id: "a1", nome: "Ativo fictício", tipo_ajuste: null, sistema: null, ativo: true, desativado_em: null, taxonomia_id: classificacao === 1 ? RF : RV }];
+      case "taxonomia_ativos": return [RF, RV].map((id, i) => ({ id, parent_id: null, nivel: 1, nome: `Classe ${i + 1}`, ordem: i + 2 }));
+      case "ler_versao_classificacao": return marcaDaClassificacao ? marcaDaClassificacao() : String(classificacao);
       case "coberturas_benchmark": return [{ inicio: "2026-01-01", fim: "2026-02-01", atualizado_em: `v${versao}` }];
       case "valores_benchmark": return [{ data: "2026-01-01", valor: versao === 1 ? 0.8 : 0.9 }];
-      case "eventos": return versao === 1 ? [] : [{ id: "e1", ativo_id: "a1", data: "2026-02-05", tipo: "aporte", valor: 10000, estorno_de: null, transferencia_id: null }];
+      case "eventos": return carteira === 1 ? [] : [{ id: "e1", ativo_id: "a1", data: "2026-02-05", tipo: "aporte", valor: 10000, estorno_de: null, transferencia_id: null }];
       default: return [];
     }
   };
@@ -63,7 +80,7 @@ function dataApi(trocarApos: (transporte: string, indice: number) => boolean, or
     transportes.push(transporte);
     const dados = linhas(tabela, url.searchParams);
     if (versao === 1 && trocarApos(transporte, transportes.length - 1)) versao = 2;
-    const intervalo = dados.length ? `0-${dados.length - 1}/${dados.length}` : `*/0`;
+    const intervalo = typeof dados === "string" ? "*/*" : dados.length ? `0-${dados.length - 1}/${dados.length}` : `*/0`;
     const corpo = pedido.method === "HEAD" ? null : JSON.stringify(dados);
     return new Response(corpo, { status: 200, headers: { "content-type": "application/json", "content-range": intervalo } });
   };
@@ -75,6 +92,26 @@ function dataApi(trocarApos: (transporte: string, indice: number) => boolean, or
 }
 
 describe("D13 com a deduplicação do Next", () => {
+  it("Início por classe: reclassificação depois da leitura dos ativos repete e devolve só a classe nova", async () => {
+    const api = dataApi((t) => t.startsWith("GET ativos id,nome"), "chegada", "classificacao");
+    const insumos = await lerInsumosDoInicioPorClasse(api.cliente);
+    expect(api.versao()).toBe(2);
+    expect(insumos.ativos[0].taxonomia_id).toBe(RV);
+    expect(insumos.nos).toHaveLength(2);
+    // Duas tentativas: a marca da classificação foi lida antes e depois em cada uma.
+    expect(api.transportes.filter((t) => t.startsWith("POST ler_versao_classificacao"))).toHaveLength(4);
+    expect(api.transportes.filter((t) => t.startsWith("GET ativos id,nome"))).toHaveLength(2);
+  });
+
+  it("Início por classe: classificação que muda a cada tentativa vira indisponibilidade, sem classe velha", async () => {
+    // Uma reclassificação a cada leitura da marca: antes e depois nunca conferem.
+    let n = 0;
+    const api = dataApi(() => false, "chegada", "classificacao", () => String(++n));
+    const cliente = api.cliente;
+    await expect(lerInsumosDoInicioPorClasse(cliente)).rejects.toThrow(ErroLeitura);
+    await expect(lerInsumosDoInicioPorClasse(cliente)).rejects.toMatchObject({ motivo: "mudou" });
+  });
+
   it("Início: fechamento refeito entre consolidados e posições devolve só a versão nova", async () => {
     const api = dataApi((t) => t === "GET consolidados_mensais mes,vi,vf");
     const insumos = await lerInsumosDoInicio(api.cliente);

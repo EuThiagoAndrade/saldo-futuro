@@ -46,7 +46,7 @@ Os tokens são semânticos: o nome descreve a função, não a cor. O tema escur
 | `warning` | `#8A5A00` | Pendência, como um período aberto ou um saldo a ajustar |
 | `warning-subtle` | `#FBF1DC` | Fundo de aviso |
 | `focus` | `#2E6BD9` | Anel de foco |
-| `chart-1` a `chart-6` | ver 2.3 | Séries de gráficos |
+| `chart-1` a `chart-8` | ver 2.3 | Séries de gráficos |
 
 `gain` e `loss` são verde e vermelho dessaturados, reservados a ganho e perda. Eles têm a mesma luminância (contraste de 1,01:1 entre si), portanto são indistinguíveis para quem não percebe a diferença entre verde e vermelho. Por isso o componente de variação exige sinal e ícone (seção 6.4).
 
@@ -92,6 +92,8 @@ Razões calculadas pela fórmula de luminância relativa da WCAG 2.2. Mínimos: 
 | `chart-4` | `surface` | 5,89 | 3 |
 | `chart-5` | `surface` | 5,47 | 3 |
 | `chart-6` | `surface` | 5,01 | 3 |
+| `chart-7` | `surface` | 5,57 | 3 |
+| `chart-8` | `surface` | 6,45 | 3 |
 
 `border` (`#D3DAE4`) é decorativo: separa áreas que já se distinguem por espaço e conteúdo, por isso não precisa de 3:1. Contornos que identificam um controle usam `border-strong`. O anel de foco nunca é desenhado diretamente sobre `primary` (2,86:1); ele fica afastado 2 px do elemento, sobre a superfície (seção 7).
 
@@ -107,9 +109,12 @@ A paleta é independente de biblioteca; a biblioteca de gráficos é escolhida n
 | `chart-4` | `#6B5A9C` | Terceira categoria |
 | `chart-5` | `#5E6A7E` | Quarta categoria e "outros" |
 | `chart-6` | `#B04F6F` | Quinta categoria |
+| `chart-7` | `#1F6E9C` | Só na distribuição por classe: Alternativos, moedas, outros (ciclo `013`) |
+| `chart-8` | `#80552D` | Só na distribuição por classe: Em trânsito (ciclo `013`) |
 
 - As séries usam a ordem da tabela. No máximo seis séries; o excedente é agrupado em "outros" (`chart-5`).
 - Na rosca da distribuição por ativo (ciclo `010`, 6.13), as cinco fatias principais usam, nesta ordem, `chart-1`, `chart-2`, `chart-3`, `chart-4` e `chart-6`; `chart-5` fica reservado a Outros.
+- **Exceção restrita à distribuição por classe macro (ciclo `013`, 6.13):** até oito categorias, sem Outros residual, com cor fixa pela identidade da linha, independente de saldo, ordem ou linhas ausentes: Caixa e disponibilidades `chart-1`, Renda fixa `chart-2`, Renda variável `chart-3`, Investimentos no exterior `chart-4`, Criptoativos e ativos digitais `chart-6`, Alternativos, moedas, outros `chart-7`, Em trânsito `chart-8` e Sem classe `chart-5`. `chart-7` e `chart-8` não são cores de ganho ou perda: `chart-7`, um azul aço, fica fora das famílias verde e vermelha (ΔE76 de cerca de 20 para `chart-5`, 26 para `chart-2` e mais de 40 para `gain` e `loss`); `chart-8`, um marrom, fica a cerca de 31 de `loss` e 27 de `chart-3`. A regra das seis séries continua valendo para os demais gráficos e para a distribuição por ativo.
 - Barras de variação usam `gain` e `loss`, e nunca uma cor de categoria.
 - Séries de benchmark usam linha tracejada; a carteira usa linha contínua. Cor nunca é a única diferença entre séries: use rótulo direto no fim da linha ou legenda com o mesmo traço.
 - Eixos e grades usam `border`; rótulos de eixo usam `text-secondary` com algarismos tabulares.
@@ -237,6 +242,8 @@ A partir do ciclo `001`, a aplicação implementa os tokens em configuração CS
   --color-chart-4: #6b5a9c;
   --color-chart-5: #5e6a7e;
   --color-chart-6: #b04f6f;
+  --color-chart-7: #1f6e9c;
+  --color-chart-8: #80552d;
 
   --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, "Segoe UI", Roboto, Arial, sans-serif;
 
@@ -408,6 +415,7 @@ Usadas para alternar entre partes de uma mesma lista lidas pelo servidor, como "
 - Cada aba tem pelo menos 44 px de altura, rótulo `label` e um contador em etiqueta neutra (`neutral` sobre `neutral-subtle`, `caption` peso 500).
 - A aba selecionada tem `aria-current="page"`, texto `primary` e borda inferior de 2 px em `primary`; as demais usam `text-secondary` e borda transparente, com fundo `surface` em hover. O conjunto fica sobre uma linha `border`.
 - Só o conteúdo da aba selecionada é renderizado; cada aba tem o próprio estado vazio.
+- **Variante sem contador (ciclo `013`):** quando as abas alternam a representação dos mesmos dados, e não subconjuntos contáveis, não há etiqueta de contagem. É o caso do alternador "Por ativo" / "Por classe" da distribuição no Início: `nav` rotulado "Distribuição do patrimônio", links `?distribuicao=ativo` e `?distribuicao=classe` que preservam o período escolhido (e o formulário de período preserva a visão), `aria-current="page"`, sem `role="tab"`, altura mínima de 44 px e os mesmos estilos acima. Ausente ou inválido abre Por ativo. Só a visão escolhida é renderizada.
 
 ### 6.13 Rosca de distribuição
 
@@ -420,6 +428,7 @@ Distribuição por ativo no Início (ciclo `010`, ADR-005). O cálculo da partic
 - **Números:** "Ver os números" traz duas tabelas: Resumo (as fatias e Outros, mais os negativos) e Detalhe por ativo (cada posição uma vez). Outros nunca aparece somado a seus componentes na mesma tabela.
 - **Ocultar valores:** toda quantia da legenda, das listas e das tabelas vira "Valor oculto" já no servidor; títulos, descrições e atributos acessíveis não carregam quantias. Participações e nomes continuam visíveis.
 - **Layout:** rosca acima da legenda; lado a lado só enquanto o cartão ocupa a largura toda (de `md` até antes de `lg`). A partir de `lg`, na meia coluna do Início, volta a empilhar, para que nomes e quantias da legenda caibam mesmo no limite da faixa monetária. Nunca há rolagem horizontal.
+- **Por classe (ciclo `013`):** a mesma rosca, com até oito linhas (as seis classes macro, Em trânsito e Sem classe), sem Outros, nas cores fixas de 2.3 e na ordem da KB-004, seção 15 (saldo decrescente; empate pela ordem fixa). A legenda traz cada linha com amostra, nome, participação e valor. Saldos negativos ficam fora, por ativo, com o nome da classe entre parênteses. "Ver os números" traz uma tabela, Por classe, com as linhas e os negativos. Ocultação, base positiva, sem positivos e layout como na distribuição por ativo. Uma classe que não pode ser lida torna a visão indisponível, nunca "Sem classe".
 
 ## 7. Acessibilidade
 

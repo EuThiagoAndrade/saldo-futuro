@@ -3363,6 +3363,674 @@
           "U3"
         ]
       }
+    },
+    {
+      "id": "CR-C01",
+      "titulo": "Negativo fora da linha da classe",
+      "entrega": "013",
+      "regras": [
+        "15"
+      ],
+      "entrada": {
+        "posicoes": [
+          {
+            "alias": "A",
+            "id": "00000000-0000-4000-8000-0000000c0101",
+            "nome": "Ativo A",
+            "saldo": 5000000,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000020000"
+          },
+          {
+            "alias": "B",
+            "id": "00000000-0000-4000-8000-0000000c0102",
+            "nome": "Ativo B",
+            "saldo": -500000,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000020000"
+          },
+          {
+            "alias": "C",
+            "id": "00000000-0000-4000-8000-0000000c0103",
+            "nome": "Ativo C",
+            "saldo": 5000000,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000030000"
+          }
+        ]
+      },
+      "esperado": {
+        "base_positiva_centavos": "10000000",
+        "saldo_RF_centavos": "5000000",
+        "participacao_RF_centesimos_pp": "5000",
+        "participacao_RV_centesimos_pp": "5000",
+        "linhas": [
+          "RF",
+          "RV"
+        ],
+        "sem_percentual": [
+          "B"
+        ]
+      }
+    },
+    {
+      "id": "CR-C02",
+      "titulo": "Soma por classe antes do rateio",
+      "entrega": "013",
+      "regras": [
+        "15"
+      ],
+      "entrada": {
+        "posicoes": [
+          {
+            "alias": "A",
+            "id": "00000000-0000-4000-8000-0000000c0204",
+            "nome": "Ativo A",
+            "saldo": 10000000,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000020000"
+          },
+          {
+            "alias": "B",
+            "id": "00000000-0000-4000-8000-0000000c0205",
+            "nome": "Ativo B",
+            "saldo": 10000000,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000020000"
+          },
+          {
+            "alias": "C",
+            "id": "00000000-0000-4000-8000-0000000c0206",
+            "nome": "Ativo C",
+            "saldo": 10000000,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000030000"
+          }
+        ]
+      },
+      "esperado": {
+        "base_positiva_centavos": "30000000",
+        "participacao_RF_centesimos_pp": "6667",
+        "participacao_RV_centesimos_pp": "3333",
+        "linhas": [
+          "RF",
+          "RV"
+        ]
+      }
+    },
+    {
+      "id": "CR-C03",
+      "titulo": "Trânsito em linha própria",
+      "entrega": "013",
+      "regras": [
+        "15"
+      ],
+      "entrada": {
+        "posicoes": [
+          {
+            "alias": "A",
+            "id": "00000000-0000-4000-8000-0000000c0307",
+            "nome": "Ativo A",
+            "saldo": 6000000,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000020000"
+          },
+          {
+            "alias": "B",
+            "id": "00000000-0000-4000-8000-0000000c0308",
+            "nome": "Ativo B",
+            "saldo": 3000000,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000030000"
+          },
+          {
+            "alias": "T",
+            "id": "00000000-0000-4000-8000-0000000c0309",
+            "nome": "Em trânsito",
+            "saldo": 1000000,
+            "sistema": "transito",
+            "no": null
+          }
+        ]
+      },
+      "esperado": {
+        "base_positiva_centavos": "10000000",
+        "participacao_RF_centesimos_pp": "6000",
+        "participacao_RV_centesimos_pp": "3000",
+        "participacao_T_centesimos_pp": "1000",
+        "linhas": [
+          "RF",
+          "RV",
+          "T"
+        ]
+      }
+    },
+    {
+      "id": "CR-C04",
+      "titulo": "Empate de resto pela ordem fixa",
+      "entrega": "013",
+      "regras": [
+        "15"
+      ],
+      "entrada": {
+        "posicoes": [
+          {
+            "alias": "A",
+            "id": "00000000-0000-4000-8000-0000000c0410",
+            "nome": "Ativo A",
+            "saldo": 10000000,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000020000"
+          },
+          {
+            "alias": "B",
+            "id": "00000000-0000-4000-8000-0000000c0411",
+            "nome": "Ativo B",
+            "saldo": 10000000,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000030000"
+          },
+          {
+            "alias": "C",
+            "id": "00000000-0000-4000-8000-0000000c0412",
+            "nome": "Ativo C",
+            "saldo": 10000000,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000050000"
+          }
+        ]
+      },
+      "esperado": {
+        "base_positiva_centavos": "30000000",
+        "participacao_RF_centesimos_pp": "3334",
+        "participacao_RV_centesimos_pp": "3333",
+        "participacao_CT_centesimos_pp": "3333",
+        "linhas": [
+          "RF",
+          "RV",
+          "CT"
+        ]
+      }
+    },
+    {
+      "id": "CR-C05",
+      "titulo": "Trânsito negativo e Sem classe zerado fora das linhas",
+      "entrega": "013",
+      "regras": [
+        "15"
+      ],
+      "entrada": {
+        "posicoes": [
+          {
+            "alias": "A",
+            "id": "00000000-0000-4000-8000-0000000c0513",
+            "nome": "Ativo A",
+            "saldo": 5000000,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000020000"
+          },
+          {
+            "alias": "B",
+            "id": "00000000-0000-4000-8000-0000000c0514",
+            "nome": "Ativo B",
+            "saldo": 5000000,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000030000"
+          },
+          {
+            "alias": "T",
+            "id": "00000000-0000-4000-8000-0000000c0515",
+            "nome": "Em trânsito",
+            "saldo": -200000,
+            "sistema": "transito",
+            "no": null
+          },
+          {
+            "alias": "S",
+            "id": "00000000-0000-4000-8000-0000000c0516",
+            "nome": "Ativo S",
+            "saldo": 0,
+            "sistema": null,
+            "no": null
+          }
+        ]
+      },
+      "esperado": {
+        "base_positiva_centavos": "10000000",
+        "participacao_RF_centesimos_pp": "5000",
+        "participacao_RV_centesimos_pp": "5000",
+        "linhas": [
+          "RF",
+          "RV"
+        ],
+        "sem_percentual": [
+          "T"
+        ],
+        "omitidos": [
+          "S"
+        ]
+      }
+    },
+    {
+      "id": "CR-C06",
+      "titulo": "Oito linhas, sem agrupamento residual",
+      "entrega": "013",
+      "regras": [
+        "15"
+      ],
+      "entrada": {
+        "posicoes": [
+          {
+            "alias": "A",
+            "id": "00000000-0000-4000-8000-0000000c0617",
+            "nome": "Ativo A",
+            "saldo": 100,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000010100"
+          },
+          {
+            "alias": "B",
+            "id": "00000000-0000-4000-8000-0000000c0618",
+            "nome": "Ativo B",
+            "saldo": 100,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000020201"
+          },
+          {
+            "alias": "C",
+            "id": "00000000-0000-4000-8000-0000000c0619",
+            "nome": "Ativo C",
+            "saldo": 100,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000030101"
+          },
+          {
+            "alias": "D",
+            "id": "00000000-0000-4000-8000-0000000c0620",
+            "nome": "Ativo D",
+            "saldo": 100,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000040300"
+          },
+          {
+            "alias": "E",
+            "id": "00000000-0000-4000-8000-0000000c0621",
+            "nome": "Ativo E",
+            "saldo": 100,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000050202"
+          },
+          {
+            "alias": "F",
+            "id": "00000000-0000-4000-8000-0000000c0622",
+            "nome": "Ativo F",
+            "saldo": 100,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000060100"
+          },
+          {
+            "alias": "T",
+            "id": "00000000-0000-4000-8000-0000000c0623",
+            "nome": "Em trânsito",
+            "saldo": 100,
+            "sistema": "transito",
+            "no": null
+          },
+          {
+            "alias": "S",
+            "id": "00000000-0000-4000-8000-0000000c0624",
+            "nome": "Ativo S",
+            "saldo": 100,
+            "sistema": null,
+            "no": null
+          }
+        ]
+      },
+      "esperado": {
+        "base_positiva_centavos": "800",
+        "participacao_CX_centesimos_pp": "1250",
+        "participacao_RF_centesimos_pp": "1250",
+        "participacao_RV_centesimos_pp": "1250",
+        "participacao_EX_centesimos_pp": "1250",
+        "participacao_CT_centesimos_pp": "1250",
+        "participacao_AL_centesimos_pp": "1250",
+        "participacao_T_centesimos_pp": "1250",
+        "participacao_SC_centesimos_pp": "1250",
+        "linhas": [
+          "CX",
+          "RF",
+          "RV",
+          "EX",
+          "CT",
+          "AL",
+          "T",
+          "SC"
+        ]
+      }
+    },
+    {
+      "id": "CR-C07",
+      "titulo": "Sem saldo positivo",
+      "entrega": "013",
+      "regras": [
+        "15"
+      ],
+      "entrada": {
+        "s1": {
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-0000000c0725",
+              "nome": "Ativo A",
+              "saldo": -100,
+              "sistema": null,
+              "no": "a5000000-0000-4000-8000-000000020000"
+            },
+            {
+              "alias": "T",
+              "id": "00000000-0000-4000-8000-0000000c0726",
+              "nome": "Em trânsito",
+              "saldo": -50,
+              "sistema": "transito",
+              "no": null
+            },
+            {
+              "alias": "S",
+              "id": "00000000-0000-4000-8000-0000000c0727",
+              "nome": "Ativo S",
+              "saldo": 0,
+              "sistema": null,
+              "no": null
+            }
+          ]
+        },
+        "s2": {
+          "posicoes": []
+        }
+      },
+      "esperado": {
+        "s1_base_positiva_centavos": "0",
+        "s1_linhas": [],
+        "s1_sem_percentual": [
+          "A",
+          "T"
+        ],
+        "s1_omitidos": [
+          "S"
+        ],
+        "s2_base_positiva_centavos": "0",
+        "s2_linhas": [],
+        "s2_sem_percentual": []
+      }
+    },
+    {
+      "id": "CR-C08",
+      "titulo": "Uma única linha positiva é o anel completo",
+      "entrega": "013",
+      "regras": [
+        "15"
+      ],
+      "entrada": {
+        "s1": {
+          "posicoes": [
+            {
+              "alias": "S",
+              "id": "00000000-0000-4000-8000-0000000c0828",
+              "nome": "Ativo S",
+              "saldo": 1,
+              "sistema": null,
+              "no": null
+            }
+          ]
+        },
+        "s2": {
+          "posicoes": [
+            {
+              "alias": "T",
+              "id": "00000000-0000-4000-8000-0000000c0829",
+              "nome": "Em trânsito",
+              "saldo": 1,
+              "sistema": "transito",
+              "no": null
+            },
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-0000000c0830",
+              "nome": "Ativo A",
+              "saldo": 0,
+              "sistema": null,
+              "no": "a5000000-0000-4000-8000-000000020000"
+            },
+            {
+              "alias": "B",
+              "id": "00000000-0000-4000-8000-0000000c0831",
+              "nome": "Ativo B",
+              "saldo": 0,
+              "sistema": null,
+              "no": "a5000000-0000-4000-8000-000000030000"
+            }
+          ]
+        }
+      },
+      "esperado": {
+        "s1_base_positiva_centavos": "1",
+        "s1_participacao_SC_centesimos_pp": "10000",
+        "s1_linhas": [
+          "SC"
+        ],
+        "s2_base_positiva_centavos": "1",
+        "s2_participacao_T_centesimos_pp": "10000",
+        "s2_linhas": [
+          "T"
+        ]
+      }
+    },
+    {
+      "id": "CR-C09",
+      "titulo": "Base acima do inteiro seguro",
+      "entrega": "013",
+      "regras": [
+        "15"
+      ],
+      "entrada": {
+        "posicoes": [
+          {
+            "alias": "A",
+            "id": "00000000-0000-4000-8000-0000000c0932",
+            "nome": "Ativo A",
+            "saldo": 9007199254740991,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000020000"
+          },
+          {
+            "alias": "B",
+            "id": "00000000-0000-4000-8000-0000000c0933",
+            "nome": "Ativo B",
+            "saldo": 9007199254740991,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000030000"
+          },
+          {
+            "alias": "C",
+            "id": "00000000-0000-4000-8000-0000000c0934",
+            "nome": "Ativo C",
+            "saldo": -9007199254740991,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000050000"
+          }
+        ]
+      },
+      "esperado": {
+        "base_positiva_centavos": "18014398509481982",
+        "participacao_RF_centesimos_pp": "5000",
+        "participacao_RV_centesimos_pp": "5000",
+        "linhas": [
+          "RF",
+          "RV"
+        ],
+        "sem_percentual": [
+          "C"
+        ]
+      }
+    },
+    {
+      "id": "CR-C10",
+      "titulo": "Empate de resto pela ordem fixa com saldos diferentes",
+      "entrega": "013",
+      "regras": [
+        "15"
+      ],
+      "entrada": {
+        "posicoes": [
+          {
+            "alias": "A",
+            "id": "00000000-0000-4000-8000-0000000c1035",
+            "nome": "Ativo A",
+            "saldo": 1,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000010000"
+          },
+          {
+            "alias": "B",
+            "id": "00000000-0000-4000-8000-0000000c1036",
+            "nome": "Ativo B",
+            "saldo": 1,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000020000"
+          },
+          {
+            "alias": "C",
+            "id": "00000000-0000-4000-8000-0000000c1037",
+            "nome": "Ativo C",
+            "saldo": 4,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000030000"
+          }
+        ]
+      },
+      "esperado": {
+        "base_positiva_centavos": "6",
+        "participacao_CX_centesimos_pp": "1667",
+        "participacao_RF_centesimos_pp": "1667",
+        "participacao_RV_centesimos_pp": "6666",
+        "linhas": [
+          "RV",
+          "CX",
+          "RF"
+        ]
+      }
+    },
+    {
+      "id": "CR-C11",
+      "titulo": "Classificação atual com os saldos de M",
+      "entrega": "013",
+      "regras": [
+        "15"
+      ],
+      "entrada": {
+        "s1": {
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-0000000c1138",
+              "nome": "Ativo A",
+              "saldo": 100,
+              "sistema": null,
+              "no": "a5000000-0000-4000-8000-000000020201"
+            },
+            {
+              "alias": "B",
+              "id": "00000000-0000-4000-8000-0000000c1139",
+              "nome": "Ativo B",
+              "saldo": 100,
+              "sistema": null,
+              "no": "a5000000-0000-4000-8000-000000020000"
+            }
+          ]
+        },
+        "s2": {
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-0000000c1140",
+              "nome": "Ativo A",
+              "saldo": 100,
+              "sistema": null,
+              "no": "a5000000-0000-4000-8000-000000030000"
+            },
+            {
+              "alias": "B",
+              "id": "00000000-0000-4000-8000-0000000c1141",
+              "nome": "Ativo B",
+              "saldo": 100,
+              "sistema": null,
+              "no": "a5000000-0000-4000-8000-000000020000"
+            }
+          ]
+        }
+      },
+      "esperado": {
+        "s1_base_positiva_centavos": "200",
+        "s1_participacao_RF_centesimos_pp": "10000",
+        "s1_linhas": [
+          "RF"
+        ],
+        "s2_base_positiva_centavos": "200",
+        "s2_participacao_RF_centesimos_pp": "5000",
+        "s2_participacao_RV_centesimos_pp": "5000",
+        "s2_linhas": [
+          "RF",
+          "RV"
+        ]
+      }
+    },
+    {
+      "id": "CR-C12",
+      "titulo": "Linha acima do inteiro seguro",
+      "entrega": "013",
+      "regras": [
+        "15"
+      ],
+      "entrada": {
+        "posicoes": [
+          {
+            "alias": "A",
+            "id": "00000000-0000-4000-8000-0000000c1242",
+            "nome": "Ativo A",
+            "saldo": 9007199254740991,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000020000"
+          },
+          {
+            "alias": "B",
+            "id": "00000000-0000-4000-8000-0000000c1243",
+            "nome": "Ativo B",
+            "saldo": 9007199254740991,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000020000"
+          },
+          {
+            "alias": "C",
+            "id": "00000000-0000-4000-8000-0000000c1244",
+            "nome": "Ativo C",
+            "saldo": -9007199254740991,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000030000"
+          }
+        ]
+      },
+      "esperado": {
+        "base_positiva_centavos": "18014398509481982",
+        "saldo_RF_centavos": "18014398509481982",
+        "participacao_RF_centesimos_pp": "10000",
+        "patrimonio_liquido_centavos": "9007199254740991",
+        "linhas": [
+          "RF"
+        ],
+        "sem_percentual": [
+          "C"
+        ]
+      }
     }
   ]
 }

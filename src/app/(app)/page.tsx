@@ -5,13 +5,14 @@ import { Dinheiro } from "@/components/dinheiro";
 import { EstadoErro, EstadoVazio } from "@/components/estados";
 import { GraficoBarras, GraficoLinha } from "@/components/graficos/graficos";
 import { margemComum, rotulosDoEixoBarras, rotulosDoEixoLinha } from "@/components/graficos/margem";
-import { GraficoRosca } from "@/components/graficos/rosca";
+import { GraficoRosca, GraficoRoscaPorClasse } from "@/components/graficos/rosca";
 import { PreviewNotice } from "@/components/preview-notice";
 import { NaoDisponivel, Percentual, ValorOculto, VariacaoPercentual } from "@/components/valores";
 import { dataBr, mesBr } from "@/lib/apresentacao/datas";
 import { mesCurto, textoDinheiro, textoEixoDinheiro, textoPercentual } from "@/lib/apresentacao/valores";
 import { backend } from "@/lib/config";
 import { indice } from "@/lib/financeiro/apresentacao";
+import { type Alocacao, ClassificacaoIncoerente, comporAlocacao, type Grupo, grupoDoAtivo, MACROS } from "@/lib/financeiro/alocacao";
 import { RecusaFinanceira } from "@/lib/financeiro/centavos";
 import { comporDistribuicao } from "@/lib/financeiro/distribuicao";
 import { hojeEmCuiaba, ultimoDia } from "@/lib/financeiro/datas";
@@ -33,7 +34,8 @@ import {
   type TipoDePeriodo,
   variacaoDeM,
 } from "@/lib/telas/inicio";
-import { type InsumosDoInicio, lerInsumosDoInicio, nomeDoAtivo } from "@/lib/telas/leituras";
+import { type InsumosDoInicio, lerInsumosDoInicio, lerInsumosDoInicioPorClasse, nomeDoAtivo } from "@/lib/telas/leituras";
+import type { NoTaxonomia } from "@/lib/telas/taxonomia";
 
 export const metadata = { title: "Início — Saldo Futuro" };
 
@@ -49,15 +51,21 @@ const rotuloPeriodo = (p: Periodo) => (p.de === p.ate ? mesBr(p.de) : `${mesBr(p
 const maiuscula = (t: string) => `${t[0].toUpperCase()}${t.slice(1)}`;
 const mesOuNulo = (t: string | undefined) => (t && /^\d{4}-(0[1-9]|1[0-2])$/.test(t) ? t : undefined);
 
-type Busca = { periodo?: string; de?: string; ate?: string };
+type Busca = { periodo?: string; de?: string; ate?: string; distribuicao?: string };
+// Visão da distribuição (ciclo 013, issue #139): por ativo, o padrão, ou por classe macro.
+type Visao = "ativo" | "classe";
+const visaoDe = (busca: Busca): Visao => (busca.distribuicao === "classe" ? "classe" : "ativo");
+type InsumosDaTela = InsumosDoInicio & { nos?: NoTaxonomia[] };
 
 export default async function InicioPage({ searchParams }: { searchParams: Promise<Busca> }) {
   if (!backend) return <PreviewNotice />;
   const { supabase } = await exigirSessao();
+  const busca = await searchParams;
+  const visao = visaoDe(busca);
 
-  let insumos: InsumosDoInicio;
+  let insumos: InsumosDaTela;
   try {
-    insumos = await lerInsumosDoInicio(supabase);
+    insumos = visao === "classe" ? await lerInsumosDoInicioPorClasse(supabase) : await lerInsumosDoInicio(supabase);
   } catch (erro) {
     if (!(erro instanceof ErroLeitura)) throw erro;
     return <EstadoErro>{erro.motivo === "mudou" ? MENSAGEM_DADOS_MUDARAM : "Não foi possível ler a carteira. Tente novamente."}</EstadoErro>;
@@ -100,7 +108,7 @@ export default async function InicioPage({ searchParams }: { searchParams: Promi
           </Cartao>
         </>
       ) : (
-        <Resumo insumos={insumos} M={M} inicio={inicio} aportes={aportes} busca={await searchParams} />
+        <Resumo insumos={insumos} M={M} inicio={inicio} aportes={aportes} busca={busca} visao={visao} />
       )}
     </div>
   );
@@ -122,12 +130,14 @@ async function Resumo({
   inicio,
   aportes,
   busca,
+  visao,
 }: {
-  insumos: InsumosDoInicio;
+  insumos: InsumosDaTela;
   M: string;
   inicio: string;
   aportes: bigint;
   busca: Busca;
+  visao: Visao;
 }) {
   const oculto = await valoresOcultos();
   const meses = insumos.consolidados.map((c) => ({ mes: c.mes, vi: BigInt(c.vi), vf: BigInt(c.vf) }));
@@ -153,12 +163,14 @@ async function Resumo({
   const mesesDoGrafico = mesesDoPeriodo(periodo).filter((m) => m >= inicio);
   const mesesDeRetorno = resultado.mesesBase100.length ? resultado.mesesBase100 : mesesDoGrafico;
   const vfPorMes = new Map(meses.map((m) => [m.mes, m.vf]));
-  // Distribuição de M (KB-004, seção 15): participação sobre os saldos positivos, pelo maior resto.
-  const distribuicao = comporDistribuicao(
-    insumos.posicoes
-      .filter((p) => p.mes.slice(0, 7) === M)
-      .map((p) => ({ id: p.ativo_id, nome: nomeDoAtivo(insumos.ativos, p.ativo_id), saldo: p.saldo_final })),
-  );
+  // Distribuição de M (KB-004, seção 15): participação sobre os saldos positivos, pelo maior resto,
+  // por ativo ou por classe macro. Só a visão escolhida é composta e renderizada.
+  const posicoesDeM = insumos.posicoes.filter((p) => p.mes.slice(0, 7) === M);
+  const distribuicao =
+    visao === "ativo"
+      ? comporDistribuicao(posicoesDeM.map((p) => ({ id: p.ativo_id, nome: nomeDoAtivo(insumos.ativos, p.ativo_id), saldo: p.saldo_final })))
+      : null;
+  const porClasse = visao === "classe" ? alocacaoDeM(insumos, posicoesDeM) : null;
   const dinheiro = (centavos: bigint | number) => (oculto ? <ValorOculto /> : textoDinheiro(BigInt(centavos)));
   const eixoDinheiro = (reais: number, marcas: number[]) => (oculto ? "••••" : textoEixoDinheiro(reais, marcas));
 
@@ -221,6 +233,8 @@ async function Resumo({
               </Campo>
             </div>
           </div>
+          {/* A visão da distribuição continua a mesma ao aplicar o período (R2-2). */}
+          <input type="hidden" name="distribuicao" value={visao} />
           <button type="submit" className={botaoSecundario}>
             Ver período
           </button>
@@ -299,14 +313,87 @@ async function Resumo({
             linhasTabela={resultado.mesesBase100.map((m, i) => ({ rotulo: mesBr(m), valores: [indice((resultado.base100 as number[])[i])] }))}
           />
         )}
-        <GraficoRosca
-          id="grafico-distribuicao"
-          titulo={`Distribuição por ativo em ${mesBr(M)}`}
-          descricao="Participação de cada ativo na soma dos saldos positivos no fim do último mês fechado; além dos cinco maiores, os demais somados em Outros. Saldos negativos ficam fora da rosca."
-          distribuicao={distribuicao}
-          dinheiro={dinheiro}
-        />
+        <div id="distribuicao" className="flex flex-col gap-3">
+          <AlternadorDaDistribuicao busca={busca} visao={visao} />
+          {distribuicao ? (
+            <GraficoRosca
+              id="grafico-distribuicao"
+              titulo={`Distribuição por ativo em ${mesBr(M)}`}
+              descricao="Participação de cada ativo na soma dos saldos positivos no fim do último mês fechado; além dos cinco maiores, os demais somados em Outros. Saldos negativos ficam fora da rosca."
+              distribuicao={distribuicao}
+              dinheiro={dinheiro}
+            />
+          ) : porClasse ? (
+            <GraficoRoscaPorClasse
+              id="grafico-distribuicao-classe"
+              titulo={`Distribuição por classe em ${mesBr(M)}`}
+              descricao="Participação de cada classe macro na soma dos saldos positivos dos ativos no fim do último mês fechado, pela classe atual de cada ativo. Saldos negativos ficam fora da rosca, por ativo."
+              alocacao={porClasse.alocacao}
+              nomeDoGrupo={porClasse.nomeDoGrupo}
+              dinheiro={dinheiro}
+            />
+          ) : (
+            <EstadoErro>A distribuição por classe não está disponível: a classe de algum ativo não pôde ser lida. Tente novamente.</EstadoErro>
+          )}
+        </div>
       </section>
     </>
+  );
+}
+
+/** Alocação de M por classe macro; null se a classe de algum ativo não puder ser lida (indisponível). */
+function alocacaoDeM(insumos: InsumosDaTela, posicoesDeM: InsumosDoInicio["posicoes"]): { alocacao: Alocacao; nomeDoGrupo: (g: Grupo) => string } | null {
+  const nos = new Map((insumos.nos ?? []).map((n) => [n.id, n]));
+  const ativos = new Map(insumos.ativos.map((a) => [a.id, a]));
+  try {
+    const alocacao = comporAlocacao(
+      posicoesDeM.map((p) => {
+        const ativo = ativos.get(p.ativo_id);
+        if (!ativo) throw new ClassificacaoIncoerente(`ativo ${p.ativo_id} ausente`);
+        return { id: p.ativo_id, nome: ativo.nome, saldo: p.saldo_final, grupo: grupoDoAtivo(ativo, nos) };
+      }),
+    );
+    const nomes = new Map(Object.entries(MACROS).map(([id, grupo]) => [grupo, nos.get(id)?.nome]));
+    const nomeDoGrupo = (g: Grupo) => (g === "transito" ? "Em trânsito" : g === "sem_classe" ? "Sem classe" : (nomes.get(g) ?? g));
+    return { alocacao, nomeDoGrupo };
+  } catch (erro) {
+    if (erro instanceof ClassificacaoIncoerente) return null;
+    throw erro;
+  }
+}
+
+/**
+ * Alternador da distribuição (DESIGN.md 6.12, variante sem contador): links que preservam o período
+ * escolhido, com aria-current na visão atual. Ausente ou inválido abre Por ativo.
+ */
+function AlternadorDaDistribuicao({ busca, visao }: { busca: Busca; visao: Visao }) {
+  const href = (destino: Visao) => {
+    const params = new URLSearchParams();
+    for (const chave of ["periodo", "de", "ate"] as const) {
+      const valor = busca[chave];
+      if (valor) params.set(chave, valor);
+    }
+    params.set("distribuicao", destino);
+    return `?${params.toString()}#distribuicao`;
+  };
+  const visoes = [
+    ["ativo", "Por ativo"],
+    ["classe", "Por classe"],
+  ] as const;
+  return (
+    <nav aria-label="Distribuição do patrimônio" className="flex border-b border-border">
+      {visoes.map(([destino, rotulo]) => (
+        <Link
+          key={destino}
+          href={href(destino)}
+          aria-current={visao === destino ? "page" : undefined}
+          className={`-mb-px flex min-h-11 items-center border-b-2 px-4 text-sm/5 font-medium hover:bg-surface ${
+            visao === destino ? "border-primary text-primary" : "border-transparent text-text-secondary"
+          }`}
+        >
+          {rotulo}
+        </Link>
+      ))}
+    </nav>
   );
 }

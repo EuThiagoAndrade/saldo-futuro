@@ -5,6 +5,7 @@
 
 import type { ReactNode } from "react";
 import { textoParticipacao } from "../../lib/apresentacao/valores";
+import type { Alocacao, Grupo } from "../../lib/financeiro/alocacao";
 import type { Distribuicao, Parte } from "../../lib/financeiro/distribuicao";
 
 const TAMANHO = 200;
@@ -77,14 +78,22 @@ function ItemDaLegenda({ amostra, nome, participacao, valor }: { amostra?: strin
   );
 }
 
-function Tabela({ legenda, linhas }: { legenda: string; linhas: { chave: string; nome: string; participacao: string; valor: ReactNode }[] }) {
+function Tabela({
+  legenda,
+  linhas,
+  coluna = "Ativo",
+}: {
+  legenda: string;
+  linhas: { chave: string; nome: string; participacao: string; valor: ReactNode }[];
+  coluna?: string;
+}) {
   return (
     <table className="w-full border-collapse text-left">
       <caption className="p-2 text-left font-medium text-text">{legenda}</caption>
       <thead>
         <tr className="border-b border-border text-text-secondary">
           <th scope="col" className="p-2 font-medium">
-            Ativo
+            {coluna}
           </th>
           <th scope="col" className="p-2 text-right font-medium">
             Participação
@@ -215,6 +224,98 @@ export function GraficoRosca({
           <div className="flex flex-col gap-4 overflow-x-auto">
             <Tabela legenda="Resumo" linhas={resumo} />
             <Tabela legenda="Detalhe por ativo" linhas={detalhe} />
+          </div>
+        </details>
+      ) : null}
+    </figure>
+  );
+}
+
+// Alocação por classe macro (ciclo 013, issue #139; DESIGN.md 2.3 e 6.13; KB-004, seção 15): até
+// oito linhas, sem Outros, cada uma com cor fixa pela identidade, independente de saldo, ordem ou
+// linhas ausentes. Nomes, ordem e legenda identificam a linha sem depender só da cor.
+const COR_DO_GRUPO: Record<Grupo, { cor: string; amostra: string }> = {
+  caixa: { cor: "var(--color-chart-1)", amostra: "bg-chart-1" },
+  renda_fixa: { cor: "var(--color-chart-2)", amostra: "bg-chart-2" },
+  renda_variavel: { cor: "var(--color-chart-3)", amostra: "bg-chart-3" },
+  exterior: { cor: "var(--color-chart-4)", amostra: "bg-chart-4" },
+  cripto: { cor: "var(--color-chart-6)", amostra: "bg-chart-6" },
+  alternativos: { cor: "var(--color-chart-7)", amostra: "bg-chart-7" },
+  transito: { cor: "var(--color-chart-8)", amostra: "bg-chart-8" },
+  sem_classe: { cor: "var(--color-chart-5)", amostra: "bg-chart-5" },
+};
+
+export function GraficoRoscaPorClasse({
+  id,
+  titulo,
+  descricao,
+  alocacao,
+  nomeDoGrupo,
+  dinheiro,
+}: {
+  id: string;
+  titulo: string;
+  descricao: string;
+  alocacao: Alocacao;
+  nomeDoGrupo: (grupo: Grupo) => string;
+  /** Quantia já formatada, ou "Valor oculto", decidida no servidor por quem chama. */
+  dinheiro: (centavos: bigint) => ReactNode;
+}) {
+  const { base, linhas, negativos } = alocacao;
+  const fatias: Fatia[] = linhas.map((l) => ({ chave: l.grupo, saldo: l.saldo, cor: COR_DO_GRUPO[l.grupo].cor }));
+  const linhasNegativas = negativos.map((n) => ({ chave: n.id, nome: `${n.nome} (${nomeDoGrupo(n.grupo)})`, participacao: FORA, valor: dinheiro(n.saldo) }));
+  const resumo = [
+    ...linhas.map((l) => ({ chave: l.grupo, nome: nomeDoGrupo(l.grupo), participacao: textoParticipacao(l.participacao), valor: dinheiro(l.saldo) })),
+    ...linhasNegativas,
+  ];
+
+  return (
+    <figure className="flex flex-col gap-3 rounded-md border border-border bg-surface p-4">
+      <figcaption className="flex flex-col gap-1">
+        <span id={`${id}-titulo`} className="text-lg/7 font-semibold text-text">
+          {titulo}
+        </span>
+        <span id={`${id}-descricao`} className="text-sm/5 text-text-secondary">
+          {descricao}
+        </span>
+      </figcaption>
+
+      {base === 0n ? (
+        <p className="text-base/6 text-text-secondary">Não há saldos positivos para exibir.</p>
+      ) : (
+        <div className="flex flex-col gap-4 md:flex-row md:items-start lg:flex-col lg:items-stretch">
+          <Desenho fatias={fatias} base={base} rotulo={`${id}-titulo ${id}-descricao`} />
+          <ol aria-label="Legenda da distribuição por classe" className="flex min-w-0 flex-1 flex-col gap-3">
+            {linhas.map((l) => (
+              <li key={l.grupo} className="flex">
+                <ItemDaLegenda amostra={COR_DO_GRUPO[l.grupo].amostra} nome={nomeDoGrupo(l.grupo)} participacao={l.participacao} valor={dinheiro(l.saldo)} />
+              </li>
+            ))}
+          </ol>
+        </div>
+      )}
+
+      {negativos.length ? (
+        <div className="flex flex-col gap-2 border-t border-border pt-3">
+          <p className="text-sm/5 font-medium text-text">Saldos negativos, fora da rosca</p>
+          <ul className="flex flex-col gap-2">
+            {negativos.map((n) => (
+              <li key={n.id} className="flex items-start gap-3 text-sm/5">
+                <span className="min-w-0 flex-1 break-words text-text">
+                  {n.nome} <span className="text-text-secondary">({nomeDoGrupo(n.grupo)})</span>
+                </span>
+                <span className="shrink-0 text-right text-text-secondary tabular-nums">{dinheiro(n.saldo)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
+      {resumo.length ? (
+        <details className="text-sm/5">
+          <summary className="min-h-11 cursor-pointer content-center font-medium text-primary">Ver os números</summary>
+          <div className="flex flex-col gap-4 overflow-x-auto">
+            <Tabela legenda="Por classe" coluna="Classe" linhas={resumo} />
           </div>
         </details>
       ) : null}
