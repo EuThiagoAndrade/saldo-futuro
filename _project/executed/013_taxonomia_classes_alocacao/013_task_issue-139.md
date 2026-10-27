@@ -2,17 +2,17 @@
 
 > **Ciclo:** `013`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#139`
-> **Plano:** `_project/drafts/013_taxonomia_classes_alocacao/013_plan.md`
+> **Plano:** `_project/executed/013_taxonomia_classes_alocacao/013_plan.md`
 > **Branch:** `feature/issue-139`
-> **PR:** [#147](https://github.com/EuThiagoAndrade/saldo-futuro/pull/147) (`Refs #139`)
-> **Integração:** `Pendente`
+> **PR:** [#147](https://github.com/EuThiagoAndrade/saldo-futuro/pull/147) (`Refs #139`), integrada
+> **Integração:** PR #147 integrada por squash (`64af18b310e971911568228f87963affe95248be`) em 2026-10-27, com checks verdes; verificação em produção do ciclo concluída em 2026-10-27; issue #139 fechada pela PR de encerramento (`Closes #139`)
 > **Autorização inicial:** "autorizo a implementação da issue #139" em 2026-10-26
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-26
-> **Última atualização:** 2026-10-26
+> **Última atualização:** 2026-10-27
 > **handoff_schema_version:** `2`
 
 ## Objetivo
@@ -51,7 +51,7 @@ Não se aplica.
 - [x] KB-003, KB-004 e nota na `0.10.0` de `/novidades`.
 - [x] e2e `tests/e2e/distribuicao-classe.spec.ts`.
 - [x] Gates completos e PR #147 aberta (`Refs #139`).
-- [ ] Checks remotos verdes e aprovação do merge.
+- [x] Checks remotos verdes e aprovação do merge; PR #147 integrada em 2026-10-27.
 
 ## Evidências
 
@@ -63,9 +63,10 @@ Não se aplica.
 | `npx supabase test db` | 9 arquivos, 498 asserções, `PASS` (sem mudança de banco) |
 | `npm run build` | Passou |
 | `npm run test:e2e` (`CI=1`, Supabase local) | 221 testes: 208 passaram, 13 ignorados (condicionais do ambiente), nenhuma falha; o novo `distribuicao-classe.spec.ts` tem 8. As três primeiras execuções do arquivo novo reprovaram por seletores ambíguos do próprio teste (rótulo "Período", nome repetido na tabela e o cartão Patrimônio), corrigidos sem mudar código |
-| Validador | Pendente |
-| `git diff --check` | Pendente |
-| Checks remotos | Pendente |
+| Validador | Executado antes da publicação; checks de governança da PR #147 verdes |
+| `git diff --check` | Executado antes da publicação |
+| Checks remotos | Verdes na PR #147: lint, tipos, testes, build e e2e de preview; Supabase local, testes de banco e e2e autenticado; governança; Vercel |
+| Verificação em produção (V) | Aprovada pelo responsável em 2026-10-27, em desktop e celular: seletor e caminhos, Cadastros só com Instituições, alternador Por ativo / Por classe (padrão Por ativo), rosca e tabela, ocultação de valores, período preservando a visão e layout mobile. Limite: feita só pelo responsável, em uso real, sem prints; o agente não acessou a produção |
 
 ## Revisão da correção
 
@@ -81,16 +82,18 @@ Não se aplica.
 
 ## Encerramento
 
-Não se aplica.
+Encerrada na PR `chore/cycle-013-closure` (`013_task_closure.md`), junto com o ciclo. Estado `Concluída` e issue fechada pela PR de encerramento são prospectivos até o merge dela.
 
 ## Próximo passo
 
+Esta task está concluída; o ciclo foi encerrado na PR `chore/cycle-013-closure`.
+
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 013 (completo)
-Quem: Responsável
-Conferir: checks e diff da PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/147
-Diga: "aprovo o merge da PR #147"
+Situação: Concluído — ciclo 013 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída

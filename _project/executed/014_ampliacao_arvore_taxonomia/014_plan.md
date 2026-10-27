@@ -400,7 +400,7 @@ Paralelismo com o ciclo `013`: a unidade 3 (#139) e este ciclo podem tocar a KB-
 - `.agent/ai_behavior.md`, `_project/README.md`, `_project/cycles.md`.
 - `.agent/workflows/rascunhar_plano.md` e `.agent/templates/plano_implementacao.md`, lidos no ponto de uso.
 - Ideação `_project/ideations/014_ampliacao_arvore_taxonomia.md`.
-- Plano `_project/drafts/013_taxonomia_classes_alocacao/013_plan.md` (D1, D1.1, D6, P1, P3, R1-2 e árvore D16).
+- Plano `_project/executed/013_taxonomia_classes_alocacao/013_plan.md` (D1, D1.1, D6, P1, P3, R1-2 e árvore D16).
 - `supabase/migrations/20261026204955_taxonomia_ativos.sql`, `supabase/tests/database/09_taxonomia_ativos.test.sql`, `src/lib/telas/taxonomia.ts`, `tests/e2e/ativos-detalhes.spec.ts`.
 - KB-002 S12, KB-003 e `design-system/DESIGN.md` 6.8.
 
