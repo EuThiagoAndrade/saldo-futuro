@@ -7,7 +7,7 @@
 > **Issue:** — (encerramento documental sem issue recursiva; fecha a #144 por `Closes #144`)
 > **Plano:** `_project/executed/014_ampliacao_arvore_taxonomia/014_plan.md`
 > **Branch:** `chore/cycle-014-closure`
-> **PR:** —
+> **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/146
 > **Integração:** prospectiva; válida somente depois do merge desta PR, conferido no GitHub
 > **Autorização inicial:** "aprovo o plano do ciclo 014" em 2026-10-26 (o encerramento é autorizado pela aprovação do plano); "continue o ciclo 014 sem a release; a PR #141 fica para o encerramento do ciclo 013" em 2026-10-26
 > **Modo contínuo:** `—`
@@ -99,4 +99,4 @@ Diga: —
 - `state_after`: registros reconciliados e ciclo em `executed/` com plano, tasks e `cycles.md` concluídos prospectivamente; antes do merge, a situação efetiva depende da PR e dos checks.
 - `result`: `executed`
 - `evidence`: PRs e issue conferidas no GitHub; ação externa declarada pelo responsável e contagens conferidas; workflow, template e skill lidos no ponto de uso; gates acima.
-- `blockers`: checks verdes no tip final e aprovação específica do merge desta PR.
+- `blockers`: checks verdes no tip final e "aprovo o merge da PR #146"; aprovação ainda não recebida. Situação efetiva Aguardando merge, sem concluir o ciclo em `main` antecipadamente.
