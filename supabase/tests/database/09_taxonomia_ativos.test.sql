@@ -1,10 +1,11 @@
--- Taxonomia global de classes de ativos (ciclo 013, issues #137 e #138): catálogo e suas restrições,
+-- Taxonomia global de classes de ativos (ciclo 013, issues #137 e #138; árvore ampliada no ciclo 014,
+-- issue #144): catálogo e suas restrições,
 -- vínculo opcional do ativo, marca de coerência da classificação (R1-2), RPCs novas, retirada das
 -- funções antigas (fase 2), equivalência mínima do legado e isolamento (G2). Só dados fictícios:
 -- e-mails em example.com e nomes inventados.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(163);
+select plan(168);
 
 create function pg_temp.act_as(p_sub uuid) returns void language plpgsql as $$
 begin
@@ -94,10 +95,36 @@ select is((select concat_ws('|', p.prosecdef, p.provolatile, p.prorettype::regty
   where p.oid = 'public.ler_versao_classificacao()'::regprocedure), 'f|s|text',
   'ler_versao_classificacao é security invoker, stable e devolve texto');
 
--- 2. A árvore aprovada, exatamente
-select is((select count(*) from public.taxonomia_ativos), 39::bigint, 'o catálogo tem 39 nós');
+-- 2. A árvore aprovada, exatamente (a do ciclo 013, ampliada no ciclo 014)
+select is((select count(*) from public.taxonomia_ativos), 133::bigint, 'o catálogo tem 133 nós');
+select is_empty(
+  $$ select pg_temp.no(o.codigo), case when o.pai is null then null else pg_temp.no(o.pai) end, o.nivel::smallint, o.nome, o.ordem
+     from (values
+       ('1', null, 1, 'Caixa e disponibilidades', 1), ('1.1', '1', 2, 'Saldos em conta', 1),
+       ('1.2', '1', 2, 'Dinheiro em espécie', 2), ('2', null, 1, 'Renda fixa', 2),
+       ('2.1', '2', 2, 'Dívida soberana', 1), ('2.2', '2', 2, 'Crédito bancário', 2), ('2.2.1', '2.2', 3, 'CDB', 1),
+       ('2.2.2', '2.2', 3, 'RDB', 2), ('2.2.3', '2.2', 3, 'Letras bancárias', 3),
+       ('2.3', '2', 2, 'Crédito corporativo', 3), ('2.3.1', '2.3', 3, 'Debêntures', 1),
+       ('2.3.2', '2.3', 3, 'Notas comerciais', 2), ('2.4', '2', 2, 'Crédito estruturado', 4),
+       ('2.4.1', '2.4', 3, 'Recebíveis imobiliários', 1), ('2.4.2', '2.4', 3, 'Recebíveis do agronegócio', 2),
+       ('2.4.3', '2.4', 3, 'Outros recebíveis', 3), ('3', null, 1, 'Renda variável', 3),
+       ('3.1', '3', 2, 'Participações em empresas', 1), ('3.1.1', '3.1', 3, 'Ações ordinárias', 1),
+       ('3.1.2', '3.1', 3, 'Ações preferenciais', 2), ('3.2', '3', 2, 'Imóveis de renda', 2),
+       ('3.3', '3', 2, 'Desenvolvimento imobiliário', 3), ('4', null, 1, 'Investimentos no exterior', 4),
+       ('4.1', '4', 2, 'Dívida soberana no exterior', 1), ('4.2', '4', 2, 'Crédito privado no exterior', 2),
+       ('4.3', '4', 2, 'Participações em empresas no exterior', 3), ('4.4', '4', 2, 'Imóveis no exterior', 4),
+       ('5', null, 1, 'Criptoativos e ativos digitais', 5), ('5.1', '5', 2, 'Criptoativos sem lastro', 1),
+       ('5.2', '5', 2, 'Stablecoins', 2), ('5.2.1', '5.2', 3, 'Com reservas', 1),
+       ('5.2.2', '5.2', 3, 'Algorítmicas', 2), ('5.3', '5', 2, 'Outros ativos digitais', 3),
+       ('6', null, 1, 'Alternativos, moedas, outros', 6), ('6.1', '6', 2, 'Ouro', 1),
+       ('6.2', '6', 2, 'Outras commodities', 2), ('6.3', '6', 2, 'Exposição a moedas', 3),
+       ('6.4', '6', 2, 'Estratégias multiexposição', 4), ('6.5', '6', 2, 'Outros alternativos', 5)
+     ) o (codigo, pai, nivel, nome, ordem)
+     except
+     select t.id, t.parent_id, t.nivel, t.nome, t.ordem from public.taxonomia_ativos t $$,
+  'os 39 nós do ciclo 013 continuam intactos: UUID, pai, nível, nome e ordem (N2)');
 select is((select array_agg(n order by nivel) from (select nivel, count(*) n from public.taxonomia_ativos group by nivel) c),
-  array[6::bigint, 21, 12], 'são 6 classes macro, 21 subclasses e 12 tipos');
+  array[6::bigint, 23, 104], 'são 6 classes macro, 23 subclasses e 104 tipos');
 select is((
   with recursive arv as (
     select t.id, t.nome, t.ordem::text as codigo, array[t.ordem] as caminho from public.taxonomia_ativos t where t.parent_id is null
@@ -105,18 +132,46 @@ select is((
     select t.id, t.nome, a.codigo || '.' || t.ordem, a.caminho || t.ordem
     from public.taxonomia_ativos t join arv a on t.parent_id = a.id)
   select array_agg(codigo || ' ' || nome order by caminho) from arv),
-  array['1 Caixa e disponibilidades', '1.1 Saldos em conta', '1.2 Dinheiro em espécie',
-    '2 Renda fixa', '2.1 Dívida soberana', '2.2 Crédito bancário', '2.2.1 CDB', '2.2.2 RDB', '2.2.3 Letras bancárias',
-    '2.3 Crédito corporativo', '2.3.1 Debêntures', '2.3.2 Notas comerciais',
-    '2.4 Crédito estruturado', '2.4.1 Recebíveis imobiliários', '2.4.2 Recebíveis do agronegócio', '2.4.3 Outros recebíveis',
-    '3 Renda variável', '3.1 Participações em empresas', '3.1.1 Ações ordinárias', '3.1.2 Ações preferenciais',
-    '3.2 Imóveis de renda', '3.3 Desenvolvimento imobiliário',
-    '4 Investimentos no exterior', '4.1 Dívida soberana no exterior', '4.2 Crédito privado no exterior',
-    '4.3 Participações em empresas no exterior', '4.4 Imóveis no exterior',
-    '5 Criptoativos e ativos digitais', '5.1 Criptoativos sem lastro', '5.2 Stablecoins', '5.2.1 Com reservas',
-    '5.2.2 Algorítmicas', '5.3 Outros ativos digitais',
-    '6 Alternativos, moedas, outros', '6.1 Ouro', '6.2 Outras commodities', '6.3 Exposição a moedas',
-    '6.4 Estratégias multiexposição', '6.5 Outros alternativos'],
+  array['1 Caixa e disponibilidades', '1.1 Saldos em conta', '1.2 Dinheiro em espécie', '2 Renda fixa',
+    '2.1 Dívida soberana', '2.1.1 Tesouro Selic', '2.1.2 Tesouro Prefixado', '2.1.3 Tesouro IPCA+',
+    '2.1.4 Tesouro Renda+', '2.1.5 Tesouro Educa+', '2.1.6 Carteiras de títulos públicos', '2.2 Crédito bancário',
+    '2.2.1 CDB', '2.2.2 RDB', '2.2.3 Letras bancárias', '2.2.4 Poupança', '2.2.5 Operações compromissadas',
+    '2.2.6 Certificados de operações estruturadas', '2.3 Crédito corporativo', '2.3.1 Debêntures',
+    '2.3.2 Notas comerciais', '2.3.3 Carteiras de crédito privado', '2.3.4 Cédulas de crédito bancário',
+    '2.3.5 Empréstimos coletivos a empresas', '2.4 Crédito estruturado', '2.4.1 Recebíveis imobiliários',
+    '2.4.2 Recebíveis do agronegócio', '2.4.3 Outros recebíveis', '3 Renda variável', '3.1 Participações em empresas',
+    '3.1.1 Ações ordinárias', '3.1.2 Ações preferenciais', '3.1.3 Units', '3.1.4 Direitos e recibos de subscrição',
+    '3.1.5 Carteiras amplas de ações', '3.1.6 Carteiras de empresas menores', '3.1.7 Carteiras de dividendos',
+    '3.1.8 Carteiras setoriais e temáticas', '3.2 Imóveis de renda', '3.2.1 Galpões logísticos e industriais',
+    '3.2.2 Escritórios', '3.2.3 Shoppings', '3.2.4 Varejo e renda urbana', '3.2.5 Residenciais para renda',
+    '3.2.6 Hotéis', '3.2.7 Saúde e educação', '3.2.8 Imóveis rurais', '3.2.9 Carteiras imobiliárias diversificadas',
+    '3.3 Desenvolvimento imobiliário', '3.3.1 Incorporação residencial', '3.3.2 Incorporação comercial',
+    '3.3.3 Loteamentos', '4 Investimentos no exterior', '4.1 Dívida soberana no exterior',
+    '4.1.1 Títulos de curto prazo', '4.1.2 Títulos de médio e longo prazo', '4.1.3 Carteiras de títulos soberanos',
+    '4.2 Crédito privado no exterior', '4.2.1 Grau de investimento', '4.2.2 Alto rendimento',
+    '4.2.3 Recebíveis imobiliários', '4.2.4 Títulos híbridos e ações preferenciais',
+    '4.3 Participações em empresas no exterior', '4.3.1 Ações individuais',
+    '4.3.2 Carteiras de ações dos Estados Unidos', '4.3.3 Carteiras de ações globais',
+    '4.3.4 Carteiras de ações de outros países desenvolvidos', '4.3.5 Carteiras de ações de mercados emergentes',
+    '4.3.6 Carteiras de empresas menores', '4.3.7 Carteiras de dividendos', '4.3.8 Carteiras setoriais e temáticas',
+    '4.4 Imóveis no exterior', '4.4.1 Imóveis de renda', '4.4.2 Imóveis físicos', '5 Criptoativos e ativos digitais',
+    '5.1 Criptoativos sem lastro', '5.1.1 Bitcoin', '5.1.2 Ethereum', '5.1.3 Outras redes de contratos inteligentes',
+    '5.1.4 Redes de segunda camada', '5.1.5 Criptomoedas de pagamento', '5.1.6 Criptomoedas de privacidade',
+    '5.1.7 Tokens de finanças descentralizadas', '5.1.8 Tokens de infraestrutura',
+    '5.1.9 Tokens de jogos e metaverso', '5.1.10 Tokens de torcedores', '5.1.11 Memecoins',
+    '5.1.12 Carteiras de criptoativos', '5.2 Stablecoins', '5.2.1 Com reservas', '5.2.2 Algorítmicas',
+    '5.2.3 Sintéticas', '5.3 Outros ativos digitais', '5.3.1 Tokens não fungíveis (NFT)',
+    '6 Alternativos, moedas, outros', '6.1 Ouro', '6.1.1 Ouro físico', '6.1.2 Ouro financeiro',
+    '6.2 Outras commodities', '6.2.1 Prata e outros metais preciosos', '6.2.2 Metais industriais', '6.2.3 Energia',
+    '6.2.4 Agrícolas', '6.2.5 Créditos de carbono', '6.2.6 Carteiras de commodities', '6.3 Exposição a moedas',
+    '6.4 Estratégias multiexposição', '6.4.1 Macro', '6.4.2 Long and short', '6.4.3 Long biased',
+    '6.4.4 Quantitativas', '6.4.5 Juros e moedas', '6.4.6 Arbitragem', '6.4.7 Capital protegido',
+    '6.4.8 Multiestratégia', '6.4.9 Alocação balanceada', '6.5 Outros alternativos',
+    '6.5.1 Precatórios e créditos judiciais', '6.5.2 Empréstimos a receber', '6.5.3 Bens colecionáveis',
+    '6.5.4 Situações especiais', '6.6 Imóveis físicos', '6.6.1 Residenciais', '6.6.2 Comerciais', '6.6.3 Terrenos',
+    '6.6.4 Rurais', '6.6.5 Imóveis na planta', '6.6.6 Multipropriedade', '6.7 Participações em empresas fechadas',
+    '6.7.1 Startups', '6.7.2 Private equity', '6.7.3 Projetos de infraestrutura',
+    '6.7.4 Empresas próprias e familiares'],
   'a árvore, na ordem de apresentação, é a aprovada');
 select is_empty(
   $$ with recursive arv as (
@@ -127,8 +182,12 @@ select is_empty(
   'toda identidade é fixa e derivada do código da especificação');
 select is((select id from public.taxonomia_ativos where nome = 'CDB'), 'a5000000-0000-4000-8000-000000020201'::uuid,
   'o UUID do CDB é o fixado');
-select is_empty($$ select 1 from public.taxonomia_ativos where nome ~ '[0-9]' or nome ~* '(taxa|indexador|cdi|ipca|selic|lci|lca)' $$,
-  'nenhum nó carrega taxa, indexador ou benefício tributário no nome');
+select is_empty($$ select 1 from public.taxonomia_ativos where nome ~ '[0-9]' $$, 'nenhum nó tem algarismo no nome');
+select is((select array_agg(id order by id) from public.taxonomia_ativos where nome ~* '(taxa|indexador|cdi|ipca|selic|lci|lca)'),
+  array[pg_temp.no('2.1.1'), pg_temp.no('2.1.3')],
+  'só Tesouro Selic e Tesouro IPCA+, cujo produto o indexador define, o têm no nome; nenhum outro nó carrega taxa, indexador ou benefício tributário');
+select is((select array_agg(nome order by id) from public.taxonomia_ativos where id in (pg_temp.no('2.1.1'), pg_temp.no('2.1.3'))),
+  array['Tesouro Selic', 'Tesouro IPCA+'], 'a exceção vale só para os nós fixados sob Dívida soberana');
 
 -- 3. Restrições do catálogo (como dono do banco; as tentativas são desfeitas pelo próprio teste)
 select throws_ok(format($f$ insert into public.taxonomia_ativos (id, parent_id, nivel, nome, ordem)
@@ -165,7 +224,7 @@ select throws_ok($$ insert into public.taxonomia_ativos (id, parent_id, nivel, n
   values (gen_random_uuid(), null, 1, 'Outra raiz', 1) $$, '23505', null, 'ordem repetida entre raízes é recusada');
 select lives_ok(format($f$ insert into public.taxonomia_ativos (id, parent_id, nivel, nome, ordem)
   values (%L, %L, 2, 'Dívida soberana', 4) $f$, gen_random_uuid(), pg_temp.no('3')), 'o mesmo nome sob outro pai é aceito');
-select is((select count(*) from public.taxonomia_ativos), 40::bigint, 'só a inserção válida entrou no catálogo');
+select is((select count(*) from public.taxonomia_ativos), 134::bigint, 'só a inserção válida entrou no catálogo');
 delete from public.taxonomia_ativos where parent_id = pg_temp.no('3') and ordem = 4;
 select throws_ok(format($f$ update public.taxonomia_ativos set parent_id = %L where id = %L $f$, pg_temp.no('2.2.1'), pg_temp.no('2.2')),
   '23503', null, 'um nó não pode passar a descendente de si mesmo (sem ciclo)');
@@ -175,7 +234,12 @@ select throws_ok(format($f$ update public.taxonomia_ativos set nivel = 3 where i
   'mudar o nível de um nó com filhos é recusado');
 select throws_ok(format($f$ delete from public.taxonomia_ativos where id = %L $f$, pg_temp.no('2.2')), '23503', null,
   'um nó com filhos não é excluído');
-select is((select count(*) from public.taxonomia_ativos), 39::bigint, 'depois das tentativas, o catálogo continua com 39 nós');
+select throws_ok(format($f$ insert into public.taxonomia_ativos (id, parent_id, nivel, nome, ordem)
+  values (gen_random_uuid(), %L, 3, 'Filho de tipo novo', 9) $f$, pg_temp.no('6.6.1')), '23503', null,
+  'um tipo novo, de nível 3, não recebe filho');
+select throws_ok(format($f$ delete from public.taxonomia_ativos where id = %L $f$, pg_temp.no('6.6')), '23503', null,
+  'uma subclasse nova com filhos não é excluída');
+select is((select count(*) from public.taxonomia_ativos), 133::bigint, 'depois das tentativas, o catálogo continua com 133 nós');
 
 -- 4. Leitura e escrita pela Data API
 select pg_temp.act_as_anon();
@@ -183,7 +247,7 @@ select throws_ok($$ select count(*) from public.taxonomia_ativos $$, '42501', nu
 reset role;
 create function pg_temp.sessao_da_api(p_ator text) returns setof text language plpgsql as $$
 begin
-  return next is((select count(*) from public.taxonomia_ativos), 39::bigint, p_ator || ' lê as 39 entradas do catálogo');
+  return next is((select count(*) from public.taxonomia_ativos), 133::bigint, p_ator || ' lê as 133 entradas do catálogo');
   return next throws_ok($q$ insert into public.taxonomia_ativos (id, parent_id, nivel, nome, ordem)
     values (gen_random_uuid(), null, 1, 'Intrusa', 9) $q$, '42501', null, p_ator || ' não insere no catálogo');
   return next throws_ok($q$ update public.taxonomia_ativos set nome = 'x' $q$, '42501', null, p_ator || ' não altera o catálogo');
@@ -203,7 +267,7 @@ select pg_temp.act_as('00000000-0000-4000-8000-0000000000d0');
 select * from pg_temp.sessao_da_api('o admin');
 reset role;
 select pg_temp.act_as('00000000-0000-4000-8000-0000000000d2');
-select is((select count(*) from public.taxonomia_ativos), 39::bigint, 'B lê o catálogo inteiro');
+select is((select count(*) from public.taxonomia_ativos), 133::bigint, 'B lê o catálogo inteiro');
 select is_empty($$ select 1 from public.profiles where user_id <> '00000000-0000-4000-8000-0000000000d2' $$,
   'B não lê o perfil, nem a marca, de outro usuário');
 reset role;
@@ -475,7 +539,7 @@ select lives_ok($$ delete from auth.users where id = '00000000-0000-4000-8000-00
   'o usuário com ativos classificados pode ser excluído');
 select is((select count(*) from public.ativos where user_id = '00000000-0000-4000-8000-0000000000d1'), 0::bigint,
   'a exclusão leva os ativos do usuário');
-select is((select count(*) from public.taxonomia_ativos), 39::bigint, 'e o catálogo global não muda');
+select is((select count(*) from public.taxonomia_ativos), 133::bigint, 'e o catálogo global não muda');
 select throws_ok(format($f$ delete from public.taxonomia_ativos where id = %L $f$, pg_temp.no('2')), '23503', null,
   'um nó referenciado por ativo não é excluído');
 select throws_ok(format($f$ delete from public.taxonomia_ativos where id = %L $f$, pg_temp.no('2.4')), '23503', null,
