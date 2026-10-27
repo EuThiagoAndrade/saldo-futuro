@@ -2,12 +2,12 @@
 
 > **Ciclo:** `015`
 > **Trilha:** `normal`
-> **Estado:** `Em andamento`
+> **Estado:** `Aguardando integração`
 > **Tipo:** `feature`
 > **Issue:** `#151`
 > **Plano:** `_project/drafts/015_analises_instituicao_niveis_classe/015_plan.md`
 > **Branch:** `feature/issue-151`
-> **PR:** —
+> **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/155
 > **Integração:** `Pendente`
 > **Autorização inicial:** "autorizo a implementação da issue #151" em 2026-10-27
 > **Modo contínuo:** `—`
@@ -53,7 +53,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 - [x] Primeira versão da migração escrita.
 - [x] Migração revisada; isolamento, concorrência, cascata, rollback e upgrade fictício passaram.
 - [x] E1 preparado; gates locais concluídos e staging revisado.
-- [ ] Publicar PR com Refs #151; integração exige aprovação própria.
+- [x] PR #155 publicada com Refs #151; integração exige aprovação própria.
 
 ## Evidências
 
@@ -62,7 +62,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 | Testes | Banco: 535/535; governança: 48/48; unitários: 405/405; lint sem erros (3 avisos preexistentes em local/), typecheck e build passaram; e2e autenticado sobre build: 208 passed, 12 skipped (preview sem backend), 1 flaky aprovado no retry; saída 0, dois workers |
 | Validador | 0 erros, 0 avisos; conferências manuais realizadas |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos | Em execução; conferir o head atual na PR #155 antes do merge |
 
 ## Revisão da correção
 
@@ -104,19 +104,19 @@ Não se aplica — ciclo completo; encerramento em PR própria após E1 e demais
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 015 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 015"
+Situação: Aguardando merge — ciclo 015 (completo)
+Quem: Responsável
+Conferir: checks, diff e roteiro E1 da PR #155 — https://github.com/EuThiagoAndrade/saldo-futuro/pull/155
+Diga: "aprovo o merge da PR #155"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 015 + implementar_issue + 151 + 200be5df7d84521d9bcd911d4f0e0500e4dddfe8`
-- `effect_class`: `local_mutation`
+- `effect_class`: `remote_mutation`
 - `state_before`: plano aprovado, #151 autorizada, PR #150 integrada; registros locais de issues preservados.
-- `state_after`: unidade A implementada e validada localmente; migração aplicada somente localmente, E1 preparado; publicação da PR em preparação na branch feature/issue-151.
+- `state_after`: unidade A implementada e validada localmente; migração aplicada somente localmente, E1 preparado; PR #155 publicada na branch feature/issue-151; aguardando integração, sem fechar #151 ou executar E1.
 - `result`: `executed`
 - `evidence`: issue e integração documental conferidas; 535 asserções de banco, 48 testes de governança, 405 unitários, lint/typecheck/build, e2e (208 passed, 12 skipped, 1 flaky no retry) e upgrade com retrato integral preservado; evidências acima.
 - `blockers`: nenhum para publicar; merge depende de checks verdes e aprovação própria. E1 permanece ação humana posterior ao merge.

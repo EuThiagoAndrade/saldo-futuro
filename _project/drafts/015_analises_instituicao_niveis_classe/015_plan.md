@@ -355,7 +355,7 @@ Após autorização específica e deploy compatível confirmado, o responsável 
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | [#151 (A)](https://github.com/EuThiagoAndrade/saldo-futuro/issues/151), [#152 (B)](https://github.com/EuThiagoAndrade/saldo-futuro/issues/152), [#153 (C)](https://github.com/EuThiagoAndrade/saldo-futuro/issues/153), [#154 (D)](https://github.com/EuThiagoAndrade/saldo-futuro/issues/154) — abertas |
-| PR(s) | [#150 — publicação documental](https://github.com/EuThiagoAndrade/saldo-futuro/pull/150), integrada pelo commit `200be5df7d84521d9bcd911d4f0e0500e4dddfe8`; unidade A em execução, conforme task #151 |
+| PR(s) | [#150 — publicação documental](https://github.com/EuThiagoAndrade/saldo-futuro/pull/150), integrada pelo commit `200be5df7d84521d9bcd911d4f0e0500e4dddfe8`; unidade A na [PR #155](https://github.com/EuThiagoAndrade/saldo-futuro/pull/155), conforme task #151 |
 | Branch(es) | `chore/cycle-015-plan`, publicação documental integrada a `main` |
 | Revisão de origem | `84f0a5ea107f33e0de5c506b3ea0825346f6e58e`, com ideação e reserva locais preexistentes |
 | Destino após conclusão | `_project/executed/015_analises_instituicao_niveis_classe/015_plan.md` |
@@ -364,10 +364,10 @@ Após autorização específica e deploy compatível confirmado, o responsável 
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 015 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 015"
+Situação: Aguardando merge — ciclo 015 (completo)
+Quem: Responsável
+Conferir: checks e diff da PR #155 — https://github.com/EuThiagoAndrade/saldo-futuro/pull/155; task 015_task_issue-151.md
+Diga: "aprovo o merge da PR #155"
 ```
 
 ## Handoff de saída
