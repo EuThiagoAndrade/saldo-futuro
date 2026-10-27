@@ -409,30 +409,30 @@ Paralelismo com o ciclo `013`: a unidade 3 (#139) e este ciclo podem tocar a KB-
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | — |
-| PR(s) | — |
-| Branch(es) | — |
+| PR(s) | [#143](https://github.com/EuThiagoAndrade/saldo-futuro/pull/143) — documental |
+| Branch(es) | `chore/cycle-014-plan` |
 | Destino após conclusão | `_project/executed/014_ampliacao_arvore_taxonomia/014_plan.md` |
 
 ## Próximo passo
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando aprovação do plano — ciclo 014 (completo)
+Situação: Aguardando merge — ciclo 014 (completo)
 Quem: Responsável
-Conferir: veredito da rodada 3 em _project/drafts/014_ampliacao_arvore_taxonomia/014_plan.md, seção Revisão crítica, e propostas X1–X4 que exigem manifestação explícita
-Diga: "aprovo o plano do ciclo 014"
+Conferir: checks e diff da PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/143
+Diga: "aprovo o merge da PR #143"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 014 + rascunhar_plano + 014_plan + v3`
-- `effect_class`: `local_mutation`
-- `state_before`: plano v2 Em Revisão, rodada 2 com veredito REQUER NOVA RODADA (R2-1 bloqueador, remanescente de R1-2); Aguardando correções (rodada 2); frase "corrija o plano do ciclo 014" recebida; `main` e `origin/main` em `3dd60910ace387d03a2cff878f2ea0e9acd816a6`; tudo local, sem commit.
-- `state_after`: plano v3 Em Revisão; orientações de enquadramento com o passo 6 (limite da orientação e Sem classe entre classes macro), o caso do fundo em dólar condicionado à qualidade de crédito e o caso do fundo imobiliário dividido em dois casos fictícios; árvore, contagens e testes sem mudança; rodadas 1 e 2 preservadas, com as respostas do autor; Aguardando revisão (rodada 3); tudo local, sem commit.
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 014 + aprovar_plano + 014_plan + v3`
+- `effect_class`: `remote_mutation`
+- `state_before`: plano v3 Em Revisão, rodada 3 APTO PARA APROVAÇÃO, aprovação pendente; Aguardando aprovação do plano; `main` e `origin/main` em `3dd60910ace387d03a2cff878f2ea0e9acd816a6`; sem branch nem PR do ciclo (`git ls-remote` e `gh pr list` vazios).
+- `state_after`: plano v3 Aprovado pela manifestação de 2026-10-26, com X1 a X4 confirmadas (Registro de aprovação). PR documental #143 publicada na branch `chore/cycle-014-plan`, com ideação, plano e `cycles.md`. Aguardando checks e aprovação específica do merge; issue e implementação não autorizadas.
 - `result`: `executed`
-- `evidence`: resposta do autor à rodada 2 nesta seção de revisão; gates documentais registrados na resposta desta sessão. Nenhum dado real lido.
-- `blockers`: nenhum para a rodada 3; a aprovação depende de veredito apto e da manifestação sobre X1 a X4.
+- `evidence`: Registro de aprovação e rodadas 1 a 3 preservadas; gates antes da publicação: governança 48/48, validador com 0 erros e 0 avisos, `git diff --check` sem erros; PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/143.
+- `blockers`: o merge depende de checks verdes e da aprovação específica; a issue depende da integração documental e da confirmação do payload.
 
 ## Revisão crítica
 
