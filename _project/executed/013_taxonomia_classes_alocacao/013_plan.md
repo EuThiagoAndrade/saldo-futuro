@@ -1,10 +1,10 @@
 # Plano de Implementação — Taxonomia de classes de ativos e alocação por classe macro
 
 > **Ciclo:** `013`
-> **Status:** `Em Execução`
+> **Status:** `Concluído`
 > **Versão:** `v2`
 > **Data de criação:** 2026-10-26
-> **Última atualização:** 2026-10-26
+> **Última atualização:** 2026-10-27
 > **Tipo:** `feature`
 > **Prioridade:** `P2` (proposta de planejamento, sem compromisso de prazo)
 > **Nível:** `completo`
@@ -342,20 +342,20 @@ Após autorização específica, conferir com o responsável: seletor/caminhos e
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | [#137](https://github.com/EuThiagoAndrade/saldo-futuro/issues/137), [#138](https://github.com/EuThiagoAndrade/saldo-futuro/issues/138) e [#139](https://github.com/EuThiagoAndrade/saldo-futuro/issues/139) (unidades 1, 2 e 3) |
-| PR(s) | [#136](https://github.com/EuThiagoAndrade/saldo-futuro/pull/136) — documental, integrada; unidade 1: [#140](https://github.com/EuThiagoAndrade/saldo-futuro/pull/140), integrada; unidade 2: [#142](https://github.com/EuThiagoAndrade/saldo-futuro/pull/142), integrada; unidade 3: [#147](https://github.com/EuThiagoAndrade/saldo-futuro/pull/147) |
-| Branch(es) | `chore/cycle-013-plan`, `feature/issue-137` e `feature/issue-138` (integradas); `feature/issue-139` |
+| PR(s) | [#136](https://github.com/EuThiagoAndrade/saldo-futuro/pull/136) — documental, integrada; unidade 1: [#140](https://github.com/EuThiagoAndrade/saldo-futuro/pull/140), integrada; unidade 2: [#142](https://github.com/EuThiagoAndrade/saldo-futuro/pull/142), integrada; unidade 3: [#147](https://github.com/EuThiagoAndrade/saldo-futuro/pull/147), integrada; release `0.10.0`: [#141](https://github.com/EuThiagoAndrade/saldo-futuro/pull/141), integrada; encerramento: `chore/cycle-013-closure` |
+| Branch(es) | `chore/cycle-013-plan`, `feature/issue-137` e `feature/issue-138` e `feature/issue-139` (integradas); `chore/cycle-013-closure` |
 | Destino após conclusão | `_project/executed/013_taxonomia_classes_alocacao/013_plan.md` |
 
 ## Próximo passo
 
-O artefato ativo do ciclo é a task `013_task_issue-139.md`; este bloco a acompanha.
+Ciclo encerrado de forma prospectiva pela PR `chore/cycle-013-closure`; a task `013_task_closure.md` acompanha este bloco.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 013 (completo)
-Quem: Responsável
-Conferir: checks e diff da PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/147
-Diga: "aprovo o merge da PR #147"
+Situação: Concluído — ciclo 013 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
@@ -464,6 +464,6 @@ Diga: "aprovo o merge da PR #147"
 
 ## Pós-mortem
 
-- **Data de conclusão:** —
-- **Desvios:** —
-- **Lições comprovadas:** —
+- **Data de conclusão:** 2026-10-27, prospectiva, com o merge da PR de encerramento.
+- **Desvios:** (1) a ampliação da árvore virou o ciclo `014`, separado e integrado antes desta unidade 3; a ordem de release mudou: a `0.10.0` (PR #141) saiu só depois da unidade 3 e levou as entregas dos dois ciclos. (2) R2-1: `chart-7` ficou `#1F6E9C` (azul aço), no lugar do verde proposto, por ser quase o verde de ganho. (3) A verificação em produção foi feita pelo responsável em uso real, sem evidência pública além de aprovado/reprovado.
+- **Lições comprovadas:** nenhuma nova além das já registradas em `.agent/lessons_learned.md`.

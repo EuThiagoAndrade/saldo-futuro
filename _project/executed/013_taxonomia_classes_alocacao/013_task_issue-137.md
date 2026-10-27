@@ -5,10 +5,10 @@
 > **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#137`
-> **Plano:** `_project/drafts/013_taxonomia_classes_alocacao/013_plan.md`
+> **Plano:** `_project/executed/013_taxonomia_classes_alocacao/013_plan.md`
 > **Branch:** `feature/issue-137`
 > **PR:** [#140](https://github.com/EuThiagoAndrade/saldo-futuro/pull/140) (`Refs #137`, sem fechar a issue), integrada
-> **Integração:** PR #140 integrada por squash (`c7fc48f4f4f547ce9e768d4468bef6b4689cfa2e`) em 2026-10-26, com todos os checks verdes; ação externa E1 concluída em 2026-10-26; issue #137 aberta até o encerramento do ciclo
+> **Integração:** PR #140 integrada por squash (`c7fc48f4f4f547ce9e768d4468bef6b4689cfa2e`) em 2026-10-26, com todos os checks verdes; ação externa E1 concluída em 2026-10-26; issue #137 fechada pela PR de encerramento (`Closes #137`)
 > **Autorização inicial:** "autorizo a implementação da issue #137" em 2026-10-26
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-26
@@ -155,14 +155,14 @@ Não se aplica.
 
 ## Próximo passo
 
-Esta task está concluída (PR #140 integrada e E1 concluída). O artefato ativo do ciclo passou a ser a task da issue #138.
+Esta task está concluída; o ciclo foi encerrado na PR `chore/cycle-013-closure`.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 013 (completo)
-Quem: Responsável
-Conferir: checks e diff da PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/142
-Diga: "aprovo o merge da PR #142"
+Situação: Concluído — ciclo 013 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
