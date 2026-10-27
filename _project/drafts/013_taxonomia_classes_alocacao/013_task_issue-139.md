@@ -2,12 +2,12 @@
 
 > **Ciclo:** `013`
 > **Trilha:** `normal`
-> **Estado:** `Em andamento`
+> **Estado:** `Aguardando integração`
 > **Tipo:** `feature`
 > **Issue:** `#139`
 > **Plano:** `_project/drafts/013_taxonomia_classes_alocacao/013_plan.md`
 > **Branch:** `feature/issue-139`
-> **PR:** —
+> **PR:** [#147](https://github.com/EuThiagoAndrade/saldo-futuro/pull/147) (`Refs #139`)
 > **Integração:** `Pendente`
 > **Autorização inicial:** "autorizo a implementação da issue #139" em 2026-10-26
 > **Modo contínuo:** `—`
@@ -50,7 +50,8 @@ Não se aplica.
 - [x] `chart-7` `#1F6E9C` (azul aço; R2-1) e `chart-8` `#80552D` em `globals.css` e no DESIGN.md, com contraste e distâncias registrados; DESIGN.md 6.12 (variante sem contador) e 6.13 (por classe).
 - [x] KB-003, KB-004 e nota na `0.10.0` de `/novidades`.
 - [x] e2e `tests/e2e/distribuicao-classe.spec.ts`.
-- [ ] Gates completos, PR (`Refs #139`) e checks.
+- [x] Gates completos e PR #147 aberta (`Refs #139`).
+- [ ] Checks remotos verdes e aprovação do merge.
 
 ## Evidências
 
@@ -85,19 +86,19 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 013 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 013"
+Situação: Aguardando merge — ciclo 013 (completo)
+Quem: Responsável
+Conferir: checks e diff da PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/147
+Diga: "aprovo o merge da PR #147"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 013 + implementar_issue + 139 + f4b0af60ede715da16a05cd8c5237585f6381d98`
-- `effect_class`: `local_mutation`
+- `effect_class`: `remote_mutation`
 - `state_before`: plano `Em Execução`; #137 e #138 integradas; issue #139 aberta; `main` em `f4b0af6`; autorização "autorizo a implementação da issue #139".
-- `state_after`: implementação local na branch `feature/issue-139`, com gates em execução; PR ainda não aberta.
+- `state_after`: entrega commitada na branch `feature/issue-139` e publicada na PR #147 (`Refs #139`); gates locais verdes; aguardando checks remotos e aprovação específica do merge.
 - `result`: `executed`
-- `evidence`: seção "Evidências".
-- `blockers`: nenhum.
+- `evidence`: seção "Evidências" e https://github.com/EuThiagoAndrade/saldo-futuro/pull/147.
+- `blockers`: o merge depende de checks verdes e de "aprovo o merge da PR #147". A task da #138 ainda não registra a E2 (contagens a pedir ao responsável).

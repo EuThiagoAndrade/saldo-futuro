@@ -342,18 +342,20 @@ Após autorização específica, conferir com o responsável: seletor/caminhos e
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | [#137](https://github.com/EuThiagoAndrade/saldo-futuro/issues/137), [#138](https://github.com/EuThiagoAndrade/saldo-futuro/issues/138) e [#139](https://github.com/EuThiagoAndrade/saldo-futuro/issues/139) (unidades 1, 2 e 3) |
-| PR(s) | [#136](https://github.com/EuThiagoAndrade/saldo-futuro/pull/136) — documental, integrada; unidade 1: [#140](https://github.com/EuThiagoAndrade/saldo-futuro/pull/140), integrada; unidade 2: ver `013_task_issue-138.md` |
-| Branch(es) | `chore/cycle-013-plan` e `feature/issue-137` (integradas); `feature/issue-138` |
+| PR(s) | [#136](https://github.com/EuThiagoAndrade/saldo-futuro/pull/136) — documental, integrada; unidade 1: [#140](https://github.com/EuThiagoAndrade/saldo-futuro/pull/140), integrada; unidade 2: [#142](https://github.com/EuThiagoAndrade/saldo-futuro/pull/142), integrada; unidade 3: [#147](https://github.com/EuThiagoAndrade/saldo-futuro/pull/147) |
+| Branch(es) | `chore/cycle-013-plan`, `feature/issue-137` e `feature/issue-138` (integradas); `feature/issue-139` |
 | Destino após conclusão | `_project/executed/013_taxonomia_classes_alocacao/013_plan.md` |
 
 ## Próximo passo
+
+O artefato ativo do ciclo é a task `013_task_issue-139.md`; este bloco a acompanha.
 
 ```text
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 013 (completo)
 Quem: Responsável
-Conferir: checks e diff da PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/136
-Diga: "aprovo o merge da PR #136"
+Conferir: checks e diff da PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/147
+Diga: "aprovo o merge da PR #147"
 ```
 
 ## Handoff de saída
