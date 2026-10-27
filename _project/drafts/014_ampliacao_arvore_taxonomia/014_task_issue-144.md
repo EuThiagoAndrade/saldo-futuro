@@ -2,12 +2,12 @@
 
 > **Ciclo:** `014`
 > **Trilha:** `normal`
-> **Estado:** `Em andamento`
+> **Estado:** `Aguardando integração`
 > **Tipo:** `feature`
 > **Issue:** `#144`
 > **Plano:** `_project/drafts/014_ampliacao_arvore_taxonomia/014_plan.md`
 > **Branch:** `feature/issue-144`
-> **PR:** —
+> **PR:** [#145](https://github.com/EuThiagoAndrade/saldo-futuro/pull/145) (`Refs #144`, sem fechar a issue)
 > **Integração:** `Pendente`
 > **Autorização inicial:** "autorizo a implementação da issue #144" em 2026-10-26
 > **Modo contínuo:** `—`
@@ -49,7 +49,8 @@ Não se aplica.
 - [x] e2e `tests/e2e/ativos-detalhes.spec.ts`: busca "CREDITO bancario" com oito opções e busca "tesouro" com os cinco produtos.
 - [x] Fixtures `upgrade_013_fase2.sql` e `e1_014_contagens.sql` e ensaio local de atualização (ver seção própria).
 - [x] KB-003 (contagens de asserções e de nós, ampliação, orientações de enquadramento, histórico) e nota nas novidades.
-- [ ] PR aberta (`Refs #144`), checks verdes e aprovação do merge.
+- [x] PR #145 aberta (`Refs #144`).
+- [ ] Checks remotos verdes e aprovação do merge.
 - [ ] Ação externa E1 pelo responsável, depois do merge.
 
 ## Ensaio de atualização (somente local)
@@ -113,19 +114,19 @@ Não se aplica.
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 014 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 014"
+Situação: Aguardando merge — ciclo 014 (completo)
+Quem: Responsável
+Conferir: checks e diff da PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/145
+Diga: "aprovo o merge da PR #145"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 014 + implementar_issue + 144 + 346a93aa686bcb6c3851b7edcdc18ceb0916aa46`
-- `effect_class`: `local_mutation`
+- `effect_class`: `remote_mutation`
 - `state_before`: plano `Aprovado` e integrado pela PR #143; issue #144 aberta; `main` em `346a93a`; autorização "autorizo a implementação da issue #144".
-- `state_after`: implementação local na branch `feature/issue-144`, com gates em execução; PR ainda não aberta.
+- `state_after`: entrega commitada na branch `feature/issue-144` e publicada na PR #145 (`Refs #144`); gates locais verdes; aguardando checks remotos e aprovação específica do merge; E1 depois do merge.
 - `result`: `executed`
-- `evidence`: seção "Evidências" e ensaio local.
-- `blockers`: nenhum.
+- `evidence`: seção "Evidências", ensaio local e https://github.com/EuThiagoAndrade/saldo-futuro/pull/145.
+- `blockers`: o merge depende de checks verdes e de "aprovo o merge da PR #145".

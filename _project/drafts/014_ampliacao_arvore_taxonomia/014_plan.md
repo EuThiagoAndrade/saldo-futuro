@@ -409,18 +409,20 @@ Paralelismo com o ciclo `013`: a unidade 3 (#139) e este ciclo podem tocar a KB-
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | [#144](https://github.com/EuThiagoAndrade/saldo-futuro/issues/144) (unidade 1) |
-| PR(s) | [#143](https://github.com/EuThiagoAndrade/saldo-futuro/pull/143) — documental, integrada |
+| PR(s) | [#143](https://github.com/EuThiagoAndrade/saldo-futuro/pull/143) — documental, integrada; unidade 1: [#145](https://github.com/EuThiagoAndrade/saldo-futuro/pull/145) |
 | Branch(es) | `chore/cycle-014-plan` (integrada); `feature/issue-144` |
 | Destino após conclusão | `_project/executed/014_ampliacao_arvore_taxonomia/014_plan.md` |
 
 ## Próximo passo
 
+O artefato ativo do ciclo passou a ser a task `014_task_issue-144.md`; este bloco a acompanha.
+
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando autorização de implementação — ciclo 014 (completo)
+Situação: Aguardando merge — ciclo 014 (completo)
 Quem: Responsável
-Conferir: issue https://github.com/EuThiagoAndrade/saldo-futuro/issues/144 e o escopo do Item 1 do plano
-Diga: "autorizo a implementação da issue #144"
+Conferir: checks e diff da PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/145
+Diga: "aprovo o merge da PR #145"
 ```
 
 ## Handoff de saída
