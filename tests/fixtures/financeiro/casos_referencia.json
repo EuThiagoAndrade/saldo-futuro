@@ -4031,6 +4031,1998 @@
           "C"
         ]
       }
+    },
+    {
+      "id": "CR-015-01",
+      "titulo": "Instituição com negativo e saldo zero",
+      "entrega": "015",
+      "regras": [
+        "15"
+      ],
+      "entrada": {
+        "visao": "instituicao",
+        "instituicoes": [
+          {
+            "alias": "IA",
+            "id": "00000000-0000-4000-8000-000001501201",
+            "nome": "Instituição A"
+          },
+          {
+            "alias": "IB",
+            "id": "00000000-0000-4000-8000-000001501202",
+            "nome": "Instituição B"
+          }
+        ],
+        "posicoes": [
+          {
+            "alias": "A",
+            "id": "00000000-0000-4000-8000-000001501101",
+            "nome": "Ativo A",
+            "saldo": 20000,
+            "sistema": null,
+            "instituicao_id": "00000000-0000-4000-8000-000001501201"
+          },
+          {
+            "alias": "B",
+            "id": "00000000-0000-4000-8000-000001501102",
+            "nome": "Ativo B",
+            "saldo": -5000,
+            "sistema": null,
+            "instituicao_id": "00000000-0000-4000-8000-000001501201"
+          },
+          {
+            "alias": "C",
+            "id": "00000000-0000-4000-8000-000001501103",
+            "nome": "Ativo C",
+            "saldo": 10000,
+            "sistema": null,
+            "instituicao_id": "00000000-0000-4000-8000-000001501202"
+          },
+          {
+            "alias": "D",
+            "id": "00000000-0000-4000-8000-000001501104",
+            "nome": "Ativo D",
+            "saldo": 0,
+            "sistema": null,
+            "instituicao_id": "00000000-0000-4000-8000-000001501202"
+          }
+        ]
+      },
+      "esperado": {
+        "base_positiva_centavos": "30000",
+        "participacao_IA_centesimos_pp": "6667",
+        "saldo_IA_centavos": "20000",
+        "participacao_IB_centesimos_pp": "3333",
+        "saldo_IB_centavos": "10000",
+        "linhas": [
+          "IA",
+          "IB"
+        ],
+        "sem_percentual": [
+          "B"
+        ],
+        "omitidos": [
+          "D"
+        ]
+      }
+    },
+    {
+      "id": "CR-015-02",
+      "titulo": "Instituição, Sem instituição e Em trânsito empatados",
+      "entrega": "015",
+      "regras": [
+        "15"
+      ],
+      "entrada": {
+        "visao": "instituicao",
+        "instituicoes": [
+          {
+            "alias": "IA",
+            "id": "00000000-0000-4000-8000-000001502201",
+            "nome": "Instituição A"
+          }
+        ],
+        "posicoes": [
+          {
+            "alias": "A",
+            "id": "00000000-0000-4000-8000-000001502101",
+            "nome": "Ativo A",
+            "saldo": 10000,
+            "sistema": null,
+            "instituicao_id": "00000000-0000-4000-8000-000001502201"
+          },
+          {
+            "alias": "B",
+            "id": "00000000-0000-4000-8000-000001502102",
+            "nome": "Ativo B",
+            "saldo": 10000,
+            "sistema": null,
+            "instituicao_id": null
+          },
+          {
+            "alias": "C",
+            "id": "00000000-0000-4000-8000-000001502103",
+            "nome": "Ativo C",
+            "saldo": 10000,
+            "sistema": "transito",
+            "instituicao_id": null
+          }
+        ]
+      },
+      "esperado": {
+        "base_positiva_centavos": "30000",
+        "participacao_IA_centesimos_pp": "3334",
+        "participacao_SI_centesimos_pp": "3333",
+        "participacao_T_centesimos_pp": "3333",
+        "linhas": [
+          "IA",
+          "SI",
+          "T"
+        ]
+      }
+    },
+    {
+      "id": "CR-015-03",
+      "titulo": "Irmãos empatados: duas bases independentes",
+      "entrega": "015",
+      "regras": [
+        "15"
+      ],
+      "entrada": {
+        "visao": "classe",
+        "nos": [
+          {
+            "alias": "RF",
+            "id": "a5000000-0000-4000-8000-000000020000",
+            "parent_id": null,
+            "nivel": 1,
+            "nome": "Renda fixa",
+            "ordem": 2
+          },
+          {
+            "alias": "RV",
+            "id": "a5000000-0000-4000-8000-000000030000",
+            "parent_id": null,
+            "nivel": 1,
+            "nome": "Renda variável",
+            "ordem": 3
+          },
+          {
+            "alias": "C1",
+            "id": "00000000-0000-4000-8000-000001503301",
+            "parent_id": "a5000000-0000-4000-8000-000000020000",
+            "nivel": 2,
+            "nome": "Subclasse C1",
+            "ordem": 1
+          },
+          {
+            "alias": "C2",
+            "id": "00000000-0000-4000-8000-000001503302",
+            "parent_id": "a5000000-0000-4000-8000-000000020000",
+            "nivel": 2,
+            "nome": "Subclasse C2",
+            "ordem": 2
+          },
+          {
+            "alias": "C3",
+            "id": "00000000-0000-4000-8000-000001503303",
+            "parent_id": "a5000000-0000-4000-8000-000000020000",
+            "nivel": 2,
+            "nome": "Subclasse C3",
+            "ordem": 3
+          }
+        ],
+        "posicoes": [
+          {
+            "alias": "A",
+            "id": "00000000-0000-4000-8000-000001503101",
+            "nome": "Ativo A",
+            "saldo": 10000,
+            "sistema": null,
+            "no": "00000000-0000-4000-8000-000001503301"
+          },
+          {
+            "alias": "B",
+            "id": "00000000-0000-4000-8000-000001503102",
+            "nome": "Ativo B",
+            "saldo": 10000,
+            "sistema": null,
+            "no": "00000000-0000-4000-8000-000001503302"
+          },
+          {
+            "alias": "C",
+            "id": "00000000-0000-4000-8000-000001503103",
+            "nome": "Ativo C",
+            "saldo": 10000,
+            "sistema": null,
+            "no": "00000000-0000-4000-8000-000001503303"
+          },
+          {
+            "alias": "D",
+            "id": "00000000-0000-4000-8000-000001503104",
+            "nome": "Ativo D",
+            "saldo": 10000,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000030000"
+          }
+        ],
+        "detalhes": [
+          "RF"
+        ]
+      },
+      "esperado": {
+        "raiz_RF_centesimos_pp": "7500",
+        "raiz_RV_centesimos_pp": "2500",
+        "raiz_linhas": [
+          "RF",
+          "RV"
+        ],
+        "detalhe_RF_base_centavos": "30000",
+        "detalhe_RF_linhas": [
+          "C1",
+          "C2",
+          "C3"
+        ],
+        "detalhe_RF_carteira_C1_centesimos_pp": "2500",
+        "detalhe_RF_pai_C1_centesimos_pp": "3334",
+        "detalhe_RF_carteira_C2_centesimos_pp": "2500",
+        "detalhe_RF_pai_C2_centesimos_pp": "3333",
+        "detalhe_RF_carteira_C3_centesimos_pp": "2500",
+        "detalhe_RF_pai_C3_centesimos_pp": "3333"
+      }
+    },
+    {
+      "id": "CR-015-04",
+      "titulo": "Resíduo de classificação direta na macro",
+      "entrega": "015",
+      "regras": [
+        "15"
+      ],
+      "entrada": {
+        "visao": "classe",
+        "nos": [
+          {
+            "alias": "RF",
+            "id": "a5000000-0000-4000-8000-000000020000",
+            "parent_id": null,
+            "nivel": 1,
+            "nome": "Renda fixa",
+            "ordem": 2
+          },
+          {
+            "alias": "RV",
+            "id": "a5000000-0000-4000-8000-000000030000",
+            "parent_id": null,
+            "nivel": 1,
+            "nome": "Renda variável",
+            "ordem": 3
+          },
+          {
+            "alias": "S1",
+            "id": "00000000-0000-4000-8000-000001504301",
+            "parent_id": "a5000000-0000-4000-8000-000000020000",
+            "nivel": 2,
+            "nome": "Subclasse S1",
+            "ordem": 1
+          }
+        ],
+        "posicoes": [
+          {
+            "alias": "A",
+            "id": "00000000-0000-4000-8000-000001504101",
+            "nome": "Ativo A",
+            "saldo": 30000,
+            "sistema": null,
+            "no": "00000000-0000-4000-8000-000001504301"
+          },
+          {
+            "alias": "B",
+            "id": "00000000-0000-4000-8000-000001504102",
+            "nome": "Ativo B",
+            "saldo": 10000,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000020000"
+          },
+          {
+            "alias": "C",
+            "id": "00000000-0000-4000-8000-000001504103",
+            "nome": "Ativo C",
+            "saldo": 60000,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000030000"
+          }
+        ],
+        "detalhes": [
+          "RF"
+        ]
+      },
+      "esperado": {
+        "raiz_RF_centesimos_pp": "4000",
+        "raiz_RV_centesimos_pp": "6000",
+        "raiz_linhas": [
+          "RV",
+          "RF"
+        ],
+        "detalhe_RF_base_centavos": "40000",
+        "detalhe_RF_linhas": [
+          "S1",
+          "res_RF"
+        ],
+        "detalhe_RF_carteira_S1_centesimos_pp": "3000",
+        "detalhe_RF_pai_S1_centesimos_pp": "7500",
+        "detalhe_RF_saldo_S1_centavos": "30000",
+        "detalhe_RF_carteira_res_RF_centesimos_pp": "1000",
+        "detalhe_RF_pai_res_RF_centesimos_pp": "2500",
+        "detalhe_RF_saldo_res_RF_centavos": "10000",
+        "detalhe_RF_sem_percentual": []
+      }
+    },
+    {
+      "id": "CR-015-05",
+      "titulo": "Resíduo da subclasse no nível 3",
+      "entrega": "015",
+      "regras": [
+        "15"
+      ],
+      "entrada": {
+        "visao": "classe",
+        "nos": [
+          {
+            "alias": "RF",
+            "id": "a5000000-0000-4000-8000-000000020000",
+            "parent_id": null,
+            "nivel": 1,
+            "nome": "Renda fixa",
+            "ordem": 2
+          },
+          {
+            "alias": "RV",
+            "id": "a5000000-0000-4000-8000-000000030000",
+            "parent_id": null,
+            "nivel": 1,
+            "nome": "Renda variável",
+            "ordem": 3
+          },
+          {
+            "alias": "S1",
+            "id": "00000000-0000-4000-8000-000001505301",
+            "parent_id": "a5000000-0000-4000-8000-000000020000",
+            "nivel": 2,
+            "nome": "Subclasse S1",
+            "ordem": 1
+          },
+          {
+            "alias": "T1",
+            "id": "00000000-0000-4000-8000-000001505302",
+            "parent_id": "00000000-0000-4000-8000-000001505301",
+            "nivel": 3,
+            "nome": "Tipo T1",
+            "ordem": 1
+          }
+        ],
+        "posicoes": [
+          {
+            "alias": "A",
+            "id": "00000000-0000-4000-8000-000001505101",
+            "nome": "Ativo A",
+            "saldo": 18000,
+            "sistema": null,
+            "no": "00000000-0000-4000-8000-000001505301"
+          },
+          {
+            "alias": "B",
+            "id": "00000000-0000-4000-8000-000001505102",
+            "nome": "Ativo B",
+            "saldo": 12000,
+            "sistema": null,
+            "no": "00000000-0000-4000-8000-000001505302"
+          },
+          {
+            "alias": "C",
+            "id": "00000000-0000-4000-8000-000001505103",
+            "nome": "Ativo C",
+            "saldo": 10000,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000020000"
+          },
+          {
+            "alias": "D",
+            "id": "00000000-0000-4000-8000-000001505104",
+            "nome": "Ativo D",
+            "saldo": 60000,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000030000"
+          }
+        ],
+        "detalhes": [
+          "S1"
+        ]
+      },
+      "esperado": {
+        "raiz_RF_centesimos_pp": "4000",
+        "raiz_RV_centesimos_pp": "6000",
+        "raiz_linhas": [
+          "RV",
+          "RF"
+        ],
+        "detalhe_S1_base_centavos": "30000",
+        "detalhe_S1_linhas": [
+          "res_S1",
+          "T1"
+        ],
+        "detalhe_S1_carteira_T1_centesimos_pp": "1200",
+        "detalhe_S1_pai_T1_centesimos_pp": "4000",
+        "detalhe_S1_saldo_T1_centavos": "12000",
+        "detalhe_S1_carteira_res_S1_centesimos_pp": "1800",
+        "detalhe_S1_pai_res_S1_centesimos_pp": "6000",
+        "detalhe_S1_saldo_res_S1_centavos": "18000",
+        "detalhe_S1_sem_percentual": []
+      }
+    },
+    {
+      "id": "CR-015-06",
+      "titulo": "Percentuais da carteira de um ramo não somam o pai",
+      "entrega": "015",
+      "regras": [
+        "15"
+      ],
+      "entrada": {
+        "visao": "classe",
+        "nos": [
+          {
+            "alias": "RF",
+            "id": "a5000000-0000-4000-8000-000000020000",
+            "parent_id": null,
+            "nivel": 1,
+            "nome": "Renda fixa",
+            "ordem": 2
+          },
+          {
+            "alias": "RV",
+            "id": "a5000000-0000-4000-8000-000000030000",
+            "parent_id": null,
+            "nivel": 1,
+            "nome": "Renda variável",
+            "ordem": 3
+          },
+          {
+            "alias": "C1",
+            "id": "00000000-0000-4000-8000-000001506301",
+            "parent_id": "a5000000-0000-4000-8000-000000020000",
+            "nivel": 2,
+            "nome": "Subclasse C1",
+            "ordem": 1
+          },
+          {
+            "alias": "C2",
+            "id": "00000000-0000-4000-8000-000001506302",
+            "parent_id": "a5000000-0000-4000-8000-000000020000",
+            "nivel": 2,
+            "nome": "Subclasse C2",
+            "ordem": 2
+          },
+          {
+            "alias": "C3",
+            "id": "00000000-0000-4000-8000-000001506303",
+            "parent_id": "a5000000-0000-4000-8000-000000020000",
+            "nivel": 2,
+            "nome": "Subclasse C3",
+            "ordem": 3
+          },
+          {
+            "alias": "C4",
+            "id": "00000000-0000-4000-8000-000001506304",
+            "parent_id": "a5000000-0000-4000-8000-000000030000",
+            "nivel": 2,
+            "nome": "Subclasse C4",
+            "ordem": 1
+          },
+          {
+            "alias": "C5",
+            "id": "00000000-0000-4000-8000-000001506305",
+            "parent_id": "a5000000-0000-4000-8000-000000030000",
+            "nivel": 2,
+            "nome": "Subclasse C5",
+            "ordem": 2
+          },
+          {
+            "alias": "C6",
+            "id": "00000000-0000-4000-8000-000001506306",
+            "parent_id": "a5000000-0000-4000-8000-000000030000",
+            "nivel": 2,
+            "nome": "Subclasse C6",
+            "ordem": 3
+          }
+        ],
+        "posicoes": [
+          {
+            "alias": "A",
+            "id": "00000000-0000-4000-8000-000001506101",
+            "nome": "Ativo A",
+            "saldo": 100,
+            "sistema": null,
+            "no": "00000000-0000-4000-8000-000001506301"
+          },
+          {
+            "alias": "B",
+            "id": "00000000-0000-4000-8000-000001506102",
+            "nome": "Ativo B",
+            "saldo": 100,
+            "sistema": null,
+            "no": "00000000-0000-4000-8000-000001506302"
+          },
+          {
+            "alias": "C",
+            "id": "00000000-0000-4000-8000-000001506103",
+            "nome": "Ativo C",
+            "saldo": 100,
+            "sistema": null,
+            "no": "00000000-0000-4000-8000-000001506303"
+          },
+          {
+            "alias": "D",
+            "id": "00000000-0000-4000-8000-000001506104",
+            "nome": "Ativo D",
+            "saldo": 100,
+            "sistema": null,
+            "no": "00000000-0000-4000-8000-000001506304"
+          },
+          {
+            "alias": "E",
+            "id": "00000000-0000-4000-8000-000001506105",
+            "nome": "Ativo E",
+            "saldo": 100,
+            "sistema": null,
+            "no": "00000000-0000-4000-8000-000001506305"
+          },
+          {
+            "alias": "F",
+            "id": "00000000-0000-4000-8000-000001506106",
+            "nome": "Ativo F",
+            "saldo": 100,
+            "sistema": null,
+            "no": "00000000-0000-4000-8000-000001506306"
+          }
+        ],
+        "detalhes": [
+          "RF",
+          "RV"
+        ]
+      },
+      "esperado": {
+        "raiz_RF_centesimos_pp": "5000",
+        "raiz_RV_centesimos_pp": "5000",
+        "raiz_linhas": [
+          "RF",
+          "RV"
+        ],
+        "detalhe_RF_base_centavos": "300",
+        "detalhe_RF_linhas": [
+          "C1",
+          "C2",
+          "C3"
+        ],
+        "detalhe_RF_carteira_C1_centesimos_pp": "1667",
+        "detalhe_RF_pai_C1_centesimos_pp": "3334",
+        "detalhe_RF_carteira_C2_centesimos_pp": "1667",
+        "detalhe_RF_pai_C2_centesimos_pp": "3333",
+        "detalhe_RF_carteira_C3_centesimos_pp": "1667",
+        "detalhe_RF_pai_C3_centesimos_pp": "3333",
+        "detalhe_RV_base_centavos": "300",
+        "detalhe_RV_linhas": [
+          "C4",
+          "C5",
+          "C6"
+        ],
+        "detalhe_RV_carteira_C4_centesimos_pp": "1667",
+        "detalhe_RV_pai_C4_centesimos_pp": "3334",
+        "detalhe_RV_carteira_C5_centesimos_pp": "1666",
+        "detalhe_RV_pai_C5_centesimos_pp": "3333",
+        "detalhe_RV_carteira_C6_centesimos_pp": "1666",
+        "detalhe_RV_pai_C6_centesimos_pp": "3333"
+      }
+    },
+    {
+      "id": "CR-015-07",
+      "titulo": "Empate de resto em classes pela ordem da árvore",
+      "entrega": "015",
+      "regras": [
+        "15"
+      ],
+      "entrada": {
+        "visao": "classe",
+        "nos": [
+          {
+            "alias": "RF",
+            "id": "a5000000-0000-4000-8000-000000020000",
+            "parent_id": null,
+            "nivel": 1,
+            "nome": "Renda fixa",
+            "ordem": 2
+          },
+          {
+            "alias": "C1",
+            "id": "00000000-0000-4000-8000-000001507301",
+            "parent_id": "a5000000-0000-4000-8000-000000020000",
+            "nivel": 2,
+            "nome": "Subclasse C1",
+            "ordem": 1
+          },
+          {
+            "alias": "C2",
+            "id": "00000000-0000-4000-8000-000001507302",
+            "parent_id": "a5000000-0000-4000-8000-000000020000",
+            "nivel": 2,
+            "nome": "Subclasse C2",
+            "ordem": 2
+          },
+          {
+            "alias": "C3",
+            "id": "00000000-0000-4000-8000-000001507303",
+            "parent_id": "a5000000-0000-4000-8000-000000020000",
+            "nivel": 2,
+            "nome": "Subclasse C3",
+            "ordem": 3
+          }
+        ],
+        "posicoes": [
+          {
+            "alias": "A",
+            "id": "00000000-0000-4000-8000-000001507101",
+            "nome": "Ativo A",
+            "saldo": 100,
+            "sistema": null,
+            "no": "00000000-0000-4000-8000-000001507301"
+          },
+          {
+            "alias": "B",
+            "id": "00000000-0000-4000-8000-000001507102",
+            "nome": "Ativo B",
+            "saldo": 700,
+            "sistema": null,
+            "no": "00000000-0000-4000-8000-000001507302"
+          },
+          {
+            "alias": "C",
+            "id": "00000000-0000-4000-8000-000001507103",
+            "nome": "Ativo C",
+            "saldo": 400,
+            "sistema": null,
+            "no": "00000000-0000-4000-8000-000001507303"
+          }
+        ],
+        "detalhes": [
+          "RF"
+        ]
+      },
+      "esperado": {
+        "raiz_RF_centesimos_pp": "10000",
+        "raiz_linhas": [
+          "RF"
+        ],
+        "detalhe_RF_base_centavos": "1200",
+        "detalhe_RF_linhas": [
+          "C2",
+          "C3",
+          "C1"
+        ],
+        "detalhe_RF_carteira_C1_centesimos_pp": "834",
+        "detalhe_RF_pai_C1_centesimos_pp": "834",
+        "detalhe_RF_carteira_C2_centesimos_pp": "5833",
+        "detalhe_RF_pai_C2_centesimos_pp": "5833",
+        "detalhe_RF_carteira_C3_centesimos_pp": "3333",
+        "detalhe_RF_pai_C3_centesimos_pp": "3333"
+      }
+    },
+    {
+      "id": "CR-015-08",
+      "titulo": "Resíduo depois dos irmãos no empate",
+      "entrega": "015",
+      "regras": [
+        "15"
+      ],
+      "entrada": {
+        "visao": "classe",
+        "nos": [
+          {
+            "alias": "RF",
+            "id": "a5000000-0000-4000-8000-000000020000",
+            "parent_id": null,
+            "nivel": 1,
+            "nome": "Renda fixa",
+            "ordem": 2
+          },
+          {
+            "alias": "S1",
+            "id": "00000000-0000-4000-8000-000001508302",
+            "parent_id": "a5000000-0000-4000-8000-000000020000",
+            "nivel": 2,
+            "nome": "Subclasse S1",
+            "ordem": 1
+          },
+          {
+            "alias": "S2",
+            "id": "00000000-0000-4000-8000-000001508301",
+            "parent_id": "a5000000-0000-4000-8000-000000020000",
+            "nivel": 2,
+            "nome": "Subclasse S2",
+            "ordem": 2
+          }
+        ],
+        "posicoes": [
+          {
+            "alias": "A",
+            "id": "00000000-0000-4000-8000-000001508101",
+            "nome": "Ativo A",
+            "saldo": 10000,
+            "sistema": null,
+            "no": "00000000-0000-4000-8000-000001508302"
+          },
+          {
+            "alias": "B",
+            "id": "00000000-0000-4000-8000-000001508102",
+            "nome": "Ativo B",
+            "saldo": 10000,
+            "sistema": null,
+            "no": "00000000-0000-4000-8000-000001508301"
+          },
+          {
+            "alias": "C",
+            "id": "00000000-0000-4000-8000-000001508103",
+            "nome": "Ativo C",
+            "saldo": 10000,
+            "sistema": null,
+            "no": "a5000000-0000-4000-8000-000000020000"
+          }
+        ],
+        "detalhes": [
+          "RF"
+        ]
+      },
+      "esperado": {
+        "raiz_RF_centesimos_pp": "10000",
+        "raiz_linhas": [
+          "RF"
+        ],
+        "detalhe_RF_base_centavos": "30000",
+        "detalhe_RF_linhas": [
+          "S1",
+          "S2",
+          "res_RF"
+        ],
+        "detalhe_RF_carteira_S1_centesimos_pp": "3334",
+        "detalhe_RF_pai_S1_centesimos_pp": "3334",
+        "detalhe_RF_carteira_S2_centesimos_pp": "3333",
+        "detalhe_RF_pai_S2_centesimos_pp": "3333",
+        "detalhe_RF_carteira_res_RF_centesimos_pp": "3333",
+        "detalhe_RF_pai_res_RF_centesimos_pp": "3333"
+      }
+    },
+    {
+      "id": "CR-015-09",
+      "titulo": "Sem saldo positivo",
+      "entrega": "015",
+      "regras": [
+        "15"
+      ],
+      "entrada": {
+        "s1": {
+          "visao": "instituicao",
+          "instituicoes": [
+            {
+              "alias": "IA",
+              "id": "00000000-0000-4000-8000-000001509201",
+              "nome": "Instituição A"
+            }
+          ],
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-000001509101",
+              "nome": "Ativo A",
+              "saldo": -10000,
+              "sistema": null,
+              "instituicao_id": "00000000-0000-4000-8000-000001509201"
+            },
+            {
+              "alias": "B",
+              "id": "00000000-0000-4000-8000-000001509102",
+              "nome": "Ativo B",
+              "saldo": -5000,
+              "sistema": null,
+              "instituicao_id": null
+            },
+            {
+              "alias": "C",
+              "id": "00000000-0000-4000-8000-000001509103",
+              "nome": "Ativo C",
+              "saldo": 0,
+              "sistema": null,
+              "instituicao_id": "00000000-0000-4000-8000-000001509201"
+            },
+            {
+              "alias": "D",
+              "id": "00000000-0000-4000-8000-000001509104",
+              "nome": "Ativo D",
+              "saldo": 0,
+              "sistema": null,
+              "instituicao_id": null
+            }
+          ]
+        },
+        "s2": {
+          "visao": "classe",
+          "nos": [
+            {
+              "alias": "RF",
+              "id": "a5000000-0000-4000-8000-000000020000",
+              "parent_id": null,
+              "nivel": 1,
+              "nome": "Renda fixa",
+              "ordem": 2
+            },
+            {
+              "alias": "S1",
+              "id": "00000000-0000-4000-8000-000001509301",
+              "parent_id": "a5000000-0000-4000-8000-000000020000",
+              "nivel": 2,
+              "nome": "Subclasse S1",
+              "ordem": 1
+            }
+          ],
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-000001509101",
+              "nome": "Ativo A",
+              "saldo": -10000,
+              "sistema": null,
+              "no": "00000000-0000-4000-8000-000001509301"
+            },
+            {
+              "alias": "B",
+              "id": "00000000-0000-4000-8000-000001509102",
+              "nome": "Ativo B",
+              "saldo": -5000,
+              "sistema": null,
+              "no": null
+            },
+            {
+              "alias": "C",
+              "id": "00000000-0000-4000-8000-000001509103",
+              "nome": "Ativo C",
+              "saldo": 0,
+              "sistema": null,
+              "no": "00000000-0000-4000-8000-000001509301"
+            },
+            {
+              "alias": "D",
+              "id": "00000000-0000-4000-8000-000001509104",
+              "nome": "Ativo D",
+              "saldo": 0,
+              "sistema": null,
+              "no": null
+            }
+          ],
+          "detalhes": [
+            "RF"
+          ]
+        }
+      },
+      "esperado": {
+        "s1_base_positiva_centavos": "0",
+        "s1_linhas": [],
+        "s1_sem_percentual": [
+          "A",
+          "B"
+        ],
+        "s1_omitidos": [
+          "C",
+          "D"
+        ],
+        "s2_raiz_linhas": [],
+        "s2_raiz_sem_percentual": [
+          "A",
+          "B"
+        ],
+        "s2_raiz_omitidos": [
+          "C",
+          "D"
+        ],
+        "s2_detalhe_RF_base_centavos": "0",
+        "s2_detalhe_RF_linhas": [],
+        "s2_detalhe_RF_sem_percentual": [
+          "A"
+        ]
+      }
+    },
+    {
+      "id": "CR-015-10",
+      "titulo": "Linha única e participação que arredonda a zero",
+      "entrega": "015",
+      "regras": [
+        "15"
+      ],
+      "entrada": {
+        "s1": {
+          "visao": "instituicao",
+          "instituicoes": [
+            {
+              "alias": "IA",
+              "id": "00000000-0000-4000-8000-000001510201",
+              "nome": "Instituição A"
+            },
+            {
+              "alias": "IB",
+              "id": "00000000-0000-4000-8000-000001510202",
+              "nome": "Instituição B"
+            }
+          ],
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-000001510101",
+              "nome": "Ativo A",
+              "saldo": 100,
+              "sistema": null,
+              "instituicao_id": "00000000-0000-4000-8000-000001510201"
+            }
+          ]
+        },
+        "s2": {
+          "visao": "instituicao",
+          "instituicoes": [
+            {
+              "alias": "IA",
+              "id": "00000000-0000-4000-8000-000001510201",
+              "nome": "Instituição A"
+            },
+            {
+              "alias": "IB",
+              "id": "00000000-0000-4000-8000-000001510202",
+              "nome": "Instituição B"
+            }
+          ],
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-000001510101",
+              "nome": "Ativo A",
+              "saldo": 1,
+              "sistema": null,
+              "instituicao_id": "00000000-0000-4000-8000-000001510201"
+            },
+            {
+              "alias": "B",
+              "id": "00000000-0000-4000-8000-000001510102",
+              "nome": "Ativo B",
+              "saldo": 1000000,
+              "sistema": null,
+              "instituicao_id": "00000000-0000-4000-8000-000001510202"
+            }
+          ]
+        },
+        "s3": {
+          "visao": "classe",
+          "nos": [
+            {
+              "alias": "RF",
+              "id": "a5000000-0000-4000-8000-000000020000",
+              "parent_id": null,
+              "nivel": 1,
+              "nome": "Renda fixa",
+              "ordem": 2
+            },
+            {
+              "alias": "S1",
+              "id": "00000000-0000-4000-8000-000001510301",
+              "parent_id": "a5000000-0000-4000-8000-000000020000",
+              "nivel": 2,
+              "nome": "Subclasse S1",
+              "ordem": 1
+            },
+            {
+              "alias": "S2",
+              "id": "00000000-0000-4000-8000-000001510302",
+              "parent_id": "a5000000-0000-4000-8000-000000020000",
+              "nivel": 2,
+              "nome": "Subclasse S2",
+              "ordem": 2
+            }
+          ],
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-000001510101",
+              "nome": "Ativo A",
+              "saldo": 1,
+              "sistema": null,
+              "no": "00000000-0000-4000-8000-000001510301"
+            },
+            {
+              "alias": "B",
+              "id": "00000000-0000-4000-8000-000001510102",
+              "nome": "Ativo B",
+              "saldo": 1000000,
+              "sistema": null,
+              "no": "00000000-0000-4000-8000-000001510302"
+            }
+          ],
+          "detalhes": [
+            "RF"
+          ]
+        }
+      },
+      "esperado": {
+        "s1_base_positiva_centavos": "100",
+        "s1_participacao_IA_centesimos_pp": "10000",
+        "s1_linhas": [
+          "IA"
+        ],
+        "s2_base_positiva_centavos": "1000001",
+        "s2_participacao_IA_centesimos_pp": "0",
+        "s2_participacao_IB_centesimos_pp": "10000",
+        "s2_linhas": [
+          "IB",
+          "IA"
+        ],
+        "s3_raiz_RF_centesimos_pp": "10000",
+        "s3_raiz_linhas": [
+          "RF"
+        ],
+        "s3_detalhe_RF_base_centavos": "1000001",
+        "s3_detalhe_RF_linhas": [
+          "S2",
+          "S1"
+        ],
+        "s3_detalhe_RF_carteira_S1_centesimos_pp": "0",
+        "s3_detalhe_RF_pai_S1_centesimos_pp": "0",
+        "s3_detalhe_RF_carteira_S2_centesimos_pp": "10000",
+        "s3_detalhe_RF_pai_S2_centesimos_pp": "10000"
+      }
+    },
+    {
+      "id": "CR-015-11",
+      "titulo": "Grupo acima do inteiro seguro",
+      "entrega": "015",
+      "regras": [
+        "15"
+      ],
+      "entrada": {
+        "s1": {
+          "visao": "instituicao",
+          "instituicoes": [
+            {
+              "alias": "IA",
+              "id": "00000000-0000-4000-8000-000001511201",
+              "nome": "Instituição A"
+            }
+          ],
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-000001511101",
+              "nome": "Ativo A",
+              "saldo": 9007199254740991,
+              "sistema": null,
+              "instituicao_id": "00000000-0000-4000-8000-000001511201"
+            },
+            {
+              "alias": "B",
+              "id": "00000000-0000-4000-8000-000001511102",
+              "nome": "Ativo B",
+              "saldo": 9007199254740991,
+              "sistema": null,
+              "instituicao_id": "00000000-0000-4000-8000-000001511201"
+            }
+          ]
+        },
+        "s2": {
+          "visao": "classe",
+          "nos": [
+            {
+              "alias": "RF",
+              "id": "a5000000-0000-4000-8000-000000020000",
+              "parent_id": null,
+              "nivel": 1,
+              "nome": "Renda fixa",
+              "ordem": 2
+            },
+            {
+              "alias": "S1",
+              "id": "00000000-0000-4000-8000-000001511301",
+              "parent_id": "a5000000-0000-4000-8000-000000020000",
+              "nivel": 2,
+              "nome": "Subclasse S1",
+              "ordem": 1
+            }
+          ],
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-000001511101",
+              "nome": "Ativo A",
+              "saldo": 9007199254740991,
+              "sistema": null,
+              "no": "00000000-0000-4000-8000-000001511301"
+            },
+            {
+              "alias": "B",
+              "id": "00000000-0000-4000-8000-000001511102",
+              "nome": "Ativo B",
+              "saldo": 9007199254740991,
+              "sistema": null,
+              "no": "00000000-0000-4000-8000-000001511301"
+            }
+          ],
+          "detalhes": [
+            "RF"
+          ]
+        }
+      },
+      "esperado": {
+        "s1_base_positiva_centavos": "18014398509481982",
+        "s1_participacao_IA_centesimos_pp": "10000",
+        "s1_saldo_IA_centavos": "18014398509481982",
+        "s1_linhas": [
+          "IA"
+        ],
+        "s1_sem_percentual": [],
+        "s1_omitidos": [],
+        "s2_raiz_RF_centesimos_pp": "10000",
+        "s2_raiz_linhas": [
+          "RF"
+        ],
+        "s2_detalhe_RF_base_centavos": "18014398509481982",
+        "s2_detalhe_RF_linhas": [
+          "S1"
+        ],
+        "s2_detalhe_RF_carteira_S1_centesimos_pp": "10000",
+        "s2_detalhe_RF_pai_S1_centesimos_pp": "10000",
+        "s2_detalhe_RF_saldo_S1_centavos": "18014398509481982",
+        "s2_detalhe_RF_sem_percentual": []
+      }
+    },
+    {
+      "id": "CR-015-12",
+      "titulo": "Ativo hoje desativado e classificação ou instituição atuais",
+      "entrega": "015",
+      "regras": [
+        "15"
+      ],
+      "entrada": {
+        "s1": {
+          "visao": "instituicao",
+          "instituicoes": [
+            {
+              "alias": "IA",
+              "id": "00000000-0000-4000-8000-000001512201",
+              "nome": "Instituição A"
+            },
+            {
+              "alias": "IB",
+              "id": "00000000-0000-4000-8000-000001512202",
+              "nome": "Instituição B"
+            }
+          ],
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-000001512101",
+              "nome": "Ativo A",
+              "saldo": 10000,
+              "sistema": null,
+              "instituicao_id": "00000000-0000-4000-8000-000001512201",
+              "ativo": false
+            },
+            {
+              "alias": "B",
+              "id": "00000000-0000-4000-8000-000001512102",
+              "nome": "Ativo B",
+              "saldo": 10000,
+              "sistema": null,
+              "instituicao_id": "00000000-0000-4000-8000-000001512202"
+            }
+          ]
+        },
+        "s2": {
+          "visao": "instituicao",
+          "instituicoes": [
+            {
+              "alias": "IA",
+              "id": "00000000-0000-4000-8000-000001512201",
+              "nome": "Instituição A"
+            },
+            {
+              "alias": "IB",
+              "id": "00000000-0000-4000-8000-000001512202",
+              "nome": "Instituição B"
+            }
+          ],
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-000001512101",
+              "nome": "Ativo A",
+              "saldo": 10000,
+              "sistema": null,
+              "instituicao_id": "00000000-0000-4000-8000-000001512202",
+              "ativo": false
+            },
+            {
+              "alias": "B",
+              "id": "00000000-0000-4000-8000-000001512102",
+              "nome": "Ativo B",
+              "saldo": 10000,
+              "sistema": null,
+              "instituicao_id": "00000000-0000-4000-8000-000001512202"
+            }
+          ]
+        },
+        "s3": {
+          "visao": "classe",
+          "nos": [
+            {
+              "alias": "RF",
+              "id": "a5000000-0000-4000-8000-000000020000",
+              "parent_id": null,
+              "nivel": 1,
+              "nome": "Renda fixa",
+              "ordem": 2
+            },
+            {
+              "alias": "S1",
+              "id": "00000000-0000-4000-8000-000001512301",
+              "parent_id": "a5000000-0000-4000-8000-000000020000",
+              "nivel": 2,
+              "nome": "Subclasse S1",
+              "ordem": 1
+            },
+            {
+              "alias": "S2",
+              "id": "00000000-0000-4000-8000-000001512302",
+              "parent_id": "a5000000-0000-4000-8000-000000020000",
+              "nivel": 2,
+              "nome": "Subclasse S2",
+              "ordem": 2
+            }
+          ],
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-000001512101",
+              "nome": "Ativo A",
+              "saldo": 10000,
+              "sistema": null,
+              "no": "00000000-0000-4000-8000-000001512301",
+              "ativo": false
+            },
+            {
+              "alias": "B",
+              "id": "00000000-0000-4000-8000-000001512102",
+              "nome": "Ativo B",
+              "saldo": 10000,
+              "sistema": null,
+              "no": "00000000-0000-4000-8000-000001512302"
+            }
+          ],
+          "detalhes": [
+            "RF"
+          ]
+        },
+        "s4": {
+          "visao": "classe",
+          "nos": [
+            {
+              "alias": "RF",
+              "id": "a5000000-0000-4000-8000-000000020000",
+              "parent_id": null,
+              "nivel": 1,
+              "nome": "Renda fixa",
+              "ordem": 2
+            },
+            {
+              "alias": "S1",
+              "id": "00000000-0000-4000-8000-000001512301",
+              "parent_id": "a5000000-0000-4000-8000-000000020000",
+              "nivel": 2,
+              "nome": "Subclasse S1",
+              "ordem": 1
+            },
+            {
+              "alias": "S2",
+              "id": "00000000-0000-4000-8000-000001512302",
+              "parent_id": "a5000000-0000-4000-8000-000000020000",
+              "nivel": 2,
+              "nome": "Subclasse S2",
+              "ordem": 2
+            }
+          ],
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-000001512101",
+              "nome": "Ativo A",
+              "saldo": 10000,
+              "sistema": null,
+              "no": "00000000-0000-4000-8000-000001512302",
+              "ativo": false
+            },
+            {
+              "alias": "B",
+              "id": "00000000-0000-4000-8000-000001512102",
+              "nome": "Ativo B",
+              "saldo": 10000,
+              "sistema": null,
+              "no": "00000000-0000-4000-8000-000001512302"
+            }
+          ],
+          "detalhes": [
+            "RF"
+          ]
+        }
+      },
+      "esperado": {
+        "s1_base_positiva_centavos": "20000",
+        "s1_participacao_IA_centesimos_pp": "5000",
+        "s1_saldo_IA_centavos": "10000",
+        "s1_participacao_IB_centesimos_pp": "5000",
+        "s1_saldo_IB_centavos": "10000",
+        "s1_linhas": [
+          "IA",
+          "IB"
+        ],
+        "s1_sem_percentual": [],
+        "s1_omitidos": [],
+        "s2_base_positiva_centavos": "20000",
+        "s2_participacao_IB_centesimos_pp": "10000",
+        "s2_saldo_IB_centavos": "20000",
+        "s2_linhas": [
+          "IB"
+        ],
+        "s2_sem_percentual": [],
+        "s2_omitidos": [],
+        "s3_raiz_RF_centesimos_pp": "10000",
+        "s3_raiz_linhas": [
+          "RF"
+        ],
+        "s3_detalhe_RF_base_centavos": "20000",
+        "s3_detalhe_RF_linhas": [
+          "S1",
+          "S2"
+        ],
+        "s3_detalhe_RF_carteira_S1_centesimos_pp": "5000",
+        "s3_detalhe_RF_pai_S1_centesimos_pp": "5000",
+        "s3_detalhe_RF_saldo_S1_centavos": "10000",
+        "s3_detalhe_RF_carteira_S2_centesimos_pp": "5000",
+        "s3_detalhe_RF_pai_S2_centesimos_pp": "5000",
+        "s3_detalhe_RF_saldo_S2_centavos": "10000",
+        "s3_detalhe_RF_sem_percentual": [],
+        "s4_raiz_RF_centesimos_pp": "10000",
+        "s4_raiz_linhas": [
+          "RF"
+        ],
+        "s4_detalhe_RF_base_centavos": "20000",
+        "s4_detalhe_RF_linhas": [
+          "S2"
+        ],
+        "s4_detalhe_RF_carteira_S2_centesimos_pp": "10000",
+        "s4_detalhe_RF_pai_S2_centesimos_pp": "10000",
+        "s4_detalhe_RF_saldo_S2_centavos": "20000",
+        "s4_detalhe_RF_sem_percentual": []
+      }
+    },
+    {
+      "id": "CR-015-13",
+      "titulo": "Nós homônimos em ramos diferentes e referências inválidas",
+      "entrega": "015",
+      "regras": [
+        "15"
+      ],
+      "entrada": {
+        "s1": {
+          "visao": "classe",
+          "nos": [
+            {
+              "alias": "RF",
+              "id": "a5000000-0000-4000-8000-000000020000",
+              "parent_id": null,
+              "nivel": 1,
+              "nome": "Renda fixa",
+              "ordem": 2
+            },
+            {
+              "alias": "RV",
+              "id": "a5000000-0000-4000-8000-000000030000",
+              "parent_id": null,
+              "nivel": 1,
+              "nome": "Renda variável",
+              "ordem": 3
+            },
+            {
+              "alias": "D1",
+              "id": "00000000-0000-4000-8000-000001513301",
+              "parent_id": "a5000000-0000-4000-8000-000000020000",
+              "nivel": 2,
+              "nome": "Duplicado",
+              "ordem": 1
+            },
+            {
+              "alias": "D2",
+              "id": "00000000-0000-4000-8000-000001513302",
+              "parent_id": "a5000000-0000-4000-8000-000000030000",
+              "nivel": 2,
+              "nome": "Duplicado",
+              "ordem": 1
+            }
+          ],
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-000001513101",
+              "nome": "Ativo A",
+              "saldo": 10000,
+              "sistema": null,
+              "no": "00000000-0000-4000-8000-000001513301"
+            },
+            {
+              "alias": "B",
+              "id": "00000000-0000-4000-8000-000001513102",
+              "nome": "Ativo B",
+              "saldo": 10000,
+              "sistema": null,
+              "no": "00000000-0000-4000-8000-000001513302"
+            }
+          ],
+          "detalhes": [
+            "RF",
+            "RV"
+          ]
+        },
+        "s2": {
+          "visao": "instituicao",
+          "instituicoes": [
+            {
+              "alias": "IA",
+              "id": "00000000-0000-4000-8000-000001513201",
+              "nome": "Instituição A"
+            }
+          ],
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-000001513101",
+              "nome": "Ativo A",
+              "saldo": 10000,
+              "sistema": null,
+              "instituicao_id": "00000000-0000-4000-8000-000001513299"
+            }
+          ]
+        },
+        "s3": {
+          "visao": "classe",
+          "nos": [
+            {
+              "alias": "RF",
+              "id": "a5000000-0000-4000-8000-000000020000",
+              "parent_id": null,
+              "nivel": 1,
+              "nome": "Renda fixa",
+              "ordem": 2
+            },
+            {
+              "alias": "S1",
+              "id": "00000000-0000-4000-8000-000001513301",
+              "parent_id": "a5000000-0000-4000-8000-000000020000",
+              "nivel": 2,
+              "nome": "Subclasse S1",
+              "ordem": 1
+            }
+          ],
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-000001513101",
+              "nome": "Ativo A",
+              "saldo": 10000,
+              "sistema": null,
+              "no": "00000000-0000-4000-8000-000001513399"
+            }
+          ],
+          "detalhes": [
+            "RF"
+          ]
+        },
+        "s4": {
+          "visao": "classe",
+          "nos": [
+            {
+              "alias": "RF",
+              "id": "a5000000-0000-4000-8000-000000020000",
+              "parent_id": null,
+              "nivel": 1,
+              "nome": "Renda fixa",
+              "ordem": 2
+            },
+            {
+              "alias": "X1",
+              "id": "00000000-0000-4000-8000-000001513301",
+              "parent_id": "a5000000-0000-4000-8000-000000020000",
+              "nivel": 3,
+              "nome": "Tipo fora de lugar",
+              "ordem": 1
+            }
+          ],
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-000001513101",
+              "nome": "Ativo A",
+              "saldo": 10000,
+              "sistema": null,
+              "no": "00000000-0000-4000-8000-000001513301"
+            }
+          ],
+          "detalhes": [
+            "RF"
+          ]
+        }
+      },
+      "esperado": {
+        "s1_raiz_RF_centesimos_pp": "5000",
+        "s1_raiz_RV_centesimos_pp": "5000",
+        "s1_raiz_linhas": [
+          "RF",
+          "RV"
+        ],
+        "s1_detalhe_RF_base_centavos": "10000",
+        "s1_detalhe_RF_linhas": [
+          "D1"
+        ],
+        "s1_detalhe_RF_carteira_D1_centesimos_pp": "5000",
+        "s1_detalhe_RF_pai_D1_centesimos_pp": "10000",
+        "s1_detalhe_RF_caminhos": [
+          "Renda fixa › Duplicado"
+        ],
+        "s1_detalhe_RV_base_centavos": "10000",
+        "s1_detalhe_RV_linhas": [
+          "D2"
+        ],
+        "s1_detalhe_RV_carteira_D2_centesimos_pp": "5000",
+        "s1_detalhe_RV_pai_D2_centesimos_pp": "10000",
+        "s1_detalhe_RV_caminhos": [
+          "Renda variável › Duplicado"
+        ],
+        "s2_resultado": "recusada",
+        "s3_resultado": "recusada",
+        "s4_resultado": "recusada"
+      }
+    },
+    {
+      "id": "CR-015-14",
+      "titulo": "Renomear muda o desempate por ativo, não instituição nem classe",
+      "entrega": "015",
+      "regras": [
+        "15",
+        "1",
+        "2",
+        "14"
+      ],
+      "entrada": {
+        "s1": {
+          "visao": "ativo",
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-000001514101",
+              "nome": "Ativo A",
+              "saldo": 10000,
+              "sistema": null
+            },
+            {
+              "alias": "B",
+              "id": "00000000-0000-4000-8000-000001514102",
+              "nome": "Ativo B",
+              "saldo": 10000,
+              "sistema": null
+            },
+            {
+              "alias": "C",
+              "id": "00000000-0000-4000-8000-000001514103",
+              "nome": "Ativo C",
+              "saldo": 10000,
+              "sistema": null
+            }
+          ]
+        },
+        "s2": {
+          "visao": "ativo",
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-000001514101",
+              "nome": "Ativo Z",
+              "saldo": 10000,
+              "sistema": null
+            },
+            {
+              "alias": "B",
+              "id": "00000000-0000-4000-8000-000001514102",
+              "nome": "Ativo B",
+              "saldo": 10000,
+              "sistema": null
+            },
+            {
+              "alias": "C",
+              "id": "00000000-0000-4000-8000-000001514103",
+              "nome": "Ativo C",
+              "saldo": 10000,
+              "sistema": null
+            }
+          ]
+        },
+        "s3": {
+          "visao": "instituicao",
+          "instituicoes": [
+            {
+              "alias": "IA",
+              "id": "00000000-0000-4000-8000-000001514201",
+              "nome": "Instituição A"
+            }
+          ],
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-000001514101",
+              "nome": "Ativo Z",
+              "saldo": 10000,
+              "sistema": null,
+              "instituicao_id": "00000000-0000-4000-8000-000001514201"
+            },
+            {
+              "alias": "B",
+              "id": "00000000-0000-4000-8000-000001514102",
+              "nome": "Ativo B",
+              "saldo": 10000,
+              "sistema": null,
+              "instituicao_id": "00000000-0000-4000-8000-000001514201"
+            },
+            {
+              "alias": "C",
+              "id": "00000000-0000-4000-8000-000001514103",
+              "nome": "Ativo C",
+              "saldo": 10000,
+              "sistema": null,
+              "instituicao_id": "00000000-0000-4000-8000-000001514201"
+            }
+          ]
+        },
+        "s4": {
+          "visao": "classe",
+          "nos": [
+            {
+              "alias": "RF",
+              "id": "a5000000-0000-4000-8000-000000020000",
+              "parent_id": null,
+              "nivel": 1,
+              "nome": "Renda fixa",
+              "ordem": 2
+            },
+            {
+              "alias": "S1",
+              "id": "00000000-0000-4000-8000-000001514301",
+              "parent_id": "a5000000-0000-4000-8000-000000020000",
+              "nivel": 2,
+              "nome": "Subclasse S1",
+              "ordem": 1
+            }
+          ],
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-000001514101",
+              "nome": "Ativo Z",
+              "saldo": 10000,
+              "sistema": null,
+              "no": "00000000-0000-4000-8000-000001514301"
+            },
+            {
+              "alias": "B",
+              "id": "00000000-0000-4000-8000-000001514102",
+              "nome": "Ativo B",
+              "saldo": 10000,
+              "sistema": null,
+              "no": "00000000-0000-4000-8000-000001514301"
+            },
+            {
+              "alias": "C",
+              "id": "00000000-0000-4000-8000-000001514103",
+              "nome": "Ativo C",
+              "saldo": 10000,
+              "sistema": null,
+              "no": "00000000-0000-4000-8000-000001514301"
+            }
+          ],
+          "detalhes": [
+            "RF"
+          ]
+        }
+      },
+      "esperado": {
+        "s1_participacao_A_centesimos_pp": "3334",
+        "s1_participacao_B_centesimos_pp": "3333",
+        "s1_participacao_C_centesimos_pp": "3333",
+        "s1_principais": [
+          "A",
+          "B",
+          "C"
+        ],
+        "s2_participacao_B_centesimos_pp": "3334",
+        "s2_participacao_C_centesimos_pp": "3333",
+        "s2_participacao_A_centesimos_pp": "3333",
+        "s2_principais": [
+          "B",
+          "C",
+          "A"
+        ],
+        "s3_base_positiva_centavos": "30000",
+        "s3_participacao_IA_centesimos_pp": "10000",
+        "s3_linhas": [
+          "IA"
+        ],
+        "s4_raiz_RF_centesimos_pp": "10000",
+        "s4_raiz_linhas": [
+          "RF"
+        ],
+        "s4_detalhe_RF_base_centavos": "30000",
+        "s4_detalhe_RF_linhas": [
+          "S1"
+        ],
+        "s4_detalhe_RF_carteira_S1_centesimos_pp": "10000",
+        "s4_detalhe_RF_pai_S1_centesimos_pp": "10000"
+      }
+    },
+    {
+      "id": "CR-015-15",
+      "titulo": "Renomear instituição muda o desempate; nome igual desempata pelo UUID",
+      "entrega": "015",
+      "regras": [
+        "15"
+      ],
+      "entrada": {
+        "s1": {
+          "visao": "instituicao",
+          "instituicoes": [
+            {
+              "alias": "IA",
+              "id": "00000000-0000-4000-8000-000001515201",
+              "nome": "Instituição A"
+            },
+            {
+              "alias": "IB",
+              "id": "00000000-0000-4000-8000-000001515202",
+              "nome": "Instituição B"
+            },
+            {
+              "alias": "IC",
+              "id": "00000000-0000-4000-8000-000001515203",
+              "nome": "Instituição C"
+            }
+          ],
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-000001515101",
+              "nome": "Ativo A",
+              "saldo": 10000,
+              "sistema": null,
+              "instituicao_id": "00000000-0000-4000-8000-000001515201"
+            },
+            {
+              "alias": "B",
+              "id": "00000000-0000-4000-8000-000001515102",
+              "nome": "Ativo B",
+              "saldo": 10000,
+              "sistema": null,
+              "instituicao_id": "00000000-0000-4000-8000-000001515202"
+            },
+            {
+              "alias": "C",
+              "id": "00000000-0000-4000-8000-000001515103",
+              "nome": "Ativo C",
+              "saldo": 10000,
+              "sistema": null,
+              "instituicao_id": "00000000-0000-4000-8000-000001515203"
+            }
+          ]
+        },
+        "s2": {
+          "visao": "instituicao",
+          "instituicoes": [
+            {
+              "alias": "IA",
+              "id": "00000000-0000-4000-8000-000001515201",
+              "nome": "Instituição Z"
+            },
+            {
+              "alias": "IB",
+              "id": "00000000-0000-4000-8000-000001515202",
+              "nome": "Instituição B"
+            },
+            {
+              "alias": "IC",
+              "id": "00000000-0000-4000-8000-000001515203",
+              "nome": "Instituição C"
+            }
+          ],
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-000001515101",
+              "nome": "Ativo A",
+              "saldo": 10000,
+              "sistema": null,
+              "instituicao_id": "00000000-0000-4000-8000-000001515201"
+            },
+            {
+              "alias": "B",
+              "id": "00000000-0000-4000-8000-000001515102",
+              "nome": "Ativo B",
+              "saldo": 10000,
+              "sistema": null,
+              "instituicao_id": "00000000-0000-4000-8000-000001515202"
+            },
+            {
+              "alias": "C",
+              "id": "00000000-0000-4000-8000-000001515103",
+              "nome": "Ativo C",
+              "saldo": 10000,
+              "sistema": null,
+              "instituicao_id": "00000000-0000-4000-8000-000001515203"
+            }
+          ]
+        },
+        "s3": {
+          "visao": "instituicao",
+          "instituicoes": [
+            {
+              "alias": "IA",
+              "id": "00000000-0000-4000-8000-000001515202",
+              "nome": "Instituição Igual"
+            },
+            {
+              "alias": "IB",
+              "id": "00000000-0000-4000-8000-000001515201",
+              "nome": "Instituição Igual"
+            },
+            {
+              "alias": "IC",
+              "id": "00000000-0000-4000-8000-000001515203",
+              "nome": "Instituição Zeta"
+            }
+          ],
+          "posicoes": [
+            {
+              "alias": "A",
+              "id": "00000000-0000-4000-8000-000001515101",
+              "nome": "Ativo A",
+              "saldo": 10000,
+              "sistema": null,
+              "instituicao_id": "00000000-0000-4000-8000-000001515202"
+            },
+            {
+              "alias": "B",
+              "id": "00000000-0000-4000-8000-000001515102",
+              "nome": "Ativo B",
+              "saldo": 10000,
+              "sistema": null,
+              "instituicao_id": "00000000-0000-4000-8000-000001515201"
+            },
+            {
+              "alias": "C",
+              "id": "00000000-0000-4000-8000-000001515103",
+              "nome": "Ativo C",
+              "saldo": 10000,
+              "sistema": null,
+              "instituicao_id": "00000000-0000-4000-8000-000001515203"
+            }
+          ]
+        }
+      },
+      "esperado": {
+        "s1_base_positiva_centavos": "30000",
+        "s1_participacao_IA_centesimos_pp": "3334",
+        "s1_participacao_IB_centesimos_pp": "3333",
+        "s1_participacao_IC_centesimos_pp": "3333",
+        "s1_linhas": [
+          "IA",
+          "IB",
+          "IC"
+        ],
+        "s2_base_positiva_centavos": "30000",
+        "s2_participacao_IB_centesimos_pp": "3334",
+        "s2_participacao_IC_centesimos_pp": "3333",
+        "s2_participacao_IA_centesimos_pp": "3333",
+        "s2_linhas": [
+          "IB",
+          "IC",
+          "IA"
+        ],
+        "s3_base_positiva_centavos": "30000",
+        "s3_participacao_IB_centesimos_pp": "3334",
+        "s3_participacao_IA_centesimos_pp": "3333",
+        "s3_participacao_IC_centesimos_pp": "3333",
+        "s3_linhas": [
+          "IB",
+          "IA",
+          "IC"
+        ]
+      }
+    },
+    {
+      "id": "CR-015-16",
+      "titulo": "Empate de resto institucional pela ordem, não pelo maior saldo",
+      "entrega": "015",
+      "regras": [
+        "15"
+      ],
+      "entrada": {
+        "visao": "instituicao",
+        "instituicoes": [
+          {
+            "alias": "IA",
+            "id": "00000000-0000-4000-8000-000001516201",
+            "nome": "Instituição A"
+          },
+          {
+            "alias": "IB",
+            "id": "00000000-0000-4000-8000-000001516202",
+            "nome": "Instituição B"
+          }
+        ],
+        "posicoes": [
+          {
+            "alias": "A",
+            "id": "00000000-0000-4000-8000-000001516101",
+            "nome": "Ativo A",
+            "saldo": 100,
+            "sistema": null,
+            "instituicao_id": "00000000-0000-4000-8000-000001516201"
+          },
+          {
+            "alias": "B",
+            "id": "00000000-0000-4000-8000-000001516102",
+            "nome": "Ativo B",
+            "saldo": 700,
+            "sistema": null,
+            "instituicao_id": "00000000-0000-4000-8000-000001516202"
+          },
+          {
+            "alias": "C",
+            "id": "00000000-0000-4000-8000-000001516103",
+            "nome": "Ativo C",
+            "saldo": 400,
+            "sistema": null,
+            "instituicao_id": null
+          }
+        ]
+      },
+      "esperado": {
+        "base_positiva_centavos": "1200",
+        "participacao_IA_centesimos_pp": "834",
+        "saldo_IA_centavos": "100",
+        "participacao_IB_centesimos_pp": "5833",
+        "saldo_IB_centavos": "700",
+        "participacao_SI_centesimos_pp": "3333",
+        "saldo_SI_centavos": "400",
+        "linhas": [
+          "IB",
+          "SI",
+          "IA"
+        ],
+        "sem_percentual": [],
+        "omitidos": []
+      }
     }
   ]
 }
