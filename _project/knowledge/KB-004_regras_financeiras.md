@@ -6,7 +6,7 @@ tags:
   - referência
 author: "Thiago Andrade e Claude"
 module: "Regras financeiras"
-last_updated: "2026-10-23"
+last_updated: "2026-10-27"
 origin_cycle: "003"
 ---
 
@@ -316,6 +316,7 @@ Os casos usam só dados fictícios. Cada caso tem o mesmo identificador `CR-NN` 
 - a coluna "Entrega" indica a issue cujos testes executam o caso (B, C, D ou os ciclos `004`, `006`, `010` e `013`);
 - nos casos da distribuição (CR-53 a CR-61, ciclo `010`), a participação `participacao_<alias>_centesimos_pp` é um inteiro de centésimos de ponto percentual, de 0 a 10000, escrito como texto decimal; `base_positiva_centavos`, `patrimonio_liquido_centavos` e `outros_centavos` são centavos em texto decimal exato; `principais`, `componentes_outros`, `sem_percentual` e `omitidos` são listas de aliases em JSON compacto, na ordem de apresentação; subcenários usam os prefixos `s1_`, `s2_` e `s3_`.
 - nos casos da alocação por classe macro (CR-C01 a CR-C12, ciclo `013`), as linhas usam os aliases `CX` (Caixa e disponibilidades), `RF` (Renda fixa), `RV` (Renda variável), `EX` (Investimentos no exterior), `CT` (Criptoativos e ativos digitais), `AL` (Alternativos, moedas, outros), `T` (Em trânsito) e `SC` (Sem classe); `participacao_<linha>_centesimos_pp` e `saldo_<linha>_centavos` seguem as convenções acima; `linhas` é a lista das linhas positivas, na ordem de apresentação; `sem_percentual` e `omitidos` listam aliases de ativos. Nas entradas do JSON, cada posição traz o nó atual do ativo (`no`) ou o ativo de sistema (`sistema`).
+- nos casos das análises por instituição e níveis de classe (CR-015-01 a CR-015-16, ciclo `015`), cada cenário tem uma `visao` (`instituicao`, `classe` ou `ativo`) e as posições de M; subcenários usam os prefixos `s1_`, `s2_`, `s3_` e `s4_`. Instituições têm alias `IA`, `IB` e `IC` (Sem instituição = `SI`, Em trânsito = `T`); nós de classe têm os aliases da entrada (`RF`, `RV`, `C1`, `S1`, `T1`...), com `res_<pai>` para o resíduo de vínculo direto ao pai e `SC` para Sem classe. Na visão por instituição valem `base_positiva_centavos`, `participacao_<grupo>_centesimos_pp`, `saldo_<grupo>_centavos`, `linhas`, `sem_percentual` e `omitidos`, como na distribuição por ativo. Na visão por classe, `raiz_<linha>_centesimos_pp` e `raiz_linhas` são a alocação macro da raiz; para cada pai detalhado, `detalhe_<pai>_linhas` lista filhos imediatos e resíduo na ordem de apresentação, `detalhe_<pai>_carteira_<filho>_centesimos_pp` é a participação na carteira, `detalhe_<pai>_pai_<filho>_centesimos_pp` a participação no pai, `detalhe_<pai>_base_centavos` a soma exata dos positivos do pai (base local, não exibida) e `detalhe_<pai>_caminhos` os caminhos completos, com ` › ` entre os nomes. `resultado` = `recusada` indica que a visão é recusada.
 
 A conferência independente está em `_project/executed/003_regras_financeiras/003_validation_casos_referencia.md`.
 
@@ -1273,6 +1274,335 @@ Casos da regra de participação da seção 15 (ciclo `010`, BL-005). Os nomes s
   - `linhas`: `["RF"]`
   - `sem_percentual`: `["C"]`
 
+#### CR-015-01 — Instituição com negativo e saldo zero
+
+- **Entrega:** ciclo `015`. **Regras:** 15 (análises por instituição e níveis de classe).
+- **Entrada:** Instituição A: ativo A = 20.000 e ativo B = −5.000; Instituição B: ativo C = 10.000 e ativo D = 0.
+- **Passo a passo:** B é negativo e sai antes de agrupar; D é zero e é omitido. S = 30.000. A tem 20.000: piso 6.666, resto 20.000; B tem 10.000: piso 3.333, resto 10.000. Falta 1 unidade, que vai ao maior resto: A = 66,67% e B = 33,33%. Os 5.000 negativos ficam à parte e não reduzem a Instituição A.
+- **Esperado:**
+  - `base_positiva_centavos`: `30000`
+  - `participacao_IA_centesimos_pp`: `6667`
+  - `saldo_IA_centavos`: `20000`
+  - `participacao_IB_centesimos_pp`: `3333`
+  - `saldo_IB_centavos`: `10000`
+  - `linhas`: `["IA","IB"]`
+  - `sem_percentual`: `["B"]`
+  - `omitidos`: `["D"]`
+
+#### CR-015-02 — Instituição, Sem instituição e Em trânsito empatados
+
+- **Entrega:** ciclo `015`. **Regras:** 15 (análises por instituição e níveis de classe).
+- **Entrada:** Instituição A: ativo A = 10.000; Sem instituição: ativo B = 10.000; Em trânsito (ativo de sistema): ativo C = 10.000.
+- **Passo a passo:** S = 30.000, com três restos iguais (10.000) e pisos de 3.333. A unidade que falta vai ao primeiro na ordem de desempate: instituições por nome e UUID, depois Sem instituição, depois Em trânsito. A = 33,34%, Sem instituição = 33,33% e Em trânsito = 33,33%. Com saldos iguais, a apresentação segue a mesma ordem.
+- **Esperado:**
+  - `base_positiva_centavos`: `30000`
+  - `participacao_IA_centesimos_pp`: `3334`
+  - `participacao_SI_centesimos_pp`: `3333`
+  - `participacao_T_centesimos_pp`: `3333`
+  - `linhas`: `["IA","SI","T"]`
+
+#### CR-015-03 — Irmãos empatados: duas bases independentes
+
+- **Entrega:** ciclo `015`. **Regras:** 15 (análises por instituição e níveis de classe).
+- **Entrada:** Renda fixa com as subclasses C1, C2 e C3, cada uma com um ativo de 10.000 (A, B e C); o ativo D, de 10.000, ligado direto a Renda variável.
+- **Passo a passo:** S = 40.000. Na fronteira dos níveis 2 há quatro grupos de 10.000 (C1, C2, C3 e o resíduo de Renda variável): 2.500 cada (25,00% da carteira), sem resto. Na raiz, Renda fixa soma 30.000 = 75,00% e Renda variável = 25,00%. No detalhe de Renda fixa, a base local é 30.000: cada filho tem piso 3.333 e resto igual; a unidade que falta vai a C1 pela ordem da árvore: 33,34%, 33,33% e 33,33% do pai. As colunas usam bases diferentes e nenhuma é derivada da outra.
+- **Esperado:**
+  - `raiz_RF_centesimos_pp`: `7500`
+  - `raiz_RV_centesimos_pp`: `2500`
+  - `raiz_linhas`: `["RF","RV"]`
+  - `detalhe_RF_base_centavos`: `30000`
+  - `detalhe_RF_linhas`: `["C1","C2","C3"]`
+  - `detalhe_RF_carteira_C1_centesimos_pp`: `2500`
+  - `detalhe_RF_pai_C1_centesimos_pp`: `3334`
+  - `detalhe_RF_carteira_C2_centesimos_pp`: `2500`
+  - `detalhe_RF_pai_C2_centesimos_pp`: `3333`
+  - `detalhe_RF_carteira_C3_centesimos_pp`: `2500`
+  - `detalhe_RF_pai_C3_centesimos_pp`: `3333`
+
+#### CR-015-04 — Resíduo de classificação direta na macro
+
+- **Entrega:** ciclo `015`. **Regras:** 15 (análises por instituição e níveis de classe).
+- **Entrada:** Renda fixa: ativo A = 30.000 na subclasse S1 e ativo B = 10.000 ligado direto à macro; ativo C = 60.000 ligado direto a Renda variável.
+- **Passo a passo:** S = 100.000. Na raiz, Renda fixa soma 40.000 = 40,00% e Renda variável = 60,00%. Na fronteira dos níveis 2: S1 = 30,00%, o resíduo de Renda fixa (vínculo direto à macro) = 10,00% e o resíduo de Renda variável = 60,00%. No detalhe de Renda fixa, a base local é 40.000: S1 = 75,00% e o resíduo = 25,00% do pai. O vínculo direto à macro não é distribuído entre as subclasses.
+- **Esperado:**
+  - `raiz_RF_centesimos_pp`: `4000`
+  - `raiz_RV_centesimos_pp`: `6000`
+  - `raiz_linhas`: `["RV","RF"]`
+  - `detalhe_RF_base_centavos`: `40000`
+  - `detalhe_RF_linhas`: `["S1","res_RF"]`
+  - `detalhe_RF_carteira_S1_centesimos_pp`: `3000`
+  - `detalhe_RF_pai_S1_centesimos_pp`: `7500`
+  - `detalhe_RF_saldo_S1_centavos`: `30000`
+  - `detalhe_RF_carteira_res_RF_centesimos_pp`: `1000`
+  - `detalhe_RF_pai_res_RF_centesimos_pp`: `2500`
+  - `detalhe_RF_saldo_res_RF_centavos`: `10000`
+  - `detalhe_RF_sem_percentual`: `[]`
+
+#### CR-015-05 — Resíduo da subclasse no nível 3
+
+- **Entrega:** ciclo `015`. **Regras:** 15 (análises por instituição e níveis de classe).
+- **Entrada:** Renda fixa: ativo A = 18.000 ligado direto à subclasse S1, ativo B = 12.000 no tipo T1 (filho de S1) e ativo C = 10.000 ligado direto à macro; ativo D = 60.000 ligado direto a Renda variável.
+- **Passo a passo:** S = 100.000. Na fronteira dos níveis 3: o resíduo de S1 = 18,00%, T1 = 12,00%, o resíduo de Renda fixa = 10,00% e o resíduo de Renda variável = 60,00%. No detalhe de S1, a base local é 30.000: o resíduo = 60,00% e T1 = 40,00% do pai; apresentação por saldo, resíduo primeiro. Os 10.000 ligados direto à macro não entram no detalhe de S1.
+- **Esperado:**
+  - `raiz_RF_centesimos_pp`: `4000`
+  - `raiz_RV_centesimos_pp`: `6000`
+  - `raiz_linhas`: `["RV","RF"]`
+  - `detalhe_S1_base_centavos`: `30000`
+  - `detalhe_S1_linhas`: `["res_S1","T1"]`
+  - `detalhe_S1_carteira_T1_centesimos_pp`: `1200`
+  - `detalhe_S1_pai_T1_centesimos_pp`: `4000`
+  - `detalhe_S1_saldo_T1_centavos`: `12000`
+  - `detalhe_S1_carteira_res_S1_centesimos_pp`: `1800`
+  - `detalhe_S1_pai_res_S1_centesimos_pp`: `6000`
+  - `detalhe_S1_saldo_res_S1_centavos`: `18000`
+  - `detalhe_S1_sem_percentual`: `[]`
+
+#### CR-015-06 — Percentuais da carteira de um ramo não somam o pai
+
+- **Entrega:** ciclo `015`. **Regras:** 15 (análises por instituição e níveis de classe).
+- **Entrada:** Renda fixa com as subclasses C1, C2 e C3 e Renda variável com C4, C5 e C6, cada subclasse com um ativo de 100 (A a F).
+- **Passo a passo:** S = 600. Na raiz, cada macro soma 300 = 50,00%. Na fronteira dos níveis 2, cada subclasse tem piso 1.666 e resto igual: sobram 4 unidades, que vão a C1, C2, C3 e C4 pela ordem global (raízes na ordem fixa e irmãos pela ordem da árvore): C1 a C4 = 16,67% e C5 e C6 = 16,66%. Matematicamente os três filhos de Renda fixa somam 50,01% e os de Renda variável, 49,99%, sem que isso corrija o rateio nem a raiz. Localmente, cada macro divide 100,00% entre os três filhos: 33,34%, 33,33% e 33,33%. O detalhe lista só os três filhos, com as duas participações, sem linha do pai nem total; ao voltar à raiz, o pai continua com 300 e 50,00%.
+- **Esperado:**
+  - `raiz_RF_centesimos_pp`: `5000`
+  - `raiz_RV_centesimos_pp`: `5000`
+  - `raiz_linhas`: `["RF","RV"]`
+  - `detalhe_RF_base_centavos`: `300`
+  - `detalhe_RF_linhas`: `["C1","C2","C3"]`
+  - `detalhe_RF_carteira_C1_centesimos_pp`: `1667`
+  - `detalhe_RF_pai_C1_centesimos_pp`: `3334`
+  - `detalhe_RF_carteira_C2_centesimos_pp`: `1667`
+  - `detalhe_RF_pai_C2_centesimos_pp`: `3333`
+  - `detalhe_RF_carteira_C3_centesimos_pp`: `1667`
+  - `detalhe_RF_pai_C3_centesimos_pp`: `3333`
+  - `detalhe_RV_base_centavos`: `300`
+  - `detalhe_RV_linhas`: `["C4","C5","C6"]`
+  - `detalhe_RV_carteira_C4_centesimos_pp`: `1667`
+  - `detalhe_RV_pai_C4_centesimos_pp`: `3334`
+  - `detalhe_RV_carteira_C5_centesimos_pp`: `1666`
+  - `detalhe_RV_pai_C5_centesimos_pp`: `3333`
+  - `detalhe_RV_carteira_C6_centesimos_pp`: `1666`
+  - `detalhe_RV_pai_C6_centesimos_pp`: `3333`
+
+#### CR-015-07 — Empate de resto em classes pela ordem da árvore
+
+- **Entrega:** ciclo `015`. **Regras:** 15 (análises por instituição e níveis de classe).
+- **Entrada:** Renda fixa com as subclasses C1, C2 e C3 (nessa ordem na árvore) e um ativo em cada: A = 100, B = 700 e C = 400.
+- **Passo a passo:** S = 1.200. Pisos: C1 833 (resto 400), C2 5.833 (resto 400) e C3 3.333 (resto 400). Falta 1 unidade e os três restos empatam: pela ordem da árvore, vai a C1, que não é o maior saldo. C1 = 8,34%, C2 = 58,33% e C3 = 33,33%, nas duas bases (só há uma macro). Apresentação por saldo: C2, C3 e C1.
+- **Esperado:**
+  - `raiz_RF_centesimos_pp`: `10000`
+  - `raiz_linhas`: `["RF"]`
+  - `detalhe_RF_base_centavos`: `1200`
+  - `detalhe_RF_linhas`: `["C2","C3","C1"]`
+  - `detalhe_RF_carteira_C1_centesimos_pp`: `834`
+  - `detalhe_RF_pai_C1_centesimos_pp`: `834`
+  - `detalhe_RF_carteira_C2_centesimos_pp`: `5833`
+  - `detalhe_RF_pai_C2_centesimos_pp`: `5833`
+  - `detalhe_RF_carteira_C3_centesimos_pp`: `3333`
+  - `detalhe_RF_pai_C3_centesimos_pp`: `3333`
+
+#### CR-015-08 — Resíduo depois dos irmãos no empate
+
+- **Entrega:** ciclo `015`. **Regras:** 15 (análises por instituição e níveis de classe).
+- **Entrada:** Renda fixa com as subclasses S1 (ordem 1) e S2 (ordem 2), cujos UUID estão em ordem inversa à da árvore, um ativo de 10.000 em cada (A e B), e um ativo C de 10.000 ligado direto à macro.
+- **Passo a passo:** S = 30.000, três grupos iguais (S1, S2 e o resíduo de Renda fixa) com restos empatados e pisos de 3.333. A unidade que falta vai ao primeiro na ordem da árvore, em que o resíduo do pai vem depois dos filhos e os irmãos seguem a ordem da árvore, não o UUID: S1 = 33,34%, S2 = 33,33% e o resíduo = 33,33%, nas duas bases. Apresentação na mesma ordem.
+- **Esperado:**
+  - `raiz_RF_centesimos_pp`: `10000`
+  - `raiz_linhas`: `["RF"]`
+  - `detalhe_RF_base_centavos`: `30000`
+  - `detalhe_RF_linhas`: `["S1","S2","res_RF"]`
+  - `detalhe_RF_carteira_S1_centesimos_pp`: `3334`
+  - `detalhe_RF_pai_S1_centesimos_pp`: `3334`
+  - `detalhe_RF_carteira_S2_centesimos_pp`: `3333`
+  - `detalhe_RF_pai_S2_centesimos_pp`: `3333`
+  - `detalhe_RF_carteira_res_RF_centesimos_pp`: `3333`
+  - `detalhe_RF_pai_res_RF_centesimos_pp`: `3333`
+
+#### CR-015-09 — Sem saldo positivo
+
+- **Entrega:** ciclo `015`. **Regras:** 15 (análises por instituição e níveis de classe).
+- **Entrada:** (s1) por instituição: ativo A = −10.000 (Instituição A), B = −5.000 (sem instituição), C = 0 (Instituição A) e D = 0 (sem instituição). (s2) por classe: A = −10.000 na subclasse S1 de Renda fixa, B = −5.000 sem classe, C = 0 em S1 e D = 0 sem classe.
+- **Passo a passo:** S = 0 nos dois subcenários: não há divisão, rosca, participação nem total de 100%. Os negativos continuam listados, do mais negativo ao menos negativo (A, B) e os zeros são omitidos (C, D). No detalhe de Renda fixa (s2) não há linhas positivas nem base local; só o negativo do ramo (A) é listado, porque B não tem classe.
+- **Esperado:**
+  - `s1_base_positiva_centavos`: `0`
+  - `s1_linhas`: `[]`
+  - `s1_sem_percentual`: `["A","B"]`
+  - `s1_omitidos`: `["C","D"]`
+  - `s2_raiz_linhas`: `[]`
+  - `s2_raiz_sem_percentual`: `["A","B"]`
+  - `s2_raiz_omitidos`: `["C","D"]`
+  - `s2_detalhe_RF_base_centavos`: `0`
+  - `s2_detalhe_RF_linhas`: `[]`
+  - `s2_detalhe_RF_sem_percentual`: `["A"]`
+
+#### CR-015-10 — Linha única e participação que arredonda a zero
+
+- **Entrega:** ciclo `015`. **Regras:** 15 (análises por instituição e níveis de classe).
+- **Entrada:** (s1) por instituição: um único ativo positivo, A = 100, na Instituição A. (s2) A = 1 na Instituição A e B = 1.000.000 na Instituição B. (s3) por classe: A = 1 na subclasse S1 e B = 1.000.000 na S2, ambas de Renda fixa.
+- **Passo a passo:** (s1) A única linha positiva tem 10.000 unidades (100,00%). (s2) S = 1.000.001: a Instituição A tem piso 0 (resto 10.000) e a B, piso 9.999 (resto 990.001); a unidade que falta vai à B: 0,00% e 100,00%. A linha de 1 centavo continua listada, depois da maior. (s3) Mesmo resultado nas duas bases do detalhe de Renda fixa: S1 = 0,00% e S2 = 100,00%, com S1 visível.
+- **Esperado:**
+  - `s1_base_positiva_centavos`: `100`
+  - `s1_participacao_IA_centesimos_pp`: `10000`
+  - `s1_linhas`: `["IA"]`
+  - `s2_base_positiva_centavos`: `1000001`
+  - `s2_participacao_IA_centesimos_pp`: `0`
+  - `s2_participacao_IB_centesimos_pp`: `10000`
+  - `s2_linhas`: `["IB","IA"]`
+  - `s3_raiz_RF_centesimos_pp`: `10000`
+  - `s3_raiz_linhas`: `["RF"]`
+  - `s3_detalhe_RF_base_centavos`: `1000001`
+  - `s3_detalhe_RF_linhas`: `["S2","S1"]`
+  - `s3_detalhe_RF_carteira_S1_centesimos_pp`: `0`
+  - `s3_detalhe_RF_pai_S1_centesimos_pp`: `0`
+  - `s3_detalhe_RF_carteira_S2_centesimos_pp`: `10000`
+  - `s3_detalhe_RF_pai_S2_centesimos_pp`: `10000`
+
+#### CR-015-11 — Grupo acima do inteiro seguro
+
+- **Entrega:** ciclo `015`. **Regras:** 15 (análises por instituição e níveis de classe).
+- **Entrada:** Dois ativos de 9.007.199.254.740.991 cada: (s1) na mesma instituição; (s2) na mesma subclasse de Renda fixa.
+- **Passo a passo:** A soma do grupo é 18.014.398.509.481.982, acima do inteiro seguro, mantida em `bigint` e sem recusa: o grupo é a base inteira e tem 10.000 unidades (100,00%) nas duas bases.
+- **Esperado:**
+  - `s1_base_positiva_centavos`: `18014398509481982`
+  - `s1_participacao_IA_centesimos_pp`: `10000`
+  - `s1_saldo_IA_centavos`: `18014398509481982`
+  - `s1_linhas`: `["IA"]`
+  - `s1_sem_percentual`: `[]`
+  - `s1_omitidos`: `[]`
+  - `s2_raiz_RF_centesimos_pp`: `10000`
+  - `s2_raiz_linhas`: `["RF"]`
+  - `s2_detalhe_RF_base_centavos`: `18014398509481982`
+  - `s2_detalhe_RF_linhas`: `["S1"]`
+  - `s2_detalhe_RF_carteira_S1_centesimos_pp`: `10000`
+  - `s2_detalhe_RF_pai_S1_centesimos_pp`: `10000`
+  - `s2_detalhe_RF_saldo_S1_centavos`: `18014398509481982`
+  - `s2_detalhe_RF_sem_percentual`: `[]`
+
+#### CR-015-12 — Ativo hoje desativado e classificação ou instituição atuais
+
+- **Entrega:** ciclo `015`. **Regras:** 15 (análises por instituição e níveis de classe).
+- **Entrada:** O ativo A, hoje desativado, tem posição de 10.000 em M; o ativo B tem 10.000. (s1) A na Instituição A e B na Instituição B. (s2) as mesmas posições, depois que A passa à Instituição B. (s3) A na subclasse S1 e B em S2, de Renda fixa. (s4) as mesmas posições, depois que A passa a S2.
+- **Passo a passo:** O ativo desativado continua participando com o saldo de M nos quatro subcenários: a base é 20.000. Só o agrupamento atual muda: (s1) 50,00% e 50,00%; (s2) a Instituição B passa a 100,00%; (s3) S1 e S2 com 50,00% do pai e da carteira; (s4) S2 com 100,00%. Posição, M e retorno não mudam.
+- **Esperado:**
+  - `s1_base_positiva_centavos`: `20000`
+  - `s1_participacao_IA_centesimos_pp`: `5000`
+  - `s1_saldo_IA_centavos`: `10000`
+  - `s1_participacao_IB_centesimos_pp`: `5000`
+  - `s1_saldo_IB_centavos`: `10000`
+  - `s1_linhas`: `["IA","IB"]`
+  - `s1_sem_percentual`: `[]`
+  - `s1_omitidos`: `[]`
+  - `s2_base_positiva_centavos`: `20000`
+  - `s2_participacao_IB_centesimos_pp`: `10000`
+  - `s2_saldo_IB_centavos`: `20000`
+  - `s2_linhas`: `["IB"]`
+  - `s2_sem_percentual`: `[]`
+  - `s2_omitidos`: `[]`
+  - `s3_raiz_RF_centesimos_pp`: `10000`
+  - `s3_raiz_linhas`: `["RF"]`
+  - `s3_detalhe_RF_base_centavos`: `20000`
+  - `s3_detalhe_RF_linhas`: `["S1","S2"]`
+  - `s3_detalhe_RF_carteira_S1_centesimos_pp`: `5000`
+  - `s3_detalhe_RF_pai_S1_centesimos_pp`: `5000`
+  - `s3_detalhe_RF_saldo_S1_centavos`: `10000`
+  - `s3_detalhe_RF_carteira_S2_centesimos_pp`: `5000`
+  - `s3_detalhe_RF_pai_S2_centesimos_pp`: `5000`
+  - `s3_detalhe_RF_saldo_S2_centavos`: `10000`
+  - `s3_detalhe_RF_sem_percentual`: `[]`
+  - `s4_raiz_RF_centesimos_pp`: `10000`
+  - `s4_raiz_linhas`: `["RF"]`
+  - `s4_detalhe_RF_base_centavos`: `20000`
+  - `s4_detalhe_RF_linhas`: `["S2"]`
+  - `s4_detalhe_RF_carteira_S2_centesimos_pp`: `10000`
+  - `s4_detalhe_RF_pai_S2_centesimos_pp`: `10000`
+  - `s4_detalhe_RF_saldo_S2_centavos`: `20000`
+  - `s4_detalhe_RF_sem_percentual`: `[]`
+
+#### CR-015-13 — Nós homônimos em ramos diferentes e referências inválidas
+
+- **Entrega:** ciclo `015`. **Regras:** 15 (análises por instituição e níveis de classe).
+- **Entrada:** (s1) um nó chamado Duplicado sob Renda fixa e outro, com o mesmo nome, sob Renda variável, cada um com um ativo de 10.000 (A e B). (s2) um ativo cuja instituição não existe no catálogo lido. (s3) um ativo ligado a um nó que não existe na árvore. (s4) um ativo ligado a um nó de nível 3 cujo pai é uma classe macro (encadeamento inválido).
+- **Passo a passo:** (s1) Os nós de mesmo nome não se misturam: a identidade é o UUID e o caminho distingue os dois (Renda fixa › Duplicado e Renda variável › Duplicado); cada detalhe mostra o seu, com 50,00% da carteira e 100,00% do pai. (s2) a (s4) A visão é recusada: ID sem entrada legível e nó ou caminho inválido nunca viram Sem instituição nem Sem classe.
+- **Esperado:**
+  - `s1_raiz_RF_centesimos_pp`: `5000`
+  - `s1_raiz_RV_centesimos_pp`: `5000`
+  - `s1_raiz_linhas`: `["RF","RV"]`
+  - `s1_detalhe_RF_base_centavos`: `10000`
+  - `s1_detalhe_RF_linhas`: `["D1"]`
+  - `s1_detalhe_RF_carteira_D1_centesimos_pp`: `5000`
+  - `s1_detalhe_RF_pai_D1_centesimos_pp`: `10000`
+  - `s1_detalhe_RF_caminhos`: `["Renda fixa › Duplicado"]`
+  - `s1_detalhe_RV_base_centavos`: `10000`
+  - `s1_detalhe_RV_linhas`: `["D2"]`
+  - `s1_detalhe_RV_carteira_D2_centesimos_pp`: `5000`
+  - `s1_detalhe_RV_pai_D2_centesimos_pp`: `10000`
+  - `s1_detalhe_RV_caminhos`: `["Renda variável › Duplicado"]`
+  - `s2_resultado`: `recusada`
+  - `s3_resultado`: `recusada`
+  - `s4_resultado`: `recusada`
+
+#### CR-015-14 — Renomear muda o desempate por ativo, não instituição nem classe
+
+- **Entrega:** ciclo `015`. **Regras:** 15 (análises por instituição e níveis de classe).
+- **Entrada:** Três ativos A, B e C de 10.000 cada, chamados Ativo A, Ativo B e Ativo C. (s1) distribuição por ativo. (s2) a mesma, depois de renomear o ativo A para Ativo Z. (s3) por instituição, com os três na Instituição A e o ativo A já renomeado. (s4) por classe, com os três na subclasse S1 de Renda fixa e o ativo A já renomeado.
+- **Passo a passo:** (s1) Pisos de 3.333 e restos iguais; o desempate por ativo é saldo, nome e UUID: A recebe a unidade (33,34%). (s2) Com o novo nome, a ordem é B, C e A (Ativo Z): B recebe a unidade (33,34%) e A passa a 33,33%; cada saldo e a soma permanecem. É o efeito aceito da renomeação (decisão 8 da ideação do ciclo `015`), não uma regressão. (s3) e (s4) Os três ativos caem no mesmo grupo: 100,00%, e nenhum nome de ativo decide o rateio.
+- **Esperado:**
+  - `s1_participacao_A_centesimos_pp`: `3334`
+  - `s1_participacao_B_centesimos_pp`: `3333`
+  - `s1_participacao_C_centesimos_pp`: `3333`
+  - `s1_principais`: `["A","B","C"]`
+  - `s2_participacao_B_centesimos_pp`: `3334`
+  - `s2_participacao_C_centesimos_pp`: `3333`
+  - `s2_participacao_A_centesimos_pp`: `3333`
+  - `s2_principais`: `["B","C","A"]`
+  - `s3_base_positiva_centavos`: `30000`
+  - `s3_participacao_IA_centesimos_pp`: `10000`
+  - `s3_linhas`: `["IA"]`
+  - `s4_raiz_RF_centesimos_pp`: `10000`
+  - `s4_raiz_linhas`: `["RF"]`
+  - `s4_detalhe_RF_base_centavos`: `30000`
+  - `s4_detalhe_RF_linhas`: `["S1"]`
+  - `s4_detalhe_RF_carteira_S1_centesimos_pp`: `10000`
+  - `s4_detalhe_RF_pai_S1_centesimos_pp`: `10000`
+
+#### CR-015-15 — Renomear instituição muda o desempate; nome igual desempata pelo UUID
+
+- **Entrega:** ciclo `015`. **Regras:** 15 (análises por instituição e níveis de classe).
+- **Entrada:** Três ativos de 10.000 cada (A, B e C), um em cada instituição IA, IB e IC. (s1) nomes Instituição A, B e C. (s2) a IA renomeada para Instituição Z. (s3) a IA e a IB com o mesmo nome (Instituição Igual), IB com o UUID menor, e a IC chamada Instituição Zeta.
+- **Passo a passo:** S = 30.000, pisos de 3.333 e restos iguais: a unidade que falta vai à primeira instituição na ordem de desempate, por nome em pt-BR. (s1) A, B, C: IA = 33,34%. (s2) Depois de renomear, a ordem é B, C, Z: IB = 33,34% e a IA passa a 33,33%; a identidade (UUID) não muda. (s3) Nomes iguais desempatam pelo UUID em ordem de texto: IB (UUID menor) = 33,34%, IA e IC = 33,33%. Que a renomeação altere o centésimo é consequência aceita da regra por nome (D1).
+- **Esperado:**
+  - `s1_base_positiva_centavos`: `30000`
+  - `s1_participacao_IA_centesimos_pp`: `3334`
+  - `s1_participacao_IB_centesimos_pp`: `3333`
+  - `s1_participacao_IC_centesimos_pp`: `3333`
+  - `s1_linhas`: `["IA","IB","IC"]`
+  - `s2_base_positiva_centavos`: `30000`
+  - `s2_participacao_IB_centesimos_pp`: `3334`
+  - `s2_participacao_IC_centesimos_pp`: `3333`
+  - `s2_participacao_IA_centesimos_pp`: `3333`
+  - `s2_linhas`: `["IB","IC","IA"]`
+  - `s3_base_positiva_centavos`: `30000`
+  - `s3_participacao_IB_centesimos_pp`: `3334`
+  - `s3_participacao_IA_centesimos_pp`: `3333`
+  - `s3_participacao_IC_centesimos_pp`: `3333`
+  - `s3_linhas`: `["IB","IA","IC"]`
+
+#### CR-015-16 — Empate de resto institucional pela ordem, não pelo maior saldo
+
+- **Entrega:** ciclo `015`. **Regras:** 15 (análises por instituição e níveis de classe).
+- **Entrada:** Instituição A: ativo A = 100; Instituição B: ativo B = 700; sem instituição: ativo C = 400. A ordem de apresentação é diferente da ordem de desempate.
+- **Passo a passo:** S = 1.200. Pisos: A 833, B 5.833 e Sem instituição 3.333, os três com resto 400. Falta 1 unidade e o empate de resto usa a ordem de desempate (instituições por nome e UUID, depois Sem instituição), não o maior saldo: vai à Instituição A. A = 8,34%, B = 58,33% e Sem instituição = 33,33%. A apresentação por saldo é B, Sem instituição e A; a alternativa descartada (desempatar pelo maior saldo) daria 58,34% à B.
+- **Esperado:**
+  - `base_positiva_centavos`: `1200`
+  - `participacao_IA_centesimos_pp`: `834`
+  - `saldo_IA_centavos`: `100`
+  - `participacao_IB_centesimos_pp`: `5833`
+  - `saldo_IB_centavos`: `700`
+  - `participacao_SI_centesimos_pp`: `3333`
+  - `saldo_SI_centavos`: `400`
+  - `linhas`: `["IB","SI","IA"]`
+  - `sem_percentual`: `[]`
+  - `omitidos`: `[]`
+
 ### 15. Apresentação do Início (P17 a P19 do ciclo `004`)
 
 Regras de apresentação decididas pelo responsável em 2026-10-14, na correção da rodada 1 do plano do ciclo `004`. Elas só escolhem os limites e o que somar; os cálculos são os das seções 7 e 8.
@@ -1313,6 +1643,19 @@ Todo período passa pelo período efetivo (K8) e pela regra do `N/D` (K1) da se�
 4. **Linhas e base.** Cada linha soma os saldos positivos dos seus ativos; linha sem positivo não aparece. S é a soma das linhas, em `bigint`; uma linha e a base podem passar da faixa de uma posição (CR-C09, CR-C12).
 5. **Participação (P6).** Com S > 0, cada linha de valor V tem piso ⌊V × 10000 ÷ S⌋ e resto (V × 10000) mod S. As unidades que faltam vão aos maiores restos; **empate de resto pela ordem fixa do item 1, mesmo com saldos diferentes** (CR-C10). É uma diferença deliberada em relação à distribuição por ativo, cujo empate de resto segue a ordem de apresentação. As linhas somam exatamente 10000.
 6. **Apresentação.** Linhas por saldo decrescente; empate de saldo pela ordem fixa. Não há rateio por ativo nem agrupamento em Outros: até oito linhas. Com S = 0, não há participação nem rosca; os negativos continuam listados.
+
+**Análises por instituição e níveis de classe (ciclo `015`).** Decididas pelo responsável em 2026-10-27: as decisões 1 a 8 da ideação do ciclo `015` e D1 e D2 do Registro de decisões do plano. É só alocação e apresentação do mês M, ao lado da distribuição por ativo e da alocação macro, que não mudam. Casos CR-015-01 a CR-015-16.
+
+1. **Entradas e bases.** Todas as posições de M, inclusive de ativos hoje desativados, passam pela fronteira (`Number.isSafeInteger`) e viram `bigint` antes de qualquer soma. Negativos saem por ativo e zeros são omitidos antes de agrupar. S é a soma exata de todos os positivos, incluindo Sem instituição, Sem classe e Em trânsito; um grupo e S podem passar da faixa de uma posição (CR-015-11). Nada passa por ponto flutuante.
+2. **Instituição.** Cada positivo vai para a instituição atual, pelo ID; para Sem instituição, quando o vínculo é nulo; ou para Em trânsito, com precedência, quando é o ativo de sistema. ID não nulo sem entrada legível no catálogo torna a visão indisponível, nunca vira Sem instituição (CR-015-13). Nomes não são identidade.
+3. **Fronteiras de classe.** A raiz mantém as oito linhas da alocação macro. Na profundidade 2, todo positivo classificado no nível 2 ou 3 sobe ao ancestral de nível 2; o vínculo direto a uma macro forma o resíduo dessa macro. Na profundidade 3, o vínculo a um tipo vai ao tipo; o vínculo direto a uma subclasse forma o resíduo da subclasse, e o vínculo direto a uma macro continua no resíduo da macro. Em trânsito e Sem classe são grupos próprios em ambas as fronteiras. Cada positivo entra exatamente uma vez em cada fronteira, e a soma dos grupos de cada uma é S. Nó inexistente ou encadeamento inválido torna a visão indisponível, nunca vira Sem classe (CR-015-13).
+4. **Ordem de desempate (D1).** Instituições: nome em ordem crescente do português (pt-BR) e, no empate, UUID canônico em ordem de texto, depois Sem instituição e Em trânsito. Classes: as raízes na ordem fixa das classes macro; dentro de cada ramo, os irmãos pela ordem da árvore e o resíduo do pai depois dos filhos; Em trânsito e Sem classe por último; o UUID é a salvaguarda final. Renomear um nó não muda esta ordem; renomear uma instituição pode mudar (CR-015-15). Os grupos são apresentados por saldo decrescente e, no empate, por esta ordem.
+5. **Maior resto.** Para uma partição positiva de base B, cada grupo de valor V tem piso ⌊V × 10000 ÷ B⌋ e resto (V × 10000) mod B, em `bigint`, somados os saldos do grupo antes do rateio. As unidades que faltam vão aos maiores restos; **o empate de resto usa a ordem do item 4 diretamente, mesmo com saldos diferentes** (CR-015-07, CR-015-16). A participação é um inteiro de centésimos de ponto percentual, apresentado com duas casas, sem novo arredondamento.
+6. **Duas bases independentes (D2).** "% da carteira" na raiz é o rateio macro. No detalhe, é o rateio entre todos os grupos da carteira na mesma profundidade (item 3), feito antes de escolher o ramo. "% do pai" é outro rateio, só entre os filhos imediatos positivos do pai e seu resíduo positivo, com base no total positivo do pai. Cada conjunto soma 10000. Os valores dos filhos mais o resíduo reconciliam exatamente com o pai, mas seus percentuais da carteira, arredondados, podem somar um centésimo a mais ou a menos que o do pai (CR-015-06). Um percentual nunca é derivado do outro, nem recalculado só entre os filhos do ramo visitado.
+7. **Limites e resíduos.** Só macro e subclasse têm detalhamento; o tipo é terminal. O resíduo "Classificado somente neste nível" é o vínculo direto ao pai, é terminal e nunca é repartido entre os filhos. Em trânsito e Sem classe também são terminais. Um positivo cuja participação arredonda a 0,00% continua listado (CR-015-10).
+8. **Negativos e ausência de base.** Negativos são listados por ativo, sem participação, com a ordem e os desempates da distribuição por ativo (saldo crescente, nome e UUID), e nunca compensam um grupo positivo. No detalhe de um pai, listam-se os negativos do ramo. Sem positivos, não há divisão nem total de 100%, e os negativos continuam listados (CR-015-09). Um pai sem positivos não tem linhas nem percentuais, mas mantém os negativos do ramo.
+9. **Nome.** A renomeação de um ativo muda o nome exibido e pode mudar o centésimo da distribuição por ativo, cujo desempate usa o nome (CR-015-14). As análises por instituição e por classe agregam antes de ratear e não usam nome de ativo.
+10. **Outros.** Na visão por instituição, depois do rateio, as cinco maiores linhas positivas (grupos especiais incluídos) são fatias e as demais formam Outros, cujos saldo e participação são as somas exatas dos componentes, sem novo rateio; cada componente mantém a participação sobre S.
 
 ### 16. Migração da origem (M1 a M10 do ciclo `006`)
 
@@ -1477,6 +1820,7 @@ Estas regras foram aprovadas no plano do ciclo `006` e implementadas na simulaç
 | Plano do ciclo `006` | Regras M1 a M10 da simulação da migração (issue #63) M6 revisada com a exceção à K12 (issue #73) e M10 revisada com a posição implícita zero (issue #76) | `_project/executed/006_migracao_dados_virada/006_plan.md`, `v3` aprovada em 2026-10-17, `v4` e `v5` aprovadas em 2026-10-18 | Autoridade das decisões; a seção 16 as especifica |
 | Plano do ciclo `010` | Regra da distribuição por ativo (Q1 a Q3, alternativa A e desempate por UUID) e casos CR-53 a CR-61 | `_project/executed/010_novidades_privacidade_ativos_distribuicao/010_plan.md`, `v2` aprovada em 2026-10-21 | Autoridade das decisões; a seção 15 as especifica |
 | Plano do ciclo `013` | Regra da alocação por classe macro (D4.2, D12 e D13 da ideação; P2 e P6 do Registro de aprovação) e casos CR-C01 a CR-C12 | `_project/executed/013_taxonomia_classes_alocacao/013_plan.md`, `v2` aprovada em 2026-10-26 | Autoridade das decisões; a seção 15 as especifica |
+| Plano do ciclo `015` | Regras das análises por instituição e níveis de classe (decisões 1 a 8 da ideação; D1 e D2 do Registro de decisões) e casos CR-015-01 a CR-015-16 | `_project/drafts/015_analises_instituicao_niveis_classe/015_plan.md`, `v2` aprovada em 2026-10-27 | Autoridade das decisões; a seção 15 as especifica |
 | `design-system/DESIGN.md`, seções 6.3 a 6.5 | Formato brasileiro, sinal e `N/D` | Versão vigente em `main` | Contrato visual |
 
 ## Histórico
@@ -1493,3 +1837,4 @@ Estas regras foram aprovadas no plano do ciclo `006` e implementadas na simulaç
 | 2026-10-21 | `010` | Issue #107: distribuição por ativo na seção 15 (participação em centésimos de p.p. pelo maior resto, antes de agrupar, com desempate por saldo, nome e UUID), exceções nas seções 1 e 2, convenções e casos CR-53 a CR-61 na seção 14 |
 | 2026-10-23 | `012` | Issue #128 (BL-009): seção 4.1 registra os atributos descritivos do ativo (instituição, classe e indicadores) e que nenhuma regra desta KB os lê |
 | 2026-10-26 | `013` | Issue #139 (BL-014 e parcela de BL-009): alocação por classe macro na seção 15 (classificação atual, negativos por ativo antes de agrupar, empate de resto pela ordem fixa das oito linhas), convenção e casos CR-C01 a CR-C12 na seção 14 |
+| 2026-10-27 | `015` | Issue #152 (parcela de BL-009): análises por instituição e níveis de classe na seção 15 (instituição atual, fronteiras de profundidade 2 e 3 com resíduos, desempate pela ordem da árvore e por nome, duas bases de participação, Outros após o rateio), convenção e casos CR-015-01 a CR-015-16 na seção 14 |

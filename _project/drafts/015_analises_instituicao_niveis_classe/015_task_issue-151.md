@@ -2,13 +2,13 @@
 
 > **Ciclo:** `015`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#151`
 > **Plano:** `_project/drafts/015_analises_instituicao_niveis_classe/015_plan.md`
 > **Branch:** `feature/issue-151`
 > **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/155
-> **Integração:** `Pendente`
+> **Integração:** PR #155 integrada por squash (`1e216d7a8497673dd9cfd209fa6767e0680fe395`) em 2026-10-27, com todos os checks verdes; ação externa E1 pendente; issue #151 aberta até o encerramento do ciclo
 > **Autorização inicial:** "autorizo a implementação da issue #151" em 2026-10-27
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-27
@@ -62,7 +62,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 | Testes | Banco: 535/535; governança: 48/48; unitários: 405/405; lint sem erros (3 avisos preexistentes em local/), typecheck e build passaram; e2e autenticado sobre build: 208 passed, 12 skipped (preview sem backend), 1 flaky aprovado no retry; saída 0, dois workers |
 | Validador | 0 erros, 0 avisos; conferências manuais realizadas |
 | `git diff --check` | Passou |
-| Checks remotos | Em execução; conferir o head atual na PR #155 antes do merge |
+| Checks remotos | Verdes na PR #155 antes do merge: governança, lint/tipos/testes/build/e2e de preview, banco e e2e autenticado, Vercel |
 
 ## Revisão da correção
 
@@ -104,10 +104,10 @@ Não se aplica — ciclo completo; encerramento em PR própria após E1 e demais
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 015 (completo)
+Situação: Aguardando ação externa — ciclo 015 (completo)
 Quem: Responsável
-Conferir: checks, diff e roteiro E1 da PR #155 — https://github.com/EuThiagoAndrade/saldo-futuro/pull/155
-Diga: "aprovo o merge da PR #155"
+Conferir: Roteiro E1 desta task, com a migração `20261027220000_metadados_nome_ativo.sql` como única pendente
+Diga: "concluí a ação externa da issue #151"
 ```
 
 ## Handoff de saída
