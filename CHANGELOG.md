@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.10.0](https://github.com/EuThiagoAndrade/saldo-futuro/compare/v0.9.0...v0.10.0) (2026-10-27)
+
+
+### Features
+
+* **issue-137:** implantar taxonomia global e transição dos vínculos de ativos ([#140](https://github.com/EuThiagoAndrade/saldo-futuro/issues/140)) ([c7fc48f](https://github.com/EuThiagoAndrade/saldo-futuro/commit/c7fc48f4f4f547ce9e768d4468bef6b4689cfa2e))
+* **issue-138:** usar a taxonomia no cadastro e congelar as classes legadas ([#142](https://github.com/EuThiagoAndrade/saldo-futuro/issues/142)) ([3dd6091](https://github.com/EuThiagoAndrade/saldo-futuro/commit/3dd60910ace387d03a2cff878f2ea0e9acd816a6))
+* **issue-139:** exibir alocação por classe macro no Início ([#147](https://github.com/EuThiagoAndrade/saldo-futuro/issues/147)) ([64af18b](https://github.com/EuThiagoAndrade/saldo-futuro/commit/64af18b310e971911568228f87963affe95248be)), closes [#139](https://github.com/EuThiagoAndrade/saldo-futuro/issues/139)
+* **issue-144:** ampliar a árvore da taxonomia de classes de ativos ([#145](https://github.com/EuThiagoAndrade/saldo-futuro/issues/145)) ([c34124d](https://github.com/EuThiagoAndrade/saldo-futuro/commit/c34124d784737587357a71526252ced2cb0f1c4d)), closes [#144](https://github.com/EuThiagoAndrade/saldo-futuro/issues/144)
+
 ## [0.9.0](https://github.com/EuThiagoAndrade/saldo-futuro/compare/v0.8.0...v0.9.0) (2026-10-25)
 
 
