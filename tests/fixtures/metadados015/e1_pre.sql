@@ -1,0 +1,2 @@
+-- Inspeção de estrutura; nenhum dado de carteira.
+select exists(select 1 from information_schema.columns where table_schema='public' and table_name='profiles' and column_name='versao_metadados') as contador_disponivel, to_regprocedure('public.ler_versao_metadados()') is not null as leitura_disponivel, to_regprocedure('public.editar_ativo_com_nome(uuid,text,uuid,text,uuid,boolean,boolean,boolean,boolean)') is not null as edicao_disponivel;
