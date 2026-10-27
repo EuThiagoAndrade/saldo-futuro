@@ -16,6 +16,13 @@ export const VERSAO_ATUAL: string = pacote.version;
 
 export const HISTORICO: readonly Novidade[] = [
   {
+    versao: "0.10.0",
+    publicadaEm: null,
+    notas: [
+      "A lista de classes de ativo ficou bem mais completa: produtos do Tesouro, poupança, estratégias de fundos, segmentos de fundos imobiliários, investimentos no exterior, criptoativos, imóveis e outros alternativos. Busque pelo nome na classe do ativo.",
+    ],
+  },
+  {
     versao: "0.9.0",
     publicadaEm: "2026-10-24",
     notas: [

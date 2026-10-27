@@ -1,7 +1,7 @@
 # Plano de Implementação — Ampliação da árvore da taxonomia de classes de ativos
 
 > **Ciclo:** `014`
-> **Status:** `Aprovado`
+> **Status:** `Em Execução`
 > **Versão:** `v3`
 > **Data de criação:** 2026-10-26
 > **Última atualização:** 2026-10-26
@@ -352,7 +352,7 @@ Gates documentais (Node 24): `node --test scripts/validate-governance.test.mjs`,
 
 ## Decomposição em issues e PRs
 
-Nenhum número alocado. O payload é apresentado e confirmado depois da integração documental.
+Payload confirmado pelo responsável em 2026-10-26, depois da integração documental (PR #143); issue criada: [#144](https://github.com/EuThiagoAndrade/saldo-futuro/issues/144).
 
 | Unidade | Título proposto | Dependência | PR e fechamento |
 | :-- | :-- | :-- | :-- |
@@ -408,31 +408,33 @@ Paralelismo com o ciclo `013`: a unidade 3 (#139) e este ciclo podem tocar a KB-
 
 | Campo | Valor |
 | :-- | :-- |
-| Issue(s) | — |
-| PR(s) | [#143](https://github.com/EuThiagoAndrade/saldo-futuro/pull/143) — documental |
-| Branch(es) | `chore/cycle-014-plan` |
+| Issue(s) | [#144](https://github.com/EuThiagoAndrade/saldo-futuro/issues/144) (unidade 1) |
+| PR(s) | [#143](https://github.com/EuThiagoAndrade/saldo-futuro/pull/143) — documental, integrada; unidade 1: [#145](https://github.com/EuThiagoAndrade/saldo-futuro/pull/145) |
+| Branch(es) | `chore/cycle-014-plan` (integrada); `feature/issue-144` |
 | Destino após conclusão | `_project/executed/014_ampliacao_arvore_taxonomia/014_plan.md` |
 
 ## Próximo passo
+
+O artefato ativo do ciclo passou a ser a task `014_task_issue-144.md`; este bloco a acompanha.
 
 ```text
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 014 (completo)
 Quem: Responsável
-Conferir: checks e diff da PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/143
-Diga: "aprovo o merge da PR #143"
+Conferir: checks e diff da PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/145
+Diga: "aprovo o merge da PR #145"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 014 + aprovar_plano + 014_plan + v3`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 014 + criar_issues + feature/unidade-1 + 014_plan v3`
 - `effect_class`: `remote_mutation`
-- `state_before`: plano v3 Em Revisão, rodada 3 APTO PARA APROVAÇÃO, aprovação pendente; Aguardando aprovação do plano; `main` e `origin/main` em `3dd60910ace387d03a2cff878f2ea0e9acd816a6`; sem branch nem PR do ciclo (`git ls-remote` e `gh pr list` vazios).
-- `state_after`: plano v3 Aprovado pela manifestação de 2026-10-26, com X1 a X4 confirmadas (Registro de aprovação). PR documental #143 publicada na branch `chore/cycle-014-plan`, com ideação, plano e `cycles.md`. Aguardando checks e aprovação específica do merge; issue e implementação não autorizadas.
+- `state_before`: plano v3 Aprovado; PR documental #143 integrada por squash em `346a93aa686bcb6c3851b7edcdc18ceb0916aa46`, com checks verdes; nenhuma issue do ciclo (busca por título vazia); payload confirmado pelo responsável.
+- `state_after`: issue #144 aberta com o payload confirmado, no formulário Feature; plano com a issue registrada localmente em `main`, sem commit (segue na branch da entrega, como no ciclo `013`); implementação não autorizada.
 - `result`: `executed`
-- `evidence`: Registro de aprovação e rodadas 1 a 3 preservadas; gates antes da publicação: governança 48/48, validador com 0 erros e 0 avisos, `git diff --check` sem erros; PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/143.
-- `blockers`: o merge depende de checks verdes e da aprovação específica; a issue depende da integração documental e da confirmação do payload.
+- `evidence`: https://github.com/EuThiagoAndrade/saldo-futuro/issues/144 conferida por `gh issue view` (aberta, título igual ao payload); PR https://github.com/EuThiagoAndrade/saldo-futuro/pull/143 integrada.
+- `blockers`: a implementação depende de "autorizo a implementação da issue #144".
 
 ## Revisão crítica
 

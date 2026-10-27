@@ -60,6 +60,20 @@ test.describe("detalhes dos ativos (#128)", () => {
       "Renda fixa › Crédito bancário › CDB",
       "Renda fixa › Crédito bancário › RDB",
       "Renda fixa › Crédito bancário › Letras bancárias",
+      "Renda fixa › Crédito bancário › Poupança",
+      "Renda fixa › Crédito bancário › Operações compromissadas",
+      "Renda fixa › Crédito bancário › Certificados de operações estruturadas",
+      // O caminho inteiro é pesquisado: o nome do tipo também casa, mesmo sob outro pai.
+      "Renda fixa › Crédito corporativo › Cédulas de crédito bancário",
+    ]);
+    // Os produtos do Tesouro, acrescentados no ciclo 014 (issue #144), saem pelo nome.
+    await classe.fill("tesouro");
+    await expect(page.getByRole("listbox").getByRole("option")).toHaveText([
+      "Renda fixa › Dívida soberana › Tesouro Selic",
+      "Renda fixa › Dívida soberana › Tesouro Prefixado",
+      "Renda fixa › Dívida soberana › Tesouro IPCA+",
+      "Renda fixa › Dívida soberana › Tesouro Renda+",
+      "Renda fixa › Dívida soberana › Tesouro Educa+",
     ]);
     await classe.fill("cdb");
     await opcao(page, CAMINHO_CDB).click();

@@ -61,6 +61,21 @@ describe("montarTaxonomia", () => {
     // Sem criação: texto sem correspondência não oferece nada.
     expect(listaFiltrada({ opcoes }, "inexistente")).toEqual([]);
   });
+
+  it("ordena irmãos pela ordem numérica, inclusive acima de 9, e distingue o mesmo nome sob pais diferentes", () => {
+    // Como na árvore ampliada no ciclo 014 (issue #144): filhos acrescentados depois dos antigos, com ordem de
+    // dois dígitos, e nomes repetidos em pais distintos.
+    const ampliada: NoTaxonomia[] = [
+      ...nos,
+      { id: "t10", parent_id: "s2", nivel: 3, nome: "Tipo Dez", ordem: 10 },
+      { id: "t9", parent_id: "s2", nivel: 3, nome: "Tipo Nove", ordem: 9 },
+      { id: "s3", parent_id: "r2", nivel: 2, nome: "Subclasse Dois", ordem: 1 },
+    ];
+    const t = montarTaxonomia(ampliada);
+    expect(t.opcoes.map((o) => o.id)).toEqual(["r1", "s1", "s2", "t2", "t3", "t9", "t10", "r2", "s3"]);
+    expect(t.caminho("s2")).toBe("Classe Um › Subclasse Dois");
+    expect(t.caminho("s3")).toBe("Classe Dois › Subclasse Dois");
+  });
 });
 
 describe("classeDoAtivo", () => {
