@@ -260,7 +260,7 @@ Mapa prospectivo, não lista de mudanças já executadas:
 
 ## Decomposição em issues e PRs
 
-Nenhuma issue foi criada. A publicação documental foi autorizada pela aprovação pós-revisão; seu número/URL serão registrados após a criação observada no GitHub. Os títulos abaixo são payloads propostos; descrição/aceite/barreiras serão apresentados para confirmação depois do plano integrado.
+Nenhuma issue foi criada. A publicação documental, autorizada pela aprovação pós-revisão, está na [PR #150](https://github.com/EuThiagoAndrade/saldo-futuro/pull/150), aberta contra main na branch `chore/cycle-015-plan`. Os títulos abaixo são payloads propostos; descrição/aceite/barreiras serão apresentados para confirmação depois do plano integrado.
 
 | Unidade | Título proposto | Dependência | Entrega e fechamento |
 | :-- | :-- | :-- | :-- |
@@ -276,7 +276,7 @@ Issues usam branch `feature/issue-N` e commit `feat(issue-N):`; documentação u
 
 ## Dependências e blockers
 
-Rodada 1 emitiu `REQUER NOVA RODADA`, com um bloqueador e três ressalvas; a correção v2 respondeu R1-1 a R1-4 e a Rodada 2 confirmou todos resolvidos, com `APTO PARA APROVAÇÃO` e nenhum achado novo. A aprovação humana posterior foi recebida em 2026-10-27 e registrada acima. D1/D2 permanecem. Publicação/merge documental, confirmação dos payloads e autorizações por issue são as próximas precondições, sem bloqueio conhecido para preparar a PR. Ferramentas, Docker e Supabase precisam ser conferidos na implementação; sua disponibilidade ainda não foi testada para este ciclo. Nenhum pacote ou checkout externo novo é previsto.
+Rodada 1 emitiu `REQUER NOVA RODADA`, com um bloqueador e três ressalvas; a correção v2 respondeu R1-1 a R1-4 e a Rodada 2 confirmou todos resolvidos, com `APTO PARA APROVAÇÃO` e nenhum achado novo. A aprovação humana posterior foi recebida em 2026-10-27 e registrada acima. D1/D2 permanecem. A PR documental #150 foi publicada; sua integração exige checks verdes no head corrente e aprovação própria do merge. Depois dela, confirmação dos payloads e autorizações por issue continuam pendentes. Ferramentas, Docker e Supabase precisam ser conferidos na implementação; sua disponibilidade ainda não foi testada para este ciclo. Nenhum pacote ou checkout externo novo é previsto.
 
 ### E1 — Ação externa depois da unidade A
 
@@ -338,7 +338,7 @@ Após autorização específica e deploy compatível confirmado, o responsável 
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | — (A–D propostas, ainda não criadas) |
-| PR(s) | — |
+| PR(s) | [#150 — publicação documental](https://github.com/EuThiagoAndrade/saldo-futuro/pull/150), aberta; nenhuma implementação iniciada |
 | Branch(es) | `chore/cycle-015-plan`, publicação documental sobre `84f0a5ea107f33e0de5c506b3ea0825346f6e58e`, base main conferida no remoto |
 | Revisão de origem | `84f0a5ea107f33e0de5c506b3ea0825346f6e58e`, com ideação e reserva locais preexistentes |
 | Destino após conclusão | `_project/executed/015_analises_instituicao_niveis_classe/015_plan.md` |
@@ -347,22 +347,22 @@ Após autorização específica e deploy compatível confirmado, o responsável 
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 015 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 015"
+Situação: Aguardando merge — ciclo 015 (completo)
+Quem: Responsável
+Conferir: checks e diff da PR #150 — https://github.com/EuThiagoAndrade/saldo-futuro/pull/150; somente ideação, plano aprovado e registro do ciclo
+Diga: "aprovo o merge da PR #150"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 015 + aprovar_plano + 015_plan + v2`
-- `effect_class`: `local_mutation`
+- `effect_class`: `remote_mutation`
 - `state_before`: v2 Em Revisão; Rodada 2 APTO PARA APROVAÇÃO, sem novos achados; Aguardando aprovação do plano; main/local e origin/main em `84f0a5ea107f33e0de5c506b3ea0825346f6e58e`; ideação, plano e reserva locais sem commit; nenhuma PR documental existente para a branch, conforme consulta ao GitHub.
-- `state_after`: v2 Aprovado por manifestação humana posterior de 2026-10-27; ciclo 015 permanece em Planejamento, próximo ciclo 016; branch documental criada e publicação autorizada em preparação; nenhuma implementação iniciada.
+- `state_after`: v2 Aprovado por manifestação humana posterior de 2026-10-27; ciclo 015 permanece em Planejamento, próximo ciclo 016; branch documental publicada e PR #150 aberta contra main; nenhuma issue criada nem implementação iniciada. Merge documental aguarda checks verdes no head corrente e autorização própria.
 - `result`: `executed`
-- `evidence`: frase de aprovação e veredito da Rodada 2 registrados; `git fetch origin` e consulta `gh pr list --state all --head chore/cycle-015-plan` confirmaram base e ausência de duplicidade; escopo, decisões e rodadas preservados. Gates documentais da aprovação: 48/48 testes de governança com TEMP/TMP locais ao processo em `local/tmp-governance-015`; validador com 0 erros e 0 avisos; `git diff --cached --check` e `git diff --check` passaram; staging limitado a ideação, plano e registro do ciclo. Nenhum dado real incluído.
-- `blockers`: nenhum para publicar o lote documental; merge próprio, confirmação de payloads e autorizações de implementação continuam pendentes.
+- `evidence`: frase de aprovação e veredito da Rodada 2 registrados; `git fetch origin` e consulta de PRs por branch confirmaram base e ausência de duplicidade; escopo, decisões e rodadas preservados. Push e criação confirmados em https://github.com/EuThiagoAndrade/saldo-futuro/pull/150; `gh pr view 150` conferiu branch/base, estado aberto e exatamente ideação, plano e registro. Gates documentais da aprovação: 48/48 testes de governança com TEMP/TMP locais ao processo em `local/tmp-governance-015`; validador com 0 erros e 0 avisos; `git diff --cached --check` e `git diff --check` passaram; staging limitado aos três documentos. Estado dos checks do head corrente é conferido no GitHub antes do merge. Nenhum dado real incluído.
+- `blockers`: nenhum impedimento local conhecido; checks verdes e aprovação específica do merge documental são precondições pendentes de integração; confirmação de payloads e autorizações de implementação continuam separadas.
 
 ### Histórico — handoff da correção v2
 
