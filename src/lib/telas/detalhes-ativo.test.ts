@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { lerDetalhes, valorDoIndicador } from "./detalhes-ativo";
+import { aparar, lerDetalhes, lerNome, valorDoIndicador } from "./detalhes-ativo";
 
 // Campos descritivos do ativo (ciclo 012, issue #128; classe como nó da taxonomia, ciclo 013, issue
 // #138). Nomes fictícios.
@@ -69,5 +69,43 @@ describe("valorDoIndicador", () => {
     expect(valorDoIndicador(true)).toBe("sim");
     expect(valorDoIndicador(false)).toBe("nao");
     expect(valorDoIndicador(null)).toBe("");
+  });
+});
+
+// Nome na edição (ciclo 015, issue #153): a semântica do banco, `btrim` de espaço comum e de 1 a 100
+// caracteres Unicode, numa função só (lição de 2026-10-18).
+describe("lerNome", () => {
+  const nome = (valor: string | null) => lerNome(valor === null ? new FormData() : formulario({ nome: valor }));
+
+  it("tira só o espaço comum das pontas e guarda o resto como veio", () => {
+    expect(nome("  CDB fictício  ")).toEqual({ nome: "CDB fictício" });
+    expect(nome("Conta  com   espaços internos")).toEqual({ nome: "Conta  com   espaços internos" });
+    expect(nome("Ação Fictícia")).toEqual({ nome: "Ação Fictícia" });
+  });
+
+  it("NBSP, tabulação, quebra de linha e BOM nas pontas ficam, como no btrim do banco", () => {
+    for (const borda of [" ", "\t", "\n", "\r", "﻿"]) {
+      expect(nome(`${borda}Ativo${borda}`), JSON.stringify(borda)).toEqual({ nome: `${borda}Ativo${borda}` });
+    }
+  });
+
+  it("ausente, vazio ou só espaços comuns pedem o nome; só NBSP é um nome válido de um caractere", () => {
+    for (const valor of [null, "", "   "]) expect(nome(valor)).toEqual({ erro: "Informe o nome do ativo." });
+    expect(nome(" ")).toEqual({ nome: " " });
+  });
+
+  it("aceita 100 caracteres e recusa 101, contando caracteres Unicode e não unidades UTF-16", () => {
+    expect(nome("a".repeat(100))).toEqual({ nome: "a".repeat(100) });
+    expect(nome("a".repeat(101))).toEqual({ erro: "Use até 100 caracteres." });
+    // 100 caracteres fora do plano básico ocupam 200 unidades UTF-16 e continuam válidos.
+    expect(nome("😀".repeat(100))).toEqual({ nome: "😀".repeat(100) });
+    expect(nome("😀".repeat(101))).toEqual({ erro: "Use até 100 caracteres." });
+    // Os espaços das pontas não contam: 100 caracteres depois do btrim.
+    expect(nome(` ${"a".repeat(100)} `)).toEqual({ nome: "a".repeat(100) });
+  });
+
+  it("aparar remove só U+0020", () => {
+    expect(aparar("  a b  ")).toBe("a b");
+    expect(aparar(" a ")).toBe(" a ");
   });
 });

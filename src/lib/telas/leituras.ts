@@ -1,6 +1,6 @@
 import "server-only";
 import type { Evento, TipoAjuste } from "../financeiro/eventos";
-import { type Cliente, type ClienteComRpc, ErroLeitura, lerComposicao, lerTabela, marcaCarteira, versaoClassificacao } from "../leitura";
+import { type Cliente, type ClienteComRpc, ErroLeitura, lerComposicao, lerTabela, marcaCarteira, versaoMetadados } from "../leitura";
 import { deLinhaEvento, type LinhaEvento } from "./carteira";
 import type { EntradaCatalogo, VinculoDoAtivo } from "./catalogos";
 import { ordenarPorNome } from "./combobox";
@@ -192,30 +192,53 @@ async function lerCarteiraDoInicio(cliente: Cliente, sinal: AbortSignal): Promis
   };
 }
 
-/** Insumos do Início, lidos como uma composição coerente (D13). */
-export async function lerInsumosDoInicio(cliente: Cliente): Promise<InsumosDoInicio> {
+/**
+ * Marca das composições do Início (ciclo 015, issue #153): a marca da carteira mais a versão dos
+ * metadados, lidas juntas antes e depois dos insumos. Nome, instituição e classe decidem agrupamentos,
+ * ordem e percentuais; a versão dos metadados cobre todos, inclusive A → B → A, e dispensa a antiga
+ * marca da classificação. Falha da RPC ou marca inválida é erro, nunca um contador zero.
+ */
+async function marcaDoInicio(cliente: ClienteComRpc, sinal: AbortSignal) {
+  const [carteira, metadados] = await Promise.all([marcaCarteira(cliente, sinal), versaoMetadados(cliente, sinal)]);
+  return { carteira, metadados };
+}
+
+/** Insumos do Início por ativo, lidos como uma composição coerente (D13). */
+export async function lerInsumosDoInicio(cliente: ClienteComRpc): Promise<InsumosDoInicio> {
   const { insumos } = await lerComposicao(
-    (sinal) => marcaCarteira(cliente, sinal),
+    (sinal) => marcaDoInicio(cliente, sinal),
     (_marca, sinal) => lerCarteiraDoInicio(cliente, sinal),
   );
   return insumos;
 }
 
 /**
- * Insumos do Início com a visão por classe macro (ciclo 013, issue #139): os mesmos da carteira,
- * mais a árvore da taxonomia. A marca soma à da carteira a versão da classificação (R1-2), lida
- * junto com ela antes e depois: uma reclassificação durante a leitura descarta tudo e repete, até
- * 3 tentativas, nunca misturando classe velha com posições novas. O catálogo fica fora da marca.
+ * Insumos do Início com a visão por classe (ciclo 013, issue #139): os mesmos da carteira, mais a
+ * árvore da taxonomia. Uma mudança de metadados durante a leitura descarta tudo e repete, até 3
+ * tentativas, nunca misturando classe ou nome velhos com posições novas. O catálogo fica fora.
  */
 export async function lerInsumosDoInicioPorClasse(cliente: ClienteComRpc): Promise<InsumosDoInicio & { nos: NoTaxonomia[] }> {
   const { insumos } = await lerComposicao(
-    async (sinal) => {
-      const [carteira, classificacao] = await Promise.all([marcaCarteira(cliente, sinal), versaoClassificacao(cliente, sinal)]);
-      return { carteira, classificacao };
-    },
+    (sinal) => marcaDoInicio(cliente, sinal),
     async (_marca, sinal) => ({
       ...(await lerCarteiraDoInicio(cliente, sinal)),
       nos: await lerTabela<NoTaxonomia>(cliente, "taxonomia_ativos", { colunas: "id, parent_id, nivel, nome, ordem", sinal }),
+    }),
+  );
+  return insumos;
+}
+
+/**
+ * Insumos do Início com a visão por instituição, preparados para a unidade D: os mesmos da
+ * carteira, mais o catálogo de instituições, lido na mesma composição que ativos e posições. Ativo
+ * com vínculo e catálogo de instantes diferentes nunca é devolvido.
+ */
+export async function lerInsumosDoInicioPorInstituicao(cliente: ClienteComRpc): Promise<InsumosDoInicio & { instituicoes: EntradaCatalogo[] }> {
+  const { insumos } = await lerComposicao(
+    (sinal) => marcaDoInicio(cliente, sinal),
+    async (_marca, sinal) => ({
+      ...(await lerCarteiraDoInicio(cliente, sinal)),
+      instituicoes: await lerInstituicoes(cliente, sinal),
     }),
   );
   return insumos;

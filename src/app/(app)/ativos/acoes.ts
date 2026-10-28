@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import type { EstadoAcao } from "@/lib/telas/acao";
 import { mensagemDeRecusa } from "@/lib/telas/carteira";
-import { lerDetalhes } from "@/lib/telas/detalhes-ativo";
+import { lerDetalhes, lerNome } from "@/lib/telas/detalhes-ativo";
 import { exigirSessao } from "@/lib/sessao";
 
 // Escrita só pelas funções do banco, com a sessão do usuário (D3). A sessão é conferida antes
@@ -47,15 +47,18 @@ export async function desativarAtivo(_estado: EstadoAcao, dados: FormData): Prom
   return { ok: "Ativo desativado." };
 }
 
-// Edição só dos campos descritivos (ciclo 012, issue #128), também de ativo desativado. O sucesso
-// volta à aba de onde o ativo veio.
+// Edição do nome e dos campos descritivos (ciclo 012, issue #128; nome desde o ciclo 015, issue
+// #153), também de ativo desativado, numa única chamada transacional: uma recusa não grava parte
+// dos dados. O sucesso volta à aba de onde o ativo veio.
 export async function editarAtivo(_estado: EstadoAcao, dados: FormData): Promise<EstadoAcao> {
   const { supabase } = await exigirSessao();
   const id = z.uuid().safeParse(dados.get("ativo"));
   if (!id.success) return { erro: mensagemDeRecusa("recusado_ativo_inexistente") };
+  const nome = lerNome(dados);
+  if ("erro" in nome) return { erro: nome.erro };
   const detalhes = lerDetalhes(dados);
   if ("erro" in detalhes) return { erro: detalhes.erro };
-  const { error } = await supabase.rpc("editar_detalhes_ativo_taxonomia", { p_ativo: id.data, ...detalhes.parametros });
+  const { error } = await supabase.rpc("editar_ativo_com_nome", { p_ativo: id.data, p_nome: nome.nome, ...detalhes.parametros });
   if (error) return { erro: mensagemDeRecusa(error) };
   revalidatePath("/", "layout");
   redirect(dados.get("aba") === "desativados" ? "/ativos?aba=desativados" : "/ativos");
