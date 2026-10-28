@@ -17,7 +17,7 @@ export const VERSAO_ATUAL: string = pacote.version;
 export const HISTORICO: readonly Novidade[] = [
   {
     versao: "0.11.0",
-    publicadaEm: null,
+    publicadaEm: "2026-10-28",
     notas: [
       "No Início, a distribuição do patrimônio ganhou a visão Por instituição, com Sem instituição e Em trânsito à parte, e as classes agora abrem em subclasses e tipos, com a participação na carteira e dentro do grupo.",
       "Agora dá para mudar o nome de um ativo, inclusive de um ativo desativado, pelo botão Editar na tela de Ativos. O nome novo também aparece nos registros antigos.",

@@ -1,10 +1,10 @@
 # Plano de Implementação — Análises por instituição e níveis de classe
 
 > **Ciclo:** `015`
-> **Status:** `Em Execução`
+> **Status:** `Concluído`
 > **Versão:** `v2`
 > **Data de criação:** 2026-10-27
-> **Última atualização:** 2026-10-27
+> **Última atualização:** 2026-10-28
 > **Tipo:** `feature`
 > **Prioridade:** `P2`
 > **Nível:** `completo`
@@ -15,7 +15,9 @@
 > **Autorização de implementação da unidade A:** "autorizo a implementação da issue #151" em 2026-10-27; recebida; execução iniciada na branch `feature/issue-151`, task `015_task_issue-151.md`.
 > **Autorização de implementação da unidade B:** "autorizo a implementação da issue #152" em 2026-10-27; recebida; entregue pela PR #156.
 > **Autorização de implementação da unidade C:** "autorizo a implementação da issue #153" em 2026-10-27; recebida; entregue pela PR #158.
-> **Autorização de implementação da unidade D:** "autorizo a implementação da issue #154" em 2026-10-27; recebida; execução iniciada na branch `feature/issue-154`, task `015_task_issue-154.md`.
+> **Autorização de implementação da unidade D:** "autorizo a implementação da issue #154" em 2026-10-27; recebida; entregue pela PR #159.
+> **Autorização da verificação em produção:** "autorizo a verificação em produção do ciclo 015", depois do deploy de produção de `7f32a9a` (2026-10-28 01:03 UTC) e antes da release `v0.11.0`; resultado relatado pelo responsável na task da #154.
+> **Encerramento:** coberto pela aprovação do plano; "continue o ciclo 015" em 2026-10-28; PR `chore/cycle-015-closure`, prospectiva.
 > **Revisão formal:** `Concluída`
 > **Veredito da revisão:** `APTO PARA APROVAÇÃO`
 > **Aprovação humana pós-revisão:** `Aprovada em 2026-10-27`
@@ -260,11 +262,11 @@ Mapa prospectivo, não lista de mudanças já executadas:
 - B: `_project/knowledge/KB-004_regras_financeiras.md`, `tests/fixtures/financeiro/casos_referencia.json`, novos módulos/testes em `src/lib/financeiro/`; `distribuicao.ts` e `alocacao.ts` só se indispensável para integração, preservando os contratos anteriores.
 - C: `src/lib/leitura.ts` (leitor da nova versão, sem alterar `marcaCarteira`), leitores do Início em `src/lib/telas/leituras.ts` e testes; `src/app/(app)/ativos/acoes.ts`, `src/components/formularios/editar-ativo.tsx`, validação em `src/lib/telas/` e e2e diretamente afetados de leitura/edição/histórico/seletores. Sem reescrever páginas de Ativos, Cadastros, Lançamentos ou Transferências para criar composições; sem mudar o leitor/ação de fechamento. Tipos/mocks somente se necessários a esses contratos delimitados.
 - D: `src/app/(app)/page.tsx`, `src/components/graficos/rosca.tsx` ou componente irmão, módulos em `src/lib/telas/`, testes unitários/e2e de distribuição; DESIGN.md, KB-003 e `src/lib/novidades.ts`.
-- Documentação do ciclo: este plano, `_project/cycles.md`, futuras tasks de issues e `_project/drafts/015_analises_instituicao_niveis_classe/015_task_closure.md`; KB-002 apenas para operação realmente alterada; versão/changelog/manifesto pelo release-please, sem edição especulativa neste rascunho.
+- Documentação do ciclo: este plano, `_project/cycles.md`, futuras tasks de issues e `_project/executed/015_analises_instituicao_niveis_classe/015_task_closure.md`; KB-002 apenas para operação realmente alterada; versão/changelog/manifesto pelo release-please, sem edição especulativa neste rascunho.
 
 ## Decomposição em issues e PRs
 
-As issues A–D foram criadas após a integração da [PR #150](https://github.com/EuThiagoAndrade/saldo-futuro/pull/150) e a confirmação dos payloads em 2026-10-27. Os corpos efetivos foram publicados conforme o formulário `.github/ISSUE_TEMPLATE/feature_request.yml` e estão registrados em “Registro de criação das issues”. A unidade A (#151) foi autorizada, iniciada e integrada pela PR #155; a unidade B (#152) foi autorizada, iniciada e integrada pela PR #156; a unidade C (#153) foi autorizada, iniciada e integrada pela PR #158; a unidade D (#154) foi autorizada e iniciada.
+As issues A–D foram criadas após a integração da [PR #150](https://github.com/EuThiagoAndrade/saldo-futuro/pull/150) e a confirmação dos payloads em 2026-10-27. Os corpos efetivos foram publicados conforme o formulário `.github/ISSUE_TEMPLATE/feature_request.yml` e estão registrados em “Registro de criação das issues”. A unidade A (#151) foi autorizada, iniciada e integrada pela PR #155; a unidade B (#152) foi autorizada, iniciada e integrada pela PR #156; a unidade C (#153) foi autorizada, iniciada e integrada pela PR #158; a unidade D (#154) foi autorizada, iniciada e integrada pela PR #159.
 
 | Unidade | Issue e título | Dependência | Entrega e fechamento |
 | :-- | :-- | :-- | :-- |
@@ -357,20 +359,22 @@ Após autorização específica e deploy compatível confirmado, o responsável 
 
 | Campo | Valor |
 | :-- | :-- |
-| Issue(s) | [#151 (A)](https://github.com/EuThiagoAndrade/saldo-futuro/issues/151), [#152 (B)](https://github.com/EuThiagoAndrade/saldo-futuro/issues/152), [#153 (C)](https://github.com/EuThiagoAndrade/saldo-futuro/issues/153), [#154 (D)](https://github.com/EuThiagoAndrade/saldo-futuro/issues/154) — abertas |
-| PR(s) | [#150 — publicação documental](https://github.com/EuThiagoAndrade/saldo-futuro/pull/150), integrada pelo commit `200be5df7d84521d9bcd911d4f0e0500e4dddfe8`; unidade A na [PR #155](https://github.com/EuThiagoAndrade/saldo-futuro/pull/155), conforme task #151 |
+| Issue(s) | [#151 (A)](https://github.com/EuThiagoAndrade/saldo-futuro/issues/151) — fechada pela PR de encerramento; [#152 (B)](https://github.com/EuThiagoAndrade/saldo-futuro/issues/152), [#153 (C)](https://github.com/EuThiagoAndrade/saldo-futuro/issues/153) e [#154 (D)](https://github.com/EuThiagoAndrade/saldo-futuro/issues/154) — fechadas pelas PRs de entrega |
+| PR(s) | [#150 — publicação documental](https://github.com/EuThiagoAndrade/saldo-futuro/pull/150), integrada pelo commit `200be5df7d84521d9bcd911d4f0e0500e4dddfe8`; unidade A na [PR #155](https://github.com/EuThiagoAndrade/saldo-futuro/pull/155) (`1e216d7`), B na [PR #156](https://github.com/EuThiagoAndrade/saldo-futuro/pull/156) (`10bc3ad`), C na [PR #158](https://github.com/EuThiagoAndrade/saldo-futuro/pull/158) (`e0e21df`) e D na [PR #159](https://github.com/EuThiagoAndrade/saldo-futuro/pull/159) (`7f32a9a`); release `0.11.0` na [PR #157](https://github.com/EuThiagoAndrade/saldo-futuro/pull/157) (`1189c18`, `v0.11.0`); encerramento na [PR #160](https://github.com/EuThiagoAndrade/saldo-futuro/pull/160) (`chore/cycle-015-closure`) |
 | Branch(es) | `chore/cycle-015-plan`, publicação documental integrada a `main` |
 | Revisão de origem | `84f0a5ea107f33e0de5c506b3ea0825346f6e58e`, com ideação e reserva locais preexistentes |
 | Destino após conclusão | `_project/executed/015_analises_instituicao_niveis_classe/015_plan.md` |
 
 ## Próximo passo
 
+Ciclo encerrado de forma prospectiva pela PR `chore/cycle-015-closure`; a task `015_task_closure.md` acompanha este bloco.
+
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 015 (completo)
-Quem: Responsável
-Conferir: checks e diff da PR #155 — https://github.com/EuThiagoAndrade/saldo-futuro/pull/155; task 015_task_issue-151.md
-Diga: "aprovo o merge da PR #155"
+Situação: Concluído — ciclo 015 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
@@ -534,6 +538,6 @@ Nenhum achado novo, bloqueador ou ressalva. A Rodada 1 foi preservada sem altera
 
 ## Pós-mortem
 
-- **Data de conclusão:** —
-- **Desvios:** —
-- **Lições comprovadas:** —
+- **Data de conclusão:** 2026-10-28, prospectiva, com o merge da PR de encerramento.
+- **Desvios:** (1) a unidade A foi integrada pela PR #155 com o título da PR (`[FEATURE] …`) como assunto do squash, e não `feat(issue-151): …`; o release-please não a reconheceu e o changelog da `0.11.0` não traz a sua linha (a versão e a produção não foram afetadas). (2) A E1 e a V não foram verificadas pelo agente: a E1 foi informada pelo responsável em 2026-10-27, com quatro indicadores sanitizados, e a V, como "passou todos os testes", sem detalhe por item. (3) O primeiro e2e local da unidade B rodou sem as variáveis do Supabase local e falhou só nos testes "preview sem backend"; refeito como o CI, passou. (4) O detalhe de classe renderiza tabela e cartões ao mesmo tempo, alternados por CSS, e a explicação das duas colunas não cita números, para o detalhe não trazer resumo numérico.
+- **Lições comprovadas:** nenhuma nova além das já registradas em `.agent/lessons_learned.md`; o assunto do squash repete a lição de 2026-10-17.

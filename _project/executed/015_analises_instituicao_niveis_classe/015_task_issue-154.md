@@ -2,17 +2,17 @@
 
 > **Ciclo:** `015`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#154`
-> **Plano:** `_project/drafts/015_analises_instituicao_niveis_classe/015_plan.md`
+> **Plano:** `_project/executed/015_analises_instituicao_niveis_classe/015_plan.md`
 > **Branch:** `feature/issue-154`
 > **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/159
-> **Integração:** `Pendente`
+> **Integração:** PR #159 integrada por squash (`7f32a9abd965e841a6dbbac7c053102ef665a0d9`) em 2026-10-28 (UTC), com todos os checks verdes; deploy de produção desse commit `success` às 01:03 UTC; issue #154 fechada pelo `Closes #154`
 > **Autorização inicial:** "autorizo a implementação da issue #154" em 2026-10-27
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-27
-> **Última atualização:** 2026-10-27
+> **Última atualização:** 2026-10-28
 > **handoff_schema_version:** `2`
 
 ## Objetivo
@@ -64,7 +64,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 | Testes | Unitários: 475/475 (7 novos da composição); governança: 48/48; lint sem erros (3 avisos preexistentes em `local/`), typecheck e build passaram; e2e autenticado sobre build com Supabase local, suíte completa: 222 passed, 12 skipped (preview sem backend), nenhum flaky, saída 0, dois workers (inclui os 11 cenários novos de `analises-inicio.spec.ts`, com axe, alvos de 44 px, ocultação e CR-015-06). Banco: não executado, sem alteração de banco |
 | Validador | 0 erros, 0 avisos; conferências manuais realizadas (G3: só nomes e valores fictícios; ocultação conferida no HTML e nos atributos) |
 | `git diff --check` | Passou |
-| Checks remotos | Em execução; conferir o head atual na PR #159 antes do merge |
+| Checks remotos | Verdes na PR #159 antes do merge: governança, lint/tipos/testes/build/e2e de preview, banco e e2e autenticado, Vercel; CI, governança e Release Please do `main` em `7f32a9a` verdes |
 
 ## Revisão da correção
 
@@ -80,7 +80,11 @@ Não se aplica — trilha normal.
 - **Não alterado.** `distribuicao.ts`, `alocacao.ts` e os módulos da unidade B; as demais telas; a renomeação de ativo nas telas descritivas.
 - **Reconciliações.** A task da unidade C passou a `Concluída` (PR #158) e a da #151 recebeu o resultado sanitizado da E1 trazido pelo responsável; o plano registra a autorização desta unidade.
 
-## Preparação de V (verificação em produção, para o encerramento)
+## Verificação em produção (V)
+
+Autorizada pelo responsável com "autorizo a verificação em produção do ciclo 015", depois de o deploy de produção de `7f32a9a` constar como `success` na Vercel (2026-10-28 01:03 UTC). O responsável executou o roteiro autenticado e informou em chat, antes da release `v0.11.0` (publicada em 2026-10-28 11:20 UTC), que **passou todos os testes**, sem detalhar item por item nem trazer evidência: é relato humano, sem acesso do agente à produção. Não houve pedido de screenshot, nome nem valor real. Itens que dependem de cenário existente na carteira real (por exemplo, resíduo de classificação) não foram detalhados pelo responsável; ficam como o relato geral, e a cobertura desses cenários está nos testes fictícios (CR-015-01 a CR-015-16 e `analises-inicio.spec.ts`).
+
+Roteiro usado, preparado nesta task antes da verificação:
 
 Roteiro do plano, ajustado ao que foi construído; só acontece depois de "autorizo a verificação em produção do ciclo 015", com release e deploy confirmados, sem prints, nomes nem valores reais nas evidências:
 
@@ -97,12 +101,14 @@ Não se aplica — ciclo completo; encerramento em PR própria.
 
 ## Próximo passo
 
+Esta task está concluída; o ciclo foi encerrado na PR `chore/cycle-015-closure`.
+
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 015 (completo)
-Quem: Responsável
-Conferir: checks, diff, contrato 6.13 do DESIGN.md e texto das novidades da PR #159 — https://github.com/EuThiagoAndrade/saldo-futuro/pull/159
-Diga: "aprovo o merge da PR #159"
+Situação: Concluído — ciclo 015 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
