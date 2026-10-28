@@ -5,14 +5,14 @@
 > **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#151`
-> **Plano:** `_project/drafts/015_analises_instituicao_niveis_classe/015_plan.md`
+> **Plano:** `_project/executed/015_analises_instituicao_niveis_classe/015_plan.md`
 > **Branch:** `feature/issue-151`
 > **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/155
-> **Integração:** PR #155 integrada por squash (`1e216d7a8497673dd9cfd209fa6767e0680fe395`) em 2026-10-27, com todos os checks verdes; ação externa E1 concluída, conforme o relato do responsável em 2026-10-27, com os quatro indicadores sanitizados; issue #151 aberta até o encerramento do ciclo
+> **Integração:** PR #155 integrada por squash (`1e216d7a8497673dd9cfd209fa6767e0680fe395`) em 2026-10-27, com todos os checks verdes; ação externa E1 concluída, conforme o relato do responsável em 2026-10-27, com os quatro indicadores sanitizados; issue #151 fechada pela PR de encerramento (`Closes #151`)
 > **Autorização inicial:** "autorizo a implementação da issue #151" em 2026-10-27
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-27
-> **Última atualização:** 2026-10-27
+> **Última atualização:** 2026-10-28
 > **handoff_schema_version:** `2`
 
 ## Objetivo
@@ -106,14 +106,14 @@ Não se aplica — ciclo completo; encerramento em PR própria após E1 e demais
 
 ## Próximo passo
 
-Esta task está concluída; o ciclo continua na task da issue #153.
+Esta task está concluída; o ciclo foi encerrado na PR `chore/cycle-015-closure`.
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 015 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
+Situação: Concluído — ciclo 015 (completo)
+Quem: —
 Conferir: —
-Diga: "continue o ciclo 015"
+Diga: —
 ```
 
 ## Handoff de saída
