@@ -2,12 +2,12 @@
 
 > **Ciclo:** `015`
 > **Trilha:** `normal`
-> **Estado:** `Em andamento`
+> **Estado:** `Aguardando integração`
 > **Tipo:** `feature`
 > **Issue:** `#154`
 > **Plano:** `_project/drafts/015_analises_instituicao_niveis_classe/015_plan.md`
 > **Branch:** `feature/issue-154`
-> **PR:** —
+> **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/159
 > **Integração:** `Pendente`
 > **Autorização inicial:** "autorizo a implementação da issue #154" em 2026-10-27
 > **Modo contínuo:** `—`
@@ -55,7 +55,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 - [x] Testes unitários da composição e e2e `analises-inicio.spec.ts` (11 cenários); regressões das visões por ativo e por classe.
 - [x] Task da unidade C reconciliada com o merge da PR #158; resultado sanitizado da E1 registrado na task da #151.
 - [x] Gates locais concluídos e staging revisado.
-- [ ] PR publicada.
+- [x] PR #159 publicada (`Closes #154` no corpo); integração exige aprovação própria.
 
 ## Evidências
 
@@ -64,7 +64,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 | Testes | Unitários: 475/475 (7 novos da composição); governança: 48/48; lint sem erros (3 avisos preexistentes em `local/`), typecheck e build passaram; e2e autenticado sobre build com Supabase local, suíte completa: 222 passed, 12 skipped (preview sem backend), nenhum flaky, saída 0, dois workers (inclui os 11 cenários novos de `analises-inicio.spec.ts`, com axe, alvos de 44 px, ocultação e CR-015-06). Banco: não executado, sem alteração de banco |
 | Validador | 0 erros, 0 avisos; conferências manuais realizadas (G3: só nomes e valores fictícios; ocultação conferida no HTML e nos atributos) |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos | Em execução; conferir o head atual na PR #159 antes do merge |
 
 ## Revisão da correção
 
@@ -99,10 +99,10 @@ Não se aplica — ciclo completo; encerramento em PR própria.
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 015 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 015"
+Situação: Aguardando merge — ciclo 015 (completo)
+Quem: Responsável
+Conferir: checks, diff, contrato 6.13 do DESIGN.md e texto das novidades da PR #159 — https://github.com/EuThiagoAndrade/saldo-futuro/pull/159
+Diga: "aprovo o merge da PR #159"
 ```
 
 ## Handoff de saída
@@ -111,7 +111,7 @@ Diga: "continue o ciclo 015"
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 015 + implementar_issue + 154 + e0e21dffc722aee575f1ed1ad0c7cd70896f5cb5`
 - `effect_class`: `remote_mutation`
 - `state_before`: plano aprovado, #154 autorizada, unidades A a C integradas, E1 informada como concluída com resultado sanitizado.
-- `state_after`: em preparação — a preencher ao publicar a PR.
-- `result`: `not_executed`
-- `evidence`: a preencher ao publicar a PR.
-- `blockers`: nenhum até aqui.
+- `state_after`: unidade D implementada e validada localmente; PR #159 publicada na branch feature/issue-154; aguardando integração.
+- `result`: `executed`
+- `evidence`: 475 testes unitários, 48 de governança, lint, typecheck, build e e2e completo (222 passed, 12 skipped, nenhum flaky); evidências acima.
+- `blockers`: nenhum para publicar; merge depende de checks verdes e aprovação própria. V, release e encerramento seguem depois, cada um com a sua aprovação.
