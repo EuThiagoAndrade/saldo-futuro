@@ -7,7 +7,7 @@
 > **Issue:** — (encerramento documental sem issue recursiva; fecha a #151 por `Closes`; #152, #153 e #154 já foram fechadas pelas PRs de entrega)
 > **Plano:** `_project/executed/015_analises_instituicao_niveis_classe/015_plan.md`
 > **Branch:** `chore/cycle-015-closure`
-> **PR:** —
+> **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/160
 > **Integração:** prospectiva; válida somente depois do merge desta PR, conferido no GitHub
 > **Autorização inicial:** "aprovo o plano do ciclo 015" em 2026-10-27 (o encerramento é autorizado pela aprovação do plano); "autorizo a verificação em produção do ciclo 015" e "Continue o ciclo" em 2026-10-28 (a V foi autorizada entre o deploy de `7f32a9a` e a release, e o encerramento foi pedido depois da release)
 > **Modo contínuo:** `—`
@@ -60,7 +60,7 @@ Não se aplica: encerramento de ciclo completo.
 | Ação externa | E1 (#151) informada como concluída pelo responsável em 2026-10-27, com `authenticated_leitura` e `authenticated_edicao` verdadeiros e `anon_leitura` e `anon_edicao` falsos. Limite: relato, sem acesso do agente à produção. |
 | Verificação em produção | Relatada pelo responsável como "passou todos os testes", depois do deploy de produção de `7f32a9a` (2026-10-28 01:03 UTC) e antes da release. Limite: relato geral, sem detalhe por item, sem acesso do agente à produção. |
 | Gates | Ver "Gates". |
-| Checks da PR de encerramento | A conferir no tip final. |
+| Checks da PR de encerramento | A conferir no tip final da PR #160. |
 
 ### Gates
 
