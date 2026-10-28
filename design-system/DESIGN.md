@@ -373,6 +373,15 @@ O campo "Classe" do ativo deixou de ser um seletor com criação e passou a esco
 - **Na edição:** acima dos campos, "Classe atual" mostra, com quebra de linha, o caminho completo do nó, ou "Sem classe" com "(antes: X)" quando o ativo só tem a classe do legado. O campo abre já com o nó confirmado.
 - **Cadastros:** a aba Classes saiu; o endereço antigo `?aba=classes` abre Instituições.
 
+#### Nome na edição do ativo (ciclo `015`)
+
+Na edição, o Nome deixou de ser só leitura e passou a campo de texto, o primeiro do formulário:
+
+- **Campo:** rótulo "Nome" visível acima, altura mínima de 44 px, preenchido com o nome atual, com a mesma classe dos demais campos de texto. Nome e detalhes são salvos juntos, num único envio de "Salvar alterações"; o tipo de ajuste continua só para leitura, e o ativo de sistema Em trânsito continua sem formulário.
+- **Dica:** logo abaixo do campo, em texto secundário, "O nome atual também aparece nos registros antigos deste ativo.", ligada ao campo por `aria-describedby`. Não há nome histórico.
+- **Validação:** a regra é a do banco. O servidor tira só o espaço comum das pontas (não NBSP, tabulação nem quebra de linha) e exige de 1 a 100 caracteres Unicode, contados como caracteres e não como unidades de texto do navegador, por isso o campo não usa `maxLength`. Vazio ou só espaços mostra "Informe o nome do ativo."; acima de 100, "Use até 100 caracteres.". Nomes repetidos são válidos; acentos e espaços internos não são alterados.
+- **Recusa:** a mensagem aparece em `role="alert"` acima do botão, o campo mantém o que foi digitado e nada é gravado (nem a instituição nova). O sucesso volta à aba de origem.
+
 ### 6.9 Botões
 
 | Variante | Fundo | Texto | Hover | Pressionado | Uso |

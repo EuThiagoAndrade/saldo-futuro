@@ -77,6 +77,23 @@ export function lerDetalhes(dados: FormData): { erro: string } | { parametros: P
   };
 }
 
+/** O nome como o banco o guarda: `btrim` tira só o espaço comum (U+0020), nunca NBSP, tabulação nem quebra de linha. */
+export function aparar(valor: string): string {
+  return valor.replace(/^ +| +$/g, "");
+}
+
+/**
+ * Nome na edição do ativo (ciclo 015, issue #153), com a semântica do banco: de 1 a 100 caracteres
+ * Unicode (pontos de código, não unidades UTF-16) depois do `btrim`. Não impõe unicidade nem altera
+ * acentos ou espaços internos.
+ */
+export function lerNome(dados: FormData): { erro: string } | { nome: string } {
+  const nome = aparar(texto(dados, "nome"));
+  if (nome === "") return { erro: "Informe o nome do ativo." };
+  if ([...nome].length > 100) return { erro: "Use até 100 caracteres." };
+  return { nome };
+}
+
 /** Valor do rádio para um indicador gravado. */
 export function valorDoIndicador(valor: boolean | null): "sim" | "nao" | "" {
   return valor === true ? "sim" : valor === false ? "nao" : "";

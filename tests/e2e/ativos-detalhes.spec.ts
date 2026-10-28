@@ -298,6 +298,98 @@ test.describe("detalhes dos ativos (#128)", () => {
     expect(largura.rolagem).toBeLessThanOrEqual(largura.cliente);
   });
 
+  // Nome na edição (ciclo 015, issue #153): nome e detalhes numa chamada só, mesmo UUID, nome repetido
+  // válido, recusa sem gravar nada, ativo desativado e tipo de ajuste intocado.
+  test("editar o nome: salva com os detalhes, mantém o UUID e o tipo de ajuste, aceita nome repetido e volta à aba", async ({ page }) => {
+    const criar = async (nome: string, tipo: "rendimento" | "marcacao") => {
+      const r = await cliente.rpc("cadastrar_ativo_taxonomia", {
+        p_nome: nome,
+        p_tipo_ajuste: tipo,
+        p_instituicao: null,
+        p_instituicao_nova: null,
+        p_taxonomia: null,
+        p_previdencia: null,
+        p_liquidez_imediata: null,
+        p_exposicao_cambial: null,
+        p_isento_ir: null,
+      });
+      expect(r.error).toBeNull();
+    };
+    const ler = async (nome: string) => (await cliente.from("ativos").select("id, nome, tipo_ajuste, ativo, taxonomia_id, instituicao_id")).data!.filter((a) => a.nome === nome);
+    await criar("Renomear um fictício", "rendimento");
+    await criar("Renomear dois fictício", "marcacao");
+    const [um] = await ler("Renomear um fictício");
+    const [dois] = await ler("Renomear dois fictício");
+    const campoNome = page.getByLabel("Nome", { exact: true });
+    await page.setViewportSize(DESKTOP);
+    await entrar(page, u.dono);
+
+    // O campo abre com o nome atual e a dica; o tipo de ajuste fica só para leitura.
+    await page.goto(`/ativos/${um.id}/editar`);
+    await expect(campoNome).toHaveValue("Renomear um fictício");
+    await expect(page.getByText("O nome atual também aparece nos registros antigos deste ativo.")).toBeVisible();
+    await expect(page.getByText("Rendimento", { exact: true })).toBeVisible();
+
+    // Recusas: nada é gravado, a mensagem aparece e o campo mantém o que foi digitado.
+    await campoNome.fill("   ");
+    await page.getByRole("button", { name: "Salvar alterações" }).click();
+    await expect(page.getByRole("main").getByRole("alert")).toHaveText("Informe o nome do ativo.");
+    await expect(page).toHaveURL(new RegExp(`/ativos/${um.id}/editar$`));
+    await campoNome.fill("b".repeat(101));
+    await page.getByRole("button", { name: "Salvar alterações" }).click();
+    await expect(page.getByRole("main").getByRole("alert")).toHaveText("Use até 100 caracteres.");
+    await expect(campoNome).toHaveValue("b".repeat(101));
+    expect(await ler("Renomear um fictício")).toHaveLength(1);
+
+    // Nome e classe juntos; o nome termina com espaços, que o banco tira.
+    await campoNome.fill("  Nome novo fictício  ");
+    await page.getByRole("combobox", { name: "Classe" }).fill("ouro");
+    await opcao(page, CAMINHO_OURO).click();
+    await page.getByRole("button", { name: "Salvar alterações" }).click();
+    await expect(page).toHaveURL(/\/ativos$/);
+    const [depois] = await ler("Nome novo fictício");
+    expect(depois).toMatchObject({ id: um.id, tipo_ajuste: "rendimento", ativo: true, taxonomia_id: OURO });
+    expect(await ler("Renomear um fictício")).toEqual([]);
+    await expect(page.getByRole("row").filter({ hasText: "Nome novo fictício" })).toBeVisible();
+
+    // Nome repetido é válido: o segundo ativo recebe o mesmo nome, sem tocar no primeiro.
+    await page.goto(`/ativos/${dois.id}/editar`);
+    await campoNome.fill("Nome novo fictício");
+    await page.getByRole("button", { name: "Salvar alterações" }).click();
+    await expect(page).toHaveURL(/\/ativos$/);
+    const repetidos = await ler("Nome novo fictício");
+    expect(repetidos.map((a) => a.id).sort()).toEqual([um.id, dois.id].sort());
+    expect(repetidos.find((a) => a.id === dois.id)?.tipo_ajuste).toBe("marcacao");
+
+    // Desativado também edita o nome e volta à aba Desativados; o UUID não muda.
+    expect((await cliente.rpc("desativar_ativo", { p_ativo: dois.id })).error).toBeNull();
+    await page.goto(`/ativos/${dois.id}/editar`);
+    await campoNome.fill("Desativado renomeado fictício");
+    await page.getByRole("button", { name: "Salvar alterações" }).click();
+    await expect(page).toHaveURL(/\/ativos\?aba=desativados$/);
+    expect(await ler("Desativado renomeado fictício")).toMatchObject([{ id: dois.id, ativo: false }]);
+  });
+
+  test("o trânsito não tem campo de nome na edição, e a função recusa o nome do trânsito", async ({ page }) => {
+    const transito = (await cliente.from("ativos").select("id").eq("sistema", "transito").single()).data!.id;
+    await entrar(page, u.dono);
+    await page.goto(`/ativos/${transito}/editar`);
+    await expect(page.getByLabel("Nome", { exact: true })).toHaveCount(0);
+    const r = await cliente.rpc("editar_ativo_com_nome", {
+      p_ativo: transito,
+      p_nome: "Outro nome",
+      p_instituicao: null,
+      p_instituicao_nova: null,
+      p_taxonomia: null,
+      p_previdencia: null,
+      p_liquidez_imediata: null,
+      p_exposicao_cambial: null,
+      p_isento_ir: null,
+    });
+    expect(r.error?.message).toBe("recusado_ativo_invalido");
+    expect((await cliente.from("ativos").select("nome").eq("id", transito).single()).data!.nome).not.toBe("Outro nome");
+  });
+
   for (const tamanho of [MOVEL, DESKTOP]) {
     test(`sem violações de acessibilidade no cadastro, na edição e nas abas em ${tamanho.width} px`, async ({ page }) => {
       const { id } = await lerAtivo("CDB fictício");

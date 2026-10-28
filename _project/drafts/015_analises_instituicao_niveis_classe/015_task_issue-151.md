@@ -8,7 +8,7 @@
 > **Plano:** `_project/drafts/015_analises_instituicao_niveis_classe/015_plan.md`
 > **Branch:** `feature/issue-151`
 > **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/155
-> **Integração:** PR #155 integrada por squash (`1e216d7a8497673dd9cfd209fa6767e0680fe395`) em 2026-10-27, com todos os checks verdes; ação externa E1 pendente; issue #151 aberta até o encerramento do ciclo
+> **Integração:** PR #155 integrada por squash (`1e216d7a8497673dd9cfd209fa6767e0680fe395`) em 2026-10-27, com todos os checks verdes; ação externa E1 concluída, conforme o relato do responsável em 2026-10-27; issue #151 aberta até o encerramento do ciclo
 > **Autorização inicial:** "autorizo a implementação da issue #151" em 2026-10-27
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-27
@@ -96,18 +96,24 @@ Não executar os arquivos `upgrade_pre.sql`/`upgrade_post.sql` em produção: s�
 5. Executar `upgrade_post.sql` da mesma maneira. Resultado observado: `retrato integral preservado`; APIs anterior e nova disponíveis, ambas verdadeiras. A comparação lança erro e para se qualquer linha financeira/descritiva diferir.
 6. A suíte normal de banco roda no projeto local principal com `npx supabase test db` (535 asserções). O reset de upgrade não atinge esse projeto. Desligar a instância descartável depois das verificações com `npx supabase stop --workdir local/issue151-upgrade`.
 
+## Registro da ação externa E1
+
+O responsável informou em chat, em 2026-10-27, ao ser lembrado da E1 depois do merge da PR #156, que já a tinha concluído antes. É relato humano: o agente não tem acesso ao banco de produção para conferir, e o responsável não informou a data nem os resultados estruturais de `e1_post.sql`. Registrado como informado, sem alegar verificação; os resultados sanitizados podem ser acrescentados quando o responsável os trouxer. Com isso, a autorização da unidade C foi concedida em 2026-10-27.
+
 ## Encerramento
 
 Não se aplica — ciclo completo; encerramento em PR própria após E1 e demais entregas.
 
 ## Próximo passo
 
+Esta task está concluída; o ciclo continua na task da issue #153.
+
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando ação externa — ciclo 015 (completo)
-Quem: Responsável
-Conferir: Roteiro E1 desta task, com a migração `20261027220000_metadados_nome_ativo.sql` como única pendente
-Diga: "concluí a ação externa da issue #151"
+Situação: Pronto para continuar — ciclo 015 (completo)
+Quem: Qualquer ferramenta, a pedido do responsável
+Conferir: —
+Diga: "continue o ciclo 015"
 ```
 
 ## Handoff de saída
