@@ -2,13 +2,13 @@
 
 > **Ciclo:** `015`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#153`
 > **Plano:** `_project/drafts/015_analises_instituicao_niveis_classe/015_plan.md`
 > **Branch:** `feature/issue-153`
 > **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/158
-> **Integração:** `Pendente`
+> **Integração:** PR #158 integrada por squash (`e0e21dffc722aee575f1ed1ad0c7cd70896f5cb5`) em 2026-10-27, com todos os checks verdes; issue #153 fechada pelo `Closes #153`
 > **Autorização inicial:** "autorizo a implementação da issue #153" em 2026-10-27
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-27
@@ -64,7 +64,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 | Testes | Unitários: 468/468 (21 novos nas leituras do Início e na validação do nome); governança: 48/48; lint sem erros (3 avisos preexistentes em `local/`), typecheck e build passaram; e2e autenticado sobre build com Supabase local, suíte completa: 211 passed, 12 skipped (preview sem backend), nenhum flaky, saída 0, dois workers (inclui 2 testes novos da edição do nome). Banco: não executado, sem alteração de banco |
 | Validador | 0 erros, 0 avisos; conferências manuais realizadas (G3: só nomes e valores fictícios) |
 | `git diff --check` | Passou |
-| Checks remotos | Em execução; conferir o head atual na PR #158 antes do merge |
+| Checks remotos | Verdes na PR #158 antes do merge: governança, lint/tipos/testes/build/e2e de preview, banco e e2e autenticado, Vercel |
 
 ## Revisão da correção
 
@@ -84,12 +84,14 @@ Não se aplica — ciclo completo; encerramento em PR própria.
 
 ## Próximo passo
 
+Esta task está concluída; o ciclo continua na task da issue #154.
+
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 015 (completo)
-Quem: Responsável
-Conferir: checks, diff e contrato 6.8 do DESIGN.md da PR #158 — https://github.com/EuThiagoAndrade/saldo-futuro/pull/158
-Diga: "aprovo o merge da PR #158"
+Situação: Pronto para continuar — ciclo 015 (completo)
+Quem: Qualquer ferramenta, a pedido do responsável
+Conferir: —
+Diga: "continue o ciclo 015"
 ```
 
 ## Handoff de saída

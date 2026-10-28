@@ -8,7 +8,7 @@
 > **Plano:** `_project/drafts/015_analises_instituicao_niveis_classe/015_plan.md`
 > **Branch:** `feature/issue-151`
 > **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/155
-> **Integração:** PR #155 integrada por squash (`1e216d7a8497673dd9cfd209fa6767e0680fe395`) em 2026-10-27, com todos os checks verdes; ação externa E1 concluída, conforme o relato do responsável em 2026-10-27; issue #151 aberta até o encerramento do ciclo
+> **Integração:** PR #155 integrada por squash (`1e216d7a8497673dd9cfd209fa6767e0680fe395`) em 2026-10-27, com todos os checks verdes; ação externa E1 concluída, conforme o relato do responsável em 2026-10-27, com os quatro indicadores sanitizados; issue #151 aberta até o encerramento do ciclo
 > **Autorização inicial:** "autorizo a implementação da issue #151" em 2026-10-27
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-27
@@ -98,7 +98,7 @@ Não executar os arquivos `upgrade_pre.sql`/`upgrade_post.sql` em produção: s�
 
 ## Registro da ação externa E1
 
-O responsável informou em chat, em 2026-10-27, ao ser lembrado da E1 depois do merge da PR #156, que já a tinha concluído antes. É relato humano: o agente não tem acesso ao banco de produção para conferir, e o responsável não informou a data nem os resultados estruturais de `e1_post.sql`. Registrado como informado, sem alegar verificação; os resultados sanitizados podem ser acrescentados quando o responsável os trouxer. Com isso, a autorização da unidade C foi concedida em 2026-10-27.
+O responsável informou em chat, em 2026-10-27, que já tinha concluído a E1 antes (relato humano: o agente não tem acesso ao banco de produção e não a conferiu), e depois, com a frase "concluí a ação externa da issue #151", trouxe o resultado sanitizado das consultas de `e1_post.sql`: `authenticated_leitura` verdadeiro, `anon_leitura` falso, `authenticated_edicao` verdadeiro e `anon_edicao` falso. Isso confirma, pelo seu relato, que `ler_versao_metadados` e `editar_ativo_com_nome` existem em produção, com o grant só para `authenticated`. Não houve data da aplicação da migração nem leitura de carteira, e a igualdade financeira continua provada apenas pelo ensaio local com fixtures fictícias. Com isso, as unidades C e D puderam ser autorizadas.
 
 ## Encerramento
 

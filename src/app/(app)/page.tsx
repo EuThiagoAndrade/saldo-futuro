@@ -5,7 +5,8 @@ import { Dinheiro } from "@/components/dinheiro";
 import { EstadoErro, EstadoVazio } from "@/components/estados";
 import { GraficoBarras, GraficoLinha } from "@/components/graficos/graficos";
 import { margemComum, rotulosDoEixoBarras, rotulosDoEixoLinha } from "@/components/graficos/margem";
-import { GraficoRosca, GraficoRoscaPorClasse } from "@/components/graficos/rosca";
+import { DetalheDoRamo } from "@/components/detalhe-do-ramo";
+import { GraficoRosca, GraficoRoscaPorClasse, GraficoRoscaPorInstituicao } from "@/components/graficos/rosca";
 import { PreviewNotice } from "@/components/preview-notice";
 import { NaoDisponivel, Percentual, ValorOculto, VariacaoPercentual } from "@/components/valores";
 import { dataBr, mesBr } from "@/lib/apresentacao/datas";
@@ -34,7 +35,8 @@ import {
   type TipoDePeriodo,
   variacaoDeM,
 } from "@/lib/telas/inicio";
-import { type InsumosDoInicio, lerInsumosDoInicio, lerInsumosDoInicioPorClasse, nomeDoAtivo } from "@/lib/telas/leituras";
+import { alocacaoPorInstituicao, MACRO_DO_GRUPO, nomeDoGrupoInstitucional, ramoDeClasse } from "@/lib/telas/analises-inicio";
+import { type InsumosDoInicio, lerInsumosDoInicio, lerInsumosDoInicioPorClasse, lerInsumosDoInicioPorInstituicao, nomeDoAtivo } from "@/lib/telas/leituras";
 import type { NoTaxonomia } from "@/lib/telas/taxonomia";
 
 export const metadata = { title: "Início — Saldo Futuro" };
@@ -51,11 +53,24 @@ const rotuloPeriodo = (p: Periodo) => (p.de === p.ate ? mesBr(p.de) : `${mesBr(p
 const maiuscula = (t: string) => `${t[0].toUpperCase()}${t.slice(1)}`;
 const mesOuNulo = (t: string | undefined) => (t && /^\d{4}-(0[1-9]|1[0-2])$/.test(t) ? t : undefined);
 
-type Busca = { periodo?: string; de?: string; ate?: string; distribuicao?: string };
-// Visão da distribuição (ciclo 013, issue #139): por ativo, o padrão, ou por classe macro.
-type Visao = "ativo" | "classe";
-const visaoDe = (busca: Busca): Visao => (busca.distribuicao === "classe" ? "classe" : "ativo");
-type InsumosDaTela = InsumosDoInicio & { nos?: NoTaxonomia[] };
+type Busca = { periodo?: string; de?: string; ate?: string; distribuicao?: string; classe?: string };
+// Visão da distribuição (ciclo 013, issue #139; instituição no ciclo 015, issue #154): por ativo, o
+// padrão, por classe ou por instituição. `classe` é o pai aberto na visão por classe.
+type Visao = "ativo" | "classe" | "instituicao";
+const visaoDe = (busca: Busca): Visao => (busca.distribuicao === "classe" || busca.distribuicao === "instituicao" ? busca.distribuicao : "ativo");
+type InsumosDaTela = InsumosDoInicio & { nos?: NoTaxonomia[]; instituicoes?: { id: string; nome: string }[] };
+
+/** Endereço de uma visão da distribuição: preserva o período; o ramo só existe na visão por classe. */
+function hrefDaDistribuicao(busca: Busca, visao: Visao, classe?: string): string {
+  const params = new URLSearchParams();
+  for (const chave of ["periodo", "de", "ate"] as const) {
+    const valor = busca[chave];
+    if (valor) params.set(chave, valor);
+  }
+  params.set("distribuicao", visao);
+  if (visao === "classe" && classe) params.set("classe", classe);
+  return `?${params.toString()}#distribuicao`;
+}
 
 export default async function InicioPage({ searchParams }: { searchParams: Promise<Busca> }) {
   if (!backend) return <PreviewNotice />;
@@ -65,7 +80,12 @@ export default async function InicioPage({ searchParams }: { searchParams: Promi
 
   let insumos: InsumosDaTela;
   try {
-    insumos = visao === "classe" ? await lerInsumosDoInicioPorClasse(supabase) : await lerInsumosDoInicio(supabase);
+    insumos =
+      visao === "classe"
+        ? await lerInsumosDoInicioPorClasse(supabase)
+        : visao === "instituicao"
+          ? await lerInsumosDoInicioPorInstituicao(supabase)
+          : await lerInsumosDoInicio(supabase);
   } catch (erro) {
     if (!(erro instanceof ErroLeitura)) throw erro;
     return <EstadoErro>{erro.motivo === "mudou" ? MENSAGEM_DADOS_MUDARAM : "Não foi possível ler a carteira. Tente novamente."}</EstadoErro>;
@@ -171,6 +191,10 @@ async function Resumo({
       ? comporDistribuicao(posicoesDeM.map((p) => ({ id: p.ativo_id, nome: nomeDoAtivo(insumos.ativos, p.ativo_id), saldo: p.saldo_final })))
       : null;
   const porClasse = visao === "classe" ? alocacaoDeM(insumos, posicoesDeM) : null;
+  const porInstituicao = visao === "instituicao" ? alocacaoPorInstituicao({ ativos: insumos.ativos, instituicoes: insumos.instituicoes ?? [] }, posicoesDeM) : null;
+  // Ramo aberto na visão por classe (ciclo 015): só um pai válido; o resto volta à raiz.
+  const ramo = visao === "classe" && porClasse ? ramoDeClasse({ ativos: insumos.ativos, nos: insumos.nos ?? [] }, posicoesDeM, busca.classe) : null;
+  const detalheAberto = ramo?.tipo === "detalhe" ? ramo.detalhe.pai.id : undefined;
   const dinheiro = (centavos: bigint | number) => (oculto ? <ValorOculto /> : textoDinheiro(BigInt(centavos)));
   const eixoDinheiro = (reais: number, marcas: number[]) => (oculto ? "••••" : textoEixoDinheiro(reais, marcas));
 
@@ -235,6 +259,7 @@ async function Resumo({
           </div>
           {/* A visão da distribuição continua a mesma ao aplicar o período (R2-2). */}
           <input type="hidden" name="distribuicao" value={visao} />
+          {detalheAberto ? <input type="hidden" name="classe" value={detalheAberto} /> : null}
           <button type="submit" className={botaoSecundario}>
             Ver período
           </button>
@@ -323,15 +348,42 @@ async function Resumo({
               distribuicao={distribuicao}
               dinheiro={dinheiro}
             />
-          ) : porClasse ? (
-            <GraficoRoscaPorClasse
-              id="grafico-distribuicao-classe"
-              titulo={`Distribuição por classe em ${mesBr(M)}`}
-              descricao="Participação de cada classe macro na soma dos saldos positivos dos ativos no fim do último mês fechado, pela classe atual de cada ativo. Saldos negativos ficam fora da rosca, por ativo."
-              alocacao={porClasse.alocacao}
-              nomeDoGrupo={porClasse.nomeDoGrupo}
+          ) : porInstituicao ? (
+            <GraficoRoscaPorInstituicao
+              id="grafico-distribuicao-instituicao"
+              titulo={`Distribuição por instituição em ${mesBr(M)}`}
+              descricao="Participação de cada instituição na soma dos saldos positivos dos ativos no fim do último mês fechado, pela instituição atual de cada ativo; sem instituição e em trânsito aparecem à parte. Além das cinco maiores linhas, as demais somadas em Outros. Saldos negativos ficam fora da rosca, por ativo."
+              alocacao={porInstituicao}
+              nomeDoGrupo={nomeDoGrupoInstitucional}
               dinheiro={dinheiro}
             />
+          ) : visao === "instituicao" ? (
+            <EstadoErro>A distribuição por instituição não está disponível: a instituição de algum ativo não pôde ser lida. Tente novamente.</EstadoErro>
+          ) : porClasse && ramo?.tipo === "detalhe" ? (
+            <DetalheDoRamo
+              id="detalhe-classe"
+              mes={mesBr(M)}
+              detalhe={ramo.detalhe}
+              dinheiro={dinheiro}
+              href={(classe) => hrefDaDistribuicao(busca, "classe", classe)}
+            />
+          ) : porClasse && ramo ? (
+            <>
+              {ramo.tipo === "invalido" ? (
+                <p role="status" className="rounded-md border border-border bg-surface p-3 text-sm/5 text-text-secondary">
+                  A classe pedida não existe ou não tem detalhamento. Mostrando as classes macro.
+                </p>
+              ) : null}
+              <GraficoRoscaPorClasse
+                id="grafico-distribuicao-classe"
+                titulo={`Distribuição por classe em ${mesBr(M)}`}
+                descricao="Participação de cada classe macro na soma dos saldos positivos dos ativos no fim do último mês fechado, pela classe atual de cada ativo. Saldos negativos ficam fora da rosca, por ativo."
+                alocacao={porClasse.alocacao}
+                nomeDoGrupo={porClasse.nomeDoGrupo}
+                dinheiro={dinheiro}
+                hrefDoDetalhe={(grupo) => (MACRO_DO_GRUPO[grupo] ? hrefDaDistribuicao(busca, "classe", MACRO_DO_GRUPO[grupo]) : undefined)}
+              />
+            </>
           ) : (
             <EstadoErro>A distribuição por classe não está disponível: a classe de algum ativo não pôde ser lida. Tente novamente.</EstadoErro>
           )}
@@ -367,25 +419,17 @@ function alocacaoDeM(insumos: InsumosDaTela, posicoesDeM: InsumosDoInicio["posic
  * escolhido, com aria-current na visão atual. Ausente ou inválido abre Por ativo.
  */
 function AlternadorDaDistribuicao({ busca, visao }: { busca: Busca; visao: Visao }) {
-  const href = (destino: Visao) => {
-    const params = new URLSearchParams();
-    for (const chave of ["periodo", "de", "ate"] as const) {
-      const valor = busca[chave];
-      if (valor) params.set(chave, valor);
-    }
-    params.set("distribuicao", destino);
-    return `?${params.toString()}#distribuicao`;
-  };
   const visoes = [
     ["ativo", "Por ativo"],
     ["classe", "Por classe"],
+    ["instituicao", "Por instituição"],
   ] as const;
   return (
     <nav aria-label="Distribuição do patrimônio" className="flex border-b border-border">
       {visoes.map(([destino, rotulo]) => (
         <Link
           key={destino}
-          href={href(destino)}
+          href={hrefDaDistribuicao(busca, destino)}
           aria-current={visao === destino ? "page" : undefined}
           className={`-mb-px flex min-h-11 items-center border-b-2 px-4 text-sm/5 font-medium hover:bg-surface ${
             visao === destino ? "border-primary text-primary" : "border-transparent text-text-secondary"
