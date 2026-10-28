@@ -3,10 +3,13 @@
 // positivos, sem tamanho mínimo, e anel completo para um único positivo. A legenda, as listas e as
 // tabelas usam as mesmas participações; o dinheiro já vem formatado (ou oculto) de quem chama.
 
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { textoParticipacao } from "../../lib/apresentacao/valores";
 import type { Alocacao, Grupo } from "../../lib/financeiro/alocacao";
 import type { Distribuicao, Parte } from "../../lib/financeiro/distribuicao";
+import type { AlocacaoInstitucional, GrupoInstitucional } from "../../lib/financeiro/instituicao";
+import { agruparOutros } from "../../lib/financeiro/rateio";
 
 const TAMANHO = 200;
 const CENTRO = TAMANHO / 2;
@@ -119,6 +122,8 @@ function Tabela({
 }
 
 const FORA = "fora da rosca";
+/** Link de aprofundamento da legenda: alinhado ao texto, com alvo de 44 px. */
+const LINK_DO_DETALHE = "ml-6 inline-flex min-h-11 items-center text-sm/5 font-medium text-primary hover:underline";
 
 export function GraficoRosca({
   id,
@@ -252,6 +257,7 @@ export function GraficoRoscaPorClasse({
   alocacao,
   nomeDoGrupo,
   dinheiro,
+  hrefDoDetalhe,
 }: {
   id: string;
   titulo: string;
@@ -260,6 +266,8 @@ export function GraficoRoscaPorClasse({
   nomeDoGrupo: (grupo: Grupo) => string;
   /** Quantia já formatada, ou "Valor oculto", decidida no servidor por quem chama. */
   dinheiro: (centavos: bigint) => ReactNode;
+  /** Endereço do detalhe de uma classe macro (ciclo 015); trânsito e Sem classe não têm detalhe. */
+  hrefDoDetalhe?: (grupo: Grupo) => string | undefined;
 }) {
   const { base, linhas, negativos } = alocacao;
   const fatias: Fatia[] = linhas.map((l) => ({ chave: l.grupo, saldo: l.saldo, cor: COR_DO_GRUPO[l.grupo].cor }));
@@ -286,11 +294,21 @@ export function GraficoRoscaPorClasse({
         <div className="flex flex-col gap-4 md:flex-row md:items-start lg:flex-col lg:items-stretch">
           <Desenho fatias={fatias} base={base} rotulo={`${id}-titulo ${id}-descricao`} />
           <ol aria-label="Legenda da distribuição por classe" className="flex min-w-0 flex-1 flex-col gap-3">
-            {linhas.map((l) => (
-              <li key={l.grupo} className="flex">
-                <ItemDaLegenda amostra={COR_DO_GRUPO[l.grupo].amostra} nome={nomeDoGrupo(l.grupo)} participacao={l.participacao} valor={dinheiro(l.saldo)} />
-              </li>
-            ))}
+            {linhas.map((l) => {
+              const href = hrefDoDetalhe?.(l.grupo);
+              return (
+                <li key={l.grupo}>
+                  <div className="flex">
+                    <ItemDaLegenda amostra={COR_DO_GRUPO[l.grupo].amostra} nome={nomeDoGrupo(l.grupo)} participacao={l.participacao} valor={dinheiro(l.saldo)} />
+                  </div>
+                  {href ? (
+                    <Link href={href} className={LINK_DO_DETALHE}>
+                      Ver subclasses<span className="sr-only"> de {nomeDoGrupo(l.grupo)}</span>
+                    </Link>
+                  ) : null}
+                </li>
+              );
+            })}
           </ol>
         </div>
       )}
@@ -316,6 +334,121 @@ export function GraficoRoscaPorClasse({
           <summary className="min-h-11 cursor-pointer content-center font-medium text-primary">Ver os números</summary>
           <div className="flex flex-col gap-4 overflow-x-auto">
             <Tabela legenda="Por classe" coluna="Classe" linhas={resumo} />
+          </div>
+        </details>
+      ) : null}
+    </figure>
+  );
+}
+
+// Alocação por instituição (ciclo 015, issue #154; DESIGN.md 2.3 e 6.13; KB-004, seção 15): a
+// mesma rosca da distribuição por ativo, sobre os grupos já rateados (instituições, Sem instituição
+// e Em trânsito). Até seis fatias: as cinco maiores linhas e Outros, derivado depois do rateio, com
+// saldo e participação somados dos componentes. A tabela traz todos os grupos, nunca Outros.
+export function GraficoRoscaPorInstituicao({
+  id,
+  titulo,
+  descricao,
+  alocacao,
+  nomeDoGrupo,
+  dinheiro,
+}: {
+  id: string;
+  titulo: string;
+  descricao: string;
+  alocacao: AlocacaoInstitucional;
+  nomeDoGrupo: (grupo: GrupoInstitucional) => string;
+  /** Quantia já formatada, ou "Valor oculto", decidida no servidor por quem chama. */
+  dinheiro: (centavos: bigint) => ReactNode;
+}) {
+  const { base, linhas, negativos } = alocacao;
+  const chave = (g: GrupoInstitucional) => (g.tipo === "instituicao" ? g.id! : g.tipo);
+  const { principais, outros } = agruparOutros(linhas);
+  const fatias: Fatia[] = [
+    ...principais.map((l, i) => ({ chave: chave(l.grupo), saldo: l.saldo, cor: CORES[i] })),
+    ...(outros ? [{ chave: "outros", saldo: outros.saldo, cor: COR_OUTROS }] : []),
+  ];
+  const linhaDe = (l: (typeof linhas)[number]) => ({ chave: chave(l.grupo), nome: nomeDoGrupo(l.grupo), participacao: textoParticipacao(l.participacao), valor: dinheiro(l.saldo) });
+  const tabela = [
+    ...linhas.map(linhaDe),
+    ...negativos.map((n) => ({ chave: n.id, nome: `${n.nome} (${nomeDoGrupo(n.grupo)})`, participacao: FORA, valor: dinheiro(n.saldo) })),
+  ];
+
+  return (
+    <figure className="flex flex-col gap-3 rounded-md border border-border bg-surface p-4">
+      <figcaption className="flex flex-col gap-1">
+        <span id={`${id}-titulo`} className="text-lg/7 font-semibold text-text">
+          {titulo}
+        </span>
+        <span id={`${id}-descricao`} className="text-sm/5 text-text-secondary">
+          {descricao}
+        </span>
+      </figcaption>
+
+      {base === 0n ? (
+        <p className="text-base/6 text-text-secondary">Não há saldos positivos para exibir.</p>
+      ) : (
+        <div className="flex flex-col gap-4 md:flex-row md:items-start lg:flex-col lg:items-stretch">
+          <Desenho fatias={fatias} base={base} rotulo={`${id}-titulo ${id}-descricao`} />
+          <ol aria-label="Legenda da distribuição por instituição" className="flex min-w-0 flex-1 flex-col gap-3">
+            {principais.map((l, i) => (
+              <li key={chave(l.grupo)} className="flex">
+                <ItemDaLegenda amostra={AMOSTRAS[i]} nome={nomeDoGrupo(l.grupo)} participacao={l.participacao} valor={dinheiro(l.saldo)} />
+              </li>
+            ))}
+            {outros ? (
+              <li>
+                <details className="group">
+                  <summary className="flex min-h-11 cursor-pointer items-start gap-1 py-1 [&::-webkit-details-marker]:hidden">
+                    <svg aria-hidden="true" viewBox="0 0 16 16" className="mt-0.5 size-4 shrink-0 text-text-secondary transition-transform group-open:rotate-90">
+                      <path d="m6 4 4 4-4 4" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    <ItemDaLegenda
+                      amostra={AMOSTRA_OUTROS}
+                      nome={
+                        <>
+                          Outros <span className="text-text-secondary">({outros.componentes.length} grupos)</span>
+                        </>
+                      }
+                      participacao={outros.participacao}
+                      valor={dinheiro(outros.saldo)}
+                    />
+                  </summary>
+                  <ul className="mt-2 flex flex-col gap-3 border-l border-border pl-6">
+                    {outros.componentes.map((l) => (
+                      <li key={chave(l.grupo)} className="flex">
+                        <ItemDaLegenda nome={nomeDoGrupo(l.grupo)} participacao={l.participacao} valor={dinheiro(l.saldo)} />
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              </li>
+            ) : null}
+          </ol>
+        </div>
+      )}
+
+      {negativos.length ? (
+        <div className="flex flex-col gap-2 border-t border-border pt-3">
+          <p className="text-sm/5 font-medium text-text">Saldos negativos, fora da rosca</p>
+          <ul className="flex flex-col gap-2">
+            {negativos.map((n) => (
+              <li key={n.id} className="flex items-start gap-3 text-sm/5">
+                <span className="min-w-0 flex-1 break-words text-text">
+                  {n.nome} <span className="text-text-secondary">({nomeDoGrupo(n.grupo)})</span>
+                </span>
+                <span className="shrink-0 text-right text-text-secondary tabular-nums">{dinheiro(n.saldo)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
+      {tabela.length ? (
+        <details className="text-sm/5">
+          <summary className="min-h-11 cursor-pointer content-center font-medium text-primary">Ver os números</summary>
+          <div className="flex flex-col gap-4 overflow-x-auto">
+            <Tabela legenda="Por instituição" coluna="Instituição" linhas={tabela} />
           </div>
         </details>
       ) : null}

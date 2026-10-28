@@ -6,7 +6,7 @@ tags:
   - referência
 author: "Thiago Andrade e Claude"
 module: "Produto"
-last_updated: "2026-10-26"
+last_updated: "2026-10-27"
 origin_cycle: "002"
 ---
 
@@ -89,8 +89,13 @@ O Saldo Futuro é um sistema web de gestão de investimentos pessoais, multiusu�
 - distribuição por classe macro (ciclo `013`, issue #139, BL-014 e parcela de BL-009):
   - o Início alterna "Por ativo" (padrão) e "Por classe" por links `?distribuicao=ativo` e `?distribuicao=classe`, que preservam o período; o formulário de período preserva a visão; parâmetro ausente ou inválido abre Por ativo; só a visão escolhida é lida e renderizada (DESIGN.md 6.12, variante sem contador);
   - a alocação vem de `src/lib/financeiro/alocacao.ts`, função irmã da distribuição por ativo: cada ativo com posição em M segue a classe macro do nó atual (subindo no máximo dois pais), o trânsito tem linha própria e só o vínculo nulo é Sem classe; negativos saem por ativo antes de agrupar; participação pelo maior resto entre as linhas, com empate pela ordem fixa das oito linhas, sem Outros (KB-004, seção 15, CR-C01 a CR-C12);
-  - a leitura (`lerInsumosDoInicioPorClasse`, em `src/lib/telas/leituras.ts`) junta à marca da carteira a versão da classificação (`ler_versao_classificacao`, texto decimal): uma reclassificação durante a leitura descarta tudo e repete, até 3 tentativas, e depois a tela mostra o erro de dados que mudaram; nó inexistente torna só a visão por classe indisponível;
+  - a leitura (`lerInsumosDoInicioPorClasse`, em `src/lib/telas/leituras.ts`) junta à marca da carteira a versão da classificação (`ler_versao_classificacao`, texto decimal): uma reclassificação durante a leitura descarta tudo e repete, até 3 tentativas, e depois a tela mostra o erro de dados que mudaram; nó inexistente torna só a visão por classe indisponível (desde o ciclo `015`, a marca é a versão dos metadados, ver abaixo);
   - rosca e tabela "Por classe" com cores fixas por linha (`chart-7` e `chart-8` novos; DESIGN.md 2.3 e 6.13) e a mesma ocultação de valores.
+- análises por instituição e níveis de classe (ciclo `015`, issues #151 a #154, parcela de BL-009):
+  - coerência (issues #151 e #153): o banco mantém `profiles.versao_metadados`, incrementada por gatilhos em toda mudança de nome, instituição ou classe do ativo e em toda criação, remoção ou renomeação de instituição, inclusive A → B → A; `ler_versao_metadados()` a devolve como texto decimal. Os três leitores do Início (por ativo, por classe e por instituição, em `src/lib/telas/leituras.ts`) usam a marca da carteira mais essa versão, lidas em paralelo antes e depois dos insumos, com signal novo por fase e até 3 tentativas; falha de RPC ou marca inválida é erro, sem fallback. A leitura por classe não chama mais a marca antiga da classificação (a coluna, o gatilho e a RPC antigos ficam no banco para a aplicação anterior). O fechamento e as telas descritivas não ganharam composição nova: leem nomes como rótulos de UUIDs, revalidados pelo banco;
+  - edição do nome (issue #153): o formulário de `/ativos/[id]/editar` tem o campo Nome e salva nome e detalhes numa única chamada (`editar_ativo_com_nome`), com a validação do banco (`btrim` de espaço comum, 1 a 100 caracteres Unicode, nomes repetidos válidos); o tipo de ajuste e o trânsito continuam protegidos; o nome atual aparece também nos registros antigos (DESIGN.md 6.8);
+  - o Início ganha a visão "Por instituição" (`?distribuicao=instituicao`) no alternador: rosca com até seis fatias (cinco maiores linhas e Outros derivado depois do rateio), Sem instituição e Em trânsito como grupos próprios, negativos por ativo à parte e tabela completa; os cálculos vêm de `src/lib/financeiro/instituicao.ts` e `rateio.ts` (KB-004, seção 15, CR-015-01 a CR-015-16);
+  - na visão por classe, as macros da raiz têm "Ver subclasses" e o detalhe (`?distribuicao=classe&classe=<UUID>`) lista filhos imediatos e resíduo de uma macro ou subclasse com "% da carteira" e "% do pai", em tabela no desktop e cartões no celular, sem linha do pai, total ou resumo numérico; tipo é terminal, ramo inválido volta à raiz com aviso, e o ramo não sobrevive à troca de visão. Os cálculos vêm de `src/lib/financeiro/niveis.ts`; a composição com os insumos, de `src/lib/telas/analises-inicio.ts` (DESIGN.md 6.12 e 6.13).
 
 Permanecem fora da entrega:
 
@@ -292,3 +297,4 @@ O plano executado do ciclo `001` (`_project/executed/001_fundacao_aplicacao/001_
 | 2026-10-26 | `014` | Encerramento: ação externa E1 concluída, com o catálogo de produção em 133 nós (6, 23 e 104); a release `0.10.0`, que inclui a ampliação, e a data da nota em `/novidades` ficam com o encerramento do ciclo `013` |
 | 2026-10-26 | `013` | Issue #139 (BL-014 e parcela de BL-009): distribuição por classe macro no Início, com alternador Por ativo / Por classe, leitura coerente com a versão da classificação e cores `chart-7` e `chart-8` |
 | 2026-10-27 | `013` | Encerramento: release `0.10.0` publicada (PR #141) com a data registrada em `/novidades`; taxonomia, seletor de classe e distribuição por classe macro conferidos em produção pelo responsável, em desktop e celular |
+| 2026-10-27 | `015` | Issues #151 a #154 (parcela de BL-009): versão dos metadados e edição transacional do nome, regras e casos CR-015 (KB-004), leitores do Início protegidos pela marca nova, edição do nome no formulário e as análises por instituição e por nível de classe no Início |

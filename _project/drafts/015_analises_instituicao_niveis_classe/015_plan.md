@@ -14,7 +14,8 @@
 > **Modo contínuo:** `—`
 > **Autorização de implementação da unidade A:** "autorizo a implementação da issue #151" em 2026-10-27; recebida; execução iniciada na branch `feature/issue-151`, task `015_task_issue-151.md`.
 > **Autorização de implementação da unidade B:** "autorizo a implementação da issue #152" em 2026-10-27; recebida; entregue pela PR #156.
-> **Autorização de implementação da unidade C:** "autorizo a implementação da issue #153" em 2026-10-27; recebida; execução iniciada na branch `feature/issue-153`, task `015_task_issue-153.md`.
+> **Autorização de implementação da unidade C:** "autorizo a implementação da issue #153" em 2026-10-27; recebida; entregue pela PR #158.
+> **Autorização de implementação da unidade D:** "autorizo a implementação da issue #154" em 2026-10-27; recebida; execução iniciada na branch `feature/issue-154`, task `015_task_issue-154.md`.
 > **Revisão formal:** `Concluída`
 > **Veredito da revisão:** `APTO PARA APROVAÇÃO`
 > **Aprovação humana pós-revisão:** `Aprovada em 2026-10-27`
@@ -263,7 +264,7 @@ Mapa prospectivo, não lista de mudanças já executadas:
 
 ## Decomposição em issues e PRs
 
-As issues A–D foram criadas após a integração da [PR #150](https://github.com/EuThiagoAndrade/saldo-futuro/pull/150) e a confirmação dos payloads em 2026-10-27. Os corpos efetivos foram publicados conforme o formulário `.github/ISSUE_TEMPLATE/feature_request.yml` e estão registrados em “Registro de criação das issues”. A unidade A (#151) foi autorizada, iniciada e integrada pela PR #155; a unidade B (#152) foi autorizada, iniciada e integrada pela PR #156; a unidade C (#153) foi autorizada e iniciada; D continua sem autorização.
+As issues A–D foram criadas após a integração da [PR #150](https://github.com/EuThiagoAndrade/saldo-futuro/pull/150) e a confirmação dos payloads em 2026-10-27. Os corpos efetivos foram publicados conforme o formulário `.github/ISSUE_TEMPLATE/feature_request.yml` e estão registrados em “Registro de criação das issues”. A unidade A (#151) foi autorizada, iniciada e integrada pela PR #155; a unidade B (#152) foi autorizada, iniciada e integrada pela PR #156; a unidade C (#153) foi autorizada, iniciada e integrada pela PR #158; a unidade D (#154) foi autorizada e iniciada.
 
 | Unidade | Issue e título | Dependência | Entrega e fechamento |
 | :-- | :-- | :-- | :-- |
@@ -295,7 +296,7 @@ Issues usam branch `feature/issue-N` e commit `feat(issue-N):`; documentação u
 
 ## Dependências e blockers
 
-Rodada 1 emitiu `REQUER NOVA RODADA`, com um bloqueador e três ressalvas; a correção v2 respondeu R1-1 a R1-4 e a Rodada 2 confirmou todos resolvidos, com `APTO PARA APROVAÇÃO` e nenhum achado novo. A aprovação humana posterior foi recebida em 2026-10-27 e registrada acima. D1/D2 permanecem. A PR documental #150 foi integrada; os payloads foram confirmados e as issues #151–#154 estão abertas. A autorização da #151 foi recebida e sua execução está registrada em `015_task_issue-151.md`; a PR #155 foi integrada. A autorização da #152 foi recebida e a PR #156 foi integrada. O responsável informou em 2026-10-27 que a E1 já estava concluída (relato humano, sem data nem resultados sanitizados; registrado na task da #151), e a autorização da #153 foi recebida e sua execução está registrada em `015_task_issue-153.md`. Docker e Supabase local foram conferidos; a autorização da D continua pendente. Nenhum pacote ou checkout externo novo é previsto.
+Rodada 1 emitiu `REQUER NOVA RODADA`, com um bloqueador e três ressalvas; a correção v2 respondeu R1-1 a R1-4 e a Rodada 2 confirmou todos resolvidos, com `APTO PARA APROVAÇÃO` e nenhum achado novo. A aprovação humana posterior foi recebida em 2026-10-27 e registrada acima. D1/D2 permanecem. A PR documental #150 foi integrada; os payloads foram confirmados e as issues #151–#154 estão abertas. A autorização da #151 foi recebida e sua execução está registrada em `015_task_issue-151.md`; a PR #155 foi integrada. A autorização da #152 foi recebida e a PR #156 foi integrada. O responsável informou em 2026-10-27 que a E1 já estava concluída (relato humano, sem data nem resultados sanitizados; registrado na task da #151), e a #153 foi autorizada e integrada pela PR #158. O resultado sanitizado da E1 foi trazido pelo responsável (quatro indicadores verdadeiro/falso esperados, registrados na task da #151), e a autorização da #154 foi recebida e sua execução está registrada em `015_task_issue-154.md`. Docker e Supabase local foram conferidos; V, release e encerramento continuam pendentes. Nenhum pacote ou checkout externo novo é previsto.
 
 ### E1 — Ação externa depois da unidade A
 
