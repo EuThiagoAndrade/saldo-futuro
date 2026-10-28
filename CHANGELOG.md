@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.11.0](https://github.com/EuThiagoAndrade/saldo-futuro/compare/v0.10.0...v0.11.0) (2026-10-28)
+
+
+### Features
+
+* **issue-152:** calcular alocação por instituição e níveis de classe ([#156](https://github.com/EuThiagoAndrade/saldo-futuro/issues/156)) ([10bc3ad](https://github.com/EuThiagoAndrade/saldo-futuro/commit/10bc3adea7498337d4f66bb0066ab1e31b7949a8)), closes [#152](https://github.com/EuThiagoAndrade/saldo-futuro/issues/152)
+* **issue-153:** proteger análises do Início e editar o nome do ativo ([#158](https://github.com/EuThiagoAndrade/saldo-futuro/issues/158)) ([e0e21df](https://github.com/EuThiagoAndrade/saldo-futuro/commit/e0e21dffc722aee575f1ed1ad0c7cd70896f5cb5)), closes [#153](https://github.com/EuThiagoAndrade/saldo-futuro/issues/153)
+* **issue-154:** exibir análises por instituição e detalhamento de classes ([#159](https://github.com/EuThiagoAndrade/saldo-futuro/issues/159)) ([7f32a9a](https://github.com/EuThiagoAndrade/saldo-futuro/commit/7f32a9abd965e841a6dbbac7c053102ef665a0d9)), closes [#154](https://github.com/EuThiagoAndrade/saldo-futuro/issues/154)
+
 ## [0.10.0](https://github.com/EuThiagoAndrade/saldo-futuro/compare/v0.9.0...v0.10.0) (2026-10-27)
 
 
