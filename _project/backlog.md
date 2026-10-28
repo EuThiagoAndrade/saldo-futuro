@@ -223,7 +223,7 @@ Observado na seção 9.5 da KB-004 ("Benchmark de valor absoluto", decisão D14)
 ## BL-009 — Metadados descritivos e classificação de ativos com aproveitamento do histórico
 
 > **Criado em:** `2026-10-20`
-> **Atualizado em:** `2026-10-27`
+> **Atualizado em:** `2026-10-28`
 > **Estado:** `Disponível`
 
 ### Problema e benefício esperado
@@ -238,17 +238,18 @@ Observado em `src/components/formularios/novo-ativo.tsx` e no schema da tabela `
 
 - ciclo 012 — 2026-10-24 — parcial: campos descritivos do ativo (instituição, classe e detalhes opcionais), com cadastro, edição e exibição
 - ciclo 013 — 2026-10-27 — parcial: visão analítica por classe de alocação (classe macro), com a taxonomia global de classes no cadastro
+- ciclo 015 — 2026-10-28 — parcial: visões analíticas por instituição e por classe nos níveis 2 e 3
 
 ### Restante
 
 - Carga retroativa dos dados descritivos para as posições históricas migradas (passo local e manual do responsável, fora de ciclo).
-- Visões analíticas por instituição e por classe nos níveis 2 e 3 (dependem de cálculo e de decisão própria).
 
 ### Registro
 
 - 2026-10-20 — Pedido explícito de guardar a necessidade; captura local.
 - 2026-10-24 — Retorno pós-integração da seleção parcial do ciclo 012; campos descritivos encaminhados (issues #126, #127 e #128, PRs #129, #131 e #132); carga retroativa e visões analíticas permanecem no Restante; item segue Disponível.
 - 2026-10-27 — Retorno pós-integração da seleção parcial do ciclo 013; visão por classe macro encaminhada (issues #137, #138 e #139, PRs #140, #142 e #147); carga retroativa e as demais visões analíticas permanecem no Restante; item segue Disponível.
+- 2026-10-28 — Retorno pós-integração da seleção parcial do ciclo 015; visões por instituição e por classe nos níveis 2 e 3 encaminhadas (issues #151, #152, #153 e #154, PRs #155, #156, #158 e #159, encerramento na PR #160); a carga retroativa permanece no Restante; item segue Disponível.
 
 ## BL-010 — Combobox pesquisável e ordenação alfabética uniforme para seleção de ativos
 
