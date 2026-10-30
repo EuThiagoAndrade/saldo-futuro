@@ -17,7 +17,7 @@ export const VERSAO_ATUAL: string = pacote.version;
 export const HISTORICO: readonly Novidade[] = [
   {
     versao: "0.12.0",
-    publicadaEm: null,
+    publicadaEm: "2026-10-30",
     notas: [
       "No Início, a distribuição do patrimônio agora abre Por instituição, e as visões aparecem na ordem Por instituição, Por classe e Por ativo.",
       "No detalhe de uma classe, as participações passaram a se chamar % na carteira e % na classe, com a explicação de cada uma logo acima da tabela.",
