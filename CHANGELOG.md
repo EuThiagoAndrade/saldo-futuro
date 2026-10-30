@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.1](https://github.com/EuThiagoAndrade/saldo-futuro/compare/v0.12.0...v0.12.1) (2026-10-30)
+
+
+### Bug Fixes
+
+* **issue-167:** registrar a data de publicação da nota 0.12.0 ([#168](https://github.com/EuThiagoAndrade/saldo-futuro/issues/168)) ([240c718](https://github.com/EuThiagoAndrade/saldo-futuro/commit/240c7182552f71dd4c16d0208c7f764ce0e72ff4)), closes [#167](https://github.com/EuThiagoAndrade/saldo-futuro/issues/167)
+
 ## [0.12.0](https://github.com/EuThiagoAndrade/saldo-futuro/compare/v0.11.0...v0.12.0) (2026-10-30)
 
 
