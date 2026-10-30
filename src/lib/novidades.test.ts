@@ -77,9 +77,9 @@ describe("histórico do produto", () => {
     expect(novidadesPublicadas("0.9.0", HISTORICO).map((n) => n.versao)).toEqual(["0.9.0", "0.8.0", "0.7.0"]);
   });
 
-  it("a nota da 0.12.0 (ordem e rótulos da distribuição) fica sem data e só aparece quando a 0.12.0 for lançada", () => {
+  it("a nota da 0.12.0 (ordem e rótulos da distribuição) tem a data de publicação da release e só aparece quando a 0.12.0 for lançada", () => {
     const nota = HISTORICO.find((n) => n.versao === "0.12.0");
-    expect(nota?.publicadaEm).toBeNull();
+    expect(nota?.publicadaEm).toBe("2026-10-30");
     expect(novidadesPublicadas("0.11.0", HISTORICO).map((n) => n.versao)).not.toContain("0.12.0");
     expect(novidadesPublicadas("0.12.0", HISTORICO).map((n) => n.versao)[0]).toBe("0.12.0");
   });
