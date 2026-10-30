@@ -428,7 +428,7 @@ Necessidade apontada na ideação do ciclo 013 (decisão D11), que deixou esses 
 
 > **Criado em:** `2026-10-30`
 > **Atualizado em:** `2026-10-30`
-> **Estado:** `Disponível`
+> **Estado:** `Encaminhado`
 
 ### Problema e benefício esperado
 
@@ -440,7 +440,7 @@ O alternador da distribuição no Início usa links que preservam a visão indic
 
 ### Encaminhamentos
 
-—
+- ciclo 016 — 2026-10-30 — integral
 
 ### Restante
 
@@ -449,12 +449,13 @@ O alternador da distribuição no Início usa links que preservam a visão indic
 ### Registro
 
 - 2026-10-30 — Pedido explícito de guardar a proposta de reordenação e abertura padrão da distribuição; captura local.
+- 2026-10-30 — Retorno pós-integração da seleção original do ciclo 016; necessidade integralmente encaminhada (issue #163, PR #164, release 0.12.0 pela PR #165).
 
 ## BL-017 — Rótulos claros das participações no detalhe por classe
 
 > **Criado em:** `2026-10-30`
 > **Atualizado em:** `2026-10-30`
-> **Estado:** `Disponível`
+> **Estado:** `Encaminhado`
 
 ### Problema e benefício esperado
 
@@ -466,7 +467,7 @@ Na visão de Renda fixa, a base de “% na classe” é o total positivo de Rend
 
 ### Encaminhamentos
 
-—
+- ciclo 016 — 2026-10-30 — integral
 
 ### Restante
 
@@ -475,3 +476,4 @@ Na visão de Renda fixa, a base de “% na classe” é o total positivo de Rend
 ### Registro
 
 - 2026-10-30 — Pedido explícito de guardar a proposta de nomenclatura dos percentuais no detalhe por classe; captura local.
+- 2026-10-30 — Retorno pós-integração da seleção original do ciclo 016; necessidade integralmente encaminhada (issue #163, PR #164, release 0.12.0 pela PR #165).
