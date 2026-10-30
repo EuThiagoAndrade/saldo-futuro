@@ -423,3 +423,55 @@ Necessidade apontada na ideação do ciclo 013 (decisão D11), que deixou esses 
 ### Registro
 
 - 2026-10-26 — Pedido explícito de capturar os atributos complementares deixados fora do ciclo 013 (D11); captura local.
+
+## BL-016 — Ordem das visões da distribuição do patrimônio
+
+> **Criado em:** `2026-10-30`
+> **Atualizado em:** `2026-10-30`
+> **Estado:** `Disponível`
+
+### Problema e benefício esperado
+
+No Início, as visões da distribuição do patrimônio aparecem na ordem Por ativo, Por classe e Por instituição, destacando primeiro a visão individual. O responsável prefere apresentar as visões na sequência Por instituição, Por classe e Por ativo, começando pelos agrupamentos e terminando nos ativos individuais. Quando nenhuma visão tiver sido escolhida na URL, Por instituição deve abrir por padrão; uma visão explicitamente indicada deve continuar sendo preservada. O benefício esperado é alinhar a ordem e a abertura inicial à forma de leitura desejada, mantendo disponíveis as três perspectivas.
+
+### Contexto
+
+O alternador da distribuição no Início usa links que preservam a visão indicada na URL e atualmente abre Por ativo quando o parâmetro está ausente ou inválido. Instituição e classe são perspectivas distintas de agrupamento; a sequência registra a preferência de navegação do responsável, sem implicar relação hierárquica entre elas.
+
+### Encaminhamentos
+
+—
+
+### Restante
+
+—
+
+### Registro
+
+- 2026-10-30 — Pedido explícito de guardar a proposta de reordenação e abertura padrão da distribuição; captura local.
+
+## BL-017 — Rótulos claros das participações no detalhe por classe
+
+> **Criado em:** `2026-10-30`
+> **Atualizado em:** `2026-10-30`
+> **Estado:** `Disponível`
+
+### Problema e benefício esperado
+
+No detalhe por classe do Início, os cabeçalhos “% da carteira” e “% do pai” não deixam imediatamente clara a base de cada participação. O responsável propõe usar “% na carteira” e “% na classe”, mantendo a coluna Saldo e o restante da tela. Ao aprofundar um ramo, “% na classe” deve continuar como rótulo e usar como base o grupo que está aberto. O benefício esperado é tornar as proporções mais fáceis de interpretar sem alterar os saldos ou as participações calculadas.
+
+### Contexto
+
+Na visão de Renda fixa, a base de “% na classe” é o total positivo de Renda fixa; no detalhe de uma subclasse, a base passa a ser o total positivo dessa subclasse. O breadcrumb “Classes macro” e os ancestrais continuam indicando o caminho de volta e permanecem como estão; o ajuste discutido limita-se aos dois cabeçalhos percentuais.
+
+### Encaminhamentos
+
+—
+
+### Restante
+
+—
+
+### Registro
+
+- 2026-10-30 — Pedido explícito de guardar a proposta de nomenclatura dos percentuais no detalhe por classe; captura local.
