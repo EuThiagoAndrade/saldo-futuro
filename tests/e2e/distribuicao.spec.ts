@@ -54,6 +54,7 @@ test.describe("distribuição em rosca (#107)", () => {
   test("cinco fatias e Outros, nomes inteiros, negativos fora da rosca e tabelas com as mesmas participações", async ({ page }) => {
     await page.setViewportSize(DESKTOP);
     await entrar(page, u.comum);
+    await page.goto("/?distribuicao=ativo");
     const f = figura(page);
     await expect(f.getByRole("img")).toBeVisible();
     expect(await f.locator('svg path[fill^="var(--color-chart-"]').count()).toBe(6);
@@ -92,6 +93,7 @@ test.describe("distribuição em rosca (#107)", () => {
   test("Ocultar valores esconde toda quantia da distribuição, também em textos e atributos; percentuais ficam", async ({ page, context, baseURL }) => {
     await context.addCookies([{ name: "sf_ocultar_valores", value: "1", url: baseURL! }]);
     await entrar(page, u.comum);
+    await page.goto("/?distribuicao=ativo");
     const f = figura(page);
     await f.getByText("Ver os números").click();
     await legenda(f).getByText("Outros").click();
@@ -108,6 +110,7 @@ test.describe("distribuição em rosca (#107)", () => {
     test(`sem violações de acessibilidade nem rolagem horizontal em ${tamanho.width} px`, async ({ page }) => {
       await page.setViewportSize(tamanho);
       await entrar(page, u.comum);
+      await page.goto("/?distribuicao=ativo");
       const f = figura(page);
       await legenda(f).getByText("Outros").click();
       await f.getByText("Ver os números").click();

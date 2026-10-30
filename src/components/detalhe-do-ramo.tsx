@@ -97,8 +97,8 @@ export function DetalheDoRamo({
         ) : (
           <>
             <p className="text-sm/5 text-text-secondary">
-              “% da carteira” é a parte de cada grupo entre todos os grupos da carteira neste nível; “% do pai” é a parte entre os grupos listados aqui. As bases são diferentes e cada
-              arredondamento é independente.
+              “% na carteira” é a parte de cada grupo entre todos os grupos da carteira neste nível; “% na classe” é a parte entre os grupos listados aqui, dentro da classe aberta. As bases
+              são diferentes e cada arredondamento é independente.
             </p>
 
             <div className="hidden md:block">
@@ -113,10 +113,10 @@ export function DetalheDoRamo({
                       Saldo
                     </th>
                     <th scope="col" className="p-2 text-right font-medium">
-                      % da carteira
+                      % na carteira
                     </th>
                     <th scope="col" className="p-2 text-right font-medium">
-                      % do pai
+                      % na classe
                     </th>
                   </tr>
                 </thead>
@@ -142,9 +142,9 @@ export function DetalheDoRamo({
                   <dl className="grid grid-cols-[1fr_auto] gap-x-3 gap-y-1 text-sm/5">
                     <dt className="text-text-secondary">Saldo</dt>
                     <dd className="text-right tabular-nums">{dinheiro(l.saldo)}</dd>
-                    <dt className="text-text-secondary">% da carteira</dt>
+                    <dt className="text-text-secondary">% na carteira</dt>
                     <dd className="text-right tabular-nums">{textoParticipacao(l.participacaoCarteira)}</dd>
-                    <dt className="text-text-secondary">% do pai</dt>
+                    <dt className="text-text-secondary">% na classe</dt>
                     <dd className="text-right tabular-nums">{textoParticipacao(l.participacaoPai)}</dd>
                   </dl>
                 </li>

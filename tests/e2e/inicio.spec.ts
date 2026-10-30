@@ -95,6 +95,7 @@ test.describe("Início", () => {
     expect((await cliente.rpc("fechar_mes", { p_mes: "2026-04-01", p_saldos: { [a]: 805000 } })).error).toBeNull();
 
     await entrar(page, u.cr17);
+    await page.goto("/?distribuicao=ativo");
     await expect(cartao(page, "Patrimônio")).toContainText("R$ 10.050,00");
     await expect(cartao(page, "Patrimônio")).toContainText("em 30/04/2026");
     const distribuicao = page.getByRole("figure").filter({ hasText: "Distribuição por ativo em abril de 2026" });

@@ -54,10 +54,11 @@ const maiuscula = (t: string) => `${t[0].toUpperCase()}${t.slice(1)}`;
 const mesOuNulo = (t: string | undefined) => (t && /^\d{4}-(0[1-9]|1[0-2])$/.test(t) ? t : undefined);
 
 type Busca = { periodo?: string; de?: string; ate?: string; distribuicao?: string; classe?: string };
-// Visão da distribuição (ciclo 013, issue #139; instituição no ciclo 015, issue #154): por ativo, o
-// padrão, por classe ou por instituição. `classe` é o pai aberto na visão por classe.
+// Visão da distribuição (ciclo 013, issue #139; instituição no ciclo 015, issue #154; ordem e padrão
+// no ciclo 016, issue #163): por instituição, o padrão, por classe ou por ativo. `classe` é o pai
+// aberto na visão por classe.
 type Visao = "ativo" | "classe" | "instituicao";
-const visaoDe = (busca: Busca): Visao => (busca.distribuicao === "classe" || busca.distribuicao === "instituicao" ? busca.distribuicao : "ativo");
+const visaoDe = (busca: Busca): Visao => (busca.distribuicao === "ativo" || busca.distribuicao === "classe" ? busca.distribuicao : "instituicao");
 type InsumosDaTela = InsumosDoInicio & { nos?: NoTaxonomia[]; instituicoes?: { id: string; nome: string }[] };
 
 /** Endereço de uma visão da distribuição: preserva o período; o ramo só existe na visão por classe. */
@@ -416,13 +417,13 @@ function alocacaoDeM(insumos: InsumosDaTela, posicoesDeM: InsumosDoInicio["posic
 
 /**
  * Alternador da distribuição (DESIGN.md 6.12, variante sem contador): links que preservam o período
- * escolhido, com aria-current na visão atual. Ausente ou inválido abre Por ativo.
+ * escolhido, com aria-current na visão atual. Ausente ou inválido abre Por instituição.
  */
 function AlternadorDaDistribuicao({ busca, visao }: { busca: Busca; visao: Visao }) {
   const visoes = [
-    ["ativo", "Por ativo"],
-    ["classe", "Por classe"],
     ["instituicao", "Por instituição"],
+    ["classe", "Por classe"],
+    ["ativo", "Por ativo"],
   ] as const;
   return (
     <nav aria-label="Distribuição do patrimônio" className="flex border-b border-border">
