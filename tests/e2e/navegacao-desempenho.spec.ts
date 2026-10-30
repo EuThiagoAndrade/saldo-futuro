@@ -284,7 +284,8 @@ for (const [alvo, alteracao, prova] of [
     await identificar(page.context(), 0);
     await page.context().addCookies([{ name: 'sf_d13', value: prova, url: 'http://127.0.0.1:3105' }, { name: 'sf_d13_alvo', value: alvo, url: 'http://127.0.0.1:3105' }]);
 
-    navegacao = page.goto('/');
+    // Só esta prova inspeciona o detalhe por ativo, então pede a visão explicitamente (ciclo 016).
+    navegacao = page.goto('/?distribuicao=ativo');
     await expect.poll(() => existsSync(prontoD13), { timeout: 120_000 }).toBe(true);
 
     const mes = '2026-09-01';

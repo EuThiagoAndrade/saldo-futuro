@@ -4,7 +4,7 @@ import pacote from "../../package.json";
 // manual em linguagem simples, a partir da 0.7.0. Uma entrada só aparece depois que sua versão
 // foi lançada no build (versão menor ou igual à corrente); versão sem entrada não tem notas, sem
 // erro. A data é a civil da publicação da release em America/Cuiaba, preenchida só quando
-// comprovada (no encerramento do ciclo); até lá fica null.
+// comprovada, depois da publicação da release; até lá fica null.
 
 export interface Novidade {
   versao: string;
@@ -15,6 +15,14 @@ export interface Novidade {
 export const VERSAO_ATUAL: string = pacote.version;
 
 export const HISTORICO: readonly Novidade[] = [
+  {
+    versao: "0.12.0",
+    publicadaEm: null,
+    notas: [
+      "No Início, a distribuição do patrimônio agora abre Por instituição, e as visões aparecem na ordem Por instituição, Por classe e Por ativo.",
+      "No detalhe de uma classe, as participações passaram a se chamar % na carteira e % na classe, com a explicação de cada uma logo acima da tabela.",
+    ],
+  },
   {
     versao: "0.11.0",
     publicadaEm: "2026-10-28",

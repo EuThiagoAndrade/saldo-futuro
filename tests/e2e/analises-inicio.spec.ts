@@ -102,21 +102,22 @@ test.describe("análises por instituição e níveis de classe (#154)", () => {
 
   const alternador = (page: Page) => page.getByRole("navigation", { name: "Distribuição do patrimônio" });
   const figuraInstituicao = (page: Page) => page.getByRole("figure").filter({ hasText: "Distribuição por instituição em março de 2026" });
+  const figuraAtivo = (page: Page) => page.getByRole("figure").filter({ hasText: "Distribuição por ativo em março de 2026" });
   const figuraClasse = (page: Page) => page.getByRole("figure").filter({ hasText: "Distribuição por classe em março de 2026" });
   const detalheDe = (page: Page, caminho: string) => page.getByRole("figure").filter({ hasText: `${caminho} em março de 2026` });
   const participacoes = async (escopo: Locator) => (await escopo.innerText()).match(PRECOS) ?? [];
   const soma = (textos: string[]) => textos.reduce((s, t) => s + Number(t.replace(/[,%]/g, "")), 0);
   const linhas = async (tabela: Locator) => (await tabela.getByRole("row").allInnerTexts()).slice(1).map((t) => t.split("\t").map((c) => c.replace(/\s+/g, " ").replace(/ :/g, ":").trim()));
 
-  test("o alternador tem três visões, preserva o período e só a visão escolhida é renderizada", async ({ page }) => {
+  test("o alternador tem três visões na ordem instituição, classe e ativo, preserva o período e só a visão escolhida é renderizada", async ({ page }) => {
     await entrar(page, u.comum);
     await page.goto("/?periodo=12_meses&distribuicao=instituicao");
-    await expect(alternador(page).getByRole("link")).toHaveText(["Por ativo", "Por classe", "Por instituição"]);
+    await expect(alternador(page).getByRole("link")).toHaveText(["Por instituição", "Por classe", "Por ativo"]);
     await expect(alternador(page).getByRole("link", { name: "Por instituição" })).toHaveAttribute("aria-current", "page");
     await expect(alternador(page).getByRole("link", { name: "Por ativo" })).toHaveAttribute("href", /periodo=12_meses.*distribuicao=ativo/);
     await expect(figuraInstituicao(page)).toBeVisible();
     await expect(figuraClasse(page)).toHaveCount(0);
-    await expect(page.getByRole("figure").filter({ hasText: "Distribuição por ativo" })).toHaveCount(0);
+    await expect(figuraAtivo(page)).toHaveCount(0);
 
     // O formulário de período preserva a visão.
     await page.getByLabel("Período", { exact: true }).selectOption("mes");
@@ -125,9 +126,22 @@ test.describe("análises por instituição e níveis de classe (#154)", () => {
     await expect(page).toHaveURL(/distribuicao=instituicao/);
     await expect(figuraInstituicao(page)).toBeVisible();
 
-    // Parâmetro desconhecido abre Por ativo.
-    await page.goto("/?distribuicao=qualquer");
+    // Parâmetro ausente ou desconhecido abre Por instituição, e os valores explícitos mantêm a visão.
+    for (const rota of ["/", "/?distribuicao=qualquer", "/?distribuicao="]) {
+      await page.goto(rota);
+      await expect(alternador(page).getByRole("link", { name: "Por instituição" }), rota).toHaveAttribute("aria-current", "page");
+      await expect(figuraInstituicao(page), rota).toBeVisible();
+      await expect(figuraClasse(page), rota).toHaveCount(0);
+      await expect(figuraAtivo(page), rota).toHaveCount(0);
+    }
+    await page.goto("/?distribuicao=ativo");
     await expect(alternador(page).getByRole("link", { name: "Por ativo" })).toHaveAttribute("aria-current", "page");
+    await expect(figuraAtivo(page)).toBeVisible();
+    await expect(figuraInstituicao(page)).toHaveCount(0);
+    await page.goto("/?distribuicao=classe");
+    await expect(alternador(page).getByRole("link", { name: "Por classe" })).toHaveAttribute("aria-current", "page");
+    await expect(figuraClasse(page)).toBeVisible();
+    await expect(figuraInstituicao(page)).toHaveCount(0);
   });
 
   test("por instituição: seis fatias, Outros derivado, componentes identificados, negativo à parte e tabela completa", async ({ page }) => {
@@ -186,7 +200,11 @@ test.describe("análises por instituição e níveis de classe (#154)", () => {
     expect(await d.locator("figcaption").innerText()).not.toMatch(/\d{1,3},\d{2}%|R\$/);
 
     const tabela = d.getByRole("table");
-    await expect(tabela.getByRole("columnheader")).toHaveText(["Grupo", "Saldo", "% da carteira", "% do pai"]);
+    await expect(tabela.getByRole("columnheader")).toHaveText(["Grupo", "Saldo", "% na carteira", "% na classe"]);
+    // A explicação usa os mesmos nomes e não cita os antigos.
+    await expect(d).toContainText("“% na carteira” é a parte");
+    await expect(d).toContainText("“% na classe” é a parte");
+    await expect(d).not.toContainText(/% da carteira|% do pai/);
     const l = await linhas(tabela);
     // Subclasse com os dois tipos, Dívida soberana e o resíduo de vínculo direto à macro.
     expect(l.map((r) => [r[0], r[2], r[3]])).toEqual([
@@ -361,7 +379,7 @@ test.describe("análises por instituição e níveis de classe (#154)", () => {
       if (tamanho.width === MOVEL.width) {
         const cartoes = detalheDe(page, "Renda fixa").getByRole("list", { name: "Grupos de Renda fixa" });
         await expect(cartoes.getByRole("listitem")).toHaveCount(3);
-        await expect(cartoes.getByRole("listitem").first()).toContainText(/Saldo[\s\S]*% da carteira[\s\S]*% do pai/);
+        await expect(cartoes.getByRole("listitem").first()).toContainText(/Saldo[\s\S]*% na carteira[\s\S]*% na classe/);
         await expect(detalheDe(page, "Renda fixa").getByRole("table")).toBeHidden();
       }
     });

@@ -97,24 +97,30 @@ test.describe("distribuição por classe (#139)", () => {
   const legenda = (f: Locator) => f.getByRole("list", { name: "Legenda da distribuição por classe" });
   const participacoes = async (escopo: Locator) => (await escopo.innerText()).match(/\d{1,3},\d{2}%/g) ?? [];
 
-  test("Por ativo é o padrão, também com parâmetro inválido; o alternador leva a Por classe", async ({ page }) => {
+  test("Por instituição é o padrão, também com parâmetro inválido; o alternador leva a Por classe", async ({ page }) => {
     await entrar(page, u.comum);
-    await expect(alternador(page).getByRole("link", { name: "Por ativo" })).toHaveAttribute("aria-current", "page");
-    await expect(page.getByRole("figure").filter({ hasText: "Distribuição por ativo em março de 2026" })).toBeVisible();
+    await expect(alternador(page).getByRole("link", { name: "Por instituição" })).toHaveAttribute("aria-current", "page");
+    await expect(page.getByRole("figure").filter({ hasText: "Distribuição por instituição em março de 2026" })).toBeVisible();
     await expect(figura(page)).toHaveCount(0);
 
     await page.goto("/?distribuicao=qualquer");
-    await expect(alternador(page).getByRole("link", { name: "Por ativo" })).toHaveAttribute("aria-current", "page");
+    await expect(alternador(page).getByRole("link", { name: "Por instituição" })).toHaveAttribute("aria-current", "page");
 
     await alternador(page).getByRole("link", { name: "Por classe" }).click();
     await expect(page).toHaveURL(/distribuicao=classe/);
     await expect(alternador(page).getByRole("link", { name: "Por classe" })).toHaveAttribute("aria-current", "page");
     // Só a visão escolhida é renderizada.
+    await expect(page.getByRole("figure").filter({ hasText: "Distribuição por instituição" })).toHaveCount(0);
     await expect(page.getByRole("figure").filter({ hasText: "Distribuição por ativo" })).toHaveCount(0);
     await expect(figura(page)).toBeVisible();
     // Voltar preserva a escolha anterior.
     await page.goBack();
+    await expect(alternador(page).getByRole("link", { name: "Por instituição" })).toHaveAttribute("aria-current", "page");
+
+    // A escolha explícita de Por ativo continua valendo.
+    await page.goto("/?distribuicao=ativo");
     await expect(alternador(page).getByRole("link", { name: "Por ativo" })).toHaveAttribute("aria-current", "page");
+    await expect(page.getByRole("figure").filter({ hasText: "Distribuição por ativo em março de 2026" })).toBeVisible();
   });
 
   test("oito linhas na ordem e nas cores fixas, negativo por ativo fora da rosca e tabela com as mesmas participações", async ({ page }) => {
