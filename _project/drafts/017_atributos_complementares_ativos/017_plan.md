@@ -369,7 +369,7 @@ Roteiro de verificação em produção, após autorização: responsável confer
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | —; três unidades propostas, ainda não criadas |
-| PR(s) | Publicação documental autorizada pela aprovação da v4; número/URL a registrar após criação efetiva |
+| PR(s) | [#171 — publicação documental da ideação/plano/registro do ciclo](https://github.com/EuThiagoAndrade/saldo-futuro/pull/171), aberta, sem merge |
 | Branch(es) | `chore/cycle-017-plan` — publicação documental da ideação/plano/registro do ciclo |
 | Destino após conclusão | `_project/executed/017_atributos_complementares_ativos/017_plan.md` |
 
@@ -377,21 +377,21 @@ Roteiro de verificação em produção, após autorização: responsável confer
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 017 (completo)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 017"
+Situação: Aguardando merge — ciclo 017 (completo)
+Quem: Responsável
+Conferir: Checks e diff da [PR #171](https://github.com/EuThiagoAndrade/saldo-futuro/pull/171); merge só com checks verdes
+Diga: "aprovo o merge da PR #171"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 017 + aprovar_plano + 017_plan + v4`
-- `effect_class`: `local_mutation`
+- `effect_class`: `remote_mutation`
 - `state_before`: plano v4 Em Revisão, Rodada 4 concluída com APTO PARA APROVAÇÃO sem achados, Aguardando aprovação; produto confirmado em D1 a D12. Blob de origem `2c017eece77566220d130792d5437af2a0535b0c`, main local/remota em `337d8b83c809e9070391d7767df6eb8ed8b81271`, sem PR ou branch documental anterior. Ideação/plano/cycles locais sem commit; manifestação de aprovação da v4 recebida nesta conversa após o veredito.
-- `state_after`: plano v4 promovido a Aprovado, aprovação humana pós-revisão registrada em 2026-10-30, incluindo D10 a D12/INPC. Branch documental `chore/cycle-017-plan` criada; publicação da ideação/plano/cycles em preparação e autorizada pela aprovação, sem mudança da especificação. Nenhuma issue ou implementação iniciada; merge ainda depende de checks verdes e aprovação própria.
+- `state_after`: plano v4 Aprovado, aprovação humana pós-revisão registrada em 2026-10-30, incluindo D10 a D12/INPC. Branch `chore/cycle-017-plan` publicada e PR documental #171 aberta para main com somente ideação/plano/cycles; Aguardando merge, sem mudança da especificação. Nenhuma issue ou implementação iniciada. Checks remotos em execução na conferência inicial; merge depende de checks verdes e aprovação própria.
 - `result`: `executed`
-- `evidence`: frase humana posterior ao parecer nesta conversa, cabeçalho e registro de aprovação; Rodada 4 apta e decisões D1 a D12 preservadas; README autoriza publicação documental; main e origem BL-015 conferidas, sem PR/branch anterior. Em 2026-10-30: 48/48 testes do validador passaram; validador com 0 erros, 0 avisos e 5 itens manuais; git diff --cached --check passou e staging contém somente os três arquivos documentais do ciclo. Comparação textual confirmou a especificação P1 a P6 e as quatro rodadas/respostas preservadas; ideação mantém blob `dd6e8650458f46cbd3a24633c98b6367453b351a`. G3 e escopo revisados manualmente; publicação a completar antes da saída.
+- `evidence`: aprovação humana posterior à Rodada 4 nesta conversa; commit documental `675627f7c8620b14c8c93b72b6388afcc22fe9ab`; push sem force e criação da [PR #171](https://github.com/EuThiagoAndrade/saldo-futuro/pull/171), aberta/não draft, conferida via gh com os três arquivos previstos. Em 2026-10-30: 48/48 testes do validador passaram; validador com 0 erros, 0 avisos e 5 itens manuais; git diff --cached --check passou. Comparação textual confirmou a especificação P1 a P6 e as quatro rodadas/respostas preservadas; ideação mantém blob `dd6e8650458f46cbd3a24633c98b6367453b351a`. G3 e escopo revisados manualmente. Conferência inicial: CI de aplicação/banco, governança e Vercel em execução; Vercel Preview Comments aprovado. Resultado final dos checks deve ser conferido no GitHub para o head corrente antes do merge; nenhum merge realizado.
 - `blockers`: nenhum para registrar aprovação e publicar a PR documental. Merge requer autorização própria; criação de issues só depois da integração documental e confirmação de payloads; implementação não autorizada.
 
 ## Revisão crítica
