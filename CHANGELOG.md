@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.0](https://github.com/EuThiagoAndrade/saldo-futuro/compare/v0.11.0...v0.12.0) (2026-10-30)
+
+
+### Features
+
+* **issue-163:** ajustar ordem e rótulos da distribuição ([#164](https://github.com/EuThiagoAndrade/saldo-futuro/issues/164)) ([ff4a817](https://github.com/EuThiagoAndrade/saldo-futuro/commit/ff4a81755a87a14394845529bbbf76a87b397cae)), closes [#163](https://github.com/EuThiagoAndrade/saldo-futuro/issues/163)
+
 ## [0.11.0](https://github.com/EuThiagoAndrade/saldo-futuro/compare/v0.10.0...v0.11.0) (2026-10-28)
 
 
