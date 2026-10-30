@@ -223,8 +223,8 @@ Observado na seção 9.5 da KB-004 ("Benchmark de valor absoluto", decisão D14)
 ## BL-009 — Metadados descritivos e classificação de ativos com aproveitamento do histórico
 
 > **Criado em:** `2026-10-20`
-> **Atualizado em:** `2026-10-28`
-> **Estado:** `Disponível`
+> **Atualizado em:** `2026-10-30`
+> **Estado:** `Encaminhado`
 
 ### Problema e benefício esperado
 
@@ -242,7 +242,7 @@ Observado em `src/components/formularios/novo-ativo.tsx` e no schema da tabela `
 
 ### Restante
 
-- Carga retroativa dos dados descritivos para as posições históricas migradas (passo local e manual do responsável, fora de ciclo).
+—
 
 ### Registro
 
@@ -250,6 +250,7 @@ Observado em `src/components/formularios/novo-ativo.tsx` e no schema da tabela `
 - 2026-10-24 — Retorno pós-integração da seleção parcial do ciclo 012; campos descritivos encaminhados (issues #126, #127 e #128, PRs #129, #131 e #132); carga retroativa e visões analíticas permanecem no Restante; item segue Disponível.
 - 2026-10-27 — Retorno pós-integração da seleção parcial do ciclo 013; visão por classe macro encaminhada (issues #137, #138 e #139, PRs #140, #142 e #147); carga retroativa e as demais visões analíticas permanecem no Restante; item segue Disponível.
 - 2026-10-28 — Retorno pós-integração da seleção parcial do ciclo 015; visões por instituição e por classe nos níveis 2 e 3 encaminhadas (issues #151, #152, #153 e #154, PRs #155, #156, #158 e #159, encerramento na PR #160); a carga retroativa permanece no Restante; item segue Disponível.
+- 2026-10-30 — Pedido explícito do responsável de corrigir e fechar o item: ele informou ter concluído a carga retroativa dos dados descritivos das posições históricas migradas, passo local e manual, fora de ciclo; é relato do responsável, sem verificação dos dados. Com os ciclos 012, 013 e 015 e esse relato, a necessidade fica integralmente atendida; Restante esvaziado e item passa a Encaminhado, sem novo destino de ciclo.
 
 ## BL-010 — Combobox pesquisável e ordenação alfabética uniforme para seleção de ativos
 
