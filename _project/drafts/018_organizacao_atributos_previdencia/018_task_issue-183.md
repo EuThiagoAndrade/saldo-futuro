@@ -2,12 +2,12 @@
 
 > **Ciclo:** `018`
 > **Trilha:** `normal`
-> **Estado:** `Em andamento`
+> **Estado:** `Aguardando integração`
 > **Tipo:** `feature`
 > **Issue:** `#183`
 > **Plano:** `_project/drafts/018_organizacao_atributos_previdencia/018_plan.md`
 > **Branch:** `feature/issue-183`
-> **PR:** —
+> **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/186
 > **Integração:** `Pendente`
 > **Autorização inicial:** "Autorizo a #183" em 2026-10-31, em resposta à pergunta "Autoriza a implementação da issue #183?"
 > **Modo contínuo:** `—`
@@ -49,7 +49,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 - [x] Painel em grupos, `ListaSuspensaFiltro`, prazo condicional por CSS, envio à âncora, contador e "Limpar filtros" ao lado; erro no topo da lista.
 - [x] Testes unitários e e2e; documentação e nota da 0.14.0.
 - [x] Gates locais completos e staging revisado.
-- [ ] PR publicada com `Refs #183`; merge só depois do teste local do responsável.
+- [x] PR #186 publicada com `Refs #183`; merge só depois do teste local do responsável.
 
 ## Evidências
 
@@ -58,7 +58,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 | Testes | Unitários 512/512; lint sem erros; typecheck e build passaram; banco 671/671 (sem migração nova); as três especificações de Ativos juntas: 33 passed e 1 flaky (`ativos.spec.ts`, acessibilidade a 1280 px, falha em 0 ms na primeira tentativa e aprovado na repetição). E2e completo sobre o build com dois workers: 230 passed, 12 skipped (preview sem backend), 1 flaky e 3 failed, todos fora de Ativos: em `migracao.spec.ts`, o processo do CLI e um worker saíram com o código do Windows 3221226505 (o mesmo do ciclo 015), e em `periodo-intervalo.spec.ts` o servidor de teste parou de responder (`ERR_CONNECTION_REFUSED`). Repetidos só esses dois arquivos: 42 passed e 1 flaky (o de mais de 1.000 eventos, mesmo código de saída, aprovado na repetição), saída 0. Nenhum teste ou código foi alterado para contornar |
 | Validador | 48/48 testes de governança; validador sem erros depois do registro do número da PR |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos | Em execução na PR #186 |
 
 ## Revisão da correção
 
@@ -94,8 +94,8 @@ Não se aplica — ciclo completo; encerramento em PR própria, depois da verifi
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 018 (completo)
 Quem: Responsável
-Conferir: Checks e diff da PR da issue #183; roteiro de teste local desta task
-Diga: "aprovo o merge da PR #N"
+Conferir: Checks e diff da [PR #186](https://github.com/EuThiagoAndrade/saldo-futuro/pull/186); roteiro de teste local desta task
+Diga: "aprovo o merge da PR #186"
 ```
 
 ## Handoff de saída
@@ -104,7 +104,7 @@ Diga: "aprovo o merge da PR #N"
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 018 + implementar_issue + 183 + c31081d56d7ce0d0ff2f51de3db655f90db6b36b`
 - `effect_class`: `remote_mutation`
 - `state_before`: PR #184 integrada e ação externa da #182 relatada; #183 aberta; "Autorizo a #183" recebida em 2026-10-31.
-- `state_after`: Item 2 implementado e validado localmente; PR a publicar na branch `feature/issue-183`, sem fechar a #183.
+- `state_after`: Item 2 implementado e validado localmente; PR #186 publicada na branch `feature/issue-183`, sem fechar a #183.
 - `result`: `executed`
 - `evidence`: tabela de evidências acima.
 - `blockers`: teste local do responsável e aprovação do merge.
