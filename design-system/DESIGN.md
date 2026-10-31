@@ -382,6 +382,17 @@ Na edição, o Nome deixou de ser só leitura e passou a campo de texto, o prime
 - **Validação:** a regra é a do banco. O servidor tira só o espaço comum das pontas (não NBSP, tabulação nem quebra de linha) e exige de 1 a 100 caracteres Unicode, contados como caracteres e não como unidades de texto do navegador, por isso o campo não usa `maxLength`. Vazio ou só espaços mostra "Informe o nome do ativo."; acima de 100, "Use até 100 caracteres.". Nomes repetidos são válidos; acentos e espaços internos não são alterados.
 - **Recusa:** a mensagem aparece em `role="alert"` acima do botão, o campo mantém o que foi digitado e nada é gravado (nem a instituição nova). O sucesso volta à aba de origem.
 
+#### Atributos complementares do ativo (ciclo `017`)
+
+No cadastro e na edição, "Mais detalhes" reúne os quatro indicadores e os cinco atributos complementares, todos opcionais. O cadastro básico continua possível sem abrir a seção, que abre já aberta na edição quando algum indicador ou atributo estiver preenchido.
+
+- **Aviso:** a frase do topo é "Informações preenchidas por você. O Saldo Futuro não calcula imposto, prazo de resgate ou valor garantido com estes campos." Nenhuma tabela de alíquotas, elegibilidade ou limite do FGC aparece.
+- **Grupos:** cinco blocos em coluna, separados por uma linha `border`, cada atributo junto do indicador que lhe é próximo: Veículo de acesso com Previdência; Indexador da remuneração com Exposição cambial; Regime tributário com Isento de IR; Prazo para resgate ou venda com Liquidez imediata (reserva), cuja dica diz que a reserva é diferente do prazo; e Cobertura do FGC sozinha. Os indicadores mantêm o rádio de três estados.
+- **Seleção múltipla:** Veículo de acesso e Indexador da remuneração usam checkboxes nativos num `fieldset` com `legend`, cada opção com alvo de 44 px e quebra de linha, e uma dica abaixo da legenda com a regra de exclusividade, ligada por `aria-describedby`. Marcar uma opção exclusiva (Não se aplica; no indexador, também Prefixado (sem indexador)) desmarca as demais, e marcar outra desmarca a exclusiva; o servidor e o banco recusam o conjunto inválido, sem descartar opções em silêncio. Nenhum componente de multisseleção próprio.
+- **Escolha única:** Regime tributário, a situação do prazo e Cobertura do FGC usam `select` nativo com a mesma classe dos campos de texto; a primeira opção, de valor vazio, é "Não informado", que nunca equivale a "Não" nem a "Não se aplica".
+- **Prazo:** o `select` "Prazo para resgate ou venda" tem a ajuda da P2 logo abaixo, ligada por `aria-describedby`. Só "Prazo em dias" mostra os campos Dias (texto com `inputmode="numeric"`) e Unidade (`select` que começa em "Escolha a unidade", sem unidade implícita), lado a lado a partir de `sm` e em coluna no celular; nas outras situações eles não existem nem são enviados. Zero aparece como 0. O app não soma, converte nem arredonda: "2,2" é recusado com "Informe os dias como número inteiro, de 0 a 2.147.483.647, sem vírgula.".
+- **Recusa:** a mensagem aparece em `role="alert"` acima do botão; a seção continua aberta e todos os campos dela, além do nome e do tipo de ajuste no cadastro, mantêm o que foi escolhido. Classe e instituição seguem a regra de reset do seletor com busca.
+
 ### 6.9 Botões
 
 | Variante | Fundo | Texto | Hover | Pressionado | Uso |

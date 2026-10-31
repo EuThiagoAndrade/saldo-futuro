@@ -6,7 +6,8 @@ import { clienteDoUsuario, configurado, criarUsuarios, entrar, removerUsuarios, 
 // Classe, instituição e indicadores do ativo (ciclo 012, issue #128, BL-009): cadastro com seletor
 // de instituição que cadastra ali mesmo, "Mais detalhes", edição (inclusive de desativado) e
 // exibição nas duas abas. Desde o ciclo 013 (issue #138) a classe é um nó da taxonomia global,
-// escolhido num seletor com busca pelo caminho completo e sem criação. Usuários e nomes fictícios
+// escolhido num seletor com busca pelo caminho completo e sem criação. Desde o ciclo 017 (issue #173),
+// os atributos complementares em "Mais detalhes". Usuários e nomes fictícios
 // exclusivos deste arquivo (D9 do ciclo 004).
 
 const MOVEL = { width: 360, height: 800 };
@@ -109,7 +110,9 @@ test.describe("detalhes dos ativos (#128)", () => {
     expect((await cliente.from("instituicoes").select("nome").eq("nome", "Corretora Fictícia")).data).toEqual([]);
 
     await page.getByText("Mais detalhes", { exact: true }).click();
-    await expect(page.getByText("Anotação sua. O Saldo Futuro não calcula nada com estes campos.")).toBeVisible();
+    await expect(
+      page.getByText("Informações preenchidas por você. O Saldo Futuro não calcula imposto, prazo de resgate ou valor garantido com estes campos."),
+    ).toBeVisible();
     await expect(radio(page, "Previdência", "Não informado")).toBeChecked();
     await radio(page, "Previdência", "Sim").check();
     await radio(page, "Isento de IR", "Não").check();
@@ -389,6 +392,201 @@ test.describe("detalhes dos ativos (#128)", () => {
     expect(r.error?.message).toBe("recusado_ativo_invalido");
     expect((await cliente.from("ativos").select("nome").eq("id", transito).single()).data!.nome).not.toBe("Outro nome");
   });
+
+  // Atributos complementares (ciclo 017, issue #173): seleção múltipla com exclusividade, selects,
+  // prazo exato com unidade, reabertura na edição, recusa que preserva o preenchimento e servidor
+  // que recusa o formulário adulterado. Nomes e valores fictícios.
+  const caixa = (page: Page, grupo: string, opcao: string) =>
+    page.getByRole("group", { name: grupo }).getByRole("checkbox", { name: opcao, exact: true });
+  const lerAtributos = async (nome: string) =>
+    (
+      await cliente
+        .from("ativos")
+        .select("id, veiculos_acesso, indexadores_remuneracao, regime_tributario, prazo_resgate_tipo, prazo_resgate_dias, prazo_resgate_unidade, cobertura_fgc, exposicao_cambial, liquidez_imediata")
+        .eq("nome", nome)
+        .single()
+    ).data!;
+
+  test("cadastro com atributos: múltipla escolha, exclusividade, prazo zero, e a edição reabre e limpa", async ({ page }) => {
+    await page.setViewportSize(DESKTOP);
+    await entrar(page, u.dono);
+    await preencherBase(page, "Fundo com atributos fictício");
+    await page.getByText("Mais detalhes", { exact: true }).click();
+    await expect(
+      page.getByText("Informações preenchidas por você. O Saldo Futuro não calcula imposto, prazo de resgate ou valor garantido com estes campos."),
+    ).toBeVisible();
+    await caixa(page, "Veículo de acesso", "Fundo").check();
+    await caixa(page, "Veículo de acesso", "ETF").check();
+    // Não se aplica é exclusivo: marcá-lo desmarca os outros, e marcar outro o desmarca.
+    await caixa(page, "Veículo de acesso", "Não se aplica").check();
+    await expect(caixa(page, "Veículo de acesso", "Fundo")).not.toBeChecked();
+    await expect(caixa(page, "Veículo de acesso", "ETF")).not.toBeChecked();
+    await caixa(page, "Veículo de acesso", "ETF").check();
+    await caixa(page, "Veículo de acesso", "Fundo").check();
+    await expect(caixa(page, "Veículo de acesso", "Não se aplica")).not.toBeChecked();
+    await caixa(page, "Indexador da remuneração", "Prefixado (sem indexador)").check();
+    await caixa(page, "Indexador da remuneração", "INPC").check();
+    await expect(caixa(page, "Indexador da remuneração", "Prefixado (sem indexador)")).not.toBeChecked();
+    await caixa(page, "Indexador da remuneração", "CDI").check();
+    await caixa(page, "Indexador da remuneração", "Variação cambial").check();
+    await page.getByLabel("Regime tributário").selectOption({ label: "Fundos — longo prazo" });
+    // Dias e unidade só aparecem com Prazo em dias; a unidade não vem escolhida.
+    await expect(page.getByLabel("Dias", { exact: true })).toHaveCount(0);
+    await page.getByLabel("Prazo para resgate ou venda").selectOption({ label: "Prazo em dias" });
+    await expect(page.getByText(/registre o total em dias corridos, arredondando para cima/)).toBeVisible();
+    await expect(page.getByLabel("Unidade", { exact: true })).toHaveValue("");
+    await page.getByLabel("Dias", { exact: true }).fill("0");
+    await page.getByLabel("Unidade", { exact: true }).selectOption({ label: "Dias úteis" });
+    await page.getByLabel("Cobertura do FGC").selectOption({ label: "Sim" });
+    await page.getByRole("button", { name: "Cadastrar ativo" }).click();
+    await expect(page).toHaveURL(/\/ativos$/);
+    const salvo = await lerAtributos("Fundo com atributos fictício");
+    expect(salvo).toMatchObject({
+      veiculos_acesso: ["fundo", "etf"],
+      indexadores_remuneracao: ["cdi", "variacao_cambial", "inpc"],
+      regime_tributario: "fundos_longo_prazo",
+      prazo_resgate_tipo: "prazo",
+      prazo_resgate_dias: 0,
+      prazo_resgate_unidade: "uteis",
+      cobertura_fgc: "sim",
+      // Variação cambial é anotação: não preenche Exposição cambial.
+      exposicao_cambial: null,
+    });
+
+    // A edição abre Mais detalhes com tudo marcado, e zero aparece como zero.
+    await page.goto(`/ativos/${salvo.id}/editar`);
+    await expect(caixa(page, "Veículo de acesso", "Fundo")).toBeChecked();
+    await expect(caixa(page, "Veículo de acesso", "ETF")).toBeChecked();
+    await expect(caixa(page, "Indexador da remuneração", "INPC")).toBeChecked();
+    await expect(page.getByLabel("Regime tributário")).toHaveValue("fundos_longo_prazo");
+    await expect(page.getByLabel("Prazo para resgate ou venda")).toHaveValue("prazo");
+    await expect(page.getByLabel("Dias", { exact: true })).toHaveValue("0");
+    await expect(page.getByLabel("Unidade", { exact: true })).toHaveValue("uteis");
+    await expect(page.getByLabel("Cobertura do FGC")).toHaveValue("sim");
+
+    // Limpar é explícito: desmarcar, voltar a Não informado, e uma situação sem número.
+    await caixa(page, "Veículo de acesso", "Fundo").uncheck();
+    await caixa(page, "Veículo de acesso", "ETF").uncheck();
+    await page.getByLabel("Prazo para resgate ou venda").selectOption({ label: "No vencimento" });
+    await expect(page.getByLabel("Dias", { exact: true })).toHaveCount(0);
+    await page.getByLabel("Cobertura do FGC").selectOption({ label: "Não informado" });
+    await radio(page, "Liquidez imediata (reserva)", "Não").check();
+    await page.getByRole("button", { name: "Salvar alterações" }).click();
+    await expect(page).toHaveURL(/\/ativos$/);
+    expect(await lerAtributos("Fundo com atributos fictício")).toMatchObject({
+      veiculos_acesso: [],
+      indexadores_remuneracao: ["cdi", "variacao_cambial", "inpc"],
+      prazo_resgate_tipo: "no_vencimento",
+      prazo_resgate_dias: null,
+      prazo_resgate_unidade: null,
+      cobertura_fgc: null,
+      liquidez_imediata: false,
+    });
+  });
+
+  test("uma recusa mantém o que foi preenchido, e dias fracionários não são arredondados", async ({ page }) => {
+    await page.setViewportSize(MOVEL);
+    await entrar(page, u.dono);
+    await preencherBase(page, "Recusa com atributos fictício");
+    await page.getByText("Mais detalhes", { exact: true }).click();
+    await caixa(page, "Indexador da remuneração", "Prefixado (sem indexador)").check();
+    await page.getByLabel("Regime tributário").selectOption({ label: "Renda fixa — por prazo" });
+    await radio(page, "Isento de IR", "Não").check();
+    await page.getByLabel("Prazo para resgate ou venda").selectOption({ label: "Prazo em dias" });
+    await page.getByLabel("Dias", { exact: true }).fill("2,2");
+    await page.getByLabel("Unidade", { exact: true }).selectOption({ label: "Dias corridos" });
+    await page.getByRole("button", { name: "Cadastrar ativo" }).click();
+    await expect(page.getByRole("main").getByRole("alert")).toHaveText("Informe os dias como número inteiro, de 0 a 2.147.483.647, sem vírgula.");
+    await expect(page).toHaveURL(/\/ativos\/novo$/);
+    expect((await cliente.from("ativos").select("id").eq("nome", "Recusa com atributos fictício")).data).toEqual([]);
+    // Nada se perde: nome, tipo, Mais detalhes aberto e cada escolha.
+    await expect(page.getByLabel("Nome", { exact: true })).toHaveValue("Recusa com atributos fictício");
+    await expect(page.getByLabel("Rendimento (renda fixa, poupança)")).toBeChecked();
+    await expect(caixa(page, "Indexador da remuneração", "Prefixado (sem indexador)")).toBeChecked();
+    await expect(page.getByLabel("Regime tributário")).toHaveValue("renda_fixa_por_prazo");
+    await expect(radio(page, "Isento de IR", "Não")).toBeChecked();
+    await expect(page.getByLabel("Dias", { exact: true })).toHaveValue("2,2");
+    await expect(page.getByLabel("Unidade", { exact: true })).toHaveValue("corridos");
+    // O total já conhecido de 2,2 dias corridos é registrado pela pessoa como 3.
+    await page.getByLabel("Dias", { exact: true }).fill("3");
+    await page.getByRole("button", { name: "Cadastrar ativo" }).click();
+    await expect(page).toHaveURL(/\/ativos$/);
+    expect(await lerAtributos("Recusa com atributos fictício")).toMatchObject({
+      indexadores_remuneracao: ["sem_indexador"],
+      regime_tributario: "renda_fixa_por_prazo",
+      prazo_resgate_tipo: "prazo",
+      prazo_resgate_dias: 3,
+      prazo_resgate_unidade: "corridos",
+    });
+  });
+
+  test("o servidor recusa exclusividade e código fora do catálogo, mesmo com o formulário adulterado", async ({ page }) => {
+    await entrar(page, u.dono);
+    await preencherBase(page, "Adulterado com atributos fictício");
+    await page.getByText("Mais detalhes", { exact: true }).click();
+    await caixa(page, "Indexador da remuneração", "Prefixado (sem indexador)").check();
+    const acrescentar = (nome: string, valor: string) =>
+      page.getByRole("main").locator("form").evaluate(
+        (form, [n, v]) => {
+          const campo = document.createElement("input");
+          campo.type = "hidden";
+          campo.name = n;
+          campo.value = v;
+          form.appendChild(campo);
+        },
+        [nome, valor],
+      );
+    await acrescentar("indexador", "cdi");
+    await page.getByRole("button", { name: "Cadastrar ativo" }).click();
+    await expect(page.getByRole("main").getByRole("alert")).toHaveText(
+      "Prefixado (sem indexador) e Não se aplica não podem ser marcados junto com outro indexador.",
+    );
+    expect((await cliente.from("ativos").select("id").eq("nome", "Adulterado com atributos fictício")).data).toEqual([]);
+    // Pela função, o banco recusa o mesmo conjunto e um código desconhecido.
+    const direto = await cliente.rpc("cadastrar_ativo_com_atributos", {
+      p_nome: "Direto com atributos fictício",
+      p_tipo_ajuste: "rendimento",
+      p_instituicao: null,
+      p_instituicao_nova: null,
+      p_taxonomia: null,
+      p_previdencia: null,
+      p_liquidez_imediata: null,
+      p_exposicao_cambial: null,
+      p_isento_ir: null,
+      p_veiculos_acesso: [],
+      p_indexadores_remuneracao: ["sem_indexador", "cdi"],
+      p_regime_tributario: null,
+      p_prazo_resgate_tipo: null,
+      p_prazo_resgate_dias: null,
+      p_prazo_resgate_unidade: null,
+      p_cobertura_fgc: null,
+    });
+    expect(direto.error?.message).toBe("recusado_indexadores_remuneracao");
+  });
+
+  for (const tamanho of [MOVEL, DESKTOP]) {
+    test(`Mais detalhes aberto, com todos os campos, sem violações nem rolagem horizontal em ${tamanho.width} px`, async ({ page }) => {
+      await page.setViewportSize(tamanho);
+      await entrar(page, u.dono);
+      await page.goto("/ativos/novo");
+      await page.getByText("Mais detalhes", { exact: true }).click();
+      await page.getByLabel("Prazo para resgate ou venda").selectOption({ label: "Prazo em dias" });
+      const resultado = await new AxeBuilder({ page }).withTags(WCAG).analyze();
+      expect(resultado.violations).toEqual([]);
+      const largura = await page.evaluate(() => ({ cliente: document.documentElement.clientWidth, rolagem: document.documentElement.scrollWidth }));
+      expect(largura.rolagem).toBeLessThanOrEqual(largura.cliente);
+      for (const alvo of await page.getByRole("checkbox").all()) {
+        expect((await alvo.locator("xpath=..").boundingBox())!.height).toBeGreaterThanOrEqual(44);
+      }
+      for (const campo of ["Regime tributário", "Prazo para resgate ou venda", "Dias", "Unidade", "Cobertura do FGC"]) {
+        expect((await page.getByLabel(campo, { exact: true }).boundingBox())!.height, campo).toBeGreaterThanOrEqual(44);
+      }
+      // Teclado: Espaço marca a caixa focada.
+      await caixa(page, "Veículo de acesso", "Direto").focus();
+      await page.keyboard.press("Space");
+      await expect(caixa(page, "Veículo de acesso", "Direto")).toBeChecked();
+    });
+  }
 
   for (const tamanho of [MOVEL, DESKTOP]) {
     test(`sem violações de acessibilidade no cadastro, na edição e nas abas em ${tamanho.width} px`, async ({ page }) => {

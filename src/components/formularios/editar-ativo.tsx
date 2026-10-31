@@ -70,6 +70,13 @@ export function FormEditarAtivo({
           liquidez_imediata: ativo.liquidez_imediata,
           exposicao_cambial: ativo.exposicao_cambial,
           isento_ir: ativo.isento_ir,
+          veiculos_acesso: ativo.veiculos_acesso,
+          indexadores_remuneracao: ativo.indexadores_remuneracao,
+          regime_tributario: ativo.regime_tributario,
+          prazo_resgate_tipo: ativo.prazo_resgate_tipo,
+          prazo_resgate_dias: ativo.prazo_resgate_dias,
+          prazo_resgate_unidade: ativo.prazo_resgate_unidade,
+          cobertura_fgc: ativo.cobertura_fgc,
         }}
       />
       <Retorno {...estado} />

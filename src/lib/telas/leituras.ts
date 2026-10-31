@@ -4,13 +4,17 @@ import { type Cliente, type ClienteComRpc, ErroLeitura, lerComposicao, lerTabela
 import { deLinhaEvento, type LinhaEvento } from "./carteira";
 import type { EntradaCatalogo, VinculoDoAtivo } from "./catalogos";
 import { ordenarPorNome } from "./combobox";
+import type { AtributosAtivo } from "./detalhes-ativo";
 import { mesDaColuna, type PosicaoLida } from "./fechamento";
 import { montarTaxonomia, type NoTaxonomia, type Taxonomia } from "./taxonomia";
 
 // Leituras completas das telas da carteira (D13): todas as linhas, na ordem declarada, com a
 // sessão do usuário (a RLS restringe às próprias linhas).
 
-export interface Ativo {
+// Atributos complementares (ciclo 017, issue #173): anotações manuais, lidas para o formulário de
+// edição; nenhum cálculo os lê. Colunas obrigatórias: sem a migração, a leitura falha, sem trocar os
+// atributos por ausência.
+export interface Ativo extends AtributosAtivo {
   id: string;
   nome: string;
   tipo_ajuste: TipoAjuste | null;
@@ -30,7 +34,8 @@ export interface Ativo {
 }
 
 const COLUNAS_ATIVO =
-  "id, nome, tipo_ajuste, sistema, ativo, desativado_em, instituicao_id, taxonomia_id, classe_id, previdencia, liquidez_imediata, exposicao_cambial, isento_ir";
+  "id, nome, tipo_ajuste, sistema, ativo, desativado_em, instituicao_id, taxonomia_id, classe_id, previdencia, liquidez_imediata, exposicao_cambial, isento_ir, " +
+  "veiculos_acesso, indexadores_remuneracao, regime_tributario, prazo_resgate_tipo, prazo_resgate_dias, prazo_resgate_unidade, cobertura_fgc";
 
 export function lerAtivos(cliente: Cliente, sinal?: AbortSignal): Promise<Ativo[]> {
   return lerTabela<Ativo>(cliente, "ativos", { colunas: COLUNAS_ATIVO, sinal });

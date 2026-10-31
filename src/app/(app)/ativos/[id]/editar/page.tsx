@@ -41,7 +41,7 @@ export default async function EditarAtivoPage({ params }: { params: Promise<{ id
       {!ativo ? (
         <EstadoVazio titulo="Ativo não encontrado">Volte para Ativos e escolha um ativo da lista.</EstadoVazio>
       ) : ativo.sistema ? (
-        <EstadoVazio titulo="Este ativo não tem detalhes">O ativo de sistema Em trânsito só recebe transferências e não tem classe, instituição nem indicadores.</EstadoVazio>
+        <EstadoVazio titulo="Este ativo não tem detalhes">O ativo de sistema Em trânsito só recebe transferências e não tem classe, instituição, indicadores nem outros detalhes.</EstadoVazio>
       ) : (
         <FormEditarAtivo
           ativo={ativo}

@@ -26,6 +26,13 @@ const ativo = (n: number, extras: Partial<Ativo> = {}): Ativo => ({
   liquidez_imediata: null,
   exposicao_cambial: null,
   isento_ir: null,
+  veiculos_acesso: [],
+  indexadores_remuneracao: [],
+  regime_tributario: null,
+  prazo_resgate_tipo: null,
+  prazo_resgate_dias: null,
+  prazo_resgate_unidade: null,
+  cobertura_fgc: null,
   ...extras,
 });
 const posicao = (n: number, saldo_final: number) => ({ mes: "2026-03-01", ativo_id: uuid(n), saldo_inicial: 0, saldo_final, ajuste: 0, tipo_ajuste: null });
