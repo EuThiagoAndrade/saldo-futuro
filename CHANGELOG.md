@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.13.0](https://github.com/EuThiagoAndrade/saldo-futuro/compare/v0.12.1...v0.13.0) (2026-10-31)
+
+
+### Features
+
+* **issue-172:** persistir atributos complementares dos ativos com escrita isolada ([#175](https://github.com/EuThiagoAndrade/saldo-futuro/issues/175)) ([030a025](https://github.com/EuThiagoAndrade/saldo-futuro/commit/030a0251b876f56a54a018225644bd51acaca878))
+* **issue-173:** preencher atributos complementares no cadastro e na edição ([e58f02d](https://github.com/EuThiagoAndrade/saldo-futuro/commit/e58f02dde56229c84996d0803bdb5a32ef96b078))
+* **issue-174:** consultar e filtrar atributos complementares na página Ativos ([8cba4ac](https://github.com/EuThiagoAndrade/saldo-futuro/commit/8cba4ac2dadc825057af777456530a9cbc66da6c))
+
 ## [0.12.1](https://github.com/EuThiagoAndrade/saldo-futuro/compare/v0.12.0...v0.12.1) (2026-10-30)
 
 
