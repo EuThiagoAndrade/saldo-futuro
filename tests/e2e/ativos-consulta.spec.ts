@@ -47,7 +47,7 @@ test.describe("consulta dos atributos (#174)", () => {
       return r.data as string;
     };
     const prazo = (dias: number, unidade: string) => ({ p_prazo_resgate_tipo: "prazo", p_prazo_resgate_dias: dias, p_prazo_resgate_unidade: unidade });
-    await criar("Ativo A fictício", { p_veiculos_acesso: ["fundo"], p_indexadores_remuneracao: ["cdi"], ...prazo(0, "uteis"), p_cobertura_fgc: "sim", p_previdencia: true });
+    await criar("Ativo A fictício", { p_veiculos_acesso: ["fundo"], p_indexadores_remuneracao: ["cdi"], ...prazo(0, "uteis"), p_cobertura_fgc: "sim", p_liquidez_imediata: true });
     await criar("Ativo B fictício", { p_veiculos_acesso: ["etf"], p_indexadores_remuneracao: ["ipca"], ...prazo(1, "uteis"), p_regime_tributario: "renda_variavel", p_cobertura_fgc: "nao" });
     await criar("Ativo C fictício", { p_veiculos_acesso: ["fundo", "etf"], p_indexadores_remuneracao: ["cdi", "variacao_cambial"], ...prazo(3, "corridos"), p_cobertura_fgc: "nao_aplicavel" });
     await criar("Ativo E fictício");
@@ -88,7 +88,7 @@ test.describe("consulta dos atributos (#174)", () => {
     const linhaA = page.getByRole("row").filter({ hasText: "Ativo A fictício" });
     for (const [rotulo, valor] of [
       ["Veículo de acesso", "Fundo"],
-      ["Previdência", "Sim"],
+      ["Liquidez imediata (reserva)", "Sim"],
       ["Indexador da remuneração", "CDI"],
       ["Regime tributário", "Não informado"],
       ["Prazo para resgate ou venda", "0 dias úteis"],
@@ -97,6 +97,11 @@ test.describe("consulta dos atributos (#174)", () => {
       await expect(linhaA.locator("dl > div").filter({ has: page.locator("dt", { hasText: rotulo }) }).locator("dd")).toHaveText(valor);
     }
     await expect(page.getByRole("row").filter({ hasText: "Ativo B fictício" }).getByText("1 dia útil", { exact: true })).toBeVisible();
+    // Ciclo 018 (D13 e D17): quatro grupos com título, sem a frase de aviso e sem Previdência como item.
+    await expect(linhaA.getByText("Produto", { exact: true })).toBeVisible();
+    await expect(linhaA.getByText("Proteção e exposição", { exact: true })).toBeVisible();
+    await expect(linhaA.getByText(/Informações preenchidas por você/)).toHaveCount(0);
+    await expect(linhaA.locator("dt", { hasText: /^Previdência$/ })).toHaveCount(0);
     await expect(page.getByRole("row").filter({ hasText: "Ativo C fictício" }).locator("dd").first()).toBeHidden();
     await expect(page.getByRole("row").filter({ hasText: "Em trânsito" }).getByText(/Ver detalhes/)).toHaveCount(0);
 
@@ -190,7 +195,7 @@ test.describe("consulta dos atributos (#174)", () => {
     expect(await nomesVisiveis(page)).toEqual(["Ativo E fictício", LONGO]);
     await page.goto("/ativos?prazo_resgate_tipo=nao_informado");
     expect(await nomesVisiveis(page)).toEqual(["Ativo E fictício"]);
-    await page.goto("/ativos?previdencia=sim");
+    await page.goto("/ativos?liquidez_imediata=sim");
     expect(await nomesVisiveis(page)).toEqual(["Ativo A fictício"]);
 
     for (const [consulta, mensagem] of [

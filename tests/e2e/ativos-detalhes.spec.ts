@@ -52,7 +52,7 @@ test.describe("detalhes dos ativos (#128)", () => {
   test("cadastro com classe da taxonomia e instituição existente, sem abrir Mais detalhes nem ganhar campos", async ({ page }) => {
     await entrar(page, u.dono);
     await preencherBase(page, "CDB fictício");
-    await expect(radio(page, "Previdência", "Não informado")).toBeHidden();
+    await expect(radio(page, "Isento de IR", "Não informado")).toBeHidden();
     const classe = page.getByRole("combobox", { name: "Classe" });
     // A busca ignora acento e caixa e acha pelo ancestral: o caminho inteiro é o texto pesquisado.
     await classe.fill("CREDITO bancario");
@@ -113,8 +113,10 @@ test.describe("detalhes dos ativos (#128)", () => {
     await expect(
       page.getByText("Informações preenchidas por você. O Saldo Futuro não calcula imposto, prazo de resgate ou valor garantido com estes campos."),
     ).toBeVisible();
-    await expect(radio(page, "Previdência", "Não informado")).toBeChecked();
-    await radio(page, "Previdência", "Sim").check();
+    await expect(radio(page, "Exposição cambial", "Não informado")).toBeChecked();
+    await radio(page, "Exposição cambial", "Sim").check();
+    // Previdência virou opção do veículo (ciclo 018, D18): o indicador não aparece mais.
+    await expect(page.getByRole("group", { name: "Previdência", exact: true })).toHaveCount(0);
     await radio(page, "Isento de IR", "Não").check();
     await page.getByRole("button", { name: "Cadastrar ativo" }).click();
     await expect(page).toHaveURL(/\/ativos$/);
@@ -123,7 +125,7 @@ test.describe("detalhes dos ativos (#128)", () => {
     const criada = (await cliente.from("instituicoes").select("id").eq("nome", "Corretora Fictícia").single()).data!;
     expect(ativo.instituicao_id).toBe(criada.id);
     expect(ativo.taxonomia_id).toBeNull();
-    expect([ativo.previdencia, ativo.liquidez_imediata, ativo.exposicao_cambial, ativo.isento_ir]).toEqual([true, null, null, false]);
+    expect([ativo.previdencia, ativo.liquidez_imediata, ativo.exposicao_cambial, ativo.isento_ir]).toEqual([null, null, true, false]);
   });
 
   test("texto sem seleção não vira classe, não há criação, e o cadastro sem classe continua possível", async ({ page }) => {
@@ -200,9 +202,9 @@ test.describe("detalhes dos ativos (#128)", () => {
     await expect(page.getByRole("heading", { level: 1, name: "Editar ativo" })).toBeVisible();
     await expect(page.getByText("Marcação a mercado")).toHaveCount(0);
     await expect(page.getByRole("combobox", { name: "Instituição" })).toHaveValue("Corretora Fictícia");
-    await expect(radio(page, "Previdência", "Sim")).toBeChecked();
+    await expect(radio(page, "Exposição cambial", "Sim")).toBeChecked();
     await expect(radio(page, "Isento de IR", "Não")).toBeChecked();
-    await expect(radio(page, "Exposição cambial", "Não informado")).toBeChecked();
+    await expect(radio(page, "Liquidez imediata (reserva)", "Não informado")).toBeChecked();
     await expect(page.getByText("Classe atual")).toBeVisible();
     await expect(page.getByText("Sem classe", { exact: true })).toBeVisible();
 
@@ -210,12 +212,12 @@ test.describe("detalhes dos ativos (#128)", () => {
     await opcao(page, CAMINHO_OURO).click();
     await page.getByRole("combobox", { name: "Instituição" }).fill("");
     await page.getByRole("combobox", { name: "Instituição" }).press("Escape");
-    await radio(page, "Previdência", "Não informado").check();
+    await radio(page, "Exposição cambial", "Não informado").check();
     await page.getByRole("button", { name: "Salvar alterações" }).click();
     await expect(page).toHaveURL(/\/ativos$/);
     const ativo = await lerAtivo("Previdência fictícia");
     expect(ativo.taxonomia_id).toBe(OURO);
-    expect([ativo.instituicao_id, ativo.previdencia, ativo.isento_ir]).toEqual([null, null, false]);
+    expect([ativo.instituicao_id, ativo.exposicao_cambial, ativo.isento_ir]).toEqual([null, null, false]);
   });
 
   test("editar mostra o caminho atual, e limpar a classe grava Sem classe", async ({ page }) => {
@@ -397,8 +399,12 @@ test.describe("detalhes dos ativos (#128)", () => {
   // Atributos complementares (ciclo 017, issue #173): seleção múltipla com exclusividade, selects,
   // prazo exato com unidade, reabertura na edição, recusa que preserva o preenchimento e servidor
   // que recusa o formulário adulterado. Nomes e valores fictícios.
-  const caixa = (page: Page, grupo: string, opcao: string) =>
-    page.getByRole("group", { name: grupo }).getByRole("checkbox", { name: opcao, exact: true });
+  // Veículo e indexador são listas suspensas desde o ciclo 018 (issue #182): a caixa só fica visível com a lista aberta.
+  const caixa = async (page: Page, grupo: string, opcao: string) => {
+    const campo = page.getByRole("group", { name: grupo });
+    if ((await campo.locator("details").getAttribute("open")) === null) await campo.locator("summary").click();
+    return campo.getByRole("checkbox", { name: opcao, exact: true });
+  };
   const lerAtributos = async (nome: string) =>
     (
       await cliente
@@ -416,20 +422,20 @@ test.describe("detalhes dos ativos (#128)", () => {
     await expect(
       page.getByText("Informações preenchidas por você. O Saldo Futuro não calcula imposto, prazo de resgate ou valor garantido com estes campos."),
     ).toBeVisible();
-    await caixa(page, "Veículo de acesso", "Fundo").check();
-    await caixa(page, "Veículo de acesso", "ETF").check();
+    await (await caixa(page, "Veículo de acesso", "Fundo")).check();
+    await (await caixa(page, "Veículo de acesso", "ETF")).check();
     // Não se aplica é exclusivo: marcá-lo desmarca os outros, e marcar outro o desmarca.
-    await caixa(page, "Veículo de acesso", "Não se aplica").check();
-    await expect(caixa(page, "Veículo de acesso", "Fundo")).not.toBeChecked();
-    await expect(caixa(page, "Veículo de acesso", "ETF")).not.toBeChecked();
-    await caixa(page, "Veículo de acesso", "ETF").check();
-    await caixa(page, "Veículo de acesso", "Fundo").check();
-    await expect(caixa(page, "Veículo de acesso", "Não se aplica")).not.toBeChecked();
-    await caixa(page, "Indexador da remuneração", "Prefixado (sem indexador)").check();
-    await caixa(page, "Indexador da remuneração", "INPC").check();
-    await expect(caixa(page, "Indexador da remuneração", "Prefixado (sem indexador)")).not.toBeChecked();
-    await caixa(page, "Indexador da remuneração", "CDI").check();
-    await caixa(page, "Indexador da remuneração", "Variação cambial").check();
+    await (await caixa(page, "Veículo de acesso", "Não se aplica")).check();
+    await expect((await caixa(page, "Veículo de acesso", "Fundo"))).not.toBeChecked();
+    await expect((await caixa(page, "Veículo de acesso", "ETF"))).not.toBeChecked();
+    await (await caixa(page, "Veículo de acesso", "ETF")).check();
+    await (await caixa(page, "Veículo de acesso", "Fundo")).check();
+    await expect((await caixa(page, "Veículo de acesso", "Não se aplica"))).not.toBeChecked();
+    await (await caixa(page, "Indexador da remuneração", "Prefixado (sem indexador)")).check();
+    await (await caixa(page, "Indexador da remuneração", "INPC")).check();
+    await expect((await caixa(page, "Indexador da remuneração", "Prefixado (sem indexador)"))).not.toBeChecked();
+    await (await caixa(page, "Indexador da remuneração", "CDI")).check();
+    await (await caixa(page, "Indexador da remuneração", "Variação cambial")).check();
     await page.getByLabel("Regime tributário").selectOption({ label: "Fundos — longo prazo" });
     // Dias e unidade só aparecem com Prazo em dias; a unidade não vem escolhida.
     await expect(page.getByLabel("Dias", { exact: true })).toHaveCount(0);
@@ -456,9 +462,9 @@ test.describe("detalhes dos ativos (#128)", () => {
 
     // A edição abre Mais detalhes com tudo marcado, e zero aparece como zero.
     await page.goto(`/ativos/${salvo.id}/editar`);
-    await expect(caixa(page, "Veículo de acesso", "Fundo")).toBeChecked();
-    await expect(caixa(page, "Veículo de acesso", "ETF")).toBeChecked();
-    await expect(caixa(page, "Indexador da remuneração", "INPC")).toBeChecked();
+    await expect((await caixa(page, "Veículo de acesso", "Fundo"))).toBeChecked();
+    await expect((await caixa(page, "Veículo de acesso", "ETF"))).toBeChecked();
+    await expect((await caixa(page, "Indexador da remuneração", "INPC"))).toBeChecked();
     await expect(page.getByLabel("Regime tributário")).toHaveValue("fundos_longo_prazo");
     await expect(page.getByLabel("Prazo para resgate ou venda")).toHaveValue("prazo");
     await expect(page.getByLabel("Dias", { exact: true })).toHaveValue("0");
@@ -466,8 +472,8 @@ test.describe("detalhes dos ativos (#128)", () => {
     await expect(page.getByLabel("Cobertura do FGC")).toHaveValue("sim");
 
     // Limpar é explícito: desmarcar, voltar a Não informado, e uma situação sem número.
-    await caixa(page, "Veículo de acesso", "Fundo").uncheck();
-    await caixa(page, "Veículo de acesso", "ETF").uncheck();
+    await (await caixa(page, "Veículo de acesso", "Fundo")).uncheck();
+    await (await caixa(page, "Veículo de acesso", "ETF")).uncheck();
     await page.getByLabel("Prazo para resgate ou venda").selectOption({ label: "No vencimento" });
     await expect(page.getByLabel("Dias", { exact: true })).toHaveCount(0);
     await page.getByLabel("Cobertura do FGC").selectOption({ label: "Não informado" });
@@ -490,7 +496,7 @@ test.describe("detalhes dos ativos (#128)", () => {
     await entrar(page, u.dono);
     await preencherBase(page, "Recusa com atributos fictício");
     await page.getByText("Mais detalhes", { exact: true }).click();
-    await caixa(page, "Indexador da remuneração", "Prefixado (sem indexador)").check();
+    await (await caixa(page, "Indexador da remuneração", "Prefixado (sem indexador)")).check();
     await page.getByLabel("Regime tributário").selectOption({ label: "Renda fixa — por prazo" });
     await radio(page, "Isento de IR", "Não").check();
     await page.getByLabel("Prazo para resgate ou venda").selectOption({ label: "Prazo em dias" });
@@ -503,7 +509,7 @@ test.describe("detalhes dos ativos (#128)", () => {
     // Nada se perde: nome, tipo, Mais detalhes aberto e cada escolha.
     await expect(page.getByLabel("Nome", { exact: true })).toHaveValue("Recusa com atributos fictício");
     await expect(page.getByLabel("Rendimento (renda fixa, poupança)")).toBeChecked();
-    await expect(caixa(page, "Indexador da remuneração", "Prefixado (sem indexador)")).toBeChecked();
+    await expect((await caixa(page, "Indexador da remuneração", "Prefixado (sem indexador)"))).toBeChecked();
     await expect(page.getByLabel("Regime tributário")).toHaveValue("renda_fixa_por_prazo");
     await expect(radio(page, "Isento de IR", "Não")).toBeChecked();
     await expect(page.getByLabel("Dias", { exact: true })).toHaveValue("2,2");
@@ -525,7 +531,7 @@ test.describe("detalhes dos ativos (#128)", () => {
     await entrar(page, u.dono);
     await preencherBase(page, "Adulterado com atributos fictício");
     await page.getByText("Mais detalhes", { exact: true }).click();
-    await caixa(page, "Indexador da remuneração", "Prefixado (sem indexador)").check();
+    await (await caixa(page, "Indexador da remuneração", "Prefixado (sem indexador)")).check();
     const acrescentar = (nome: string, valor: string) =>
       page.getByRole("main").locator("form").evaluate(
         (form, [n, v]) => {
@@ -565,6 +571,50 @@ test.describe("detalhes dos ativos (#128)", () => {
     expect(direto.error?.message).toBe("recusado_indexadores_remuneracao");
   });
 
+  // Ciclo 018, issue #182: "Mais detalhes" em quatro grupos, Previdência como opção do veículo e a
+  // lista suspensa de múltipla escolha (Esc, clique fora, teclado). Nomes fictícios.
+  test("Mais detalhes em grupos, Previdência no veículo e lista suspensa com Esc, clique fora e teclado", async ({ page }) => {
+    await page.setViewportSize(DESKTOP);
+    await entrar(page, u.dono);
+    await preencherBase(page, "Plano de previdência fictício");
+    await page.getByText("Mais detalhes", { exact: true }).click();
+    const secao = page.locator("details").filter({ has: page.locator("summary", { hasText: /^Mais detalhes$/ }) });
+    await expect(secao.getByRole("heading", { level: 2 })).toHaveText(["Produto", "Tributação", "Resgate", "Proteção e exposição"]);
+    await expect(page.getByText("Use Previdência para planos PGBL ou VGBL; Plano ou contrato, para outros contratos.", { exact: false })).toBeVisible();
+    await expect(page.getByText(/Em títulos híbridos, como IPCA \+ taxa, marque só o indexador\./)).toBeVisible();
+
+    const veiculo = page.getByRole("group", { name: "Veículo de acesso" });
+    const resumo = veiculo.locator("summary");
+    await expect(resumo).toHaveText(/Não informado/);
+    await expect(veiculo.getByRole("checkbox", { name: "Previdência (PGBL ou VGBL)" })).toBeHidden();
+    // Teclado: Enter abre a lista; Esc fecha e devolve o foco ao resumo.
+    await resumo.focus();
+    await page.keyboard.press("Enter");
+    await expect(veiculo.locator("details")).toHaveAttribute("open");
+    await veiculo.getByRole("checkbox", { name: "Previdência (PGBL ou VGBL)" }).check();
+    await page.keyboard.press("Escape");
+    await expect(veiculo.locator("details")).not.toHaveAttribute("open");
+    await expect(resumo).toBeFocused();
+    await expect(resumo).toHaveText(/Previdência \(PGBL ou VGBL\)/);
+    // Clique fora fecha a lista.
+    await resumo.click();
+    await expect(veiculo.locator("details")).toHaveAttribute("open");
+    await secao.getByRole("heading", { name: "Tributação" }).click();
+    await expect(veiculo.locator("details")).not.toHaveAttribute("open");
+    // A caixa fechada continua sendo enviada.
+    await page.getByRole("button", { name: "Cadastrar ativo" }).click();
+    await expect(page).toHaveURL(/\/ativos$/);
+    const salvo = (await cliente.from("ativos").select("id, veiculos_acesso, previdencia").eq("nome", "Plano de previdência fictício").single()).data!;
+    expect(salvo.veiculos_acesso).toEqual(["previdencia"]);
+    expect(salvo.previdencia).toBeNull();
+
+    // Na edição: a lista mostra a Previdência, o indicador antigo não aparece e o campo oculto vai vazio.
+    await page.goto(`/ativos/${salvo.id}/editar`);
+    await expect(page.getByRole("group", { name: "Veículo de acesso" }).locator("summary")).toHaveText(/Previdência \(PGBL ou VGBL\)/);
+    await expect(page.getByRole("group", { name: "Previdência", exact: true })).toHaveCount(0);
+    await expect(page.locator('input[type="hidden"][name="previdencia"]')).toHaveValue("");
+  });
+
   for (const tamanho of [MOVEL, DESKTOP]) {
     test(`Mais detalhes aberto, com todos os campos, sem violações nem rolagem horizontal em ${tamanho.width} px`, async ({ page }) => {
       await page.setViewportSize(tamanho);
@@ -572,20 +622,25 @@ test.describe("detalhes dos ativos (#128)", () => {
       await page.goto("/ativos/novo");
       await page.getByText("Mais detalhes", { exact: true }).click();
       await page.getByLabel("Prazo para resgate ou venda").selectOption({ label: "Prazo em dias" });
-      const resultado = await new AxeBuilder({ page }).withTags(WCAG).analyze();
-      expect(resultado.violations).toEqual([]);
-      const largura = await page.evaluate(() => ({ cliente: document.documentElement.clientWidth, rolagem: document.documentElement.scrollWidth }));
-      expect(largura.rolagem).toBeLessThanOrEqual(largura.cliente);
-      for (const alvo of await page.getByRole("checkbox").all()) {
-        expect((await alvo.locator("xpath=..").boundingBox())!.height).toBeGreaterThanOrEqual(44);
+      // Uma lista suspensa aberta por vez: abrir uma fecha a outra (clique fora).
+      for (const lista of ["Veículo de acesso", "Indexador da remuneração"]) {
+        await page.getByRole("group", { name: lista }).locator("summary").click();
+        const resultado = await new AxeBuilder({ page }).withTags(WCAG).analyze();
+        expect(resultado.violations, lista).toEqual([]);
+        const largura = await page.evaluate(() => ({ cliente: document.documentElement.clientWidth, rolagem: document.documentElement.scrollWidth }));
+        expect(largura.rolagem, lista).toBeLessThanOrEqual(largura.cliente);
+        for (const alvo of await page.getByRole("group", { name: lista }).getByRole("checkbox").all()) {
+          expect((await alvo.locator("xpath=..").boundingBox())!.height, lista).toBeGreaterThanOrEqual(44);
+        }
+        expect((await page.getByRole("group", { name: lista }).locator("summary").boundingBox())!.height, lista).toBeGreaterThanOrEqual(44);
       }
       for (const campo of ["Regime tributário", "Prazo para resgate ou venda", "Dias", "Unidade", "Cobertura do FGC"]) {
         expect((await page.getByLabel(campo, { exact: true }).boundingBox())!.height, campo).toBeGreaterThanOrEqual(44);
       }
       // Teclado: Espaço marca a caixa focada.
-      await caixa(page, "Veículo de acesso", "Direto").focus();
+      await (await caixa(page, "Veículo de acesso", "Direto")).focus();
       await page.keyboard.press("Space");
-      await expect(caixa(page, "Veículo de acesso", "Direto")).toBeChecked();
+      await expect((await caixa(page, "Veículo de acesso", "Direto"))).toBeChecked();
     });
   }
 

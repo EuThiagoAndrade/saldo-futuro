@@ -15,6 +15,13 @@ export const INDICADORES = [
 
 export type ColunaIndicador = (typeof INDICADORES)[number]["coluna"];
 
+/**
+ * Indicadores que as telas mostram (ciclo 018, issue #182, D18): Previdência virou opção do veículo
+ * de acesso e saiu das telas. A coluna fica como legado; na edição, um campo oculto devolve o valor
+ * gravado sem alterá-lo, para nenhuma edição apagar um "Sim" antes da migração que o converte.
+ */
+export const INDICADORES_VISIVEIS = INDICADORES.filter((i) => i.coluna !== "previdencia");
+
 /** Valores dos rádios: "sim", "nao" ou vazio (não informado). */
 export const OPCOES_INDICADOR = [
   { valor: "sim", rotulo: "Sim" },
@@ -35,6 +42,7 @@ export const VEICULOS_ACESSO = [
   { codigo: "direto", rotulo: "Direto" },
   { codigo: "fundo", rotulo: "Fundo" },
   { codigo: "etf", rotulo: "ETF" },
+  { codigo: "previdencia", rotulo: "Previdência (PGBL ou VGBL)" },
   { codigo: "plano_contrato", rotulo: "Plano ou contrato" },
   { codigo: "certificado_representativo", rotulo: "BDR ou certificado de depósito" },
   { codigo: "outro", rotulo: "Outro" },
@@ -94,6 +102,12 @@ export const MAXIMO_DIAS_PRAZO = 2147483647;
 /** Texto confirmado em D9, no topo de "Mais detalhes". */
 export const AVISO_ATRIBUTOS =
   "Informações preenchidas por você. O Saldo Futuro não calcula imposto, prazo de resgate ou valor garantido com estes campos.";
+
+/** Dica do veículo (ciclo 018, P3 confirmada). */
+export const AJUDA_VEICULO = "Use Previdência para planos PGBL ou VGBL; Plano ou contrato, para outros contratos.";
+
+/** Dica do indexador para títulos híbridos (ciclo 018, D16, texto literal). */
+export const AJUDA_HIBRIDOS = "Em títulos híbridos, como IPCA + taxa, marque só o indexador. Use Prefixado quando a remuneração não tiver indexador.";
 
 /** Ajuda do prazo (P2, ajustada em D11): orientação de preenchimento manual, sem conversão pelo sistema. */
 export const AJUDA_PRAZO =
@@ -310,13 +324,19 @@ export function valorDoIndicador(valor: boolean | null): "sim" | "nao" | "" {
   return valor === true ? "sim" : valor === false ? "nao" : "";
 }
 
-// Resumo "Ver detalhes" da página Ativos (ciclo 017, issue #174, P6): os cinco atributos e os quatro
-// indicadores, na ordem dos grupos do formulário, com "Não informado" explícito. Conjuntos na ordem
-// do catálogo. Um código fora do catálogo é erro de leitura, nunca vira ausência.
+// Resumo "Ver detalhes" da página Ativos (ciclo 017, issue #174, P6; grupos desde o ciclo 018, issue
+// #182, D13): os cinco atributos e os três indicadores visíveis, nos quatro grupos do formulário, com
+// "Não informado" explícito. Conjuntos na ordem do catálogo. Um código fora do catálogo é erro de
+// leitura, nunca vira ausência.
 
 export interface ItemResumo {
   rotulo: string;
   valor: string;
+}
+
+export interface GrupoResumo {
+  titulo: string;
+  itens: ItemResumo[];
 }
 
 const NAO_INFORMADO = "Não informado";
@@ -347,16 +367,35 @@ export function prazoLegivel(a: Pick<AtributosAtivo, "prazo_resgate_tipo" | "pra
   return `${dias.toLocaleString("pt-BR")} ${palavra}`;
 }
 
-export function resumoDosAtributos(a: AtributosAtivo & Record<ColunaIndicador, boolean | null>): ItemResumo[] {
+export function resumoDosAtributos(a: AtributosAtivo & Record<ColunaIndicador, boolean | null>): GrupoResumo[] {
   return [
-    { rotulo: "Veículo de acesso", valor: conjuntoLegivel(VEICULOS_ACESSO, a.veiculos_acesso) },
-    { rotulo: "Previdência", valor: indicadorLegivel(a.previdencia) },
-    { rotulo: "Indexador da remuneração", valor: conjuntoLegivel(INDEXADORES_REMUNERACAO, a.indexadores_remuneracao) },
-    { rotulo: "Exposição cambial", valor: indicadorLegivel(a.exposicao_cambial) },
-    { rotulo: "Regime tributário", valor: escolhaLegivel(REGIMES_TRIBUTARIOS, a.regime_tributario) },
-    { rotulo: "Isento de IR", valor: indicadorLegivel(a.isento_ir) },
-    { rotulo: "Prazo para resgate ou venda", valor: prazoLegivel(a) },
-    { rotulo: "Liquidez imediata (reserva)", valor: indicadorLegivel(a.liquidez_imediata) },
-    { rotulo: "Cobertura do FGC", valor: escolhaLegivel(COBERTURAS_FGC, a.cobertura_fgc) },
+    {
+      titulo: "Produto",
+      itens: [
+        { rotulo: "Veículo de acesso", valor: conjuntoLegivel(VEICULOS_ACESSO, a.veiculos_acesso) },
+        { rotulo: "Indexador da remuneração", valor: conjuntoLegivel(INDEXADORES_REMUNERACAO, a.indexadores_remuneracao) },
+      ],
+    },
+    {
+      titulo: "Tributação",
+      itens: [
+        { rotulo: "Regime tributário", valor: escolhaLegivel(REGIMES_TRIBUTARIOS, a.regime_tributario) },
+        { rotulo: "Isento de IR", valor: indicadorLegivel(a.isento_ir) },
+      ],
+    },
+    {
+      titulo: "Resgate",
+      itens: [
+        { rotulo: "Prazo para resgate ou venda", valor: prazoLegivel(a) },
+        { rotulo: "Liquidez imediata (reserva)", valor: indicadorLegivel(a.liquidez_imediata) },
+      ],
+    },
+    {
+      titulo: "Proteção e exposição",
+      itens: [
+        { rotulo: "Cobertura do FGC", valor: escolhaLegivel(COBERTURAS_FGC, a.cobertura_fgc) },
+        { rotulo: "Exposição cambial", valor: indicadorLegivel(a.exposicao_cambial) },
+      ],
+    },
   ];
 }

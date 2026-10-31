@@ -420,6 +420,22 @@ Relatar com a frase pedida no encerramento. Uma falha vira pendência explícita
 
 **Resultado do ciclo 017:** ação externa AC2 a AC6 relatada pelo responsável em 2026-10-30, com a migração aplicada e alinhada e AC5 `true/true/true/true/false`; depois da autorização da verificação e da apresentação do roteiro completo, o responsável respondeu "todos passaram" para VA1 a VA8. Evidência humana, sem execução de SQL ou conferência autenticada pelo agente. Release `v0.13.0` publicada pela PR #176 em 2026-10-31 às 04:02:15 UTC (2026-10-31 em America/Cuiaba); data da nota reconciliada na PR de encerramento. O relato anterior de VA1 não comprova a tela de novidades depois dessa publicação. Registro e limites em `_project/executed/017_atributos_complementares_ativos/017_task_closure.md`.
 
+### Previdência como veículo (ciclo 018)
+
+Ação externa da issue #182, feita pelo responsável **logo depois** do deploy da PR da issue, que já mostra "Previdência (PGBL ou VGBL)" no veículo e devolve o indicador antigo sem alterá-lo. A migração `20261031213611_previdencia_veiculo_acesso.sql` converte os dados de todos os usuários numa transação só e congela a coluna antiga. Nenhum dado de carteira é consultado nem relatado; a única contagem é agregada e só diz se sobrou algo a converter.
+
+| Passo | O que fazer | Resultado esperado |
+| :-- | :-- | :-- |
+| AP1 | Conferir a `main` com a PR da issue #182 integrada, os checks verdes e o deploy de produção concluído (painel da Vercel, deploy do commit da PR como "Ready"); terminal na raiz do repositório, na `main` atualizada, com o projeto de produção vinculado (S4) | `git log -1` mostra o commit da issue #182 |
+| AP2 | `npx supabase migration list` e `npx supabase db push --dry-run` | Só `20261031213611_previdencia_veiculo_acesso.sql` pendente. Qualquer outra migração pendente interrompe a ação para decisão |
+| AP3 | No editor SQL do painel, executar `tests/fixtures/previdencia018/e1_pre.sql` | Os três valores falsos (consulta só de estrutura) |
+| AP4 | `npx supabase db push` e de novo `npx supabase migration list` | Migração aplicada sem erro; local e remoto alinhados |
+| AP5 | Executar `tests/fixtures/previdencia018/e1_post.sql` no editor SQL | Os quatro valores verdadeiros, inclusive `nenhum_indicador_restante` |
+| AP6 | Abrir a edição de um ativo que tinha Previdência marcada, sem salvar, e o "Ver detalhes" dele | "Previdência (PGBL ou VGBL)" aparece no veículo; nada de indicador Previdência |
+| AP7 | Relatar no chat só os resultados de AP2 a AP6, dizendo "concluí a ação externa da issue #182" | Sem nomes de ativos, instituições, valores, e-mails ou prints |
+
+Não executar `tests/fixtures/previdencia018/upgrade_pre.sql` nem `upgrade_post.sql` em produção: são fixtures do ensaio local descartável. Em caso de erro no AP4, a transação desfaz tudo; não repetir nem corrigir no painel, e relatar a mensagem de erro sem dados. Não há `down migration`; uma correção é migração nova. Enquanto o AP4 não for feito, escolher "Previdência" no veículo é recusado pelo banco, sem gravar nada; por isso o `db push` deve vir logo depois do deploy.
+
 ## Fontes
 
 Consultadas em 2026-10-12 e conferidas na execução de 2026-10-13. São documentação oficial, sem versão fixada; os valores que dependem do plano ou do painel devem ser reconferidos.
@@ -456,3 +472,4 @@ Consultadas em 2026-10-12 e conferidas na execução de 2026-10-13. São documen
 | 2026-10-30 | `017` | Issue #172: roteiro AC1 a AC7 da ação externa dos atributos complementares dos ativos, com consultas só de estrutura |
 | 2026-10-30 | `017` | Issue #174: roteiro VA1 a VA8 da verificação em produção da consulta e dos filtros de Ativos, com relato só de passou ou falhou |
 | 2026-10-31 | `017` | Encerramento: ação externa e VA1 a VA8 relatados como concluídos; release `0.13.0` publicada; evidências humanas e conferências do agente distinguidas no resultado |
+| 2026-10-31 | `018` | Issue #182: roteiro AP1 a AP7 da ação externa da Previdência como veículo, logo depois do deploy, com consultas só de estrutura e uma contagem agregada |

@@ -1,7 +1,7 @@
 # Plano de Implementação — Organização dos atributos e Previdência como veículo
 
 > **Ciclo:** `018`
-> **Status:** `Aprovado`
+> **Status:** `Em Execução`
 > **Versão:** `v1`
 > **Data de criação:** 2026-10-30
 > **Última atualização:** 2026-10-31
@@ -11,6 +11,7 @@
 > **Autorização inicial:** "confirmo o nível completo e autorizo a ideação do ciclo 018" em 2026-10-30
 > **Autorização do rascunho:** "autorizo o rascunho do plano do ciclo 018" em 2026-10-30
 > **Modo contínuo:** `—`
+> **Autorização de implementação da issue #182:** "Autorizo a #182" em 2026-10-31, em resposta à pergunta "Autoriza a implementação da issue #182?"; execução iniciada na branch `feature/issue-182`, task `018_task_issue-182.md`.
 > **Aprovação:** "aprovo o plano do ciclo 018" em 2026-10-31, depois do veredito APTO PARA APROVAÇÃO da Rodada 1; propostas P3 a P6 confirmadas com "Confirmo as quatro" no mesmo dia (ver "Registro de aprovação").
 > **Revisão formal:** `Concluída`
 > **Veredito da revisão:** `APTO PARA APROVAÇÃO`
@@ -161,11 +162,11 @@ Existentes: `src/lib/telas/detalhes-ativo.ts`, `src/lib/telas/filtros-ativos.ts`
 
 ## Decomposição em issues e PRs
 
-| Unidade | Título proposto | Conteúdo | Dependência e fechamento |
+| Unidade | Issue e título | Conteúdo | Dependência e fechamento |
 | :-- | :-- | :-- | :-- |
 | Documental | — | Ideação, plano e `cycles.md` | Branch `chore/cycle-018-plan`; merge com aprovação própria |
-| Issue 1 | [FEATURE] Tratar Previdência como veículo e organizar os detalhes do ativo em grupos | Item 1 | Depois da documental e do payload confirmado; ação externa logo depois do deploy; a issue fica aberta até a ação externa |
-| Issue 2 | [FEATURE] Reorganizar o filtro de Ativos em grupos com listas suspensas | Item 2 | Depois da issue 1 integrada; fica aberta até a verificação em produção e o encerramento |
+| Issue 1 | [#182](https://github.com/EuThiagoAndrade/saldo-futuro/issues/182) — [FEATURE] Tratar Previdência como veículo e organizar os detalhes do ativo em grupos | Item 1 | Depois da documental e do payload confirmado; ação externa logo depois do deploy; a issue fica aberta até a ação externa |
+| Issue 2 | [#183](https://github.com/EuThiagoAndrade/saldo-futuro/issues/183) — [FEATURE] Reorganizar o filtro de Ativos em grupos com listas suspensas | Item 2 | Depois da issue 1 integrada; fica aberta até a verificação em produção e o encerramento |
 
 Uma branch por issue (`feature/issue-N`), commit `feat(issue-N): ...`, task `018_task_issue-N.md`. Encerramento em `chore/cycle-018-closure`, sem issue própria.
 
@@ -200,9 +201,9 @@ Uma branch por issue (`feature/issue-N`), commit `feat(issue-N): ...`, task `018
 
 | Campo | Valor |
 | :-- | :-- |
-| Issue(s) | — |
-| PR(s) | [#180 — publicação documental da ideação, do plano e do registro do ciclo](https://github.com/EuThiagoAndrade/saldo-futuro/pull/180), aberta |
-| Branch(es) | `chore/cycle-018-plan` — publicação documental, numa pasta separada (`git worktree`) para não interferir no encerramento do 017 feito em paralelo |
+| Issue(s) | [#182](https://github.com/EuThiagoAndrade/saldo-futuro/issues/182) e [#183](https://github.com/EuThiagoAndrade/saldo-futuro/issues/183) |
+| PR(s) | [#180 — publicação documental da ideação, do plano e do registro do ciclo](https://github.com/EuThiagoAndrade/saldo-futuro/pull/180), integrada em `main` (`e5fe034587f36bc3ae49ef6397a231da3c1bf641`); [#184 — Item 1, issue #182](https://github.com/EuThiagoAndrade/saldo-futuro/pull/184), aberta |
+| Branch(es) | `chore/cycle-018-plan` — publicação documental, numa pasta separada (`git worktree`) para não interferir no encerramento do 017 feito em paralelo; `feature/issue-182` — Item 1, task `018_task_issue-182.md` |
 | Destino após conclusão | `_project/executed/018_organizacao_atributos_previdencia/018_plan.md` |
 
 ## Próximo passo
@@ -211,11 +212,29 @@ Uma branch por issue (`feature/issue-N`), commit `feat(issue-N): ...`, task `018
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 018 (completo)
 Quem: Responsável
-Conferir: Checks e diff da [PR #180](https://github.com/EuThiagoAndrade/saldo-futuro/pull/180)
-Diga: "aprovo o merge da PR #180"
+Conferir: Checks e diff da [PR #184](https://github.com/EuThiagoAndrade/saldo-futuro/pull/184); roteiro de teste local em 018_task_issue-182.md
+Diga: "aprovo o merge da PR #184"
 ```
 
 ## Handoff de saída
+
+- `handoff_schema_version: 2`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 018 + criar_issues + issues-182-183 + e5fe034587f36bc3ae49ef6397a231da3c1bf641`
+- `effect_class`: `remote_mutation`
+- `state_before`: plano v1 `Aprovado` e integrado pela PR #180 (`e5fe034`); payloads apresentados ao responsável; nenhuma issue do 018.
+- `state_after`: issues #182 e #183 criadas e conferidas como `OPEN`; registros locais em `018_plan.md` e `cycles.md`, sem commit, para a branch da #182; nenhuma implementação iniciada.
+- `result`: `executed`
+- `evidence`: ver "Registro de criação das issues".
+- `blockers`: "autorizo a implementação da issue #182".
+
+### Registro de criação das issues
+
+- **Data e autorização:** 2026-10-31, "pode criar as issues", depois da apresentação dos dois payloads.
+- **Precondições conferidas:** plano `Aprovado` e integrado (PR #180, `e5fe034587f36bc3ae49ef6397a231da3c1bf641`); busca no GitHub sem issue equivalente e sem issue aberta.
+- **Template aplicado:** `.github/ISSUE_TEMPLATE/feature_request.yml` — Contexto, Escopo, Critérios de aceite, Ciclo e plano relacionados, Dependências, riscos e autorizações; sem labels ou responsáveis.
+- **Resultado:** criadas em sequência por `gh issue create --body-file` e conferidas com `gh issue view` como `OPEN`: [#182](https://github.com/EuThiagoAndrade/saldo-futuro/issues/182) e [#183](https://github.com/EuThiagoAndrade/saldo-futuro/issues/183). O corpo da #183 cita a #182 como pré-requisito, com o número real; fora isso, os textos são os apresentados.
+
+### Histórico — handoff da aprovação
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 018 + aprovar_plano + 018_plan + v1`

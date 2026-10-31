@@ -2,10 +2,9 @@ import Link from "next/link";
 import { botaoSecundario, botaoTexto } from "@/components/botoes";
 import { classeCampo } from "@/components/campos";
 import {
-  AVISO_ATRIBUTOS,
   COBERTURAS_FGC,
   INDEXADORES_REMUNERACAO,
-  INDICADORES,
+  INDICADORES_VISIVEIS,
   type OpcaoAtributo,
   REGIMES_TRIBUTARIOS,
   resumoDosAtributos,
@@ -20,23 +19,27 @@ import type { Ativo } from "@/lib/telas/leituras";
 // "Ver detalhes" de cada ativo e o painel "Filtrar", um formulário GET que não depende de
 // JavaScript. Os dois usam as mesmas linhas já lidas pela página; nada aqui lê o banco.
 
-/** Resumo recolhível dos atributos e indicadores de um ativo comum, abaixo das informações principais. */
+/** Resumo recolhível dos atributos e indicadores de um ativo comum, nos quatro grupos (ciclo 018, D13), sem a frase de aviso (D17). */
 export function ResumoAtivo({ ativo }: { ativo: Ativo }) {
   return (
     <details>
       <summary className="flex min-h-11 w-fit cursor-pointer items-center text-sm/5 font-medium text-primary hover:underline">
         Ver detalhes<span className="sr-only"> de {ativo.nome}</span>
       </summary>
-      <div className="flex flex-col gap-2 pb-2">
-        <p className="text-sm/5 text-text-secondary">{AVISO_ATRIBUTOS}</p>
-        <dl className="flex flex-col gap-2 md:grid md:grid-cols-2 md:gap-x-6">
-          {resumoDosAtributos(ativo).map((item) => (
-            <div key={item.rotulo} className="min-w-0">
-              <dt className="text-xs/4 font-medium text-text-secondary">{item.rotulo}</dt>
-              <dd className="text-sm/5 break-words text-text">{item.valor}</dd>
-            </div>
-          ))}
-        </dl>
+      <div className="flex flex-col gap-3 pb-2 md:grid md:grid-cols-2 md:gap-x-6">
+        {resumoDosAtributos(ativo).map((grupo) => (
+          <div key={grupo.titulo} className="flex min-w-0 flex-col gap-1">
+            <p className="text-sm/5 font-medium text-text">{grupo.titulo}</p>
+            <dl className="flex flex-col gap-1">
+              {grupo.itens.map((item) => (
+                <div key={item.rotulo} className="min-w-0">
+                  <dt className="text-xs/4 font-medium text-text-secondary">{item.rotulo}</dt>
+                  <dd className="text-sm/5 break-words text-text">{item.valor}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        ))}
       </div>
     </details>
   );
@@ -155,7 +158,7 @@ export function FiltrosDosAtivos({
             </div>
             <Selecao id="filtro-prazo-unidade" rotulo="Unidade" nome="prazo_resgate_unidade" opcoes={UNIDADES_PRAZO} p={p} vazio="Escolha" />
           </fieldset>
-          {INDICADORES.map((i) => (
+          {INDICADORES_VISIVEIS.map((i) => (
             <Selecao key={i.coluna} id={`filtro-${i.coluna}`} rotulo={i.rotulo} nome={i.coluna} opcoes={SIM_NAO} p={p} />
           ))}
           <button type="submit" className={`${botaoSecundario} sm:col-span-2 sm:justify-self-end`}>

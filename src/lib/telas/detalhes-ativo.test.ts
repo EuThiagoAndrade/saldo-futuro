@@ -6,6 +6,7 @@ import {
   EXCLUSIVOS_INDEXADOR,
   EXCLUSIVOS_VEICULO,
   INDEXADORES_REMUNERACAO,
+  INDICADORES_VISIVEIS,
   lerAtributos,
   lerDetalhes,
   lerNome,
@@ -181,6 +182,27 @@ describe("lerAtributos", () => {
       parametros: expect.objectContaining({ p_veiculos_acesso: ["direto"], p_cobertura_fgc: "sim", p_previdencia: null }),
     });
     expect(lerDetalhes(formulario({ fgc: "talvez" }))).toEqual({ erro: "Escolha Sim, Não, Não se aplica ou Não informado na cobertura do FGC." });
+  });
+});
+
+describe("Previdência como veículo (ciclo 018, issue #182, D18)", () => {
+  it("o catálogo tem Previdência entre ETF e Plano ou contrato, e o conjunto sai na ordem do catálogo", () => {
+    expect(VEICULOS_ACESSO.map((o) => o.codigo)).toEqual(["direto", "fundo", "etf", "previdencia", "plano_contrato", "certificado_representativo", "outro", "nao_aplicavel"]);
+    expect(VEICULOS_ACESSO.find((o) => o.codigo === "previdencia")?.rotulo).toBe("Previdência (PGBL ou VGBL)");
+    expect(lerAtributos(formulario({ veiculo: ["plano_contrato", "previdencia", "fundo"] }))).toEqual({
+      atributos: expect.objectContaining({ veiculos_acesso: ["fundo", "previdencia", "plano_contrato"] }),
+    });
+  });
+
+  it("o valor do indicador antigo, devolvido pelo campo oculto, passa sem alteração; sem o campo, fica nulo", () => {
+    expect(lerDetalhes(formulario({ previdencia: "sim" }))).toEqual({ parametros: expect.objectContaining({ p_previdencia: true }) });
+    expect(lerDetalhes(formulario({ previdencia: "nao" }))).toEqual({ parametros: expect.objectContaining({ p_previdencia: false }) });
+    expect(lerDetalhes(formulario({ previdencia: "" }))).toEqual({ parametros: expect.objectContaining({ p_previdencia: null }) });
+    expect(lerDetalhes(formulario({}))).toEqual({ parametros: expect.objectContaining({ p_previdencia: null }) });
+  });
+
+  it("os indicadores visíveis são os três que ficaram", () => {
+    expect(INDICADORES_VISIVEIS.map((i) => i.coluna)).toEqual(["liquidez_imediata", "exposicao_cambial", "isento_ir"]);
   });
 });
 

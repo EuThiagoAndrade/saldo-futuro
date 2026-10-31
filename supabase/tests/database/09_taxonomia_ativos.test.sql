@@ -347,7 +347,7 @@ select pg_temp.act_as('00000000-0000-4000-8000-0000000000d1');
 select is(public.ler_versao_classificacao(), '0', 'um perfil sem classificação lê a marca 0');
 select pg_temp.guarda('ia', public.criar_instituicao('Banco Exemplo'));
 select pg_temp.guarda('a_macro', public.cadastrar_ativo_taxonomia('Ativo A macro', 'rendimento', pg_temp.id('ia'), null,
-  pg_temp.no('2'), true, null, false, null));
+  pg_temp.no('2'), null, null, false, null));
 select pg_temp.guarda('a_sub', public.cadastrar_ativo_taxonomia('Ativo A sub', 'rendimento', null, ' banco exemplo ',
   pg_temp.no('2.2'), null, null, null, null));
 select pg_temp.guarda('a_tipo', public.cadastrar_ativo_taxonomia('Ativo A tipo', 'marcacao', null, null, pg_temp.no('2.2.1'),
@@ -360,9 +360,9 @@ select is((select array_agg(coalesce(a.taxonomia_id::text, 'nulo') order by a.no
   'o cadastro aceita um nó de qualquer nível, ou nenhum');
 select is((select count(*) from public.ativos a where a.user_id = '00000000-0000-4000-8000-0000000000d1'
   and a.classe_id is not null), 0::bigint, 'o cadastro novo não escreve o legado classe_id');
-select is((select concat_ws('|', a.instituicao_id = pg_temp.id('ia'), a.previdencia, coalesce(a.liquidez_imediata::text, 'nulo'),
+select is((select concat_ws('|', a.instituicao_id = pg_temp.id('ia'), coalesce(a.previdencia::text, 'nulo'), coalesce(a.liquidez_imediata::text, 'nulo'),
     a.exposicao_cambial, coalesce(a.isento_ir::text, 'nulo')) from public.ativos a where a.id = pg_temp.id('a_macro')),
-  't|t|nulo|f|nulo', 'o cadastro novo grava instituição e indicadores em três estados');
+  't|nulo|nulo|f|nulo', 'o cadastro novo grava instituição e indicadores em três estados');
 select is((select count(*) from public.instituicoes), 1::bigint, 'o nome novo de instituição reaproveita a entrada de mesma identidade');
 select is((select count(*) from public.ativos where sistema = 'transito'), 1::bigint, 'o cadastro novo garante o trânsito, uma vez');
 select is(public.ler_versao_classificacao(), '3', 'três cadastros com nó, uma mudança cada; o sem nó não conta');
@@ -387,11 +387,11 @@ select pg_temp.act_as('00000000-0000-4000-8000-0000000000d1');
 select is((select concat_ws('|', a.classe_id is not null, coalesce(a.taxonomia_id::text, 'nulo')) from public.ativos a
   where a.id = pg_temp.id('a_legado')), 't|nulo', 'um ativo com legado e sem nó é "Sem classe"');
 select is(public.ler_versao_classificacao(), '3', 'o legado posto direto não mexe na marca');
-select public.editar_detalhes_ativo_taxonomia(pg_temp.id('a_legado'), null, null, pg_temp.no('2.4'), true, true, true, true);
-select is((select concat_ws('|', a.classe_id is not null, a.taxonomia_id = pg_temp.no('2.4'), a.previdencia) from public.ativos a
+select public.editar_detalhes_ativo_taxonomia(pg_temp.id('a_legado'), null, null, pg_temp.no('2.4'), null, true, true, true);
+select is((select concat_ws('|', a.classe_id is not null, a.taxonomia_id = pg_temp.no('2.4'), a.liquidez_imediata) from public.ativos a
   where a.id = pg_temp.id('a_legado')), 't|t|t', 'a edição nova troca o nó e preserva o legado classe_id');
 select is(public.ler_versao_classificacao(), '4', 'a edição que muda o nó incrementa a marca');
-select public.editar_detalhes_ativo_taxonomia(pg_temp.id('a_legado'), null, null, pg_temp.no('2.4'), false, null, null, null);
+select public.editar_detalhes_ativo_taxonomia(pg_temp.id('a_legado'), null, null, pg_temp.no('2.4'), null, false, null, null);
 select is(public.ler_versao_classificacao(), '4', 'editar outros campos com o mesmo nó não incrementa a marca');
 select is(pg_temp.erro(format('select public.editar_detalhes_ativo_taxonomia(%L, null, null, %L, null, null, null, null)',
   pg_temp.id('a_legado'), gen_random_uuid())), 'recusado_taxonomia_inexistente', 'um nó inexistente é recusado na edição');
