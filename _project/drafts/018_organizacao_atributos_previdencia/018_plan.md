@@ -193,7 +193,7 @@ Uma branch por issue (`feature/issue-N`), commit `feat(issue-N): ...`, task `018
 
 ## Referências
 
-- Ideação `_project/ideations/018_organizacao_atributos_previdencia.md`; plano do ciclo `017` (D9, P1 a P6, Rodada 5 e "Decisão do responsável após a Rodada 5"), hoje sem commit na branch local `chore/cycle-017-closure`.
+- Ideação `_project/ideations/018_organizacao_atributos_previdencia.md`; plano do ciclo `017` (D9, P1 a P6, Rodada 5 e "Decisão do responsável após a Rodada 5"), em `_project/executed/017_atributos_complementares_ativos/017_plan.md` desde o encerramento (PR #179).
 - Migrações `20261027220000_metadados_nome_ativo.sql` e `20261031000721_atributos_complementares_ativos.sql`; fases 1 e 2 da taxonomia do ciclo `013` (precedente de coluna legada congelada).
 
 ## Rastreabilidade
