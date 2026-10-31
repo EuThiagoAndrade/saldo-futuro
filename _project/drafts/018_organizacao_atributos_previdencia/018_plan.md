@@ -201,18 +201,18 @@ Uma branch por issue (`feature/issue-N`), commit `feat(issue-N): ...`, task `018
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | — |
-| PR(s) | — |
-| Branch(es) | — |
+| PR(s) | [#180 — publicação documental da ideação, do plano e do registro do ciclo](https://github.com/EuThiagoAndrade/saldo-futuro/pull/180), aberta |
+| Branch(es) | `chore/cycle-018-plan` — publicação documental, numa pasta separada (`git worktree`) para não interferir no encerramento do 017 feito em paralelo |
 | Destino após conclusão | `_project/executed/018_organizacao_atributos_previdencia/018_plan.md` |
 
 ## Próximo passo
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando aprovação do plano — ciclo 018 (completo)
+Situação: Aguardando merge — ciclo 018 (completo)
 Quem: Responsável
-Conferir: Veredito e parecer da Rodada 1 na seção "Revisão crítica" de `_project/drafts/018_organizacao_atributos_previdencia/018_plan.md`, propostas P1 a P6 e respostas às perguntas 1 a 4 da ideação
-Diga: "aprovo o plano do ciclo 018"
+Conferir: Checks e diff da [PR #180](https://github.com/EuThiagoAndrade/saldo-futuro/pull/180)
+Diga: "aprovo o merge da PR #180"
 ```
 
 ## Handoff de saída
@@ -221,7 +221,7 @@ Diga: "aprovo o plano do ciclo 018"
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 018 + aprovar_plano + 018_plan + v1`
 - `effect_class`: `remote_mutation`
 - `state_before`: plano v1 `Em Revisão`, Rodada 1 com APTO PARA APROVAÇÃO (Antigravity, Gemini 4 Argon), aprovação pendente das confirmações de P3 a P6.
-- `state_after`: plano v1 `Aprovado` em 2026-10-31; P3 a P6 confirmadas; ideação, plano e reserva em `cycles.md` publicados na PR documental da branch `chore/cycle-018-plan`; nenhuma issue criada.
+- `state_after`: plano v1 `Aprovado` em 2026-10-31; P3 a P6 confirmadas; ideação, plano e reserva em `cycles.md` publicados na PR #180 (branch `chore/cycle-018-plan`, base `main` em `9abf283`, já com a release 0.13.0 integrada pela PR #176); encerramento do 017 em paralelo na PR #179; nenhuma issue criada.
 - `result`: `executed`
 - `evidence`: frases "aprovo o plano do ciclo 018" e "Confirmo as quatro", posteriores ao veredito; validador e `git diff --check` antes do commit; PR documental registrada em Rastreabilidade.
 - `blockers`: merge documental com aprovação própria e checks verdes; depois, confirmação dos payloads das duas issues.
