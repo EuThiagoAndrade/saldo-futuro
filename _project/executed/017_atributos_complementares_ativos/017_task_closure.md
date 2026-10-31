@@ -7,7 +7,7 @@
 > **Issue:** — (encerramento sem issue recursiva; fecha #172 e #174; #173 já fechada pela PR #177)
 > **Plano:** `_project/executed/017_atributos_complementares_ativos/017_plan.md`
 > **Branch:** `chore/cycle-017-closure`
-> **PR:** Pendente de publicação
+> **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/179
 > **Integração:** prospectiva; conclusão válida somente depois do merge desta PR, conferido no GitHub
 > **Autorização inicial:** "aprovo o plano do ciclo 017" em 2026-10-30 (cobre o encerramento); pedido "Podemos fechar o ciclo 17? Já que estamos começando a fazer o ciclo 18"; "autorizo a verificação em produção do ciclo 017" em 2026-10-30; "aprovo o merge da PR #176" em 2026-10-31 (somente a release)
 > **Modo contínuo:** `—`
@@ -50,7 +50,7 @@ Não se aplica — encerramento de ciclo completo.
 - [x] Conferir release v0.13.0 e data civil 2026-10-31 em America/Cuiaba; preencher a data da nota e ajustar o teste existente.
 - [x] Reconciliar plano e tasks, preservar pareceres e emendas históricas, consolidar KB-002/KB-003 e mover o ciclo para `executed/`.
 - [x] Validar gates locais, revisão de G3 e staging limitado ao 017.
-- [ ] Publicar PR de encerramento e conferir checks do head final.
+- [x] Publicar PR #179 de encerramento; conferir os checks do head final no GitHub antes do merge.
 
 ## Evidências
 
@@ -62,7 +62,7 @@ Não se aplica — encerramento de ciclo completo.
 | Produção | Autorização explícita seguida da resposta "todos passaram" para VA1 a VA8, apresentados integralmente ao responsável. O agente não executou SQL nem os testes autenticados e não salvou ativos reais. Consulta HTTP sem sessão comprovou só entrada disponível e redirecionamento de `/ativos` e `/novidades` para login |
 | Release | #176 aprovada com "aprovo o merge da PR #176"; head `9958a1fd5b85d5303052da68fc1749529e8e9ec9` com todos os checks verdes, inclusive runs manuais `41166126047` e `41166128107`; squash `9abf28384d95d914f8a26f7e71a470f359370a50`; v0.13.0 publicada em 2026-10-31 às 04:02:15 UTC, data civil 2026-10-31 em Cuiabá |
 | Gates locais | Governança 48/48; validador com 0 erros e 0 avisos no worktree e no snapshot exato do staging; npm ci concluído; lint sem erros (3 avisos preexistentes em arquivo ignorado de local/); typecheck, unitários 501/501 e build passaram; e2e sem backend com dois workers: 33 passaram e 212 ignorados, saída 0. Nenhuma mudança de banco/autenticação; banco e e2e autenticado executados pelo CI |
-| Checks do encerramento | Pendente de publicação |
+| Checks do encerramento | CI, governança e Vercel acionados na PR #179; a conferência do resultado no head corrente é pré-requisito de merge, verificável no GitHub |
 
 ## Revisão da correção
 
@@ -95,7 +95,7 @@ Diga: —
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 017 + atualizar_docs + encerramento + 9abf28384d95d914f8a26f7e71a470f359370a50`
 - `effect_class`: `remote_mutation`
 - `state_before`: entregas integradas, ação externa e VA1 a VA8 relatados como concluídos, release 0.13.0 publicada; ciclo Em execução em drafts; #172 e #174 abertas.
-- `state_after`: documentação consolidada e ciclo em executed com conclusão prospectiva; publicação/integração do encerramento verificáveis na PR desta branch.
+- `state_after`: documentação consolidada e ciclo em executed com conclusão prospectiva; PR #179 publicada, aguardando checks finais e aprovação própria do merge.
 - `result`: `executed`
 - `evidence`: PRs, release, relatos humanos e gates desta task.
 - `blockers`: checks verdes no head final da PR de encerramento e aprovação específica de seu merge.
