@@ -86,9 +86,9 @@ describe("histórico do produto", () => {
 });
 
 describe("nota da 0.13.0", () => {
-  it("os atributos dos ativos ficam sem data até a publicação da release e só aparecem quando a 0.13.0 for lançada", () => {
+  it("os atributos dos ativos têm a data da release e só aparecem a partir da 0.13.0", () => {
     const nota = HISTORICO.find((n) => n.versao === "0.13.0");
-    expect(nota?.publicadaEm).toBeNull();
+    expect(nota?.publicadaEm).toBe("2026-10-31");
     expect(novidadesPublicadas("0.12.1", HISTORICO).map((n) => n.versao)).not.toContain("0.13.0");
     expect(novidadesPublicadas("0.13.0", HISTORICO).map((n) => n.versao)[0]).toBe("0.13.0");
   });
