@@ -86,12 +86,12 @@ select is_empty($$select p.proname from pg_proc p join pg_namespace n on n.oid =
 select pg_temp.act_as('17200000-0000-4000-8000-000000000001');
 select set_config('teste.metadados', public.ler_versao_metadados(), true);
 select pg_temp.guarda('a', public.cadastrar_ativo_com_atributos('Ativo A','rendimento',null,'Instituição A',
-  'a5000000-0000-4000-8000-000000020000',true,false,null,null,
+  'a5000000-0000-4000-8000-000000020000',null,false,null,null,
   '{etf,fundo,fundo}','{inpc,cdi,variacao_cambial}','fundos_longo_prazo','prazo',0,'uteis','sim'));
 select is(pg_temp.linha(), '{"veiculos":["fundo","etf"],"indexadores":["cdi","variacao_cambial","inpc"],"regime":"fundos_longo_prazo","tipo":"prazo","dias":0,"unidade":"uteis","fgc":"sim"}'::jsonb,
   'cadastro grava conjuntos canônicos, sem duplicatas, na ordem do catálogo, e prazo zero');
 select is((select row(nome, previdencia, liquidez_imediata, exposicao_cambial, isento_ir, taxonomia_id)::text from public.ativos where id = pg_temp.id('a')),
-  row('Ativo A', true, false, null::boolean, null::boolean, 'a5000000-0000-4000-8000-000000020000'::uuid)::text,
+  row('Ativo A', null::boolean, false, null::boolean, null::boolean, 'a5000000-0000-4000-8000-000000020000'::uuid)::text,
   'cadastro grava nome, classe e indicadores; variação cambial não preenche exposição cambial');
 select isnt((select instituicao_id from public.ativos where id = pg_temp.id('a')), null, 'cadastro cria a instituição nova');
 select is(public.ler_versao_metadados()::bigint, current_setting('teste.metadados')::bigint + 3,
@@ -105,7 +105,7 @@ select is((select row(veiculos_acesso, indexadores_remuneracao, regime_tributari
 select lives_ok(pg_temp.atributos('{}','{}',null,null,null,null,null),'limpar atributos explicitamente');
 select is(pg_temp.linha(), '{"veiculos":[],"indexadores":[],"regime":null,"tipo":null,"dias":null,"unidade":null,"fgc":null}'::jsonb,
   'vazio e nulo representam Não informado');
-select is((select previdencia from public.ativos where id = pg_temp.id('a')), null::boolean, 'edição substitui os indicadores pelos enviados');
+select is((select liquidez_imediata from public.ativos where id = pg_temp.id('a')), null::boolean, 'edição substitui os indicadores pelos enviados');
 select is((select instituicao_id from public.ativos where id = pg_temp.id('a')), null::uuid, 'edição substitui a instituição pela enviada');
 
 -- Com nome e vínculos iguais, mudar só atributos não mexe nas marcas de metadados e de classificação.
@@ -161,7 +161,7 @@ select is(pg_temp.linha()->'dias', '1'::jsonb, 'recusas preservam o último valo
 -- Atomicidade: recusa nos atributos desfaz nome, classe, instituição nova e indicadores.
 select set_config('teste.antes', (select to_jsonb(a)::text from public.ativos a where id = pg_temp.id('a')), true);
 select is(pg_temp.erro($$select public.editar_ativo_com_atributos(pg_temp.id('a'),'Nome desfeito',null,'Instituição desfeita',
-  'a5000000-0000-4000-8000-000000030000',true,true,true,true,'{fundo}','{cdi}','outro','prazo',5,'dias','sim')$$),
+  'a5000000-0000-4000-8000-000000030000',null,true,true,true,'{fundo}','{cdi}','outro','prazo',5,'dias','sim')$$),
   'recusado_prazo_resgate','recusa depois de resolver instituição');
 select is((select to_jsonb(a)::text from public.ativos a where id = pg_temp.id('a')), current_setting('teste.antes'), 'ativo inteiro preservado');
 select is_empty($$select 1 from public.instituicoes where nome = 'Instituição desfeita'$$, 'instituição nova desfeita');

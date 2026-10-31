@@ -32,9 +32,9 @@ const ativo = (id: string, extras: Partial<Ativo> = {}): Ativo => ({
 });
 const prazo = (dias: number, unidade: "uteis" | "corridos") => ({ prazo_resgate_tipo: "prazo", prazo_resgate_dias: dias, prazo_resgate_unidade: unidade });
 
-const A = ativo("A", { veiculos_acesso: ["fundo"], indexadores_remuneracao: ["cdi"], ...prazo(0, "uteis"), cobertura_fgc: "sim", previdencia: true });
+const A = ativo("A", { veiculos_acesso: ["fundo"], indexadores_remuneracao: ["cdi"], ...prazo(0, "uteis"), cobertura_fgc: "sim", liquidez_imediata: true, previdencia: true });
 const B = ativo("B", { veiculos_acesso: ["etf"], indexadores_remuneracao: ["ipca"], ...prazo(1, "uteis"), regime_tributario: "renda_variavel", cobertura_fgc: "nao" });
-const C = ativo("C", { veiculos_acesso: ["fundo", "etf"], indexadores_remuneracao: ["cdi"], ...prazo(3, "corridos"), cobertura_fgc: "nao_aplicavel", previdencia: false });
+const C = ativo("C", { veiculos_acesso: ["fundo", "etf"], indexadores_remuneracao: ["cdi"], ...prazo(3, "corridos"), cobertura_fgc: "nao_aplicavel", liquidez_imediata: false, previdencia: false });
 const D = ativo("D", { prazo_resgate_tipo: "no_vencimento" });
 const E = ativo("E");
 const TRANSITO = ativo("T", { nome: "Em trânsito", tipo_ajuste: null, sistema: "transito" });
@@ -88,9 +88,14 @@ describe("filtrarAtivos — exemplos da P5", () => {
   });
 
   it("indicadores em Sim, Não e Não informado", () => {
-    expect(filtrar({ previdencia: "sim" })).toEqual(["A"]);
-    expect(filtrar({ previdencia: "nao" })).toEqual(["C"]);
-    expect(filtrar({ previdencia: "nao_informado" })).toEqual(["B", "D", "E"]);
+    expect(filtrar({ liquidez_imediata: "sim" })).toEqual(["A"]);
+    expect(filtrar({ liquidez_imediata: "nao" })).toEqual(["C"]);
+    expect(filtrar({ liquidez_imediata: "nao_informado" })).toEqual(["B", "D", "E"]);
+  });
+
+  it("o indicador Previdência deixou de ser filtro (ciclo 018, D18): o parâmetro antigo é ignorado", () => {
+    expect(filtrar({ previdencia: "sim" })).toEqual(["A", "B", "C", "D", "E", "T"]);
+    expect(erro({ previdencia: "true" })).toBeNull();
   });
 });
 
@@ -100,7 +105,7 @@ describe("lerFiltros — recusas explícitas", () => {
     expect(erro({ regime: ["outro", "renda_variavel"] })).toBe("Regime tributário aparece mais de uma vez.");
     expect(erro({ regime: ["", "outro"] })).toBe("Regime tributário aparece mais de uma vez.");
     expect(erro({ fgc: "talvez" })).toBe("Cobertura do FGC tem uma opção desconhecida.");
-    expect(erro({ previdencia: "true" })).toBe("Previdência tem uma opção desconhecida.");
+    expect(erro({ isento_ir: "true" })).toBe("Isento de IR tem uma opção desconhecida.");
     expect(erro({ veiculo: ["nao_informado", "fundo"] })).toBe("Veículo de acesso: Não informado e as opções exclusivas não combinam com outras.");
     expect(erro({ indexador: ["sem_indexador", "cdi"] })).toBe("Indexador da remuneração: Não informado e as opções exclusivas não combinam com outras.");
   });
@@ -142,17 +147,40 @@ describe("estado na URL", () => {
 });
 
 describe("resumo do ativo", () => {
-  it("nove itens na ordem dos grupos, com Não informado explícito e conjuntos na ordem do catálogo", () => {
-    expect(resumoDosAtributos(ativo("X", { veiculos_acesso: ["fundo", "etf"], indexadores_remuneracao: ["variacao_cambial"], isento_ir: false, ...prazo(0, "uteis") }))).toEqual([
-      { rotulo: "Veículo de acesso", valor: "Fundo, ETF" },
-      { rotulo: "Previdência", valor: "Não informado" },
-      { rotulo: "Indexador da remuneração", valor: "Variação cambial" },
-      { rotulo: "Exposição cambial", valor: "Não informado" },
-      { rotulo: "Regime tributário", valor: "Não informado" },
-      { rotulo: "Isento de IR", valor: "Não" },
-      { rotulo: "Prazo para resgate ou venda", valor: "0 dias úteis" },
-      { rotulo: "Liquidez imediata (reserva)", valor: "Não informado" },
-      { rotulo: "Cobertura do FGC", valor: "Não informado" },
+  it("oito itens nos quatro grupos, com Não informado explícito, conjuntos na ordem do catálogo e sem Previdência à parte", () => {
+    expect(
+      resumoDosAtributos(
+        ativo("X", { veiculos_acesso: ["etf", "previdencia"], indexadores_remuneracao: ["variacao_cambial"], isento_ir: false, previdencia: true, ...prazo(0, "uteis") }),
+      ),
+    ).toEqual([
+      {
+        titulo: "Produto",
+        itens: [
+          { rotulo: "Veículo de acesso", valor: "ETF, Previdência (PGBL ou VGBL)" },
+          { rotulo: "Indexador da remuneração", valor: "Variação cambial" },
+        ],
+      },
+      {
+        titulo: "Tributação",
+        itens: [
+          { rotulo: "Regime tributário", valor: "Não informado" },
+          { rotulo: "Isento de IR", valor: "Não" },
+        ],
+      },
+      {
+        titulo: "Resgate",
+        itens: [
+          { rotulo: "Prazo para resgate ou venda", valor: "0 dias úteis" },
+          { rotulo: "Liquidez imediata (reserva)", valor: "Não informado" },
+        ],
+      },
+      {
+        titulo: "Proteção e exposição",
+        itens: [
+          { rotulo: "Cobertura do FGC", valor: "Não informado" },
+          { rotulo: "Exposição cambial", valor: "Não informado" },
+        ],
+      },
     ]);
   });
 

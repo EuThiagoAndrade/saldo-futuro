@@ -4,7 +4,7 @@ import {
   EXCLUSIVOS_INDEXADOR,
   EXCLUSIVOS_VEICULO,
   INDEXADORES_REMUNERACAO,
-  INDICADORES,
+  INDICADORES_VISIVEIS,
   MAXIMO_DIAS_PRAZO,
   type OpcaoAtributo,
   prazoLegivel,
@@ -58,7 +58,7 @@ export const PARAMETROS_FILTRO = [
   "prazo_resgate_unidade",
   "prazo_resgate_comparacao",
   "fgc",
-  ...INDICADORES.map((i) => i.coluna),
+  ...INDICADORES_VISIVEIS.map((i) => i.coluna),
 ] as const;
 
 const lista = (valor: string | string[] | undefined) => (valor === undefined ? [] : Array.isArray(valor) ? valor : [valor]);
@@ -111,7 +111,7 @@ function prazo(p: Parametros): FiltroPrazo | null {
 export function lerFiltros(p: Parametros): { filtros: FiltrosAtivos } | { erro: string } {
   try {
     const indicadores: FiltrosAtivos["indicadores"] = {};
-    for (const i of INDICADORES) {
+    for (const i of INDICADORES_VISIVEIS) {
       const valor = escalar(p, i.coluna, ["sim", "nao", NAO_INFORMADO_FILTRO], i.rotulo);
       if (valor !== null) indicadores[i.coluna] = valor as "sim" | "nao" | typeof NAO_INFORMADO_FILTRO;
     }
@@ -163,7 +163,7 @@ export function filtrarAtivos<A extends Ativo>(ativos: readonly A[], f: FiltrosA
       confere(f.regime, a.regime_tributario) &&
       conferePrazo(f.prazo, a) &&
       confere(f.fgc, a.cobertura_fgc) &&
-      INDICADORES.every((i) => {
+      INDICADORES_VISIVEIS.every((i) => {
         const filtro = f.indicadores[i.coluna];
         return filtro === undefined || filtro === valorDoIndicador(a[i.coluna]);
       }),
@@ -188,7 +188,7 @@ export function descreverFiltros(f: FiltrosAtivos): string[] {
     );
   }
   if (f.fgc) itens.push(`FGC: ${rotulo(COBERTURAS_FGC, f.fgc)}`);
-  for (const i of INDICADORES) {
+  for (const i of INDICADORES_VISIVEIS) {
     const v = f.indicadores[i.coluna];
     if (v) itens.push(`${i.rotulo}: ${v === "sim" ? "Sim" : v === "nao" ? "Não" : "Não informado"}`);
   }

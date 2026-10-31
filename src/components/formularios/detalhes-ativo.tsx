@@ -4,9 +4,12 @@ import { type ReactNode, useRef, useState } from "react";
 import { ComboboxAtivo } from "@/components/combobox-ativo";
 import { Campo, classeCampo } from "@/components/campos";
 import { useManterAposReset } from "@/components/formularios/manter-apos-reset";
+import { ListaSuspensa } from "@/components/lista-suspensa";
 import type { Opcao } from "@/lib/telas/combobox";
 import {
+  AJUDA_HIBRIDOS,
   AJUDA_PRAZO,
+  AJUDA_VEICULO,
   algumAtributoInformado,
   alternarNoConjunto,
   type AtributosAtivo,
@@ -17,6 +20,7 @@ import {
   EXCLUSIVOS_VEICULO,
   INDEXADORES_REMUNERACAO,
   INDICADORES,
+  INDICADORES_VISIVEIS,
   type OpcaoAtributo,
   OPCOES_INDICADOR,
   REGIMES_TRIBUTARIOS,
@@ -27,6 +31,7 @@ import {
 } from "@/lib/telas/detalhes-ativo";
 
 type ValorIndicador = "sim" | "nao" | "";
+type ColunaVisivel = (typeof INDICADORES_VISIVEIS)[number]["coluna"];
 
 // Campos descritivos do ativo (ciclo 012, issue #128, BL-009), comuns ao cadastro e à edição:
 // classe e instituição como campos principais, com busca (DESIGN.md 6.8), e o resto dentro de "Mais
@@ -34,9 +39,12 @@ type ValorIndicador = "sim" | "nao" | "";
 // seletor único, opcional, com o caminho completo, sem criação. A instituição segue oferecendo
 // "Cadastrar «texto»". Nada aqui entra em cálculo.
 //
-// Atributos complementares (ciclo 017, issue #173): veículos e indexadores em checkboxes, regime,
-// prazo e FGC em selects nativos, agrupados com os quatro indicadores que lhes são próximos (P3/D12).
-// Os campos de "Mais detalhes" são controlados: uma recusa do servidor mantém o que foi escolhido.
+// Atributos complementares (ciclo 017, issue #173) organizados em quatro grupos com título (ciclo
+// 018, issue #182, D13): Produto, Tributação, Resgate e Proteção e exposição. Veículo e indexador
+// são listas suspensas de múltipla escolha (D14); regime, prazo e FGC, selects nativos. Previdência
+// é opção do veículo (D18): o indicador antigo não aparece, e a edição devolve o valor gravado num
+// campo oculto, sem alterá-lo. Os campos são controlados: uma recusa do servidor mantém o que foi
+// escolhido.
 export function CamposDetalhes({
   prefixo,
   classes,
@@ -50,9 +58,10 @@ export function CamposDetalhes({
   instituicoes: readonly Opcao[];
   inicial?: { classe: string | null; instituicao: string | null } & Record<ColunaIndicador, boolean | null> & AtributosAtivo;
 }) {
-  const algumInformado = inicial ? INDICADORES.some((i) => inicial[i.coluna] !== null) || algumAtributoInformado(inicial) : false;
+  const algumInformado = inicial ? INDICADORES_VISIVEIS.some((i) => inicial[i.coluna] !== null) || algumAtributoInformado(inicial) : false;
   const [indicadores, setIndicadores] = useState(
-    () => Object.fromEntries(INDICADORES.map((i) => [i.coluna, valorDoIndicador(inicial?.[i.coluna] ?? null)])) as Record<ColunaIndicador, ValorIndicador>,
+    () =>
+      Object.fromEntries(INDICADORES_VISIVEIS.map((i) => [i.coluna, valorDoIndicador(inicial?.[i.coluna] ?? null)])) as Record<ColunaVisivel, ValorIndicador>,
   );
   const [veiculos, setVeiculos] = useState<string[]>(inicial?.veiculos_acesso ?? []);
   const [indexadores, setIndexadores] = useState<string[]>(inicial?.indexadores_remuneracao ?? []);
@@ -65,7 +74,7 @@ export function CamposDetalhes({
   const secao = useRef<HTMLDetailsElement>(null);
   useManterAposReset(secao);
 
-  const indicador = (coluna: ColunaIndicador, dica?: string) => {
+  const indicador = (coluna: ColunaVisivel, dica?: string) => {
     const definicao = INDICADORES.find((i) => i.coluna === coluna)!;
     const idDica = `${prefixo}-${definicao.campo}-dica`;
     return (
@@ -120,6 +129,8 @@ export function CamposDetalhes({
           semResultado="Nenhuma instituição cadastrada. Digite um nome para cadastrar."
         />
       </Campo>
+      {/* Legado do indicador Previdência (D18): só na edição, com o valor gravado, para a migração convertê-lo. */}
+      {inicial ? <input type="hidden" name="previdencia" value={valorDoIndicador(inicial.previdencia)} /> : null}
       <details ref={secao} open={algumInformado} className="rounded-md border border-border">
         <summary className="flex min-h-11 cursor-pointer items-center px-4 text-sm/5 font-medium text-primary hover:bg-surface-subtle">
           Mais detalhes
@@ -127,39 +138,37 @@ export function CamposDetalhes({
         <div className="flex flex-col gap-4 border-t border-border p-4">
           <p className="text-sm/5 text-text-secondary">{AVISO_ATRIBUTOS}</p>
           <div className="flex flex-col divide-y divide-border">
-            <Grupo>
-              <Conjunto
+            <Grupo titulo="Produto">
+              <ListaSuspensa
                 id={`${prefixo}-veiculos`}
                 legenda="Veículo de acesso"
-                dica="Marque uma ou mais opções. Não se aplica não combina com as outras."
+                dica={`${AJUDA_VEICULO} Não se aplica não combina com as outras opções.`}
                 nome="veiculo"
-                catalogo={VEICULOS_ACESSO}
+                opcoes={VEICULOS_ACESSO}
                 marcados={veiculos}
                 aoAlternar={(codigo, marcado) => setVeiculos((atual) => alternarNoConjunto(atual, codigo, marcado, VEICULOS_ACESSO, EXCLUSIVOS_VEICULO))}
+                vazio="Não informado"
               />
-              {indicador("previdencia")}
-            </Grupo>
-            <Grupo>
-              <Conjunto
+              <ListaSuspensa
                 id={`${prefixo}-indexadores`}
                 legenda="Indexador da remuneração"
-                dica="Marque uma ou mais opções. Prefixado (sem indexador) e Não se aplica não combinam com as outras."
+                dica={`${AJUDA_HIBRIDOS} Prefixado (sem indexador) e Não se aplica não combinam com as outras opções.`}
                 nome="indexador"
-                catalogo={INDEXADORES_REMUNERACAO}
+                opcoes={INDEXADORES_REMUNERACAO}
                 marcados={indexadores}
                 aoAlternar={(codigo, marcado) =>
                   setIndexadores((atual) => alternarNoConjunto(atual, codigo, marcado, INDEXADORES_REMUNERACAO, EXCLUSIVOS_INDEXADOR))
                 }
+                vazio="Não informado"
               />
-              {indicador("exposicao_cambial")}
             </Grupo>
-            <Grupo>
+            <Grupo titulo="Tributação">
               <Campo id={`${prefixo}-regime`} rotulo="Regime tributário">
                 <Escolha id={`${prefixo}-regime`} nome="regime" catalogo={REGIMES_TRIBUTARIOS} valor={regime} aoMudar={setRegime} vazio="Não informado" />
               </Campo>
               {indicador("isento_ir")}
             </Grupo>
-            <Grupo>
+            <Grupo titulo="Resgate">
               <div className="flex flex-col gap-1">
                 <label htmlFor={`${prefixo}-prazo`} className="text-sm/5 font-medium text-text">
                   Prazo para resgate ou venda
@@ -205,10 +214,11 @@ export function CamposDetalhes({
               )}
               {indicador("liquidez_imediata", "Indica se você usa o ativo como reserva. É diferente do prazo informado acima.")}
             </Grupo>
-            <Grupo>
+            <Grupo titulo="Proteção e exposição">
               <Campo id={`${prefixo}-fgc`} rotulo="Cobertura do FGC">
                 <Escolha id={`${prefixo}-fgc`} nome="fgc" catalogo={COBERTURAS_FGC} valor={fgc} aoMudar={setFgc} vazio="Não informado" />
               </Campo>
+              {indicador("exposicao_cambial")}
             </Grupo>
           </div>
         </div>
@@ -217,8 +227,13 @@ export function CamposDetalhes({
   );
 }
 
-function Grupo({ children }: { children: ReactNode }) {
-  return <div className="flex flex-col gap-4 py-4 first:pt-0 last:pb-0">{children}</div>;
+function Grupo({ titulo, children }: { titulo: string; children: ReactNode }) {
+  return (
+    <section className="flex flex-col gap-4 py-4 first:pt-0 last:pb-0" aria-label={titulo}>
+      <h2 className="text-base/6 font-semibold text-text">{titulo}</h2>
+      {children}
+    </section>
+  );
 }
 
 /** Select nativo de escolha única; a primeira opção, de valor vazio, é "Não informado" (ou o pedido de escolha). */
@@ -248,48 +263,5 @@ function Escolha({
         </option>
       ))}
     </select>
-  );
-}
-
-/** Checkboxes de um conjunto, em `fieldset` com `legend` e a regra de exclusividade escrita. */
-function Conjunto({
-  id,
-  legenda,
-  dica,
-  nome,
-  catalogo,
-  marcados,
-  aoAlternar,
-}: {
-  id: string;
-  legenda: string;
-  dica: string;
-  nome: string;
-  catalogo: readonly OpcaoAtributo[];
-  marcados: readonly string[];
-  aoAlternar: (codigo: string, marcado: boolean) => void;
-}) {
-  return (
-    <fieldset className="flex flex-col gap-1" aria-describedby={`${id}-dica`}>
-      <legend className="mb-1 text-sm/5 font-medium text-text">{legenda}</legend>
-      <p id={`${id}-dica`} className="text-sm/5 text-text-secondary">
-        {dica}
-      </p>
-      <div className="flex flex-wrap gap-x-5">
-        {catalogo.map((o) => (
-          <label key={o.codigo} className="flex min-h-11 items-center gap-2 text-base/6">
-            <input
-              type="checkbox"
-              name={nome}
-              value={o.codigo}
-              checked={marcados.includes(o.codigo)}
-              onChange={(e) => aoAlternar(o.codigo, e.target.checked)}
-              className="size-5"
-            />
-            {o.rotulo}
-          </label>
-        ))}
-      </div>
-    </fieldset>
   );
 }

@@ -81,10 +81,10 @@ select hasnt_function('private', 'criar_classes_iniciais', array['uuid'], 'o aux
 select pg_temp.act_as('00000000-0000-4000-8000-0000000000c1');
 select pg_temp.guarda('ia', public.criar_instituicao('Banco Exemplo'));
 select pg_temp.guarda('a1', public.cadastrar_ativo_taxonomia('Ativo fictício A1', 'rendimento', pg_temp.id('ia'), null,
-  pg_temp.cdb(), true, null, false, null));
-select is((select concat_ws('|', a.instituicao_id = pg_temp.id('ia'), a.taxonomia_id = pg_temp.cdb(), a.previdencia,
+  pg_temp.cdb(), null, null, false, null));
+select is((select concat_ws('|', a.instituicao_id = pg_temp.id('ia'), a.taxonomia_id = pg_temp.cdb(), coalesce(a.previdencia::text, 'nulo'),
     coalesce(a.liquidez_imediata::text, 'nulo'), a.exposicao_cambial, coalesce(a.isento_ir::text, 'nulo'))
-  from public.ativos a where a.id = pg_temp.id('a1')), 't|t|t|nulo|f|nulo',
+  from public.ativos a where a.id = pg_temp.id('a1')), 't|t|nulo|nulo|f|nulo',
   'cadastrar grava instituição, classe e indicadores em três estados');
 select pg_temp.guarda('a2', public.criar_ativo('Ativo fictício A2', 'marcacao'));
 select is((select num_nonnulls(a.instituicao_id, a.taxonomia_id, a.previdencia, a.liquidez_imediata, a.exposicao_cambial,
@@ -137,10 +137,10 @@ select is(pg_temp.erro($$ select public.cadastrar_ativo_taxonomia('Ativo fictíc
 select is((select count(*) from public.ativos a where a.nome = 'Ativo fictício'), 0::bigint, 'cadastros recusados não gravam ativo');
 
 -- 6. Edição, inclusive de ativo desativado
-select public.editar_detalhes_ativo_taxonomia(pg_temp.id('a2'), pg_temp.id('ia'), null, pg_temp.raiz(), false, true, true, false);
-select is((select concat_ws('|', a.instituicao_id = pg_temp.id('ia'), a.taxonomia_id = pg_temp.raiz(), a.previdencia,
+select public.editar_detalhes_ativo_taxonomia(pg_temp.id('a2'), pg_temp.id('ia'), null, pg_temp.raiz(), null, true, true, false);
+select is((select concat_ws('|', a.instituicao_id = pg_temp.id('ia'), a.taxonomia_id = pg_temp.raiz(), coalesce(a.previdencia::text, 'nulo'),
   a.liquidez_imediata, a.exposicao_cambial, a.isento_ir) from public.ativos a where a.id = pg_temp.id('a2')),
-  't|t|f|t|t|f', 'a edição substitui os campos descritivos');
+  't|t|nulo|t|t|f', 'a edição substitui os campos descritivos');
 select public.desativar_ativo(pg_temp.id('a4'));
 select is(pg_temp.erro(format('select public.editar_detalhes_ativo_taxonomia(%L, null, null, null, null, null, null, true)',
   pg_temp.id('a4'))), 'ok', 'ativo desativado pode ser editado');
