@@ -5,14 +5,14 @@
 > **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#172`
-> **Plano:** `_project/drafts/017_atributos_complementares_ativos/017_plan.md`
+> **Plano:** `_project/executed/017_atributos_complementares_ativos/017_plan.md`
 > **Branch:** `feature/issue-172`
 > **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/175
 > **Integração:** PR #175 integrada por squash (`030a0251b876f56a54a018225644bd51acaca878`) em 2026-10-30, com todos os checks verdes; ação externa concluída, conforme o relato do responsável em 2026-10-30; issue #172 aberta até o encerramento do ciclo
 > **Autorização inicial:** "autorizo a implementação da issue #172" em 2026-10-30
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-30
-> **Última atualização:** 2026-10-30
+> **Última atualização:** 2026-10-31
 > **handoff_schema_version:** `2`
 
 ## Objetivo
@@ -104,17 +104,28 @@ Não se aplica — ciclo completo; encerramento em PR própria depois da ação 
 
 ## Próximo passo
 
-Esta task está concluída; a ação externa foi relatada e o ciclo segue para a issue #173.
+Encerramento prospectivo: conclusão efetiva somente depois do merge da PR de encerramento.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando autorização de implementação — ciclo 017 (completo)
-Quem: Responsável
-Conferir: Issue [#173](https://github.com/EuThiagoAndrade/saldo-futuro/issues/173) e escopo do Item 2 do plano
-Diga: "autorizo a implementação da issue #173"
+Situação: Concluído — ciclo 017 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
+
+- `handoff_schema_version: 2`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 017 + atualizar_docs + 017_task_issue-172/encerramento + 9abf28384d95d914f8a26f7e71a470f359370a50`
+- `effect_class`: `remote_mutation`
+- `state_before`: implementação integrada; task Concluída; ação externa e VA1 a VA8 relatados como concluídos; release 0.13.0 publicada; ciclo Em execução.
+- `state_after`: task reconciliada em executed, com próximo passo Concluído prospectivo; integração do encerramento ainda pendente.
+- `result`: `executed`
+- `evidence`: esta task e `017_task_closure.md`; PR #176 integrada e release v0.13.0 publicada.
+- `blockers`: checks e aprovação própria do merge da PR de encerramento.
+
+### Histórico — handoff anterior ao encerramento
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 017 + implementar_issue + 172 + a28f22667d67ddaf80e35ab7af201ae1d4a84a53`

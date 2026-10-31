@@ -6,7 +6,7 @@ tags:
   - acesso
 author: "Thiago Andrade e Claude"
 module: "Operação"
-last_updated: "2026-10-30"
+last_updated: "2026-10-31"
 origin_cycle: "001"
 ---
 
@@ -418,6 +418,8 @@ Depois de "autorizo a verificação em produção do ciclo 017", com as três en
 
 Relatar com a frase pedida no encerramento. Uma falha vira pendência explícita na task de encerramento; o ciclo não é dado como concluído com falha aberta.
 
+**Resultado do ciclo 017:** ação externa AC2 a AC6 relatada pelo responsável em 2026-10-30, com a migração aplicada e alinhada e AC5 `true/true/true/true/false`; depois da autorização da verificação e da apresentação do roteiro completo, o responsável respondeu "todos passaram" para VA1 a VA8. Evidência humana, sem execução de SQL ou conferência autenticada pelo agente. Release `v0.13.0` publicada pela PR #176 em 2026-10-31 às 04:02:15 UTC (2026-10-31 em America/Cuiaba); data da nota reconciliada na PR de encerramento. O relato anterior de VA1 não comprova a tela de novidades depois dessa publicação. Registro e limites em `_project/executed/017_atributos_complementares_ativos/017_task_closure.md`.
+
 ## Fontes
 
 Consultadas em 2026-10-12 e conferidas na execução de 2026-10-13. São documentação oficial, sem versão fixada; os valores que dependem do plano ou do painel devem ser reconferidos.
@@ -453,3 +455,4 @@ Consultadas em 2026-10-12 e conferidas na execução de 2026-10-13. São documen
 | 2026-10-24 | `012` | Encerramento: `db push` da migração dos metadados dos ativos (S12) feito pelo responsável antes de as telas que a leem entrarem na `main`, com local e remoto alinhados |
 | 2026-10-30 | `017` | Issue #172: roteiro AC1 a AC7 da ação externa dos atributos complementares dos ativos, com consultas só de estrutura |
 | 2026-10-30 | `017` | Issue #174: roteiro VA1 a VA8 da verificação em produção da consulta e dos filtros de Ativos, com relato só de passou ou falhou |
+| 2026-10-31 | `017` | Encerramento: ação externa e VA1 a VA8 relatados como concluídos; release `0.13.0` publicada; evidências humanas e conferências do agente distinguidas no resultado |

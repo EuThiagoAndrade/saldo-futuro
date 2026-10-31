@@ -17,7 +17,7 @@ export const VERSAO_ATUAL: string = pacote.version;
 export const HISTORICO: readonly Novidade[] = [
   {
     versao: "0.13.0",
-    publicadaEm: null,
+    publicadaEm: "2026-10-31",
     notas: [
       "Agora dá para anotar em cada ativo, em Mais detalhes, o veículo de acesso, o indexador da remuneração, o regime tributário, o prazo para resgate ou venda e a cobertura do FGC. São anotações suas: o Saldo Futuro não calcula imposto, prazo nem garantia com elas.",
       "Na tela de Ativos, Ver detalhes mostra essas anotações sem abrir a edição, e Filtrar encontra os ativos por elas, nas duas abas.",
