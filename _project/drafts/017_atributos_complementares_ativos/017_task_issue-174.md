@@ -2,12 +2,12 @@
 
 > **Ciclo:** `017`
 > **Trilha:** `normal`
-> **Estado:** `Em andamento`
+> **Estado:** `Aguardando integração`
 > **Tipo:** `feature`
 > **Issue:** `#174`
 > **Plano:** `_project/drafts/017_atributos_complementares_ativos/017_plan.md`
 > **Branch:** `feature/issue-174`
-> **PR:** —
+> **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/178
 > **Integração:** `Pendente`
 > **Autorização inicial:** "autorizo a implementação da issue #174" em 2026-10-30
 > **Modo contínuo:** `—`
@@ -49,7 +49,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 - [x] Página `/ativos` com "Ver detalhes" e "Filtrar" (`src/components/ativos-consulta.tsx`).
 - [x] E2e novo e ajustes nos existentes; DESIGN.md 6.7 e 6.12, KB-003, KB-002 e nota da 0.13.0.
 - [x] Gates locais completos e staging revisado.
-- [ ] PR publicada com `Refs #174`; integração exige aprovação própria.
+- [x] PR #178 publicada com `Refs #174`; integração exige aprovação própria.
 
 ## Evidências
 
@@ -58,7 +58,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 | Testes | Unitários 501/501 (13 novos de filtros e resumo, com os exemplos da P5, e a nota da 0.13.0); lint sem erros (3 avisos preexistentes em `local/`); typecheck e build passaram; banco 640/640 (sem migração nova); e2e sobre o build com o Supabase local e dois workers: 233 passed e 12 skipped (preview sem backend), saída 0. As três especificações de Ativos juntas: 32/32, com as sete novas de `ativos-consulta.spec.ts` (resumo nas duas abas, OU/E e URL, abas, contadores e Limpar, Exatamente e Até, Não informado e erros, acessibilidade e 44 px em 360 e 1280 px) |
 | Validador | 48/48 testes de governança; validador sem erros depois do registro do número da PR |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos | Em execução na PR #178 |
 
 ## Revisão da correção
 
@@ -83,8 +83,8 @@ Não se aplica — ciclo completo; encerramento em PR própria, depois da verifi
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 017 (completo)
 Quem: Responsável
-Conferir: Checks e diff da PR da issue #174; esta task
-Diga: "aprovo o merge da PR #N"
+Conferir: Checks e diff da [PR #178](https://github.com/EuThiagoAndrade/saldo-futuro/pull/178); esta task
+Diga: "aprovo o merge da PR #178"
 ```
 
 ## Handoff de saída
@@ -93,7 +93,7 @@ Diga: "aprovo o merge da PR #N"
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 017 + implementar_issue + 174 + e58f02dde56229c84996d0803bdb5a32ef96b078`
 - `effect_class`: `remote_mutation`
 - `state_before`: PR #177 integrada pelo responsável e #173 fechada; #174 aberta; "autorizo a implementação da issue #174" recebida em 2026-10-30.
-- `state_after`: unidade Consulta implementada e validada localmente; PR a publicar na branch `feature/issue-174`, sem fechar a #174.
+- `state_after`: unidade Consulta implementada e validada localmente; PR #178 publicada na branch `feature/issue-174`, sem fechar a #174, aguardando checks e aprovação do merge.
 - `result`: `executed`
 - `evidence`: tabela de evidências acima.
 - `blockers`: nenhum para publicar; o merge depende de checks verdes e de aprovação própria. A #174 fica aberta até a verificação em produção e o encerramento.
