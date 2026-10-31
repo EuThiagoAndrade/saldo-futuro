@@ -2,12 +2,12 @@
 
 > **Ciclo:** `017`
 > **Trilha:** `normal`
-> **Estado:** `Em andamento`
+> **Estado:** `Aguardando integração`
 > **Tipo:** `feature`
 > **Issue:** `#173`
 > **Plano:** `_project/drafts/017_atributos_complementares_ativos/017_plan.md`
 > **Branch:** `feature/issue-173`
-> **PR:** —
+> **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/177
 > **Integração:** `Pendente`
 > **Autorização inicial:** "Autorizo a implementação da issue #173" em 2026-10-30
 > **Modo contínuo:** `—`
@@ -49,7 +49,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 - [x] Catálogos, parser, leitura, Server Actions e formulários.
 - [x] Testes unitários e e2e; DESIGN.md 6.8, KB-003 e KB-004.
 - [x] Gates locais completos e staging revisado.
-- [ ] PR publicada; integração exige aprovação própria.
+- [x] PR #177 publicada com `Closes #173`; integração exige aprovação própria.
 
 ## Evidências
 
@@ -58,7 +58,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 | Testes | Unitários 487/487; lint sem erros (3 avisos preexistentes em `local/`); typecheck e build passaram; banco 640/640 (sem migração nova); e2e sobre o build com o Supabase local e dois workers: 227 passed e 12 skipped (preview sem backend), saída 0. O arquivo `ativos-detalhes.spec.ts` sozinho: 19/19, com os cinco testes novos (cadastro e reabertura com atributos, recusa que preserva o preenchimento, servidor que recusa o formulário adulterado e acessibilidade com "Mais detalhes" aberto em 360 e 1280 px) |
 | Validador | 48/48 testes de governança; validador sem erros depois do registro do número da PR |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos | Em execução na PR #177 |
 
 ## Revisão da correção
 
@@ -83,8 +83,8 @@ Não se aplica — ciclo completo; encerramento em PR própria.
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 017 (completo)
 Quem: Responsável
-Conferir: Checks e diff da PR da issue #173; esta task
-Diga: "aprovo o merge da PR #N"
+Conferir: Checks e diff da [PR #177](https://github.com/EuThiagoAndrade/saldo-futuro/pull/177); esta task
+Diga: "aprovo o merge da PR #177"
 ```
 
 ## Handoff de saída
@@ -93,7 +93,7 @@ Diga: "aprovo o merge da PR #N"
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 017 + implementar_issue + 173 + 030a0251b876f56a54a018225644bd51acaca878`
 - `effect_class`: `remote_mutation`
 - `state_before`: PR #175 integrada; ação externa da #172 relatada pelo responsável; #173 aberta; "Autorizo a implementação da issue #173" recebida em 2026-10-30.
-- `state_after`: unidade Formulários implementada e validada localmente; PR a publicar na branch `feature/issue-173`.
+- `state_after`: unidade Formulários implementada e validada localmente; PR #177 publicada na branch `feature/issue-173`, aguardando checks e aprovação do merge.
 - `result`: `executed`
 - `evidence`: tabela de evidências acima.
 - `blockers`: nenhum para publicar; o merge depende de checks verdes e de aprovação própria.

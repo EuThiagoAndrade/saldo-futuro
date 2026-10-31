@@ -371,7 +371,7 @@ Roteiro de verificação em produção, após autorização: responsável confer
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | [#172](https://github.com/EuThiagoAndrade/saldo-futuro/issues/172), [#173](https://github.com/EuThiagoAndrade/saldo-futuro/issues/173) e [#174](https://github.com/EuThiagoAndrade/saldo-futuro/issues/174) |
-| PR(s) | [#171 — publicação documental da ideação/plano/registro do ciclo](https://github.com/EuThiagoAndrade/saldo-futuro/pull/171), integrada em `main` (`a28f22667d67ddaf80e35ab7af201ae1d4a84a53`); [#175 — unidade Banco, issue #172](https://github.com/EuThiagoAndrade/saldo-futuro/pull/175), integrada em `main` (`030a0251b876f56a54a018225644bd51acaca878`); ação externa relatada pelo responsável em 2026-10-30 |
+| PR(s) | [#171 — publicação documental da ideação/plano/registro do ciclo](https://github.com/EuThiagoAndrade/saldo-futuro/pull/171), integrada em `main` (`a28f22667d67ddaf80e35ab7af201ae1d4a84a53`); [#175 — unidade Banco, issue #172](https://github.com/EuThiagoAndrade/saldo-futuro/pull/175), integrada em `main` (`030a0251b876f56a54a018225644bd51acaca878`); ação externa relatada pelo responsável em 2026-10-30; [#177 — unidade Formulários, issue #173](https://github.com/EuThiagoAndrade/saldo-futuro/pull/177), aberta |
 | Branch(es) | `chore/cycle-017-plan` — publicação documental da ideação/plano/registro do ciclo; `feature/issue-172` — unidade Banco, task `017_task_issue-172.md`; `feature/issue-173` — unidade Formulários, task `017_task_issue-173.md` |
 | Destino após conclusão | `_project/executed/017_atributos_complementares_ativos/017_plan.md` |
 
@@ -379,10 +379,10 @@ Roteiro de verificação em produção, após autorização: responsável confer
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando autorização de implementação — ciclo 017 (completo)
+Situação: Aguardando merge — ciclo 017 (completo)
 Quem: Responsável
-Conferir: Issue [#173](https://github.com/EuThiagoAndrade/saldo-futuro/issues/173) e escopo do Item 2; registro da ação externa em 017_task_issue-172.md
-Diga: "autorizo a implementação da issue #173"
+Conferir: Checks e diff da [PR #177](https://github.com/EuThiagoAndrade/saldo-futuro/pull/177); task 017_task_issue-173.md
+Diga: "aprovo o merge da PR #177"
 ```
 
 ## Handoff de saída
