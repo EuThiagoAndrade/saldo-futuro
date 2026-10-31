@@ -16,6 +16,15 @@ export const VERSAO_ATUAL: string = pacote.version;
 
 export const HISTORICO: readonly Novidade[] = [
   {
+    versao: "0.14.0",
+    publicadaEm: null,
+    notas: [
+      "Previdência agora é uma opção do veículo de acesso, Previdência (PGBL ou VGBL). Os ativos que estavam marcados como previdência foram atualizados.",
+      "Mais detalhes, Ver detalhes e Filtrar estão organizados em Produto, Tributação, Resgate e Proteção e exposição, e veículo e indexador ficaram em listas de múltipla escolha.",
+      "Ao aplicar os filtros na tela de Ativos, o painel fecha e mostra a lista; Filtrar indica quantos campos estão filtrados, com Limpar filtros ao lado.",
+    ],
+  },
+  {
     versao: "0.13.0",
     publicadaEm: "2026-10-31",
     notas: [

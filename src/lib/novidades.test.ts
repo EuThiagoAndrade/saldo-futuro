@@ -85,6 +85,15 @@ describe("histórico do produto", () => {
   });
 });
 
+describe("nota da 0.14.0", () => {
+  it("o ciclo 018 fica sem data até a publicação da release e só aparece quando a 0.14.0 for lançada", () => {
+    const nota = HISTORICO.find((n) => n.versao === "0.14.0");
+    expect(nota?.publicadaEm).toBeNull();
+    expect(novidadesPublicadas("0.13.0", HISTORICO).map((n) => n.versao)).not.toContain("0.14.0");
+    expect(novidadesPublicadas("0.14.0", HISTORICO).map((n) => n.versao)[0]).toBe("0.14.0");
+  });
+});
+
 describe("nota da 0.13.0", () => {
   it("os atributos dos ativos têm a data da release e só aparecem a partir da 0.13.0", () => {
     const nota = HISTORICO.find((n) => n.versao === "0.13.0");

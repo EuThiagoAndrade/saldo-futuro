@@ -1,13 +1,10 @@
 import {
   COBERTURAS_FGC,
   type ColunaIndicador,
-  EXCLUSIVOS_INDEXADOR,
-  EXCLUSIVOS_VEICULO,
   INDEXADORES_REMUNERACAO,
   INDICADORES_VISIVEIS,
   MAXIMO_DIAS_PRAZO,
   type OpcaoAtributo,
-  prazoLegivel,
   REGIMES_TRIBUTARIOS,
   SITUACOES_PRAZO,
   UNIDADES_PRAZO,
@@ -76,12 +73,14 @@ function escalar(p: Parametros, nome: string, validos: readonly string[], rotulo
   return valor;
 }
 
-function conjunto(p: Parametros, nome: string, catalogo: readonly OpcaoAtributo[], exclusivos: readonly string[], rotulo: string): string[] {
+// No filtro, só "Não informado" é exclusivo (ciclo 018, D16): "Prefixado" e "Não se aplica" combinam
+// por OU com as demais, como qualquer opção.
+function conjunto(p: Parametros, nome: string, catalogo: readonly OpcaoAtributo[], rotulo: string): string[] {
   const valores = [...new Set(preenchidos(p, nome))];
   const validos = [...catalogo.map((o) => o.codigo), NAO_INFORMADO_FILTRO];
   if (valores.some((v) => !validos.includes(v))) throw new ErroFiltro(`${rotulo} tem uma opção desconhecida.`);
-  if (valores.length > 1 && valores.some((v) => v === NAO_INFORMADO_FILTRO || exclusivos.includes(v))) {
-    throw new ErroFiltro(`${rotulo}: Não informado e as opções exclusivas não combinam com outras.`);
+  if (valores.length > 1 && valores.includes(NAO_INFORMADO_FILTRO)) {
+    throw new ErroFiltro(`${rotulo}: Não informado não combina com outras opções.`);
   }
   return validos.filter((v) => valores.includes(v));
 }
@@ -118,8 +117,8 @@ export function lerFiltros(p: Parametros): { filtros: FiltrosAtivos } | { erro: 
     const codigos = (c: readonly OpcaoAtributo[]) => [...c.map((o) => o.codigo), NAO_INFORMADO_FILTRO];
     return {
       filtros: {
-        veiculo: conjunto(p, "veiculo", VEICULOS_ACESSO, EXCLUSIVOS_VEICULO, "Veículo de acesso"),
-        indexador: conjunto(p, "indexador", INDEXADORES_REMUNERACAO, EXCLUSIVOS_INDEXADOR, "Indexador da remuneração"),
+        veiculo: conjunto(p, "veiculo", VEICULOS_ACESSO, "Veículo de acesso"),
+        indexador: conjunto(p, "indexador", INDEXADORES_REMUNERACAO, "Indexador da remuneração"),
         regime: escalar(p, "regime", codigos(REGIMES_TRIBUTARIOS), "Regime tributário"),
         prazo: prazo(p),
         fgc: escalar(p, "fgc", codigos(COBERTURAS_FGC), "Cobertura do FGC"),
@@ -170,29 +169,31 @@ export function filtrarAtivos<A extends Ativo>(ativos: readonly A[], f: FiltrosA
   );
 }
 
-const rotulo = (catalogo: readonly OpcaoAtributo[], codigo: string) =>
-  codigo === NAO_INFORMADO_FILTRO ? "Não informado" : (catalogo.find((o) => o.codigo === codigo)?.rotulo ?? codigo);
+/**
+ * Campos com filtro, para o contador do "Filtrar" (ciclo 018, D15 e P4): cada atributo conta uma vez,
+ * mesmo com várias opções marcadas.
+ */
+export function camposComFiltro(f: FiltrosAtivos): number {
+  return (
+    Number(f.veiculo.length > 0) +
+    Number(f.indexador.length > 0) +
+    Number(f.regime !== null) +
+    Number(f.prazo !== null) +
+    Number(f.fgc !== null) +
+    Object.keys(f.indicadores).length
+  );
+}
 
-/** Filtros aplicados em texto, para ficarem visíveis com o painel fechado. */
-export function descreverFiltros(f: FiltrosAtivos): string[] {
-  const itens: string[] = [];
-  if (f.veiculo.length) itens.push(`Veículo: ${f.veiculo.map((c) => rotulo(VEICULOS_ACESSO, c)).join(" ou ")}`);
-  if (f.indexador.length) itens.push(`Indexador: ${f.indexador.map((c) => rotulo(INDEXADORES_REMUNERACAO, c)).join(" ou ")}`);
-  if (f.regime) itens.push(`Regime: ${rotulo(REGIMES_TRIBUTARIOS, f.regime)}`);
-  if (f.prazo) {
-    const p = f.prazo;
-    itens.push(
-      "comparacao" in p
-        ? `Prazo: ${p.comparacao === "exato" ? "exatamente" : "até"} ${prazoLegivel({ prazo_resgate_tipo: "prazo", prazo_resgate_dias: p.dias, prazo_resgate_unidade: p.unidade })}`
-        : `Prazo: ${rotulo(SITUACOES_PRAZO, p.tipo)}`,
-    );
-  }
-  if (f.fgc) itens.push(`FGC: ${rotulo(COBERTURAS_FGC, f.fgc)}`);
-  for (const i of INDICADORES_VISIVEIS) {
-    const v = f.indicadores[i.coluna];
-    if (v) itens.push(`${i.rotulo}: ${v === "sim" ? "Sim" : v === "nao" ? "Não" : "Não informado"}`);
-  }
-  return itens;
+export const OPCAO_NAO_INFORMADO = { codigo: NAO_INFORMADO_FILTRO, rotulo: "Não informado" } as const;
+
+/**
+ * Opções de veículo ou indexador no filtro (ciclo 018, D14): só as presentes em algum ativo comum do
+ * usuário, das duas abas, mais as marcadas na URL, em ordem de catálogo, e "Não informado" no fim.
+ * Uma opção sem nenhum ativo nunca traria resultado.
+ */
+export function opcoesEmUso(catalogo: readonly OpcaoAtributo[], conjuntos: readonly (readonly string[])[], marcados: readonly string[]): OpcaoAtributo[] {
+  const usados = new Set([...conjuntos.flat(), ...marcados]);
+  return [...catalogo.filter((o) => usados.has(o.codigo)), OPCAO_NAO_INFORMADO];
 }
 
 /** Consulta só com os parâmetros de filtro preenchidos, na ordem fixa, para os links das abas. */

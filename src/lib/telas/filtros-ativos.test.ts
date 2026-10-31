@@ -1,6 +1,16 @@
 import { describe, expect, it } from "vitest";
-import { prazoLegivel, resumoDosAtributos } from "./detalhes-ativo";
-import { algumFiltro, consultaDosFiltros, descreverFiltros, enderecoDaAba, filtrarAtivos, type FiltrosAtivos, lerFiltros, type Parametros } from "./filtros-ativos";
+import { INDEXADORES_REMUNERACAO, prazoLegivel, resumoDosAtributos, VEICULOS_ACESSO } from "./detalhes-ativo";
+import {
+  algumFiltro,
+  camposComFiltro,
+  consultaDosFiltros,
+  enderecoDaAba,
+  filtrarAtivos,
+  type FiltrosAtivos,
+  lerFiltros,
+  opcoesEmUso,
+  type Parametros,
+} from "./filtros-ativos";
 import type { Ativo } from "./leituras";
 
 // Filtros e resumo da página Ativos (ciclo 017, issue #174). Exemplos fictícios da P5 do plano:
@@ -106,8 +116,14 @@ describe("lerFiltros — recusas explícitas", () => {
     expect(erro({ regime: ["", "outro"] })).toBe("Regime tributário aparece mais de uma vez.");
     expect(erro({ fgc: "talvez" })).toBe("Cobertura do FGC tem uma opção desconhecida.");
     expect(erro({ isento_ir: "true" })).toBe("Isento de IR tem uma opção desconhecida.");
-    expect(erro({ veiculo: ["nao_informado", "fundo"] })).toBe("Veículo de acesso: Não informado e as opções exclusivas não combinam com outras.");
-    expect(erro({ indexador: ["sem_indexador", "cdi"] })).toBe("Indexador da remuneração: Não informado e as opções exclusivas não combinam com outras.");
+    expect(erro({ veiculo: ["nao_informado", "fundo"] })).toBe("Veículo de acesso: Não informado não combina com outras opções.");
+    expect(erro({ indexador: ["nao_informado", "cdi"] })).toBe("Indexador da remuneração: Não informado não combina com outras opções.");
+  });
+
+  it("no filtro, Prefixado e Não se aplica combinam por OU com outras opções (ciclo 018, D16)", () => {
+    expect(erro({ indexador: ["sem_indexador", "cdi"] })).toBeNull();
+    expect(erro({ veiculo: ["nao_aplicavel", "fundo"] })).toBeNull();
+    expect(filtrar({ indexador: ["sem_indexador", "ipca"] })).toEqual(["B"]);
   });
 
   it("tupla do prazo: Prazo em dias exige comparação, dias e unidade; as outras situações não os aceitam", () => {
@@ -127,13 +143,23 @@ describe("lerFiltros — recusas explícitas", () => {
 });
 
 describe("estado na URL", () => {
-  it("algumFiltro e a descrição dos filtros aplicados", () => {
+  it("algumFiltro e o contador conta campos, não opções (ciclo 018, D15)", () => {
     const lido = lerFiltros({ veiculo: ["etf", "fundo"], prazo_resgate_tipo: "prazo", prazo_resgate_dias: "1", prazo_resgate_unidade: "uteis", prazo_resgate_comparacao: "ate", isento_ir: "nao_informado" });
     expect("filtros" in lido).toBe(true);
     const f = (lido as { filtros: FiltrosAtivos }).filtros;
     expect(algumFiltro(f)).toBe(true);
-    expect(descreverFiltros(f)).toEqual(["Veículo: Fundo ou ETF", "Prazo: até 1 dia útil", "Isento de IR: Não informado"]);
-    expect(algumFiltro((lerFiltros({}) as { filtros: FiltrosAtivos }).filtros)).toBe(false);
+    // Dois veículos, o prazo com seus três campos e um indicador: três campos com filtro.
+    expect(camposComFiltro(f)).toBe(3);
+    const vazio = (lerFiltros({}) as { filtros: FiltrosAtivos }).filtros;
+    expect(algumFiltro(vazio)).toBe(false);
+    expect(camposComFiltro(vazio)).toBe(0);
+  });
+
+  it("opções em uso: as dos ativos e as marcadas, em ordem de catálogo, com Não informado no fim (ciclo 018, D14)", () => {
+    const codigos = (o: { codigo: string }[]) => o.map((x) => x.codigo);
+    expect(codigos(opcoesEmUso(VEICULOS_ACESSO, [["etf"], ["previdencia", "fundo"], []], []))).toEqual(["fundo", "etf", "previdencia", "nao_informado"]);
+    expect(codigos(opcoesEmUso(VEICULOS_ACESSO, [["etf"]], ["direto"]))).toEqual(["direto", "etf", "nao_informado"]);
+    expect(codigos(opcoesEmUso(INDEXADORES_REMUNERACAO, [], []))).toEqual(["nao_informado"]);
   });
 
   it("os links das abas preservam só os filtros preenchidos, e sem filtro mantêm os endereços de antes", () => {

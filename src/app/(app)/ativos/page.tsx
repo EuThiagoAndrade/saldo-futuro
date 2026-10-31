@@ -8,7 +8,8 @@ import { dataBr } from "@/lib/apresentacao/datas";
 import { backend } from "@/lib/config";
 import { hojeEmCuiaba } from "@/lib/financeiro/datas";
 import { exigirSessao } from "@/lib/sessao";
-import { descreverFiltros, enderecoDaAba, filtrarAtivos, lerFiltros, type Parametros } from "@/lib/telas/filtros-ativos";
+import { INDEXADORES_REMUNERACAO, VEICULOS_ACESSO } from "@/lib/telas/detalhes-ativo";
+import { camposComFiltro, enderecoDaAba, filtrarAtivos, lerFiltros, opcoesEmUso, type Parametros } from "@/lib/telas/filtros-ativos";
 import { type Ativo, lerAtivos, lerClassesLegadas, lerInstituicoes, lerTaxonomia } from "@/lib/telas/leituras";
 import { classeDoAtivo } from "@/lib/telas/taxonomia";
 import { desativarAtivo } from "./acoes";
@@ -231,9 +232,14 @@ export default async function AtivosPage({ searchParams }: { searchParams: Promi
   const desativados = ativos.filter((a) => !a.ativo);
   // Filtro e resumo usam as mesmas linhas; com filtro inválido, nenhuma lista é mostrada.
   const filtros = "filtros" in lido ? lido.filtros : null;
-  const aplicados = filtros ? descreverFiltros(filtros) : [];
+  const campos = filtros ? camposComFiltro(filtros) : 0;
   const daAba = aba === "em-uso" ? emUso : desativados;
   const visiveis = filtros ? filtrarAtivos(daAba, filtros) : [];
+  // Opções do filtro (ciclo 018, D14): só as usadas por algum ativo comum, das duas abas, e as marcadas na URL.
+  const comuns = ativos.filter((a) => a.sistema === null);
+  const marcados = (nome: string) => [parametros[nome] ?? []].flat();
+  const opcoesVeiculo = opcoesEmUso(VEICULOS_ACESSO, comuns.map((a) => a.veiculos_acesso), marcados("veiculo"));
+  const opcoesIndexador = opcoesEmUso(INDEXADORES_REMUNERACAO, comuns.map((a) => a.indexadores_remuneracao), marcados("indexador"));
 
   return (
     <div className="flex flex-col gap-6">
@@ -262,16 +268,22 @@ export default async function AtivosPage({ searchParams }: { searchParams: Promi
       <FiltrosDosAtivos
         aba={aba}
         parametros={parametros}
-        aplicados={aplicados}
+        campos={campos}
         erro={"erro" in lido ? lido.erro : null}
-        resultado={aplicados.length > 0 ? { correspondem: visiveis.length, total: daAba.length } : null}
+        opcoesVeiculo={opcoesVeiculo}
+        opcoesIndexador={opcoesIndexador}
       />
 
-      <section id="ativos-da-aba" aria-label={aba === "em-uso" ? "Ativos em uso" : "Ativos desativados"} className="flex flex-col gap-3">
-        {filtros === null ? null : aba === "em-uso" ? (
-          <EmUso ativos={visiveis} detalhes={detalhes} filtrado={aplicados.length > 0} />
+      <section id="ativos-da-aba" aria-label={aba === "em-uso" ? "Ativos em uso" : "Ativos desativados"} className="flex scroll-mt-4 flex-col gap-3">
+        {/* Com filtro inválido, a mensagem fica no topo da lista, onde a âncora do envio leva (ciclo 018, P4). */}
+        {"erro" in lido ? (
+          <p role="alert" className="text-sm/5 break-words text-loss">
+            Não foi possível aplicar os filtros: {lido.erro}
+          </p>
+        ) : aba === "em-uso" ? (
+          <EmUso ativos={visiveis} detalhes={detalhes} filtrado={campos > 0} />
         ) : (
-          <Desativados ativos={visiveis} detalhes={detalhes} filtrado={aplicados.length > 0} />
+          <Desativados ativos={visiveis} detalhes={detalhes} filtrado={campos > 0} />
         )}
       </section>
     </div>
