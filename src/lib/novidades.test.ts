@@ -85,6 +85,15 @@ describe("histórico do produto", () => {
   });
 });
 
+describe("nota da 0.13.0", () => {
+  it("os atributos dos ativos ficam sem data até a publicação da release e só aparecem quando a 0.13.0 for lançada", () => {
+    const nota = HISTORICO.find((n) => n.versao === "0.13.0");
+    expect(nota?.publicadaEm).toBeNull();
+    expect(novidadesPublicadas("0.12.1", HISTORICO).map((n) => n.versao)).not.toContain("0.13.0");
+    expect(novidadesPublicadas("0.13.0", HISTORICO).map((n) => n.versao)[0]).toBe("0.13.0");
+  });
+});
+
 describe("dataExtensaBr", () => {
   it("escreve a data civil por extenso, sem depender do fuso", () => {
     expect(dataExtensaBr("2026-10-21")).toBe("21 de outubro de 2026");

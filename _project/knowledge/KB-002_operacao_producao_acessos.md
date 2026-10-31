@@ -401,6 +401,23 @@ Ação externa da issue #172, feita pelo responsável depois do merge da PR da i
 
 Não executar `tests/fixtures/atributos/upgrade_pre.sql` nem `upgrade_post.sql` em produção: são fixtures do ensaio local descartável. A preservação de eventos, posições, consolidados, instituições, perfis e indicadores foi provada nesse ensaio, não na carteira real. Em caso de erro no AC4, não repetir nem tentar corrigir no painel: parar e relatar a mensagem de erro sem dados. Não há caminho de volta por `down migration`; uma correção é migração nova.
 
+#### Verificação em produção dos atributos (ciclo 017)
+
+Depois de "autorizo a verificação em produção do ciclo 017", com as três entregas do ciclo integradas e implantadas. O responsável executa no próprio login, no desktop e no celular, e relata só **passou** ou **falhou** por item, sem nomes de ativos, instituições, valores, e-mails ou prints. Cadastrar ou editar um ativo real só por decisão própria; nenhum passo exige salvar.
+
+| Passo | O que fazer | Resultado esperado |
+| :-- | :-- | :-- |
+| VA1 | Conferir no editor SQL o resultado de `tests/fixtures/atributos/e1_post.sql` e, em `/novidades`, a versão corrente | Quatro verdadeiros e `anon_funcoes_novas` falso; versão igual à da release publicada |
+| VA2 | Em `/ativos`, aba Em uso, abrir "Ver detalhes" de dois ativos | Os dois abrem ao mesmo tempo, com nove itens e "Não informado" onde não houver dado; sem coluna nova na tabela |
+| VA3 | Repetir na aba Desativados, se houver desativado | "Ver detalhes" abaixo do nome, separado de Editar |
+| VA4 | Num ativo com várias opções marcadas e prazo informado, conferir o resumo | Opções listadas e prazo com número e unidade como foram informados |
+| VA5 | Abrir "Filtrar", marcar duas opções de Veículo de acesso e aplicar; depois acrescentar um indexador | A lista diminui como esperado; a linha abaixo do painel mostra os filtros e "N de M nesta aba"; a URL guarda os filtros |
+| VA6 | Fechar o painel, trocar para Desativados e voltar; depois usar "Limpar filtros" | Filtros e "Limpar filtros" visíveis com o painel fechado; as abas mantêm os filtros, e os contadores não mudam; Limpar mantém só a aba |
+| VA7 | Aplicar um filtro de prazo com Exatamente e depois com Até, na mesma unidade | Até inclui os iguais e menores, só na unidade escolhida; o trânsito não aparece |
+| VA8 | No celular, repetir VA2 e VA5 | Campos em coluna, alvos confortáveis ao toque e nenhuma rolagem horizontal |
+
+Relatar com a frase pedida no encerramento. Uma falha vira pendência explícita na task de encerramento; o ciclo não é dado como concluído com falha aberta.
+
 ## Fontes
 
 Consultadas em 2026-10-12 e conferidas na execução de 2026-10-13. São documentação oficial, sem versão fixada; os valores que dependem do plano ou do painel devem ser reconferidos.
@@ -435,3 +452,4 @@ Consultadas em 2026-10-12 e conferidas na execução de 2026-10-13. São documen
 | 2026-10-23 | `011` | Encerramento: `db push` da migração do IGP-M (S12) e primeira sincronização do IGP-M feitos pelo responsável, com a cobertura iniciando junto com a do IPCA e indo até setembro de 2026 |
 | 2026-10-24 | `012` | Encerramento: `db push` da migração dos metadados dos ativos (S12) feito pelo responsável antes de as telas que a leem entrarem na `main`, com local e remoto alinhados |
 | 2026-10-30 | `017` | Issue #172: roteiro AC1 a AC7 da ação externa dos atributos complementares dos ativos, com consultas só de estrutura |
+| 2026-10-30 | `017` | Issue #174: roteiro VA1 a VA8 da verificação em produção da consulta e dos filtros de Ativos, com relato só de passou ou falhou |

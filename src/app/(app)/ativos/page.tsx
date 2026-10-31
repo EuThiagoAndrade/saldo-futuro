@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FiltrosDosAtivos, ResumoAtivo } from "@/components/ativos-consulta";
 import { botaoPrincipal, botaoTexto } from "@/components/botoes";
 import { Confirmacao } from "@/components/confirmacao";
 import { EstadoVazio } from "@/components/estados";
@@ -7,6 +8,7 @@ import { dataBr } from "@/lib/apresentacao/datas";
 import { backend } from "@/lib/config";
 import { hojeEmCuiaba } from "@/lib/financeiro/datas";
 import { exigirSessao } from "@/lib/sessao";
+import { descreverFiltros, enderecoDaAba, filtrarAtivos, lerFiltros, type Parametros } from "@/lib/telas/filtros-ativos";
 import { type Ativo, lerAtivos, lerClassesLegadas, lerInstituicoes, lerTaxonomia } from "@/lib/telas/leituras";
 import { classeDoAtivo } from "@/lib/telas/taxonomia";
 import { desativarAtivo } from "./acoes";
@@ -18,7 +20,10 @@ export const metadata = { title: "Ativos — Saldo Futuro" };
 // navegação com aria-current, não o padrão "tab" do ARIA; só a lista selecionada é renderizada
 // (DESIGN.md 6.12). Classe e instituição aparecem nas duas abas, e Editar abre os campos
 // descritivos (ciclo 012, issue #128; DESIGN.md 6.7). A classe é o nome do nó da taxonomia global
-// (ciclo 013, issue #138), ou "Sem classe (antes: X)" para quem só tem o legado.
+// (ciclo 013, issue #138), ou "Sem classe (antes: X)" para quem só tem o legado. Desde o ciclo 017
+// (issue #174), cada ativo comum tem "Ver detalhes" com os atributos complementares, e "Filtrar",
+// abaixo das abas, filtra pela URL as mesmas linhas lidas; as abas preservam os filtros, e os
+// contadores continuam com o total de cada situação.
 
 type Aba = "em-uso" | "desativados";
 
@@ -71,11 +76,11 @@ function informados(ativo: Ativo, d: Detalhes): string[] {
   return [d.classe(ativo), d.instituicao(ativo)].filter((v): v is string => v !== null);
 }
 
-function LinkDaAba({ aba, atual, contagem, children }: { aba: Aba; atual: Aba; contagem: number; children: string }) {
+function LinkDaAba({ aba, atual, contagem, href, children }: { aba: Aba; atual: Aba; contagem: number; href: string; children: string }) {
   const selecionada = aba === atual;
   return (
     <Link
-      href={aba === "em-uso" ? "/ativos" : "/ativos?aba=desativados"}
+      href={href}
       aria-current={selecionada ? "page" : undefined}
       className={`-mb-px flex min-h-11 items-center gap-2 border-b-2 px-4 text-sm/5 font-medium hover:bg-surface ${
         selecionada ? "border-primary text-primary" : "border-transparent text-text-secondary"
@@ -87,7 +92,16 @@ function LinkDaAba({ aba, atual, contagem, children }: { aba: Aba; atual: Aba; c
   );
 }
 
-function EmUso({ ativos, detalhes }: { ativos: Ativo[]; detalhes: Detalhes }) {
+function SemResultado() {
+  return (
+    <EstadoVazio titulo="Nenhum ativo corresponde aos filtros">
+      Mude as opções em Filtrar ou use Limpar filtros. Os filtros continuam aplicados nas duas abas.
+    </EstadoVazio>
+  );
+}
+
+function EmUso({ ativos, detalhes, filtrado }: { ativos: Ativo[]; detalhes: Detalhes; filtrado: boolean }) {
+  if (ativos.length === 0 && filtrado) return <SemResultado />;
   if (ativos.length === 0) {
     return (
       <EstadoVazio titulo="Nenhum ativo em uso">
@@ -119,8 +133,11 @@ function EmUso({ ativos, detalhes }: { ativos: Ativo[]; detalhes: Detalhes }) {
         </thead>
         <tbody>
           {ativos.map((ativo) => (
-            <tr key={ativo.id} className="border-b border-border last:border-0">
-              <td className="p-3 text-base/6 break-words">{nome(ativo)}</td>
+            <tr key={ativo.id} className="border-b border-border align-top last:border-0">
+              <td className="p-3 text-base/6 break-words">
+                <p>{nome(ativo)}</p>
+                {ativo.sistema === "transito" ? null : <ResumoAtivo ativo={ativo} />}
+              </td>
               <td className="p-3 text-base/6 text-text-secondary">{tipoDoAtivo(ativo)}</td>
               <td className="p-3 text-base/6 break-words text-text-secondary">{detalhes.classe(ativo) ?? "—"}</td>
               <td className="p-3 text-base/6 break-words text-text-secondary">{detalhes.instituicao(ativo) ?? "—"}</td>
@@ -141,13 +158,14 @@ function EmUso({ ativos, detalhes }: { ativos: Ativo[]; detalhes: Detalhes }) {
       {/* Lista densa no celular (DESIGN.md 6.7): nome completo com quebra, tipo, classe e instituição na segunda linha e ações de 44 px. */}
       <ul className="divide-y divide-border rounded-md border border-border bg-surface md:hidden">
         {ativos.map((ativo) => (
-          <li key={ativo.id} className="flex items-center gap-3 px-4 py-2">
+          <li key={ativo.id} className="flex items-start gap-3 px-4 py-2">
             <div className="min-w-0 flex-1 py-1">
               <p className="text-base/6 font-medium break-words text-text">{nome(ativo)}</p>
               <p className="text-sm/5 break-words text-text-secondary">
                 {[tipoDoAtivo(ativo), ...informados(ativo, detalhes)].join(" · ")}
                 {ativo.sistema === "transito" ? ` · ${TRANSITO}` : null}
               </p>
+              {ativo.sistema === "transito" ? null : <ResumoAtivo ativo={ativo} />}
             </div>
             {ativo.sistema === "transito" ? null : (
               <div className="flex shrink-0 flex-col items-end gap-1">
@@ -162,7 +180,8 @@ function EmUso({ ativos, detalhes }: { ativos: Ativo[]; detalhes: Detalhes }) {
   );
 }
 
-function Desativados({ ativos, detalhes }: { ativos: Ativo[]; detalhes: Detalhes }) {
+function Desativados({ ativos, detalhes, filtrado }: { ativos: Ativo[]; detalhes: Detalhes; filtrado: boolean }) {
+  if (ativos.length === 0 && filtrado) return <SemResultado />;
   if (ativos.length === 0) {
     return (
       <EstadoVazio titulo="Nenhum ativo desativado">
@@ -173,12 +192,13 @@ function Desativados({ ativos, detalhes }: { ativos: Ativo[]; detalhes: Detalhes
   return (
     <ul className="divide-y divide-border rounded-md border border-border bg-surface">
       {ativos.map((ativo) => (
-        <li key={ativo.id} className="flex items-center gap-3 px-4 py-2">
+        <li key={ativo.id} className="flex items-start gap-3 px-4 py-2">
           <div className="min-w-0 flex-1 py-1">
             <p className="text-base/6 break-words text-text">{ativo.nome}</p>
             <p className="text-sm/5 break-words text-text-secondary">
               {[...informados(ativo, detalhes), `Desativado em ${desativadoEm(ativo)}`].join(" · ")}
             </p>
+            <ResumoAtivo ativo={ativo} />
           </div>
           <div className="shrink-0">
             <Editar ativo={ativo} />
@@ -189,11 +209,12 @@ function Desativados({ ativos, detalhes }: { ativos: Ativo[]; detalhes: Detalhes
   );
 }
 
-export default async function AtivosPage({ searchParams }: { searchParams: Promise<{ aba?: string | string[] }> }) {
+export default async function AtivosPage({ searchParams }: { searchParams: Promise<Parametros> }) {
   if (!backend) return <PreviewNotice />;
   const { supabase } = await exigirSessao();
-  const { aba: parametro } = await searchParams;
-  const aba: Aba = parametro === "desativados" ? "desativados" : "em-uso";
+  const parametros = await searchParams;
+  const aba: Aba = parametros.aba === "desativados" ? "desativados" : "em-uso";
+  const lido = lerFiltros(parametros);
   const [ativos, taxonomia, legado, instituicoes] = await Promise.all([
     lerAtivos(supabase),
     lerTaxonomia(supabase),
@@ -208,6 +229,11 @@ export default async function AtivosPage({ searchParams }: { searchParams: Promi
   };
   const emUso = ativos.filter((a) => a.ativo).sort((a, b) => Number(!!a.sistema) - Number(!!b.sistema) || nome(a).localeCompare(nome(b), "pt-BR"));
   const desativados = ativos.filter((a) => !a.ativo);
+  // Filtro e resumo usam as mesmas linhas; com filtro inválido, nenhuma lista é mostrada.
+  const filtros = "filtros" in lido ? lido.filtros : null;
+  const aplicados = filtros ? descreverFiltros(filtros) : [];
+  const daAba = aba === "em-uso" ? emUso : desativados;
+  const visiveis = filtros ? filtrarAtivos(daAba, filtros) : [];
 
   return (
     <div className="flex flex-col gap-6">
@@ -221,20 +247,32 @@ export default async function AtivosPage({ searchParams }: { searchParams: Promi
       <nav aria-label="Situação dos ativos">
         <ul className="flex border-b border-border">
           <li>
-            <LinkDaAba aba="em-uso" atual={aba} contagem={emUso.length}>
+            <LinkDaAba aba="em-uso" atual={aba} contagem={emUso.length} href={enderecoDaAba("em-uso", parametros)}>
               Em uso
             </LinkDaAba>
           </li>
           <li>
-            <LinkDaAba aba="desativados" atual={aba} contagem={desativados.length}>
+            <LinkDaAba aba="desativados" atual={aba} contagem={desativados.length} href={enderecoDaAba("desativados", parametros)}>
               Desativados
             </LinkDaAba>
           </li>
         </ul>
       </nav>
 
+      <FiltrosDosAtivos
+        aba={aba}
+        parametros={parametros}
+        aplicados={aplicados}
+        erro={"erro" in lido ? lido.erro : null}
+        resultado={aplicados.length > 0 ? { correspondem: visiveis.length, total: daAba.length } : null}
+      />
+
       <section id="ativos-da-aba" aria-label={aba === "em-uso" ? "Ativos em uso" : "Ativos desativados"} className="flex flex-col gap-3">
-        {aba === "em-uso" ? <EmUso ativos={emUso} detalhes={detalhes} /> : <Desativados ativos={desativados} detalhes={detalhes} />}
+        {filtros === null ? null : aba === "em-uso" ? (
+          <EmUso ativos={visiveis} detalhes={detalhes} filtrado={aplicados.length > 0} />
+        ) : (
+          <Desativados ativos={visiveis} detalhes={detalhes} filtrado={aplicados.length > 0} />
+        )}
       </section>
     </div>
   );
