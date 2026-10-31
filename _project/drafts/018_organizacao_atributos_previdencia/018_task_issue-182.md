@@ -90,6 +90,10 @@ Na pasta `C:\Programas\saldo-futuro-018`, com o Supabase local rodando (o banco 
 
 Se tudo estiver certo, diga "aprovo o merge da PR #184". Logo depois do merge e do deploy vem a ação externa (KB-002, "Previdência como veículo", AP1 a AP7).
 
+### Resultado do teste local — 2026-10-31
+
+Feito pelo responsável no navegador do app, com o código da PR #184 rodando na pasta do 018 (porta 3018), contra o Supabase local já com a migração, e um usuário fictício só do banco local (`teste-local.responsavel@example.com`, senha de teste dos e2e). Seis blocos guiados: grupos no cadastro, lista suspensa do veículo (Esc, clique fora, exclusividade), indexador abrindo de primeira com a lista do veículo aberta, salvar e conferir no "Ver detalhes" e na edição, celular e filtro sem o indicador. Relato do responsável: "Tudo passou".
+
 ## Encerramento
 
 Não se aplica — ciclo completo; encerramento em PR própria.
