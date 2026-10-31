@@ -1,10 +1,10 @@
 # Plano de Implementação — Atributos complementares dos ativos
 
 > **Ciclo:** `017`
-> **Status:** `Em Execução`
-> **Versão:** `v4`
+> **Status:** `Concluído`
+> **Versão:** `v5`
 > **Data de criação:** 2026-10-30
-> **Última atualização:** 2026-10-30
+> **Última atualização:** 2026-10-31
 > **Tipo:** `feature`
 > **Prioridade:** `P2`
 > **Nível:** `completo`
@@ -17,8 +17,9 @@
 > **Autorização de implementação da unidade Banco:** "autorizo a implementação da issue #172" em 2026-10-30; recebida; execução iniciada na branch `feature/issue-172`, task `017_task_issue-172.md`.
 > **Autorização de implementação da unidade Formulários:** "Autorizo a implementação da issue #173" em 2026-10-30; recebida depois da ação externa da #172 relatada pelo responsável; execução iniciada na branch `feature/issue-173`, task `017_task_issue-173.md`.
 > **Autorização de implementação da unidade Consulta:** "autorizo a implementação da issue #174" em 2026-10-30; recebida depois da integração da PR #177; execução iniciada na branch `feature/issue-174`, task `017_task_issue-174.md`.
-> **Revisão formal:** `Concluída`
-> **Veredito da revisão:** `APTO PARA APROVAÇÃO`
+> **Emendas:** E-1 (tela) e E-2 (Previdência como veículo) em 2026-10-30, depois das entregas #172 a #174, autorizadas por "Tá, então a partir de agora, pode concatenar todas as informações que nós discutimos agora, para fazer essa revisão geral do que aconteceu na tela." (ver "Emendas E-1 e E-2"); decisões D13 a D18. Não adotadas no 017: a Rodada 5 deu REQUER NOVA RODADA, e o responsável levou o trabalho ao ciclo 018 ("Sim, ciclo 018", ver "Decisão do responsável após a Rodada 5")
+> **Revisão formal:** `Concluída` (Rodada 5, sobre as emendas da v5; teto de cinco rodadas atingido)
+> **Veredito da revisão:** `APTO PARA APROVAÇÃO` (Rodada 4, v4: vale só para a execução aprovada da v4); Rodada 5, v5 (emendas E-1 e E-2): `REQUER NOVA RODADA`
 > **Aprovação humana pós-revisão:** `Aprovada em 2026-10-30`
 > **Aprovação da v4:** "aprovo o plano do ciclo 017" em 2026-10-30, recebida após o veredito APTO PARA APROVAÇÃO da Rodada 4; confirma a versão revisada, inclusive D10 a D12 e a inclusão de INPC.
 > **Manifestação anterior de aprovação:** a frase dita após o parecer da v3 permanece somente como histórico; a aprovação vigente é a manifestação posterior ao parecer da v4 registrada acima.
@@ -98,7 +99,7 @@ Autoridades: `.agent/ai_behavior.md`, `_project/README.md`, ADR-003, KB-003, KB-
 | D9 | Adotar o texto literal: "Informações preenchidas por você. O Saldo Futuro não calcula imposto, prazo de resgate ou valor garantido com estes campos." | Escolha explícita durante a correção v2, em 2026-10-30 |
 | D10 | Confirmar o restante dos catálogos da P1, renomear Sem indexador para Prefixado (sem indexador) e Certificado representativo para BDR ou certificado de depósito; incluir Variação cambial nos indexadores e permitir incluir INPC a critério do autor | Resposta explícita à confirmação de P1, em 2026-10-30. INPC foi incluído no catálogo manual dentro da opção delegada, sem criar benchmark ou sincronização |
 | D11 | Aplicar a definição do prazo a resgate ou venda; quando cotização/liquidação tiverem unidades diferentes, orientar no texto de ajuda registrar o total em dias corridos, arredondando para cima; manter o restante da definição | Resposta explícita à confirmação de P2, em 2026-10-30. A orientação é para preenchimento manual; o sistema continua sem converter, somar ou calcular datas |
-| D12 | Confirmar a preservação e o agrupamento visual dos quatro indicadores atuais, com Sim, Não e Não informado, sem conversão ou apagamento de dados | Resposta explícita à confirmação de P3, em 2026-10-30 |
+| D12 | Confirmar a preservação e o agrupamento visual dos quatro indicadores atuais, com Sim, Não e Não informado, sem conversão ou apagamento de dados | Resposta explícita à confirmação de P3, em 2026-10-30. Vale para o 017; a mudança de agrupamento (D13) e do indicador Previdência (D18) foi levada ao ciclo 018 |
 
 ### Proposta de especificação para revisão
 
@@ -146,7 +147,7 @@ Essa é uma orientação de preenchimento manual. Contagens em dias úteis e cor
 
 | Indicador existente | Relação com os novos atributos | Convivência confirmada |
 | :-- | :-- | :-- |
-| Previdência | O tipo genérico Plano ou contrato não determina se é previdenciário; a seleção pode combinar veículos | Preservar os três estados; agrupar visualmente próximo de veículo |
+| Previdência | O tipo genérico Plano ou contrato não determina se é previdenciário; a seleção pode combinar veículos | Preservar os três estados; agrupar visualmente próximo de veículo. Proposta de Previdência como opção do veículo (D18) levada ao ciclo 018, sem efeito no 017 |
 | Liquidez imediata (reserva) | O rótulo atual inclui indicação de reserva; um número de dias não prova essa intenção | Preservar os três estados; agrupar junto ao prazo, com textos que distingam as informações |
 | Exposição cambial | Não equivale a veículo, indexador ou regime tributário | Preservar os três estados |
 | Isento de IR | Isenção e identificação do regime não são representadas pelo mesmo conjunto de opções | Preservar os três estados; agrupar visualmente com regime |
@@ -207,6 +208,61 @@ Após a Rodada 3, em 2026-10-30, o responsável disse "aprovo o plano do ciclo 0
 
 A manifestação de aprovação da v3 e a parada anterior permanecem como histórico abaixo. As alterações foram examinadas pela Rodada 4, com veredito APTO PARA APROVAÇÃO, e o responsável depois disse novamente "aprovo o plano do ciclo 017", em 2026-10-30. Essa manifestação nova aprova a v4 integralmente, inclusive INPC e D10 a D12; não se reaproveitou a frase anterior. A aprovação cobre a publicação documental prevista no README, sem cobrir merge ou implementação. O corpo da PR em `local/cycle-017-plan-pr.md` é preparação ignorada, atualizada para esta versão antes da publicação.
 
+### Emendas E-1 e E-2 — revisão da tela depois das entregas (2026-10-30)
+
+**Origem.** Depois da integração das PRs #177 (formulários) e #178 (consulta), esta pelo próprio responsável em 2026-10-30 sem a frase de aprovação no chat, o responsável usou as telas e apontou quatro problemas: o filtro com opções demais (caixas abertas para veículo e indexador), o filtro sem divisão por assunto, a página que volta ao topo com o painel aberto depois de aplicar, e a Previdência ao lado do veículo no cadastro, que confunde. A análise do agente, um esboço visual do filtro e as respostas do responsável na conversa levaram às decisões D13 a D18. O responsável autorizou registrá-las e revisá-las: "Tá, então a partir de agora, pode concatenar todas as informações que nós discutimos agora, para fazer essa revisão geral do que aconteceu na tela." Ele também registrou que passará a testar localmente antes de aprovar um merge de tela.
+
+**Estado de partida.** As três entregas (#172 a #174) estão em `main` (`8cba4ac2dadc825057af777456530a9cbc66da6c`) e, pelo deploy contínuo, em produção; a ação externa da #172 foi relatada. A release 0.13.0 (PR #176) não foi integrada, então a nota de `/novidades` ainda não aparece. As emendas corrigem o que já foi entregue por **novas** PRs; nada é revertido.
+
+#### Decisões humanas das emendas
+
+| ID | Decisão | Origem |
+| :-- | :-- | :-- |
+| D13 | Quatro grupos com título, na mesma ordem, no cadastro, na edição, no "Ver detalhes" e no "Filtrar": **Produto** (Veículo de acesso, Indexador da remuneração), **Tributação** (Regime tributário, Isento de IR), **Resgate** (Prazo para resgate ou venda, Liquidez imediata (reserva)) e **Proteção e exposição** (Cobertura do FGC, Exposição cambial). Substitui o agrupamento da P3/D12 | Proposta do agente com esboço; o responsável confirmou a divisão e pediu que o cadastro siga a mesma |
+| D14 | Veículo de acesso e Indexador da remuneração viram **lista suspensa de múltipla escolha** no cadastro, na edição e no filtro. Fechada, mostra o que está marcado ("Fundo, ETF") ou "Todos" no filtro e "Não informado" no cadastro; aberta, mostra as opções com caixas. No cadastro, o catálogo inteiro; no filtro, só as opções presentes em algum ativo comum do usuário (das duas abas), mais "Não informado" e as que estiverem marcadas na URL. Substitui a P6 ("checkboxes em fieldset" e "sem novo componente de multiselect") | "Eu gostei da sua proposta que você colocou aqui acima, exemplificativa" |
+| D15 | "Filtrar": depois de aplicar, o painel fecha e a página mostra a lista; o painel só abre sozinho quando há erro de filtro. Sai a linha abaixo do painel com os filtros aplicados e "N de M nesta aba". O resumo de "Filtrar" ganha um contador de filtros ativos, e "Limpar filtros" fica ao lado dele, visível com o painel fechado. Comparação, Dias e Unidade só aparecem com a situação "Prazo em dias" (sem JavaScript, continuam visíveis, e a combinação incoerente segue com erro). Altera a P5 | "o item 1 de tanto nesta aba, isso você pode tirar"; "Vou seguir sua sugestão: remover a linha inteira e levar o essencial para junto do botão Filtrar" |
+| D16 | No cadastro, "Prefixado (sem indexador)" e "Não se aplica" continuam exclusivos (P1 mantida, opção A), com a dica literal: "Em títulos híbridos, como IPCA + taxa, marque só o indexador. Use Prefixado quando a remuneração não tiver indexador." No filtro, só "Não informado" é exclusivo; "Prefixado" e "Não se aplica" combinam por OU com as demais. Altera a P5 nesse ponto | "Pode usar a regra A"; resposta 4: "Ok. Perfeito." |
+| D17 | A frase de D9 sai do "Ver detalhes" (nas duas abas) e fica só no "Mais detalhes" do cadastro e da edição. Altera a P6 nesse ponto | "retira essa frase, não serve para nada" |
+| D18 | **Previdência é veículo.** "Veículo de acesso" ganha a opção única **"Previdência (PGBL ou VGBL)"**, código `previdencia`, entre ETF e "Plano ou contrato", que continua para outros contratos. O indicador "Previdência" (Sim/Não/Não informado) sai do cadastro, da edição, do "Ver detalhes" e do filtro. A conversão dos dados gravados segue a tabela abaixo. A parte tributária continua em "Regime tributário" (Previdência — progressivo/regressivo). Substitui P3/D12 para esse indicador; os outros três continuam com os três estados | Respostas 1 a 3: "Uma só Previdência"; "Está certa a tabela"; "Perfeito" (revisão formal) |
+
+Conversão de D18, por ativo comum (o trânsito não tem atributos):
+
+| Antes | Depois |
+| :-- | :-- |
+| `previdencia = true` | `veiculos_acesso` recebe `previdencia`; se tinha `plano_contrato` ou `nao_aplicavel`, eles saem; o conjunto volta à forma canônica; `previdencia` fica nula |
+| `previdencia = false` | Nada a converter; `previdencia` fica nula (o "Não" deixa de existir) |
+| `previdencia` nula | Nada muda |
+
+#### E-1 — tela (D13 a D17)
+
+- **Cadastro e edição:** "Mais detalhes" com os quatro grupos de D13, cada um com título; a frase de D9 no topo; a dica de D16 abaixo do indexador; a lista suspensa de D14 para veículo e indexador, com a desmarcação dos exclusivos como orientação e o servidor e o banco recusando o conjunto inválido; o resto como entregue na #173 (prazo, selects, preservação depois da recusa).
+- **Ver detalhes:** oito itens nos quatro grupos de D13, com título de grupo, sem a frase de D9 e sem Previdência como item próprio (ela aparece no veículo).
+- **Filtrar:** os quatro grupos de D13; listas suspensas de D14 com as opções em uso; D15 e D16; os demais selects como hoje. A lista suspensa usa `<details>` nativo com caixas dentro de um `fieldset` cujo `legend` é o nome do campo, alvos de 44 px e quebra de linha; fecha ao clicar fora quando há JavaScript, e funciona sem ele. O formulário GET envia para a lista (âncora `#ativos-da-aba`), para a página voltar posicionada nos resultados.
+- **Contadores, abas, URL, Não informado, trânsito fora de qualquer filtro e erros explícitos:** sem mudança em relação à P5, salvo D15 e D16. O parâmetro `previdencia` deixa de ser filtro; vindo na URL antiga, é ignorado como qualquer parâmetro desconhecido de nome.
+- **Documentação:** DESIGN.md 6.7, 6.8 e 6.12; KB-003; roteiro VA da KB-002 ajustado (sem a linha de status e com Previdência no veículo).
+
+#### E-2 — Previdência como veículo (D18), em duas fases de banco
+
+Duas migrações novas e aditivas, cada uma com ação externa, para não haver janela em que a aplicação em produção grave o indicador antigo depois da conversão (mesmo padrão das fases 1 e 2 do ciclo 013):
+
+1. **Fase A, antes da tela nova.** Redefine `private.canonizar_veiculos_acesso` com `previdencia` no catálogo, entre `etf` e `plano_contrato` (a ordem relativa dos códigos existentes não muda, então todo conjunto gravado continua canônico; a migração confere isso e falha se algum não estiver). Converte os dados pela tabela de D18, de forma idempotente, para todos os usuários. A aplicação em produção continua funcionando: as funções e as assinaturas não mudam, e o indicador antigo ainda pode ser gravado.
+2. **Tela nova (E-1 + D18).** Deixa de mostrar e de enviar o indicador (`p_previdencia` vai nulo nas funções novas, cuja assinatura não muda) e passa a oferecer "Previdência (PGBL ou VGBL)" no veículo.
+3. **Fase B, depois do deploy da tela nova.** Reaplica a conversão às sobras (algum "Sim" gravado pela tela antiga entre a fase A e o deploy) e acrescenta a restrição `previdencia is null`, congelando a coluna como legado sem uso, como `classe_id` desde o ciclo 013. A remoção física da coluna e dos parâmetros fica para um ciclo futuro.
+
+Testes: pgTAP do catálogo novo (aceita `previdencia`, ordem canônica, exclusividade de `nao_aplicavel` mantida) e da conversão em todas as linhas da tabela de D18, com isolamento (conversão só no próprio ativo, trânsito intocado, cascata do usuário); ensaio de upgrade com retrato integral antes e depois, desconsiderando só `veiculos_acesso` e `previdencia` dos ativos convertidos, que são conferidos um a um contra a tabela; fase B ensaiada com uma sobra gravada pela função antiga entre as fases. KB-002 com os roteiros das duas ações externas; KB-003 e KB-004 4.1 com o indicador aposentado.
+
+#### Decomposição, ordem e pontos de aprovação das emendas
+
+| Unidade | Conteúdo | Dependência e fechamento |
+| :-- | :-- | :-- |
+| Documental | Este registro (v5), Rodada 5 e reconciliação da task da #174 | Branch `chore/cycle-017-emendas`; PR documental com aprovação própria do merge |
+| Issue nova — banco | Fase A de E-2, testes, ensaio e roteiro | Depois da documental integrada e do payload confirmado; ação externa antes da issue de tela; a issue fica aberta até a fase B |
+| Issue nova — tela | E-1 completa, D18 na tela e a migração da fase B | Depois da ação externa da fase A; o responsável testa localmente antes de aprovar o merge; a ação externa da fase B vem depois do deploy |
+| #174 | Continua aberta | Fecha no encerramento, depois da verificação em produção com o roteiro ajustado |
+| Release 0.13.0 (PR #176) | Inclui também as entregas das emendas | Só depois da issue de tela integrada e da fase B; a nota de `/novidades` é revista para mencionar a Previdência no veículo |
+
+Os pontos de aprovação são os mesmos da tabela acima, um por PR, issue e ação externa. Nenhuma decisão de regra financeira está envolvida (G1 não se aplica): a conversão só move uma anotação descritiva. G2 se aplica à conversão em massa e às funções (teste de isolamento); G3, às fixtures; G4, às duas migrações novas.
+
 ### Pontos de aprovação
 
 | Ponto | Precondição | Cobre | Não cobre | Conferir |
@@ -260,13 +316,13 @@ Testar 360 px úteis e desktop 1280 px, além de janela de 375 px com barra clá
 
 **Critérios de aceite:**
 
-- [ ] Catálogo e significado confirmados no plano revisado; conjuntos e prazo seguem constraints completas, inclusive trânsito e campos vazios.
-- [ ] Variação cambial e INPC são códigos aceitos como anotações, sem novo benchmark, fonte externa, evento cambio ou preenchimento de Exposição cambial.
-- [ ] Toda tentativa de leitura/escrita cruzada e bypass do admin falha; escrita é atômica e preserva o protocolo da carteira.
-- [ ] Funções antigas preservam novos valores e continuam executáveis nas permissões atuais; novas não são ambíguas no PostgREST.
-- [ ] A migração não amplia a marca de metadados nem altera os leitores do Início; constraints e RPCs garantem os novos campos sem composição de leitura nova.
-- [ ] Upgrade e suíte de banco passam com dados fictícios; nenhuma diferença em eventos, posições, consolidados ou indicadores prévios.
-- [ ] Roteiro sanitizado de ação externa pronto; issue fica aberta até essa ação e reconciliação no encerramento.
+- [x] Catálogo e significado confirmados no plano revisado; conjuntos e prazo seguem constraints completas, inclusive trânsito e campos vazios.
+- [x] Variação cambial e INPC são códigos aceitos como anotações, sem novo benchmark, fonte externa, evento cambio ou preenchimento de Exposição cambial.
+- [x] Toda tentativa de leitura/escrita cruzada e bypass do admin falha; escrita é atômica e preserva o protocolo da carteira.
+- [x] Funções antigas preservam novos valores e continuam executáveis nas permissões atuais; novas não são ambíguas no PostgREST.
+- [x] A migração não amplia a marca de metadados nem altera os leitores do Início; constraints e RPCs garantem os novos campos sem composição de leitura nova.
+- [x] Upgrade e suíte de banco passam com dados fictícios; nenhuma diferença em eventos, posições, consolidados ou indicadores prévios.
+- [x] Roteiro sanitizado de ação externa pronto; issue fica aberta até essa ação e reconciliação no encerramento.
 
 ### Item 2 — Cadastro e edição opcionais com seleção múltipla e prazo exato
 
@@ -276,14 +332,14 @@ Testar 360 px úteis e desktop 1280 px, além de janela de 375 px com barra clá
 
 **Critérios de aceite:**
 
-- [ ] Cadastro básico continua possível sem abrir Mais detalhes e grava ausência de atributos corretamente.
-- [ ] Seleções múltiplas, indicadores, regime, FGC e prazo são salvos e reabertos sem perda; clearing é explícito e validado.
-- [ ] Prazo zero aparece como zero com unidade; vazio, Não se aplica e outros estados não viram número ou booleano por conversão.
-- [ ] O rótulo e a ajuda abrangem resgate ou venda; a ajuda da P2 orienta total manual em dias corridos e arredondamento para cima quando as etapas usam unidades diferentes. O app não soma/converte/arredonda, e input fracionário segue recusado.
-- [ ] Nome e atributos são salvos juntos; erro preserva entrada; ativo desativado edita e trânsito não ganha formulário.
-- [ ] Textos e agrupamento seguem a convivência confirmada; teclado, foco, 44 px e mobile passam.
-- [ ] Banco já aplicado antes de publicar código que seleciona colunas ou chama RPCs novas; gates da aplicação e banco passam.
-- [ ] DESIGN.md 6.8 e documentação dos formulários acompanham esta entrega; não ficam dependentes da PR de consulta.
+- [x] Cadastro básico continua possível sem abrir Mais detalhes e grava ausência de atributos corretamente.
+- [x] Seleções múltiplas, indicadores, regime, FGC e prazo são salvos e reabertos sem perda; clearing é explícito e validado.
+- [x] Prazo zero aparece como zero com unidade; vazio, Não se aplica e outros estados não viram número ou booleano por conversão.
+- [x] O rótulo e a ajuda abrangem resgate ou venda; a ajuda da P2 orienta total manual em dias corridos e arredondamento para cima quando as etapas usam unidades diferentes. O app não soma/converte/arredonda, e input fracionário segue recusado.
+- [x] Nome e atributos são salvos juntos; erro preserva entrada; ativo desativado edita e trânsito não ganha formulário.
+- [x] Textos e agrupamento seguem a convivência confirmada; teclado, foco, 44 px e mobile passam.
+- [x] Banco já aplicado antes de publicar código que seleciona colunas ou chama RPCs novas; gates da aplicação e banco passam.
+- [x] DESIGN.md 6.8 e documentação dos formulários acompanham esta entrega; não ficam dependentes da PR de consulta.
 
 ### Item 3 — Resumo expansível, filtros em Ativos e documentação da entrega
 
@@ -293,15 +349,15 @@ Testar 360 px úteis e desktop 1280 px, além de janela de 375 px com barra clá
 
 **Critérios de aceite:**
 
-- [ ] Em uso e Desativados têm Ver detalhes; resumo não exige edição e não acrescenta colunas ou campos à linha principal.
-- [ ] Filtrar fica abaixo das abas; filtros ativos e Limpar são visíveis com painel fechado; estado aplicado vem da URL.
-- [ ] Multisseleção combina OU e campos combinam E; Exatamente/Até comparam número na mesma unidade, sem conversão; inválidos, estados ausentes, contadores, trânsito e sem resultados seguem P5 e D8.
-- [ ] Não informado nos filtros de regime, FGC e situação do prazo seleciona apenas o respectivo nulo e não o trânsito; distingue Todos, Não e Não se aplica. Prazo não informado não aceita comparador, dias ou unidade preenchidos.
-- [ ] Filtros, resumo, aba e contadores derivam das mesmas linhas lidas; erro de consulta/contagem não apresenta conjunto parcial; não há nova composição por marca ou promessa de snapshot global.
-- [ ] Mobile/desktop, teclado e axe passam com todos os campos e textos longos, sem overflow horizontal.
-- [ ] Documentação descreve o produto efetivamente entregue, as opções e suas limitações, sem regras fiscais ou garantia automática.
-- [ ] DESIGN.md 6.7 e 6.12 descrevem Em uso como tabela no desktop e lista no celular, Desativados como lista em todas as larguras, resumo em cada formato e preservação de filtros nas abas.
-- [ ] Roteiro de verificação em produção está pronto; issue só fecha após relato sanitizado e reconciliação no encerramento.
+- [x] Em uso e Desativados têm Ver detalhes; resumo não exige edição e não acrescenta colunas ou campos à linha principal.
+- [x] Filtrar fica abaixo das abas; filtros ativos e Limpar são visíveis com painel fechado; estado aplicado vem da URL.
+- [x] Multisseleção combina OU e campos combinam E; Exatamente/Até comparam número na mesma unidade, sem conversão; inválidos, estados ausentes, contadores, trânsito e sem resultados seguem P5 e D8.
+- [x] Não informado nos filtros de regime, FGC e situação do prazo seleciona apenas o respectivo nulo e não o trânsito; distingue Todos, Não e Não se aplica. Prazo não informado não aceita comparador, dias ou unidade preenchidos.
+- [x] Filtros, resumo, aba e contadores derivam das mesmas linhas lidas; erro de consulta/contagem não apresenta conjunto parcial; não há nova composição por marca ou promessa de snapshot global.
+- [x] Mobile/desktop, teclado e axe passam com todos os campos e textos longos, sem overflow horizontal.
+- [x] Documentação descreve o produto efetivamente entregue, as opções e suas limitações, sem regras fiscais ou garantia automática.
+- [x] DESIGN.md 6.7 e 6.12 descrevem Em uso como tabela no desktop e lista no celular, Desativados como lista em todas as larguras, resumo em cada formato e preservação de filtros nas abas.
+- [x] Roteiro de verificação em produção está pronto; issue só fecha após relato sanitizado e reconciliação no encerramento.
 
 ## Arquivos afetados
 
@@ -372,21 +428,56 @@ Roteiro de verificação em produção, após autorização: responsável confer
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | [#172](https://github.com/EuThiagoAndrade/saldo-futuro/issues/172), [#173](https://github.com/EuThiagoAndrade/saldo-futuro/issues/173) e [#174](https://github.com/EuThiagoAndrade/saldo-futuro/issues/174) |
-| PR(s) | [#171 — publicação documental da ideação/plano/registro do ciclo](https://github.com/EuThiagoAndrade/saldo-futuro/pull/171), integrada em `main` (`a28f22667d67ddaf80e35ab7af201ae1d4a84a53`); [#175 — unidade Banco, issue #172](https://github.com/EuThiagoAndrade/saldo-futuro/pull/175), integrada em `main` (`030a0251b876f56a54a018225644bd51acaca878`); ação externa relatada pelo responsável em 2026-10-30; [#177 — unidade Formulários, issue #173](https://github.com/EuThiagoAndrade/saldo-futuro/pull/177), integrada em `main` (`e58f02dde56229c84996d0803bdb5a32ef96b078`); [#178 — unidade Consulta, issue #174](https://github.com/EuThiagoAndrade/saldo-futuro/pull/178), aberta |
+| PR(s) | [#171 — publicação documental da ideação/plano/registro do ciclo](https://github.com/EuThiagoAndrade/saldo-futuro/pull/171), integrada em `main` (`a28f22667d67ddaf80e35ab7af201ae1d4a84a53`); [#175 — unidade Banco, issue #172](https://github.com/EuThiagoAndrade/saldo-futuro/pull/175), integrada em `main` (`030a0251b876f56a54a018225644bd51acaca878`); ação externa relatada pelo responsável em 2026-10-30; [#177 — unidade Formulários, issue #173](https://github.com/EuThiagoAndrade/saldo-futuro/pull/177), integrada em `main` (`e58f02dde56229c84996d0803bdb5a32ef96b078`); [#178 — unidade Consulta, issue #174](https://github.com/EuThiagoAndrade/saldo-futuro/pull/178), integrada em `main` pelo responsável (`8cba4ac2dadc825057af777456530a9cbc66da6c`) |
 | Branch(es) | `chore/cycle-017-plan` — publicação documental da ideação/plano/registro do ciclo; `feature/issue-172` — unidade Banco, task `017_task_issue-172.md`; `feature/issue-173` — unidade Formulários, task `017_task_issue-173.md`; `feature/issue-174` — unidade Consulta, task `017_task_issue-174.md` |
 | Destino após conclusão | `_project/executed/017_atributos_complementares_ativos/017_plan.md` |
 
 ## Próximo passo
 
+Encerramento prospectivo: conclusão efetiva somente depois do merge da PR de encerramento.
+
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 017 (completo)
-Quem: Responsável
-Conferir: Checks e diff da [PR #178](https://github.com/EuThiagoAndrade/saldo-futuro/pull/178); task 017_task_issue-174.md
-Diga: "aprovo o merge da PR #178"
+Situação: Concluído — ciclo 017 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
+
+- `handoff_schema_version: 2`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 017 + atualizar_docs + document_set/encerramento + 9abf28384d95d914f8a26f7e71a470f359370a50`
+- `effect_class`: `remote_mutation`
+- `state_before`: entregas #172 a #174 integradas; ação externa e VA1 a VA8 concluídos conforme relato humano; release v0.13.0 publicada; ciclo Em execução em drafts.
+- `state_after`: plano, tasks, índice e documentação viva reconciliados; ciclo movido a executed com conclusão prospectiva; antes do merge, situação efetiva Aguardando merge quando só faltar integração.
+- `result`: `executed`
+- `evidence`: `017_task_closure.md`, tasks das entregas, PRs #175/#177/#178 e release v0.13.0 pela PR #176.
+- `blockers`: checks e aprovação própria da PR de encerramento.
+
+### Histórico — handoff da verificação em produção
+
+- `handoff_schema_version: 2`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 017 + atualizar_docs + document_set/verificacao-producao + 8cba4ac2dadc825057af777456530a9cbc66da6c`
+- `effect_class`: `remote_mutation`
+- `state_before`: ciclo Em execução, entregas integradas e emendas destinadas ao 018; Aguardando verificação em produção; release #176 aberta.
+- `state_after`: autorização e relato humano "todos passaram" para VA1 a VA8 registrados na task #174 e refletidos neste próximo passo; checks da release acionados; Aguardando merge da #176, condicionado a checks verdes e aprovação própria. Nenhum merge nem encerramento executado.
+- `result`: `executed`
+- `evidence`: `017_task_issue-174.md`, seção "Verificação em produção — 2026-10-30"; PRs #175/#177/#178 MERGED, checks da #178 verdes; PR #176 aberta no head `9958a1fd5b85d5303052da68fc1749529e8e9ec9`; runs `41166126047` e `41166128107`.
+- `blockers`: aprovação do merge da release #176; todos os checks automáticos e manuais passaram no head `9958a1fd5b85d5303052da68fc1749529e8e9ec9`, conferido em 2026-10-31 (America/Cuiaba). Publicação da release e encerramento posteriores.
+
+### Histórico — handoff das emendas
+
+- `handoff_schema_version: 2`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 017 + rascunhar_plano + 017_plan/emendas-E1-E2 + 8cba4ac2dadc825057af777456530a9cbc66da6c`
+- `effect_class`: `local_mutation`
+- `state_before`: plano v4 `Em Execução`; #172 a #174 entregues em `main` (`8cba4ac2dadc825057af777456530a9cbc66da6c`), #178 integrada pelo responsável; release 0.13.0 (PR #176) aberta; o responsável pediu mudanças na tela e decidiu D13 a D18 na conversa, autorizando o registro e a revisão.
+- `state_after`: plano v5 com as emendas E-1 e E-2, D13 a D18, P3 e D12 anotados; task da #174 reconciliada; na branch `chore/cycle-017-emendas`, sem commit; Aguardando revisão (rodada 5). Nenhum código, migração, issue ou PR.
+- `result`: `executed`
+- `evidence`: estado conferido no GitHub (#178 MERGED, #172 e #174 OPEN, #176 OPEN sem issue vinculada); seção "Emendas E-1 e E-2"; validador e `git diff --check` depois da gravação.
+- `blockers`: a Rodada 5 e a aprovação humana posterior da v5; depois, PR documental, payloads e criação das duas issues novas.
+
+### Histórico — handoff anterior
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 017 + criar_issues + issues-172-174 + a28f22667d67ddaf80e35ab7af201ae1d4a84a53`
@@ -719,8 +810,73 @@ A aprovação cobre a publicação documental segundo `_project/README.md`, com 
 - `evidence`: respostas explícitas do responsável na conversa; autorização da atualização no cabeçalho; D10/D11/D12, P1/P2/P3/P4, estratégia de testes, critérios dos Itens 1/2 e dependências alinhados. Fontes primárias de terminologia referidas; nenhuma conversão de prazo pelo sistema. Em 2026-10-30: 48/48 testes do validador passaram; `node scripts/validate-governance.mjs` passou com 0 erros, 0 avisos e 5 itens manuais; `git diff --check` passou; nenhuma linha com espaço final. Comparação textual confirmou preservação integral das três rodadas, respostas e registros anteriores; ideação/cycles mantêm os blobs `dd6e8650458f46cbd3a24633c98b6367453b351a` e `23b3c91f9b903e8c72772e17cc5f1e218a151166`. Revisão manual de autorização, G3 e escopo concluída; sem testes de aplicação/banco nesta atualização documental.
 - `blockers`: nenhum para atualizar e encaminhar à Rodada 4; P1/P2/P3 estão respondidas. A v4 altera a especificação após o parecer da v3 e exige revisão e aprovação humana posteriores; manifestação anterior permanece histórica e não aprova antecipadamente esta versão.
 
+### Rodada 5
+
+- **Data:** 2026-10-30.
+- **Versão revisada:** v5, somente as emendas E-1 e E-2 (D13 a D18), as anotações em D12, na tabela da P3, no cabeçalho, em Rastreabilidade e o handoff novo, além da reconciliação de `017_task_issue-174.md`. Base `main` = `origin/main` = `8cba4ac2dadc825057af777456530a9cbc66da6c`, com as entregas #172 a #174 integradas; branch local `chore/cycle-017-emendas`, plano (blob `91c65e3884f2f1c86b4aac48d9f7a19a1692441b` antes desta rodada) e task (blob `e3c1617656da0ae042be31588b572fd64f68a563`) sem commit.
+- **Autor:** Claude Code (Claude Opus 5.5).
+- **Revisor:** Claude Code (Claude Opus 5.5), em sessão separada, sem acesso à conversa em que D13 a D18 foram decididas.
+- **Veredito:** `REQUER NOVA RODADA`.
+
+#### Achados
+
+| ID | Tipo | Achado e evidência | Correção necessária |
+| :-- | :-- | :-- | :-- |
+| R5-1 | Bloqueador | **A sequência de E-2 não fecha a janela de perda; ela a desloca.** (a) Entre a fase A e o deploy da tela nova, a aplicação em produção encontra `previdencia` em `veiculos_acesso`, código que ela não conhece. O formulário de edição só desenha caixas do catálogo (`src/components/formularios/detalhes-ativo.tsx:279-291`) e `alternarNoConjunto` filtra pelo catálogo (`src/lib/telas/detalhes-ativo.ts:288`); o código entra no estado inicial (`src/components/formularios/editar-ativo.tsx:73`), mas não é enviado. Salvar qualquer edição desse ativo grava o conjunto sem `previdencia`, e o indicador já foi anulado pela conversão: a anotação some sem erro. O "Ver detalhes" antigo também esconde o código, porque `conjuntoLegivel` filtra pelo catálogo antes de buscar o rótulo (`src/lib/telas/detalhes-ativo.ts:330-331`): `{previdencia}` vira texto vazio, e `{fundo, previdencia}` vira "Fundo". A afirmação "A aplicação em produção continua funcionando" (E-2, passo 1) vale para as assinaturas, não para os dados. (b) Entre o deploy da tela nova e a fase B, a tela envia `p_previdencia` nulo e `editar_ativo_com_nome` grava `previdencia = p_previdencia` sem condição (`supabase/migrations/20261027220000_metadados_nome_ativo.sql:79`, chamada por `editar_ativo_com_atributos` na `20261031000721`, linhas 218-219). Uma sobra "Sim" gravada pela tela antiga é apagada na primeira edição e não chega à fase B. O ensaio previsto ("uma sobra gravada pela função antiga entre as fases") não cobre esse caminho | Reordenar ou proteger a transição de modo que nenhuma tela grave por cima de uma informação que ela não mostra. Por exemplo, a fase A só amplia o catálogo, sem converter; a tela nova trata `previdencia = true` como "Previdência (PGBL ou VGBL)" já marcada no veículo (edição, resumo e filtro) até a fase B; e a fase B converte e congela a coluna. Outra forma aceitável precisa ter testes dos dois caminhos acima. A escolha muda a especificação de E-2 e precisa de revisão |
+| R5-2 | Ressalva | **A fase B quebra chamadas e testes que ainda gravam o indicador, e a especificação não prevê isso.** Com `check (previdencia is null)`, toda chamada com `p_previdencia` não nulo, inclusive `false`, falha por violação de restrição (23514) em `cadastrar_ativo_taxonomia`, `editar_ativo_com_nome`, `editar_detalhes_ativo_taxonomia` e nas duas funções novas, que repassam o parâmetro (`20261031000721`, linhas 194-195 e 218-219). A suíte existente grava valores não nulos: `supabase/tests/database/12_atributos_ativos.test.sql:89-95` (`true`), `08_metadados_ativos.test.sql:93`, `:140` (`false, true, true, false`) e `:195`, além do e2e `tests/e2e/ativos-consulta.spec.ts:50` (`p_previdencia: true`) e `:193` (`/ativos?previdencia=sim`). Como a fase B vai na PR da tela, o CI de banco dessa PR falha se esses testes não mudarem. Testes não são migrações, então podem ser ajustados sem violar G4 | Declarar o comportamento esperado depois da fase B (recusa pelo banco, com teste, para funções antigas e novas; mensagem da aplicação, se houver) e listar o ajuste dos testes pgTAP e e2e que gravam ou filtram o indicador na mesma PR da migração. Considerar `lock table` antes da conversão da fase B, para que uma gravação concorrente não faça a validação da restrição falhar no meio da ação externa |
+| R5-3 | Ressalva | **Os casos da conversão de D18 não estão enumerados.** A tabela é idempotente: depois da conversão, `previdencia` fica nula e a condição deixa de valer. Ela respeita a exclusividade de `nao_aplicavel`, que sai junto com `plano_contrato`, e preserva a forma canônica. O trânsito não é afetado, porque a restrição `ativos_transito_sem_detalhes_check` já exige `previdencia` nula (`20261031000721`, linhas 126-131). Mas o texto dos testes cita só as três linhas da tabela. Não diz que os ativos desativados são convertidos (a restrição da fase B exige isso) nem cobre a combinação com outro veículo (`{fundo, plano_contrato}` vira `{fundo, previdencia}`), com `{nao_aplicavel}`, com conjunto vazio e a reexecução sobre um conjunto que já tenha `previdencia` | Enumerar esses casos nos testes e no ensaio, com ativo desativado, e pôr a guarda de forma canônica depois da conversão, junto com a conferência de que não restou nenhum `previdencia = true` |
+| R5-4 | Ressalva | **Trechos normativos superados por D13 a D18 continuam sem anotação, e alguns contradizem a emenda.** A emenda anotou D12 e a célula da P3, mas não: o parágrafo da P3 "Nenhuma equivalência de conversão será aplicada..." (linha 155); Escopo, "Preservação dos quatro indicadores" (linha 69); Riscos, "não preencher novos campos por equivalência, não apagar dados" (linha 397); P5, "estados exclusivos da P1 mantêm a exclusividade nos filtros" (linha 170, alterada por D16) e "Informar separadamente quantidade de resultados na aba corrente" (linha 175, retirada por D15); P6, checkboxes em `fieldset` e "Sem novo componente complexo de multiselect" (linha 195, D14), e a frase de D9 no resumo (linha 201, D17); critérios do Item 2 (linha 340, agrupamento) e do Item 3 (linha 353, "filtros ativos e Limpar são visíveis com painel fechado"; D15 deixa só um contador). Os dois critérios ainda valem para a #174, que fica aberta até a verificação, e o corpo da issue no GitHub mantém o texto antigo. Também ficaram desatualizados o cabeçalho "Aprovação humana pós-revisão" (que se refere à v4), a abertura de "Revisão crítica" ("Concluída. As quatro rodadas..."), "Dependências e blockers" ("Para aprovação: atendido"), "Sequência recomendada" e o bloco "Próximo passo" da task da #174, já `Concluída`, que repete a situação do ciclo e vai envelhecer. A task adia a conferência dos checks, mas eles podem ser verificados agora: a PR #178 e o commit `8cba4ac` em `main` têm todos os checks com sucesso (conferido por `gh` nesta revisão) | Anotar no lugar cada trecho substituído, como fez com D12 e a P3 e como no precedente do ciclo `010` ("anotados no lugar"). Dizer quais critérios da #174 são substituídos por D15/D18 e como o encerramento os verifica. Registrar a evidência dos checks na task |
+| R5-5 | Ressalva | **E-1 deixa lacunas de especificação na tela.** (a) Âncora: o GET preserva o fragmento da `action` (só a consulta é substituída) e `#ativos-da-aba` existe (`src/app/(app)/ativos/page.tsx:270`), então a página volta posicionada nos resultados. Com erro de filtro, porém, a seção fica vazia (`page.tsx:232-236`) e o painel abre acima da âncora; no celular, a página pode rolar para além da mensagem de erro, hoje um `role="alert"` fora da seção (`src/components/ativos-consulta.tsx:168-171`). (b) A lista suspensa é viável sem JavaScript, e as caixas dentro de um `<details>` fechado continuam sendo enviadas. Falta dizer se o `legend` fica fora do `<details>`, para o nome do campo continuar visível com a lista fechada; qual é o nome acessível do `summary` (ex.: "Veículo de acesso: Fundo, ETF"); que, sem JavaScript, o texto do `summary` só mostra o estado carregado; e, se "fechar ao clicar fora" for implementado, que Escape também feche e o foco volte ao `summary`. (c) O contador de D15 não define se conta atributos filtrados ou opções marcadas (dois veículos contam 1 ou 2). (d) "Opções em uso" é determinístico: a união dos códigos dos ativos comuns das duas abas, mais "Não informado" e as opções marcadas na URL. Falta só fixar a ordem de catálogo | Fixar (a) onde o erro aparece em relação à âncora; (b) a estrutura e os nomes acessíveis; (c) a regra do contador; (d) a ordem |
+| R5-6 | Ressalva | **A decomposição deixa ambíguas a ação externa da fase B e a branch documental.** A issue de banco "fica aberta até a fase B", mas a migração da fase B vai na PR da issue de tela, e a tabela não diz em qual issue a frase "concluí a ação externa da issue #N" da fase B é dita, nem qual roteiro da KB-002 é usado. A branch `chore/cycle-017-emendas` não está na lista fechada de nomes documentais (`_project/README.md`, seção "Branches, commits e migrações": `chore/cycle-NNN-ideation`, `-plan` ou `-closure`) e não há justificativa registrada | Atribuir a fase B a uma issue (migração, roteiro, ação externa e fechamento) e justificar ou ajustar o nome da branch |
+| R5-7 | Ressalva | **A governança não tem a transição usada.** Emendar um plano `Em Execução`, com issues e migrações novas, não está entre as transições canônicas (`_project/README.md`, "Transições canônicas do plano": "Transições não listadas exigem decisão explícita e correção da governança"). A entrada de `revisar_plano` pede plano `Rascunho` ou `Em Revisão` ainda não aprovado. O validador exige veredito apto no cabeçalho de um plano `Em Execução` com "Aprovada em" (`scripts/validate-governance.mjs:436-447`), por isso o veredito desta rodada fica registrado depois do da Rodada 4. E esta é a quinta rodada, o teto (`maxReviewRounds: 5`). A frase de autorização da emenda é humana e explícita, e esta revisão foi feita por instrução expressa. Ainda assim, o caminho para revisar e aprovar uma v6 não existe sem decisão do responsável | Ver "Pergunta ao responsável" |
+
+Os achados anteriores (R1 a R4) não reapareceram: as emendas são escopo novo, posterior à aprovação da v4. A regra de progresso não pode ser aplicada porque não haverá Rodada 6.
+
+#### Itens atendidos e evidências
+
+- **Pergunta 1 (catálogo):** inserir `previdencia` entre `etf` e `plano_contrato` mantém canônicos todos os conjuntos gravados. `private.canonizar_conjunto` ordena pela posição no catálogo e só recusa código fora dele ou exclusivo combinado (`20261031000721`, linhas 14-43), e a ordem relativa dos códigos atuais não muda. O PostgreSQL não revalida `ativos_veiculos_acesso_check` (linhas 118-119) quando a função é redefinida, então a conferência explícita na migração é o mecanismo certo e basta, desde que rode também depois da conversão (R5-3). Nenhum índice ou outra restrição usa a função. Os gatilhos de marca não observam `veiculos_acesso` nem `previdencia` (`20261027220000`, linha 24; `20261026204955`, linha 154), então a conversão não altera a marca, e o retrato integral do ensaio pode exigir igualdade também em `profiles`.
+- **Pergunta 2 (conversão):** idempotente, respeita a exclusividade, mantém a forma canônica e não toca o trânsito (ver R5-3 para os casos que faltam enumerar). A remoção de `plano_contrato` mesmo junto de outro veículo é regra da tabela que o responsável confirmou ("Está certa a tabela"); não é inferência do autor.
+- **Pergunta 3 (duas fases):** ver R5-1 e R5-2.
+- **Pergunta 5 (D16 no filtro):** é coerente com OU dentro do atributo. Hoje `conjunto` trata como exclusivos, além de `nao_informado`, os códigos exclusivos do catálogo (`src/lib/telas/filtros-ativos.ts:79-87`, linha 83). A tela nova precisa passar só `nao_informado` como exclusivo. O parâmetro `previdencia` de uma URL antiga é ignorado, como já acontece com qualquer nome desconhecido (`lerFiltros` só lê nomes conhecidos, linhas 111-128). Falta só a anotação na P5 (R5-4).
+- **Pergunta 7 (preservação):** pelo `git diff`, o autor alterou só o cabeçalho (versão, campo Emendas e os campos de revisão), a origem de D12, a célula Previdência da P3, a linha de PRs em Rastreabilidade (#178 integrada), o bloco "Próximo passo" e o handoff novo. O handoff anterior foi preservado sob "Histórico — handoff anterior", e a seção das emendas é acréscimo. Rodadas 1 a 4, respostas, registros de aprovação e handoffs históricos estão intactos. Na task, mudaram estado, integração, a linha de checks remotos, o "Registro da integração e das emendas", o bloco e uma linha de reconciliação no handoff.
+- **Estado externo conferido por `gh`:** PR #178 `MERGED` em `8cba4ac2dadc825057af777456530a9cbc66da6c`; #172 e #174 abertas; PR #176 (release 0.13.0) aberta; nenhuma outra PR aberta.
+- **Barreiras:** G1 não se aplica, porque nenhuma regra financeira lê `previdencia` ou `veiculos_acesso` (KB-004, seção 4.1; os únicos usos em `src/lib/telas/analises-inicio.test.ts` e nos e2e do Início são fixtures com valor nulo). G2 está declarada para a conversão em massa e as funções. G3: somente exemplos fictícios. G4: duas migrações novas, sem editar a `20261031000721`.
+- **Limites desta conferência:** as decisões D13 a D18, as frases citadas na emenda e o relato de que o responsável integrou a PR #178 sem a frase no chat vêm de uma conversa a que este revisor não teve acesso. Confirmar que foram ditas é item manual. Nada em `local/` foi lido. O comportamento do navegador com a âncora e com `<details>` foi avaliado pela especificação do HTML, sem executar a aplicação. Nenhum teste de aplicação ou de banco foi executado, porque não há código novo. O revisor e o autor usam o mesmo modelo, e só a sessão é separada.
+
+#### Pergunta ao responsável
+
+R5-1 é bloqueador e não pode haver Rodada 6 (R5-7). Como você quer seguir com as emendas E-1 e E-2? Alternativas sem recomendação de regra financeira, porque nenhuma está envolvida:
+
+- **(a) Ciclo novo.** Levar as emendas a um ciclo novo de nível completo, com D13 a D18 e os achados R5-1 a R5-7 como insumo e revisão formal própria. O 017 segue para a verificação em produção e o encerramento com a tela já entregue e o roteiro VA atual da KB-002.
+- **(b) Outra via de governança definida por você**, por exemplo mudar a regra de emendas ou o teto de rodadas. Mudar as regras de governança é, por si só, trabalho de ciclo completo.
+
+Enquanto não houver resposta, nenhuma issue, PR, migração ou alteração de tela das emendas está autorizada. A v4 aprovada continua valendo para o que já foi entregue.
+
+#### Handoff da revisão
+
+- `handoff_schema_version: 2`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 017 + revisar_plano + 017_plan/rodada-5 + v5`
+- `effect_class`: `local_mutation`
+- `state_before`: plano v5 `Em Execução` (v4 aprovada e entregue); emendas E-1 e E-2 registradas sem commit na branch `chore/cycle-017-emendas`; Aguardando revisão (rodada 5).
+- `state_after`: Rodada 5 registrada com `REQUER NOVA RODADA` (um bloqueador, seis ressalvas); campos "Revisão formal" e "Veredito da revisão" atualizados; teto de rodadas atingido; situação Parado, com a pergunta registrada acima. Nenhuma outra parte do plano, da task ou do código foi alterada; nenhum commit, push, issue ou PR.
+- `result`: `executed`
+- `evidence`: inspeção somente leitura da migração `20261031000721`, da `20261027220000`, de `detalhes-ativo.ts`, `filtros-ativos.ts`, `detalhes-ativo.tsx`, `editar-ativo.tsx`, `ativos-consulta.tsx`, `page.tsx`, dos testes pgTAP 08 e 12, do e2e `ativos-consulta.spec.ts`, da KB-002 (VA5/VA6), da KB-003, da KB-004 e do DESIGN.md 6.7, 6.8 e 6.12; `gh` para as PRs #178 e #176, as issues abertas e os checks de `8cba4ac`; `git diff` do plano e da task. Gates depois da gravação, em 2026-10-30: `node --test scripts/validate-governance.test.mjs` com 48/48; `node scripts/validate-governance.mjs` com 0 erros, 0 avisos e 5 itens manuais; `git diff --check` sem saída (passou).
+- `blockers`: R5-1 (bloqueador) e a decisão do responsável sobre a via de continuidade (R5-7), registrada em "Pergunta ao responsável".
+
+### Decisão do responsável após a Rodada 5 — 2026-10-30
+
+À pergunta registrada na Rodada 5, o responsável escolheu a alternativa (a) e respondeu: "Sim, ciclo 018". Efeitos:
+
+- As emendas E-1 e E-2 **não são adotadas no ciclo 017**. A seção "Emendas E-1 e E-2" e a Rodada 5 ficam como registro histórico da proposta e do parecer. A v4 aprovada continua sendo o escopo do 017, já entregue nas PRs #175, #177 e #178; os trechos da v4 que as emendas substituiriam (P3, P5, P6, Escopo, Riscos e os critérios dos Itens 2 e 3) continuam valendo para o 017, e por isso não foram anotados como substituídos.
+- O ciclo 017 segue para a verificação em produção com o roteiro VA1 a VA8 da KB-002, que descreve a tela entregue, depois para a release 0.13.0 (PR #176) e o encerramento prospectivo, cada um com aprovação própria.
+- O trabalho das emendas vai para o **ciclo 018**, de nível completo, que começa pela triagem e pela própria frase de entrada, com ideação, plano e revisão formal próprios. Insumos registrados para a ideação: D13 a D18 (decididas pelo responsável nesta conversa), os achados R5-1 a R5-7 e duas formas de fechar R5-1 a avaliar lá: (1) a do revisor, em que a fase A só amplia o catálogo, a tela nova trata `previdencia = true` como "Previdência (PGBL ou VGBL)" já marcada no veículo até a fase B, e a fase B converte e congela a coluna; (2) a do autor, depois do parecer, em que a tela nova vai primeiro, já conhece o código `previdencia`, esconde o indicador e devolve à função o valor gravado sem alterá-lo, e uma migração única, aplicada depois do deploy, amplia o catálogo, converte pela tabela de D18 e congela a coluna. Nenhuma das duas está decidida.
+- Correção registrada pelo autor: na conversa, ele disse que o "Ver detalhes" atual daria erro com o código novo; o parecer está certo, o código é escondido em silêncio (`conjuntoLegivel` filtra pelo catálogo antes do rótulo). O bloqueador R5-1 continua o mesmo.
+- R5-6: a branch local passou de `chore/cycle-017-emendas` a `chore/cycle-017-closure`, o nome previsto, e estes registros seguem na PR de encerramento.
+- R5-4, checks da #178: conferidos por `gh pr checks 178` em 2026-10-30, todos com sucesso (governança; lint, tipos, testes, build e e2e de preview; Supabase local, testes de banco e e2e autenticado; Vercel).
+
 ## Pós-mortem
 
-- **Data de conclusão:** —
-- **Desvios:** —
-- **Lições comprovadas:** —
+- **Data de conclusão:** 2026-10-31, prospectiva até o merge da PR de encerramento.
+- **Entregas e evidências:** v4 aprovada entregue pelas PRs #175, #177 e #178; ação externa da #172 relatada em 2026-10-30; VA1 a VA8 relatados como "todos passaram"; release v0.13.0 publicada em 2026-10-31 às 04:02:15 UTC pela PR #176. Detalhes e gates em `017_task_closure.md`.
+- **Desvios:** as emendas E-1/E-2 da v5 não foram adotadas depois do parecer da Rodada 5 e seguem em ciclo próprio por decisão humana; o encerramento abrange a v4 aprovada. Nenhuma migração ou conversão dessas emendas foi executada.
+- **Lições comprovadas:** na revisão da compatibilidade de catálogos, além da assinatura da RPC, conferir se a aplicação anterior exibe e devolve os códigos ao salvar; a inspeção da Rodada 5 comprovou o descarte de códigos desconhecidos no fluxo proposto. Não houve perda de dados em produção verificada ou relatada.
