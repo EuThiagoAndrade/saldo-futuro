@@ -2,13 +2,13 @@
 
 > **Ciclo:** `017`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#173`
 > **Plano:** `_project/drafts/017_atributos_complementares_ativos/017_plan.md`
 > **Branch:** `feature/issue-173`
 > **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/177
-> **Integração:** `Pendente`
+> **Integração:** PR #177 integrada por squash pelo responsável (`e58f02dde56229c84996d0803bdb5a32ef96b078`) em 2026-10-30, com todos os checks verdes; issue #173 fechada pela PR (`Closes #173`)
 > **Autorização inicial:** "Autorizo a implementação da issue #173" em 2026-10-30
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-30
@@ -58,7 +58,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 | Testes | Unitários 487/487; lint sem erros (3 avisos preexistentes em `local/`); typecheck e build passaram; banco 640/640 (sem migração nova); e2e sobre o build com o Supabase local e dois workers: 227 passed e 12 skipped (preview sem backend), saída 0. O arquivo `ativos-detalhes.spec.ts` sozinho: 19/19, com os cinco testes novos (cadastro e reabertura com atributos, recusa que preserva o preenchimento, servidor que recusa o formulário adulterado e acessibilidade com "Mais detalhes" aberto em 360 e 1280 px) |
 | Validador | 48/48 testes de governança; validador sem erros depois do registro do número da PR |
 | `git diff --check` | Passou |
-| Checks remotos | Em execução na PR #177 |
+| Checks remotos | Verdes na PR #177 antes do merge: governança; lint, tipos, testes, build e e2e de preview; Supabase local, testes de banco e e2e autenticado; Vercel |
 
 ## Revisão da correção
 
@@ -77,14 +77,20 @@ Não se aplica — trilha normal.
 
 Não se aplica — ciclo completo; encerramento em PR própria.
 
+## Registro da integração
+
+O responsável integrou a PR #177 em 2026-10-30, depois dos checks verdes, sem a frase de aprovação registrada no chat; o agente não fez esse merge. Conferido no GitHub: assunto do squash `feat(issue-173): …`, corpo com `Closes #173` e sem referência à #172, que continua aberta; a PR de release #176 não vincula nenhuma issue para fechamento. Com isso, a dependência da #174 (formulários integrados) ficou atendida.
+
 ## Próximo passo
+
+Esta task está concluída; a autorização da #174 foi recebida e a execução segue em `017_task_issue-174.md`.
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 017 (completo)
+Situação: Aguardando autorização de implementação — ciclo 017 (completo)
 Quem: Responsável
-Conferir: Checks e diff da [PR #177](https://github.com/EuThiagoAndrade/saldo-futuro/pull/177); esta task
-Diga: "aprovo o merge da PR #177"
+Conferir: Issue [#174](https://github.com/EuThiagoAndrade/saldo-futuro/issues/174) e escopo do Item 3 do plano
+Diga: "autorizo a implementação da issue #174"
 ```
 
 ## Handoff de saída
@@ -97,3 +103,4 @@ Diga: "aprovo o merge da PR #177"
 - `result`: `executed`
 - `evidence`: tabela de evidências acima.
 - `blockers`: nenhum para publicar; o merge depende de checks verdes e de aprovação própria.
+- Reconciliação (2026-10-30): PR #177 integrada (`e58f02dde56229c84996d0803bdb5a32ef96b078`) e #173 fechada; registro local, publicado com a branch da issue #174.

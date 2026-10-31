@@ -309,3 +309,54 @@ export function lerNome(dados: FormData): { erro: string } | { nome: string } {
 export function valorDoIndicador(valor: boolean | null): "sim" | "nao" | "" {
   return valor === true ? "sim" : valor === false ? "nao" : "";
 }
+
+// Resumo "Ver detalhes" da página Ativos (ciclo 017, issue #174, P6): os cinco atributos e os quatro
+// indicadores, na ordem dos grupos do formulário, com "Não informado" explícito. Conjuntos na ordem
+// do catálogo. Um código fora do catálogo é erro de leitura, nunca vira ausência.
+
+export interface ItemResumo {
+  rotulo: string;
+  valor: string;
+}
+
+const NAO_INFORMADO = "Não informado";
+
+function rotuloDe(catalogo: readonly OpcaoAtributo[], codigo: string): string {
+  const opcao = catalogo.find((o) => o.codigo === codigo);
+  if (!opcao) throw new Error(`código de atributo desconhecido: ${codigo}`);
+  return opcao.rotulo;
+}
+
+const conjuntoLegivel = (catalogo: readonly OpcaoAtributo[], valores: readonly string[]) =>
+  valores.length === 0 ? NAO_INFORMADO : codigos(catalogo).filter((c) => valores.includes(c)).map((c) => rotuloDe(catalogo, c)).join(", ");
+
+const escolhaLegivel = (catalogo: readonly OpcaoAtributo[], valor: string | null) => (valor === null ? NAO_INFORMADO : rotuloDe(catalogo, valor));
+
+const indicadorLegivel = (valor: boolean | null) => (valor === true ? "Sim" : valor === false ? "Não" : NAO_INFORMADO);
+
+/** Prazo como foi informado: número e unidade ("0 dias úteis", "1 dia corrido") ou a situação; nada é convertido. */
+export function prazoLegivel(a: Pick<AtributosAtivo, "prazo_resgate_tipo" | "prazo_resgate_dias" | "prazo_resgate_unidade">): string {
+  if (a.prazo_resgate_tipo === null) return NAO_INFORMADO;
+  if (a.prazo_resgate_tipo !== "prazo") return rotuloDe(SITUACOES_PRAZO, a.prazo_resgate_tipo);
+  const dias = a.prazo_resgate_dias;
+  const unidade = a.prazo_resgate_unidade;
+  if (dias === null || unidade === null) throw new Error("prazo sem dias ou unidade");
+  const uteis = unidade === "uteis";
+  if (!uteis && unidade !== "corridos") throw new Error(`unidade desconhecida: ${unidade}`);
+  const palavra = dias === 1 ? (uteis ? "dia útil" : "dia corrido") : uteis ? "dias úteis" : "dias corridos";
+  return `${dias.toLocaleString("pt-BR")} ${palavra}`;
+}
+
+export function resumoDosAtributos(a: AtributosAtivo & Record<ColunaIndicador, boolean | null>): ItemResumo[] {
+  return [
+    { rotulo: "Veículo de acesso", valor: conjuntoLegivel(VEICULOS_ACESSO, a.veiculos_acesso) },
+    { rotulo: "Previdência", valor: indicadorLegivel(a.previdencia) },
+    { rotulo: "Indexador da remuneração", valor: conjuntoLegivel(INDEXADORES_REMUNERACAO, a.indexadores_remuneracao) },
+    { rotulo: "Exposição cambial", valor: indicadorLegivel(a.exposicao_cambial) },
+    { rotulo: "Regime tributário", valor: escolhaLegivel(REGIMES_TRIBUTARIOS, a.regime_tributario) },
+    { rotulo: "Isento de IR", valor: indicadorLegivel(a.isento_ir) },
+    { rotulo: "Prazo para resgate ou venda", valor: prazoLegivel(a) },
+    { rotulo: "Liquidez imediata (reserva)", valor: indicadorLegivel(a.liquidez_imediata) },
+    { rotulo: "Cobertura do FGC", valor: escolhaLegivel(COBERTURAS_FGC, a.cobertura_fgc) },
+  ];
+}

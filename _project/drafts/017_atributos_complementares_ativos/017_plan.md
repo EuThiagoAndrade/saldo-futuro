@@ -16,6 +16,7 @@
 > **Modo contínuo:** `—`
 > **Autorização de implementação da unidade Banco:** "autorizo a implementação da issue #172" em 2026-10-30; recebida; execução iniciada na branch `feature/issue-172`, task `017_task_issue-172.md`.
 > **Autorização de implementação da unidade Formulários:** "Autorizo a implementação da issue #173" em 2026-10-30; recebida depois da ação externa da #172 relatada pelo responsável; execução iniciada na branch `feature/issue-173`, task `017_task_issue-173.md`.
+> **Autorização de implementação da unidade Consulta:** "autorizo a implementação da issue #174" em 2026-10-30; recebida depois da integração da PR #177; execução iniciada na branch `feature/issue-174`, task `017_task_issue-174.md`.
 > **Revisão formal:** `Concluída`
 > **Veredito da revisão:** `APTO PARA APROVAÇÃO`
 > **Aprovação humana pós-revisão:** `Aprovada em 2026-10-30`
@@ -314,7 +315,7 @@ Artefatos do ciclo: este plano; tasks por issue após numeração real; evidênc
 
 ## Decomposição em issues e PRs
 
-As issues [#172](https://github.com/EuThiagoAndrade/saldo-futuro/issues/172), [#173](https://github.com/EuThiagoAndrade/saldo-futuro/issues/173) e [#174](https://github.com/EuThiagoAndrade/saldo-futuro/issues/174) foram criadas após a integração da [PR #171](https://github.com/EuThiagoAndrade/saldo-futuro/pull/171) e a confirmação dos payloads em 2026-10-30. Os corpos efetivos foram publicados conforme o formulário `.github/ISSUE_TEMPLATE/feature_request.yml` e estão registrados em "Registro de criação das issues". A unidade Banco (#172) foi integrada pela PR #175, com a ação externa relatada; a unidade Formulários (#173) foi autorizada e iniciada; #174 continua sem autorização.
+As issues [#172](https://github.com/EuThiagoAndrade/saldo-futuro/issues/172), [#173](https://github.com/EuThiagoAndrade/saldo-futuro/issues/173) e [#174](https://github.com/EuThiagoAndrade/saldo-futuro/issues/174) foram criadas após a integração da [PR #171](https://github.com/EuThiagoAndrade/saldo-futuro/pull/171) e a confirmação dos payloads em 2026-10-30. Os corpos efetivos foram publicados conforme o formulário `.github/ISSUE_TEMPLATE/feature_request.yml` e estão registrados em "Registro de criação das issues". A unidade Banco (#172) foi integrada pela PR #175, com a ação externa relatada; a unidade Formulários (#173) foi integrada pela PR #177; a unidade Consulta (#174) foi autorizada e iniciada.
 
 | Unidade | Issue e título | Conteúdo/PR | Dependência e fechamento |
 | :-- | :-- | :-- | :-- |
@@ -371,8 +372,8 @@ Roteiro de verificação em produção, após autorização: responsável confer
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | [#172](https://github.com/EuThiagoAndrade/saldo-futuro/issues/172), [#173](https://github.com/EuThiagoAndrade/saldo-futuro/issues/173) e [#174](https://github.com/EuThiagoAndrade/saldo-futuro/issues/174) |
-| PR(s) | [#171 — publicação documental da ideação/plano/registro do ciclo](https://github.com/EuThiagoAndrade/saldo-futuro/pull/171), integrada em `main` (`a28f22667d67ddaf80e35ab7af201ae1d4a84a53`); [#175 — unidade Banco, issue #172](https://github.com/EuThiagoAndrade/saldo-futuro/pull/175), integrada em `main` (`030a0251b876f56a54a018225644bd51acaca878`); ação externa relatada pelo responsável em 2026-10-30; [#177 — unidade Formulários, issue #173](https://github.com/EuThiagoAndrade/saldo-futuro/pull/177), aberta |
-| Branch(es) | `chore/cycle-017-plan` — publicação documental da ideação/plano/registro do ciclo; `feature/issue-172` — unidade Banco, task `017_task_issue-172.md`; `feature/issue-173` — unidade Formulários, task `017_task_issue-173.md` |
+| PR(s) | [#171 — publicação documental da ideação/plano/registro do ciclo](https://github.com/EuThiagoAndrade/saldo-futuro/pull/171), integrada em `main` (`a28f22667d67ddaf80e35ab7af201ae1d4a84a53`); [#175 — unidade Banco, issue #172](https://github.com/EuThiagoAndrade/saldo-futuro/pull/175), integrada em `main` (`030a0251b876f56a54a018225644bd51acaca878`); ação externa relatada pelo responsável em 2026-10-30; [#177 — unidade Formulários, issue #173](https://github.com/EuThiagoAndrade/saldo-futuro/pull/177), integrada em `main` (`e58f02dde56229c84996d0803bdb5a32ef96b078`); [#178 — unidade Consulta, issue #174](https://github.com/EuThiagoAndrade/saldo-futuro/pull/178), aberta |
+| Branch(es) | `chore/cycle-017-plan` — publicação documental da ideação/plano/registro do ciclo; `feature/issue-172` — unidade Banco, task `017_task_issue-172.md`; `feature/issue-173` — unidade Formulários, task `017_task_issue-173.md`; `feature/issue-174` — unidade Consulta, task `017_task_issue-174.md` |
 | Destino após conclusão | `_project/executed/017_atributos_complementares_ativos/017_plan.md` |
 
 ## Próximo passo
@@ -381,8 +382,8 @@ Roteiro de verificação em produção, após autorização: responsável confer
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 017 (completo)
 Quem: Responsável
-Conferir: Checks e diff da [PR #177](https://github.com/EuThiagoAndrade/saldo-futuro/pull/177); task 017_task_issue-173.md
-Diga: "aprovo o merge da PR #177"
+Conferir: Checks e diff da [PR #178](https://github.com/EuThiagoAndrade/saldo-futuro/pull/178); task 017_task_issue-174.md
+Diga: "aprovo o merge da PR #178"
 ```
 
 ## Handoff de saída

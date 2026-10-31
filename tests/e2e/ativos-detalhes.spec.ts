@@ -294,7 +294,8 @@ test.describe("detalhes dos ativos (#128)", () => {
     await page.setViewportSize(DESKTOP);
     await page.goto("/ativos");
     const linha = (nome: string): Locator => page.getByRole("row").filter({ hasText: nome });
-    await expect(linha("CDB fictício").getByRole("cell")).toHaveText(["CDB fictício", "Rendimento", "CDB", "Banco Exemplo", /Editar/]);
+    // A célula Nome também guarda o resumo "Ver detalhes" (ciclo 017, issue #174), sem coluna nova.
+    await expect(linha("CDB fictício").getByRole("cell")).toHaveText([/^CDB fictícioVer detalhes/, "Rendimento", "CDB", "Banco Exemplo", /Editar/]);
     await expect(linha("Previdência fictícia").getByRole("cell").nth(2)).toHaveText("Ouro");
     await expect(linha("Previdência fictícia").getByRole("cell").nth(3)).toHaveText("—");
     const largura = await page.evaluate(() => ({ cliente: document.documentElement.clientWidth, rolagem: document.documentElement.scrollWidth }));
