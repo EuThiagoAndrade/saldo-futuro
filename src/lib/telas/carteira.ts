@@ -131,6 +131,12 @@ const MENSAGENS: Record<string, string> = {
   instituicao_inexistente: "Instituição não encontrada.",
   taxonomia_inexistente: "Classe não encontrada. Escolha uma da lista.",
   referencia_dupla: "Escolha uma opção da lista ou cadastre uma nova, não as duas.",
+  // Atributos complementares do ativo (ciclo 017): o banco confere catálogo, exclusividade e prazo.
+  veiculos_acesso: "Confira os veículos de acesso: escolha da lista, e Não se aplica sozinho.",
+  indexadores_remuneracao: "Confira os indexadores: escolha da lista, e Prefixado (sem indexador) ou Não se aplica sozinhos.",
+  regime_tributario: "Escolha um regime tributário da lista.",
+  prazo_resgate: "Confira o prazo: Prazo em dias pede dias inteiros e unidade; as outras situações não levam dias.",
+  cobertura_fgc: "Escolha Sim, Não, Não se aplica ou Não informado na cobertura do FGC.",
   // Fechamento (KB-004, seção 5).
   pendencia: "Informe o saldo real de todos os ativos do mês, mesmo que igual ao calculado.",
   identidade: "Os saldos não fecham com os lançamentos do mês. Confira os valores e tente de novo.",

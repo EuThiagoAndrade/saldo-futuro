@@ -2,13 +2,13 @@
 
 > **Ciclo:** `017`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#172`
 > **Plano:** `_project/drafts/017_atributos_complementares_ativos/017_plan.md`
 > **Branch:** `feature/issue-172`
 > **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/175
-> **Integração:** `Pendente`
+> **Integração:** PR #175 integrada por squash (`030a0251b876f56a54a018225644bd51acaca878`) em 2026-10-30, com todos os checks verdes; ação externa concluída, conforme o relato do responsável em 2026-10-30; issue #172 aberta até o encerramento do ciclo
 > **Autorização inicial:** "autorizo a implementação da issue #172" em 2026-10-30
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-30
@@ -64,7 +64,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 | Upgrade | Instância descartável `saldo-futuro-issue172-upgrade` (portas 553xx) com as migrações até `20261027220000`: `e1_pre.sql` → `f|f`; `upgrade_pre.sql` (usuário, instituição, classe, indicadores, aporte, fechamento e ativo desativado fictícios) → retrato guardado; migração nova aplicada; `upgrade_post.sql` → "retrato integral preservado e atributos vazios", função anterior preserva atributos gravados pela nova (`t`), APIs anterior e nova disponíveis (`t|t`); `e1_post.sql` → `t|t|t|t|f`. Reexecutar `upgrade_post.sql` depois das edições reprova com "retrato financeiro/descritivo divergente", o que prova que a comparação detecta diferença |
 | Validador | 48/48 testes de governança; validador com 0 erros, 0 avisos e 5 itens manuais conferidos |
 | `git diff --check` | Passou |
-| Checks remotos | Em execução na PR #175 |
+| Checks remotos | Verdes na PR #175 antes do merge: governança; lint, tipos, testes, build e e2e de preview; Supabase local, testes de banco e e2e autenticado; Vercel |
 
 ## Revisão da correção
 
@@ -83,6 +83,12 @@ Não se aplica — trilha normal.
 
 Está em KB-002, "Atributos complementares dos ativos (ciclo 017)", passos AC1 a AC7: conferir `main`; `migration list` e `db push --dry-run` com só esta migração pendente; `e1_pre.sql` (falsos); `db push`; `e1_post.sql` (quatro verdadeiros e `anon_funcoes_novas` falso); abrir `/ativos` e a edição sem salvar; relatar só os resultados estruturais com "concluí a ação externa da issue #172". Não executar `upgrade_pre.sql`/`upgrade_post.sql` em produção. A issue #173 só pode publicar código que leia as colunas ou chame as funções novas depois dessa ação.
 
+## Registro da ação externa
+
+Merge aprovado em 2026-10-30 com "aprovo o merge da PR", dito logo depois da explicação da ordem merge → ação externa e quando a #175 era a única PR aberta; checks verdes e head `ea12e55` conferidos antes do squash. O assunto em `main` é `feat(issue-172): …`, sem palavra de fechamento; a PR de release #176 aberta pelo release-please não vincula a #172 para fechamento (`closingIssuesReferences` vazio, conferido em 2026-10-30).
+
+Em 2026-10-30, com a frase "concluí a ação externa da issue #172", o responsável relatou: AC2 com só `20261031000721_atributos_complementares_ativos.sql` pendente; AC3 (`e1_pre.sql`) `false`/`false`; AC4 aplicada sem erro e local/remoto alinhados; AC5 (`e1_post.sql`) `true`/`true`/`true`/`true`/`false` (colunas, restrições, funções novas e anteriores para `authenticated`; `anon` sem as novas); AC6 `/ativos` e a edição abrem normalmente, sem salvar. É relato humano: o agente não tem acesso ao banco de produção e não o conferiu. Nenhum dado de carteira foi consultado ou relatado; a preservação financeira continua provada só pelo ensaio local com fixtures fictícias. Com isso, a issue #173 pode ser autorizada.
+
 ## Ensaio local de upgrade — reprodução
 
 1. Criar `local/issue172-upgrade/supabase` só com `config.toml` (`project_id = "saldo-futuro-issue172-upgrade"`, portas 553xx) e as migrações anteriores a esta; sem seed, ambiente ou dados.
@@ -98,12 +104,14 @@ Não se aplica — ciclo completo; encerramento em PR própria depois da ação 
 
 ## Próximo passo
 
+Esta task está concluída; a ação externa foi relatada e o ciclo segue para a issue #173.
+
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 017 (completo)
+Situação: Aguardando autorização de implementação — ciclo 017 (completo)
 Quem: Responsável
-Conferir: Checks e diff da [PR #175](https://github.com/EuThiagoAndrade/saldo-futuro/pull/175); esta task
-Diga: "aprovo o merge da PR #175"
+Conferir: Issue [#173](https://github.com/EuThiagoAndrade/saldo-futuro/issues/173) e escopo do Item 2 do plano
+Diga: "autorizo a implementação da issue #173"
 ```
 
 ## Handoff de saída
@@ -116,3 +124,4 @@ Diga: "aprovo o merge da PR #175"
 - `result`: `executed`
 - `evidence`: tabela de evidências acima.
 - `blockers`: nenhum para publicar; o merge depende de checks verdes e de "aprovo o merge da PR #175". A ação externa é posterior ao merge.
+- Reconciliação (2026-10-30): PR #175 integrada (`030a0251b876f56a54a018225644bd51acaca878`); ação externa relatada pelo responsável e registrada acima; registro local, a publicar com a branch da issue #173.

@@ -6,7 +6,7 @@ tags:
   - referência
 author: "Thiago Andrade e Claude"
 module: "Regras financeiras"
-last_updated: "2026-10-27"
+last_updated: "2026-10-30"
 origin_cycle: "003"
 ---
 
@@ -69,6 +69,7 @@ Ela deliberadamente não decide:
 
 - Cada ativo pertence a um usuário e tem um atributo explícito de tipo de ajuste: `rendimento` ou `marcacao` (P9).
 - Desde o ciclo `012` (BL-009), o ativo pode ter atributos **só descritivos**: instituição, classe de alocação e os indicadores previdência, liquidez imediata, exposição cambial e isenção de IR (sim, não ou não informado). **Nenhuma regra desta KB os lê**: fechamento, consolidação, retorno, benchmarks e distribuição não mudam com eles. "Exposição cambial" é uma anotação e não se confunde com o evento `cambio`; "Isento de IR" também é só anotação, sem efeito fiscal no produto. O trânsito não tem nenhum desses atributos.
+- Desde o ciclo `017` (BL-015), o ativo também pode ter cinco atributos complementares, igualmente **só descritivos** e preenchidos pelo usuário: veículos de acesso, indexadores da remuneração, regime tributário, prazo informado para resgate ou venda (número inteiro de dias com unidade úteis ou corridos, ou uma situação sem número) e cobertura do FGC. **Nenhuma regra desta KB os lê**, e o produto não calcula com eles imposto, alíquota, data ou prazo de disponibilidade, conversão entre dias úteis e corridos, elegibilidade nem valor garantido pelo FGC. Os indexadores CDI, Selic, IPCA, IGP-M e INPC e a variação cambial são rótulos da remuneração declarada, não séries do catálogo de benchmarks nem insumo de comparação, e "Variação cambial" não preenche "Exposição cambial" nem gera evento `cambio`. O trânsito não tem nenhum desses atributos.
 - Cada usuário tem exatamente um ativo de sistema "Em trânsito", criado só pelas funções do banco (D3). Ele não tem tipo de ajuste.
 - Um ativo é desativado logicamente; nunca é apagado. Ativo desativado não recebe lançamentos novos nem entra nas pendências do fechamento. A desativação só é aceita com saldo calculado atual zero (o saldo final do último mês fechado mais os eventos posteriores), para que nenhum patrimônio fique fora da carteira.
 
@@ -1838,3 +1839,4 @@ Estas regras foram aprovadas no plano do ciclo `006` e implementadas na simulaç
 | 2026-10-23 | `012` | Issue #128 (BL-009): seção 4.1 registra os atributos descritivos do ativo (instituição, classe e indicadores) e que nenhuma regra desta KB os lê |
 | 2026-10-26 | `013` | Issue #139 (BL-014 e parcela de BL-009): alocação por classe macro na seção 15 (classificação atual, negativos por ativo antes de agrupar, empate de resto pela ordem fixa das oito linhas), convenção e casos CR-C01 a CR-C12 na seção 14 |
 | 2026-10-27 | `015` | Issue #152 (parcela de BL-009): análises por instituição e níveis de classe na seção 15 (instituição atual, fronteiras de profundidade 2 e 3 com resíduos, desempate pela ordem da árvore e por nome, duas bases de participação, Outros após o rateio), convenção e casos CR-015-01 a CR-015-16 na seção 14 |
+| 2026-10-30 | `017` | Issue #173 (BL-015): seção 4.1 registra os atributos complementares do ativo (veículos, indexadores, regime tributário, prazo informado e FGC) como só descritivos, sem cálculo fiscal, de prazo ou de garantia |

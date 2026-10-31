@@ -22,10 +22,11 @@ export async function criarAtivo(_estado: EstadoAcao, dados: FormData): Promise<
   if (!entrada.success) return { erro: entrada.error.issues[0].message };
   // Campos descritivos (ciclo 012, issue #128): a instituição nova é criada na mesma transação do
   // ativo (P-4). A classe é um nó da taxonomia global, só por ID (ciclo 013, issue #138): a função
-  // recusa um ID inexistente, e um texto sem seleção nem chega aqui.
+  // recusa um ID inexistente, e um texto sem seleção nem chega aqui. Os atributos complementares
+  // (ciclo 017, issue #173) vão na mesma chamada, todos explícitos: vazio é não informado.
   const detalhes = lerDetalhes(dados);
   if ("erro" in detalhes) return { erro: detalhes.erro };
-  const { error } = await supabase.rpc("cadastrar_ativo_taxonomia", {
+  const { error } = await supabase.rpc("cadastrar_ativo_com_atributos", {
     p_nome: entrada.data.nome,
     p_tipo_ajuste: entrada.data.tipoAjuste,
     ...detalhes.parametros,
@@ -48,8 +49,9 @@ export async function desativarAtivo(_estado: EstadoAcao, dados: FormData): Prom
 }
 
 // Edição do nome e dos campos descritivos (ciclo 012, issue #128; nome desde o ciclo 015, issue
-// #153), também de ativo desativado, numa única chamada transacional: uma recusa não grava parte
-// dos dados. O sucesso volta à aba de onde o ativo veio.
+// #153; atributos complementares desde o ciclo 017, issue #173), também de ativo desativado, numa
+// única chamada transacional: uma recusa não grava parte dos dados. O sucesso volta à aba de onde o
+// ativo veio.
 export async function editarAtivo(_estado: EstadoAcao, dados: FormData): Promise<EstadoAcao> {
   const { supabase } = await exigirSessao();
   const id = z.uuid().safeParse(dados.get("ativo"));
@@ -58,7 +60,7 @@ export async function editarAtivo(_estado: EstadoAcao, dados: FormData): Promise
   if ("erro" in nome) return { erro: nome.erro };
   const detalhes = lerDetalhes(dados);
   if ("erro" in detalhes) return { erro: detalhes.erro };
-  const { error } = await supabase.rpc("editar_ativo_com_nome", { p_ativo: id.data, p_nome: nome.nome, ...detalhes.parametros });
+  const { error } = await supabase.rpc("editar_ativo_com_atributos", { p_ativo: id.data, p_nome: nome.nome, ...detalhes.parametros });
   if (error) return { erro: mensagemDeRecusa(error) };
   revalidatePath("/", "layout");
   redirect(dados.get("aba") === "desativados" ? "/ativos?aba=desativados" : "/ativos");
