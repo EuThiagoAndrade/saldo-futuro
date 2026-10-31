@@ -202,7 +202,7 @@ Uma branch por issue (`feature/issue-N`), commit `feat(issue-N): ...`, task `018
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | [#182](https://github.com/EuThiagoAndrade/saldo-futuro/issues/182) e [#183](https://github.com/EuThiagoAndrade/saldo-futuro/issues/183) |
-| PR(s) | [#180 — publicação documental da ideação, do plano e do registro do ciclo](https://github.com/EuThiagoAndrade/saldo-futuro/pull/180), integrada em `main` (`e5fe034587f36bc3ae49ef6397a231da3c1bf641`) |
+| PR(s) | [#180 — publicação documental da ideação, do plano e do registro do ciclo](https://github.com/EuThiagoAndrade/saldo-futuro/pull/180), integrada em `main` (`e5fe034587f36bc3ae49ef6397a231da3c1bf641`); [#184 — Item 1, issue #182](https://github.com/EuThiagoAndrade/saldo-futuro/pull/184), aberta |
 | Branch(es) | `chore/cycle-018-plan` — publicação documental, numa pasta separada (`git worktree`) para não interferir no encerramento do 017 feito em paralelo; `feature/issue-182` — Item 1, task `018_task_issue-182.md` |
 | Destino após conclusão | `_project/executed/018_organizacao_atributos_previdencia/018_plan.md` |
 
@@ -210,10 +210,10 @@ Uma branch por issue (`feature/issue-N`), commit `feat(issue-N): ...`, task `018
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando autorização de implementação — ciclo 018 (completo)
+Situação: Aguardando merge — ciclo 018 (completo)
 Quem: Responsável
-Conferir: Issue [#182](https://github.com/EuThiagoAndrade/saldo-futuro/issues/182) e escopo do Item 1
-Diga: "autorizo a implementação da issue #182"
+Conferir: Checks e diff da [PR #184](https://github.com/EuThiagoAndrade/saldo-futuro/pull/184); roteiro de teste local em 018_task_issue-182.md
+Diga: "aprovo o merge da PR #184"
 ```
 
 ## Handoff de saída

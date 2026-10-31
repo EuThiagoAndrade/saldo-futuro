@@ -2,12 +2,12 @@
 
 > **Ciclo:** `018`
 > **Trilha:** `normal`
-> **Estado:** `Em andamento`
+> **Estado:** `Aguardando integração`
 > **Tipo:** `feature`
 > **Issue:** `#182`
 > **Plano:** `_project/drafts/018_organizacao_atributos_previdencia/018_plan.md`
 > **Branch:** `feature/issue-182`
-> **PR:** —
+> **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/184
 > **Integração:** `Pendente`
 > **Autorização inicial:** "Autorizo a #182" em 2026-10-31, em resposta à pergunta "Autoriza a implementação da issue #182?"
 > **Modo contínuo:** `—`
@@ -50,7 +50,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 - [x] Migração, pgTAP 13 e ajustes nos testes 08, 09 e 12.
 - [x] E2e ajustados e novos; ensaio de upgrade; documentação.
 - [x] Gates locais completos e staging revisado.
-- [ ] PR publicada com `Refs #182`; merge só depois do teste local do responsável.
+- [x] PR #184 publicada com `Refs #182`; merge só depois do teste local do responsável.
 
 ## Evidências
 
@@ -60,7 +60,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 | Ensaio de upgrade | Instância descartável `saldo-futuro-issue182-upgrade` (portas 553xx) com as migrações até `20261031000721`: `e1_pre.sql` → `f|f|f`; `upgrade_pre.sql` com os 8 casos de D18, aporte e fechamento; a "tela nova" editou um ativo com "Sim" antes da migração e o valor ficou preservado; o banco recusou `previdencia` no veículo antes da migração, sem gravar; migração aplicada; `upgrade_post.sql` → "retrato integral preservado e casos de D18 convertidos", os 8 casos conferidos um a um, código novo aceito e indicador não nulo recusado; `e1_post.sql` → `t|t|t|t`. Reexecutar `upgrade_post.sql` reprova com "caso de conversão divergente da tabela de D18", provando que a conferência detecta diferença |
 | Validador | 48/48 testes de governança; validador sem erros depois do registro do número da PR |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos | Em execução na PR #184 |
 
 ## Revisão da correção
 
@@ -88,7 +88,7 @@ Na pasta `C:\Programas\saldo-futuro-018`, com o Supabase local rodando (o banco 
 6. **Celular:** no navegador, simule 360 px de largura e repita os passos 3 e 5; nada pode cortar nem exigir rolagem para o lado.
 7. **Filtrar:** não deve haver mais o seletor "Previdência"; a opção "Previdência (PGBL ou VGBL)" aparece no veículo.
 
-Se tudo estiver certo, diga "aprovo o merge da PR #N". Logo depois do merge e do deploy vem a ação externa (KB-002, "Previdência como veículo", AP1 a AP7).
+Se tudo estiver certo, diga "aprovo o merge da PR #184". Logo depois do merge e do deploy vem a ação externa (KB-002, "Previdência como veículo", AP1 a AP7).
 
 ## Encerramento
 
@@ -100,8 +100,8 @@ Não se aplica — ciclo completo; encerramento em PR própria.
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 018 (completo)
 Quem: Responsável
-Conferir: Checks e diff da PR da issue #182; roteiro de teste local desta task
-Diga: "aprovo o merge da PR #N"
+Conferir: Checks e diff da [PR #184](https://github.com/EuThiagoAndrade/saldo-futuro/pull/184); roteiro de teste local desta task
+Diga: "aprovo o merge da PR #184"
 ```
 
 ## Handoff de saída
@@ -110,7 +110,7 @@ Diga: "aprovo o merge da PR #N"
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 018 + implementar_issue + 182 + 2385623`
 - `effect_class`: `remote_mutation`
 - `state_before`: plano aprovado e integrado (PR #180); issues #182 e #183 abertas; "Autorizo a #182" recebida em 2026-10-31.
-- `state_after`: Item 1 implementado e validado localmente; migração aplicada só ao banco local de desenvolvimento e ao ensaio descartável; PR a publicar na branch `feature/issue-182`, sem fechar a #182.
+- `state_after`: Item 1 implementado e validado localmente; migração aplicada só ao banco local de desenvolvimento e ao ensaio descartável; PR #184 publicada na branch `feature/issue-182`, sem fechar a #182.
 - `result`: `executed`
 - `evidence`: tabela de evidências acima.
 - `blockers`: teste local do responsável e aprovação do merge; depois, a ação externa logo após o deploy.
