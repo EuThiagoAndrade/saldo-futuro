@@ -2,12 +2,12 @@
 
 > **Ciclo:** `017`
 > **Trilha:** `normal`
-> **Estado:** `Em andamento`
+> **Estado:** `Aguardando integração`
 > **Tipo:** `feature`
 > **Issue:** `#172`
 > **Plano:** `_project/drafts/017_atributos_complementares_ativos/017_plan.md`
 > **Branch:** `feature/issue-172`
-> **PR:** —
+> **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/175
 > **Integração:** `Pendente`
 > **Autorização inicial:** "autorizo a implementação da issue #172" em 2026-10-30
 > **Modo contínuo:** `—`
@@ -54,7 +54,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 - [x] Ensaio de upgrade em instância descartável, com retrato integral preservado e compatibilidade das funções anteriores.
 - [x] KB-002 (roteiro AC1 a AC7) e KB-003 (seção "Atributos complementares dos ativos").
 - [x] Gates locais e staging revisado.
-- [ ] PR publicada com `Refs #172`; integração exige aprovação própria.
+- [x] PR #175 publicada com `Refs #172`; integração exige aprovação própria.
 
 ## Evidências
 
@@ -64,7 +64,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 | Upgrade | Instância descartável `saldo-futuro-issue172-upgrade` (portas 553xx) com as migrações até `20261027220000`: `e1_pre.sql` → `f|f`; `upgrade_pre.sql` (usuário, instituição, classe, indicadores, aporte, fechamento e ativo desativado fictícios) → retrato guardado; migração nova aplicada; `upgrade_post.sql` → "retrato integral preservado e atributos vazios", função anterior preserva atributos gravados pela nova (`t`), APIs anterior e nova disponíveis (`t|t`); `e1_post.sql` → `t|t|t|t|f`. Reexecutar `upgrade_post.sql` depois das edições reprova com "retrato financeiro/descritivo divergente", o que prova que a comparação detecta diferença |
 | Validador | 48/48 testes de governança; validador com 0 erros, 0 avisos e 5 itens manuais conferidos |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos | Em execução na PR #175 |
 
 ## Revisão da correção
 
@@ -102,8 +102,8 @@ Não se aplica — ciclo completo; encerramento em PR própria depois da ação 
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 017 (completo)
 Quem: Responsável
-Conferir: Checks e diff da PR da issue #172; esta task
-Diga: "aprovo o merge da PR #N"
+Conferir: Checks e diff da [PR #175](https://github.com/EuThiagoAndrade/saldo-futuro/pull/175); esta task
+Diga: "aprovo o merge da PR #175"
 ```
 
 ## Handoff de saída
@@ -112,7 +112,7 @@ Diga: "aprovo o merge da PR #N"
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 017 + implementar_issue + 172 + a28f22667d67ddaf80e35ab7af201ae1d4a84a53`
 - `effect_class`: `remote_mutation`
 - `state_before`: plano v4 `Aprovado`, PR #171 integrada, issues #172 a #174 abertas; registros locais da criação das issues não commitados; "autorizo a implementação da issue #172" recebida em 2026-10-30.
-- `state_after`: unidade Banco implementada e validada localmente; migração aplicada só ao Supabase local; plano `Em Execução` e ciclo `Em execução`; roteiro da ação externa pronto; PR a publicar na branch `feature/issue-172`, sem fechar a #172.
+- `state_after`: unidade Banco implementada e validada localmente; migração aplicada só ao Supabase local; plano `Em Execução` e ciclo `Em execução`; roteiro da ação externa pronto; PR #175 publicada na branch `feature/issue-172`, sem fechar a #172.
 - `result`: `executed`
 - `evidence`: tabela de evidências acima.
-- `blockers`: nenhum para publicar; o merge depende de checks verdes e de "aprovo o merge da PR #N". A ação externa é posterior ao merge.
+- `blockers`: nenhum para publicar; o merge depende de checks verdes e de "aprovo o merge da PR #175". A ação externa é posterior ao merge.
