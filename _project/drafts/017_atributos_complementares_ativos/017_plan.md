@@ -1,7 +1,7 @@
 # Plano de Implementação — Atributos complementares dos ativos
 
 > **Ciclo:** `017`
-> **Status:** `Aprovado`
+> **Status:** `Em Execução`
 > **Versão:** `v4`
 > **Data de criação:** 2026-10-30
 > **Última atualização:** 2026-10-30
@@ -14,6 +14,7 @@
 > **Autorização da correção v3:** "corrija o plano do ciclo 017" em 2026-10-30, após a Rodada 2
 > **Autorização da atualização v4:** respostas explícitas do responsável em 2026-10-30 ajustando P1 e P2 e confirmando P3; decisões D10 a D12.
 > **Modo contínuo:** `—`
+> **Autorização de implementação da unidade Banco:** "autorizo a implementação da issue #172" em 2026-10-30; recebida; execução iniciada na branch `feature/issue-172`, task `017_task_issue-172.md`.
 > **Revisão formal:** `Concluída`
 > **Veredito da revisão:** `APTO PARA APROVAÇÃO`
 > **Aprovação humana pós-revisão:** `Aprovada em 2026-10-30`
@@ -312,13 +313,13 @@ Artefatos do ciclo: este plano; tasks por issue após numeração real; evidênc
 
 ## Decomposição em issues e PRs
 
-Unidades propostas, ainda sem números. Payloads usarão `.github/ISSUE_TEMPLATE/feature_request.yml`, com contexto, escopo, critérios, plano e dependências apresentados ao responsável antes da criação.
+As issues [#172](https://github.com/EuThiagoAndrade/saldo-futuro/issues/172), [#173](https://github.com/EuThiagoAndrade/saldo-futuro/issues/173) e [#174](https://github.com/EuThiagoAndrade/saldo-futuro/issues/174) foram criadas após a integração da [PR #171](https://github.com/EuThiagoAndrade/saldo-futuro/pull/171) e a confirmação dos payloads em 2026-10-30. Os corpos efetivos foram publicados conforme o formulário `.github/ISSUE_TEMPLATE/feature_request.yml` e estão registrados em "Registro de criação das issues". A unidade Banco (#172) foi autorizada e iniciada; #173 e #174 continuam sem autorização.
 
-| Unidade | Título proposto | Conteúdo/PR | Dependência e fechamento |
+| Unidade | Issue e título | Conteúdo/PR | Dependência e fechamento |
 | :-- | :-- | :-- | :-- |
-| Banco | [FEATURE] Persistir atributos complementares dos ativos com escrita isolada | Item 1, migração/testes/upgrade | Depois do plano integrado; merge não fecha issue enquanto ação externa estiver pendente |
-| Formulários | [FEATURE] Preencher atributos complementares no cadastro e na edição | Item 2 | Banco aplicado e conferido; uma PR, podendo fechar a issue na integração |
-| Consulta | [FEATURE] Consultar e filtrar atributos complementares na página Ativos | Item 3 | Formulários integrados; issue permanece aberta até verificação em produção e encerramento |
+| Banco | [#172](https://github.com/EuThiagoAndrade/saldo-futuro/issues/172) — [FEATURE] Persistir atributos complementares dos ativos com escrita isolada | Item 1, migração/testes/upgrade | Depois do plano integrado; merge não fecha issue enquanto ação externa estiver pendente |
+| Formulários | [#173](https://github.com/EuThiagoAndrade/saldo-futuro/issues/173) — [FEATURE] Preencher atributos complementares no cadastro e na edição | Item 2 | Banco aplicado e conferido; uma PR, podendo fechar a issue na integração |
+| Consulta | [#174](https://github.com/EuThiagoAndrade/saldo-futuro/issues/174) — [FEATURE] Consultar e filtrar atributos complementares na página Ativos | Item 3 | Formulários integrados; issue permanece aberta até verificação em produção e encerramento |
 
 Uma branch por issue (`feature/issue-N`), commit `feat(issue-N): ...`, task `017_task_issue-N.md` e PR por unidade. Sem número inventado. PR documental do plano usa `chore/cycle-017-plan`; commit `docs(cycle-017): ...`. A última entrega do ciclo completo não move o ciclo a executed: release, se houver, e encerramento têm PRs próprias e aprovação própria de cada merge; encerramento usa `chore/cycle-017-closure` e não cria issue recursiva.
 
@@ -368,9 +369,9 @@ Roteiro de verificação em produção, após autorização: responsável confer
 
 | Campo | Valor |
 | :-- | :-- |
-| Issue(s) | —; três unidades propostas, ainda não criadas |
-| PR(s) | [#171 — publicação documental da ideação/plano/registro do ciclo](https://github.com/EuThiagoAndrade/saldo-futuro/pull/171), aberta, sem merge |
-| Branch(es) | `chore/cycle-017-plan` — publicação documental da ideação/plano/registro do ciclo |
+| Issue(s) | [#172](https://github.com/EuThiagoAndrade/saldo-futuro/issues/172), [#173](https://github.com/EuThiagoAndrade/saldo-futuro/issues/173) e [#174](https://github.com/EuThiagoAndrade/saldo-futuro/issues/174) |
+| PR(s) | [#171 — publicação documental da ideação/plano/registro do ciclo](https://github.com/EuThiagoAndrade/saldo-futuro/pull/171), integrada em `main` (`a28f22667d67ddaf80e35ab7af201ae1d4a84a53`); [#175 — unidade Banco, issue #172](https://github.com/EuThiagoAndrade/saldo-futuro/pull/175), aberta |
+| Branch(es) | `chore/cycle-017-plan` — publicação documental da ideação/plano/registro do ciclo; `feature/issue-172` — unidade Banco, task `017_task_issue-172.md` |
 | Destino após conclusão | `_project/executed/017_atributos_complementares_ativos/017_plan.md` |
 
 ## Próximo passo
@@ -379,11 +380,32 @@ Roteiro de verificação em produção, após autorização: responsável confer
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 017 (completo)
 Quem: Responsável
-Conferir: Checks e diff da [PR #171](https://github.com/EuThiagoAndrade/saldo-futuro/pull/171); merge só com checks verdes
-Diga: "aprovo o merge da PR #171"
+Conferir: Checks e diff da [PR #175](https://github.com/EuThiagoAndrade/saldo-futuro/pull/175); task 017_task_issue-172.md
+Diga: "aprovo o merge da PR #175"
 ```
 
 ## Handoff de saída
+
+- `handoff_schema_version: 2`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 017 + criar_issues + issues-172-174 + a28f22667d67ddaf80e35ab7af201ae1d4a84a53`
+- `effect_class`: `remote_mutation`
+- `state_before`: plano v4 Aprovado e PR #171 integrada em main (`a28f22667d67ddaf80e35ab7af201ae1d4a84a53`); payloads apresentados e confirmação recebida em 2026-10-30 ("Pode criar as issues aprovadas no plano."); nenhuma issue aberta no repositório.
+- `state_after`: issues #172, #173 e #174 criadas no GitHub e conferidas via `gh issue view` como OPEN; registros locais atualizados em `017_plan.md` e `cycles.md`, sem commit ou push direto em main; ciclo em Planejamento; nenhuma implementação iniciada; próximo passo aguarda autorização para a issue #172.
+- `result`: `executed`
+- `evidence`: issues [#172](https://github.com/EuThiagoAndrade/saldo-futuro/issues/172), [#173](https://github.com/EuThiagoAndrade/saldo-futuro/issues/173) e [#174](https://github.com/EuThiagoAndrade/saldo-futuro/issues/174) abertas e conferidas; validador de governança executado e sem erros.
+- `blockers`: autorização humana explícita para implementar a issue #172 ("autorizo a implementação da issue #172").
+
+### Registro de criação das issues
+
+- **Data e autorização:** 2026-10-30, "Pode criar as issues aprovadas no plano.", após a apresentação e confirmação dos três payloads.
+- **Precondições conferidas:** plano v4 `Aprovado`; PR #171 integrada em `main` pelo commit `a28f22667d67ddaf80e35ab7af201ae1d4a84a53`; busca `gh issue list` sem duplicatas.
+- **Template aplicado:** `.github/ISSUE_TEMPLATE/feature_request.yml` — Contexto, Escopo, Critérios de aceite, Ciclo e plano relacionados, Dependências, riscos e autorizações, nessa ordem; sem labels ou responsáveis.
+- **Resultado:** três issues criadas sequencialmente por `gh issue create --body-file`, relidas com `gh issue view` e conferidas como `OPEN`:
+  - [#172](https://github.com/EuThiagoAndrade/saldo-futuro/issues/172) — `[FEATURE] Persistir atributos complementares dos ativos com escrita isolada`
+  - [#173](https://github.com/EuThiagoAndrade/saldo-futuro/issues/173) — `[FEATURE] Preencher atributos complementares no cadastro e na edição`
+  - [#174](https://github.com/EuThiagoAndrade/saldo-futuro/issues/174) — `[FEATURE] Consultar e filtrar atributos complementares na página Ativos`
+
+### Histórico — handoff da aprovação do plano e PR documental
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 017 + aprovar_plano + 017_plan + v4`

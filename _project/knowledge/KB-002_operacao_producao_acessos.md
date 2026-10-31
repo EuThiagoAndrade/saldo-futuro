@@ -6,7 +6,7 @@ tags:
   - acesso
 author: "Thiago Andrade e Claude"
 module: "Operação"
-last_updated: "2026-10-24"
+last_updated: "2026-10-30"
 origin_cycle: "001"
 ---
 
@@ -385,6 +385,22 @@ Depois, entre de novo na aplicação com o Google: o hook recria a conta com o p
 
 A data de virada é o dia em que a conferência M5 termina sem diferença. A partir dela, o Saldo Futuro é a fonte de verdade e a origem não recebe lançamentos. A data é registrada na verificação em produção do ciclo 006 ("autorizo a verificação em produção do ciclo 006") e entra na KB-003 pela PR de encerramento. **A virada ocorreu em 2026-10-18.**
 
+### Atributos complementares dos ativos (ciclo 017)
+
+Ação externa da issue #172, feita pelo responsável depois do merge da PR da issue e **antes** de qualquer deploy de aplicação que leia as colunas novas ou chame as funções novas (issues #173 e #174). A migração é aditiva e compatível com a aplicação em produção: as funções anteriores continuam e preservam os campos novos. O agente não acessa o banco de produção; nenhum dado de carteira é consultado nem relatado.
+
+| Passo | O que fazer | Resultado esperado |
+| :-- | :-- | :-- |
+| AC1 | Conferir a `main` com a PR da issue #172 integrada e os checks verdes; terminal na raiz do repositório, na `main` atualizada (`git switch main` e `git pull`), com o projeto de produção vinculado (S4) | `git log -1` mostra o commit da issue #172 |
+| AC2 | `npx supabase migration list` e `npx supabase db push --dry-run` | Só `20261031000721_atributos_complementares_ativos.sql` pendente. Qualquer outra migração pendente interrompe a ação para decisão |
+| AC3 | No editor SQL do painel, executar o conteúdo de `tests/fixtures/atributos/e1_pre.sql` | `colunas_disponiveis` e `funcoes_disponiveis` falsos (consulta só de estrutura) |
+| AC4 | `npx supabase db push` e de novo `npx supabase migration list` | Local e remoto alinhados, com a migração nova nas duas colunas |
+| AC5 | Executar `tests/fixtures/atributos/e1_post.sql` no editor SQL | `colunas_disponiveis`, `restricoes_disponiveis`, `authenticated_funcoes_novas` e `authenticated_funcoes_anteriores` verdadeiros; `anon_funcoes_novas` falso |
+| AC6 | Abrir `/ativos` e a edição de um ativo na aplicação em produção, sem salvar | As telas abrem como antes (a aplicação ainda não usa os campos novos) |
+| AC7 | Relatar no chat só os cinco valores de AC5 e o resultado de AC2, AC4 e AC6, dizendo "concluí a ação externa da issue #172" | Sem nomes de ativos, instituições, valores, e-mails ou prints |
+
+Não executar `tests/fixtures/atributos/upgrade_pre.sql` nem `upgrade_post.sql` em produção: são fixtures do ensaio local descartável. A preservação de eventos, posições, consolidados, instituições, perfis e indicadores foi provada nesse ensaio, não na carteira real. Em caso de erro no AC4, não repetir nem tentar corrigir no painel: parar e relatar a mensagem de erro sem dados. Não há caminho de volta por `down migration`; uma correção é migração nova.
+
 ## Fontes
 
 Consultadas em 2026-10-12 e conferidas na execução de 2026-10-13. São documentação oficial, sem versão fixada; os valores que dependem do plano ou do painel devem ser reconferidos.
@@ -418,3 +434,4 @@ Consultadas em 2026-10-12 e conferidas na execução de 2026-10-13. São documen
 | 2026-10-22 | `011` | Issue #117: V1 sem a premissa de repositório privado; o repositório é público desde 2026-10-22 (ADR-003, emenda do ciclo `011`) |
 | 2026-10-23 | `011` | Encerramento: `db push` da migração do IGP-M (S12) e primeira sincronização do IGP-M feitos pelo responsável, com a cobertura iniciando junto com a do IPCA e indo até setembro de 2026 |
 | 2026-10-24 | `012` | Encerramento: `db push` da migração dos metadados dos ativos (S12) feito pelo responsável antes de as telas que a leem entrarem na `main`, com local e remoto alinhados |
+| 2026-10-30 | `017` | Issue #172: roteiro AC1 a AC7 da ação externa dos atributos complementares dos ativos, com consultas só de estrutura |
