@@ -402,8 +402,8 @@ Necessidade debatida com o responsável em 2026-10-25 a partir de um briefing de
 ## BL-015 — Atributos complementares de classificação do ativo além da classe
 
 > **Criado em:** `2026-10-26`
-> **Atualizado em:** `2026-10-26`
-> **Estado:** `Disponível`
+> **Atualizado em:** `2026-10-31`
+> **Estado:** `Encaminhado`
 
 ### Problema e benefício esperado
 
@@ -415,7 +415,7 @@ Necessidade apontada na ideação do ciclo 013 (decisão D11), que deixou esses 
 
 ### Encaminhamentos
 
-—
+- ciclo 017 — 2026-10-31 — integral
 
 ### Restante
 
@@ -424,6 +424,7 @@ Necessidade apontada na ideação do ciclo 013 (decisão D11), que deixou esses 
 ### Registro
 
 - 2026-10-26 — Pedido explícito de capturar os atributos complementares deixados fora do ciclo 013 (D11); captura local.
+- 2026-10-31 — Retorno pós-integração da seleção original do ciclo 017; necessidade integralmente encaminhada (issues #172, #173 e #174, PRs #175, #177 e #178; release 0.13.0 pela PR #176).
 
 ## BL-016 — Ordem das visões da distribuição do patrimônio
 
