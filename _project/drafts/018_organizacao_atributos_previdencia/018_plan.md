@@ -12,6 +12,7 @@
 > **Autorização do rascunho:** "autorizo o rascunho do plano do ciclo 018" em 2026-10-30
 > **Modo contínuo:** `—`
 > **Autorização de implementação da issue #182:** "Autorizo a #182" em 2026-10-31, em resposta à pergunta "Autoriza a implementação da issue #182?"; execução iniciada na branch `feature/issue-182`, task `018_task_issue-182.md`.
+> **Autorização de implementação da issue #183:** "Autorizo a #183" em 2026-10-31, em resposta à pergunta "Autoriza a implementação da issue #183?", depois da ação externa da #182 relatada; execução iniciada na branch `feature/issue-183`, task `018_task_issue-183.md`.
 > **Aprovação:** "aprovo o plano do ciclo 018" em 2026-10-31, depois do veredito APTO PARA APROVAÇÃO da Rodada 1; propostas P3 a P6 confirmadas com "Confirmo as quatro" no mesmo dia (ver "Registro de aprovação").
 > **Revisão formal:** `Concluída`
 > **Veredito da revisão:** `APTO PARA APROVAÇÃO`
@@ -202,8 +203,8 @@ Uma branch por issue (`feature/issue-N`), commit `feat(issue-N): ...`, task `018
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | [#182](https://github.com/EuThiagoAndrade/saldo-futuro/issues/182) e [#183](https://github.com/EuThiagoAndrade/saldo-futuro/issues/183) |
-| PR(s) | [#180 — publicação documental da ideação, do plano e do registro do ciclo](https://github.com/EuThiagoAndrade/saldo-futuro/pull/180), integrada em `main` (`e5fe034587f36bc3ae49ef6397a231da3c1bf641`); [#184 — Item 1, issue #182](https://github.com/EuThiagoAndrade/saldo-futuro/pull/184), aberta |
-| Branch(es) | `chore/cycle-018-plan` — publicação documental, numa pasta separada (`git worktree`) para não interferir no encerramento do 017 feito em paralelo; `feature/issue-182` — Item 1, task `018_task_issue-182.md` |
+| PR(s) | [#180 — publicação documental da ideação, do plano e do registro do ciclo](https://github.com/EuThiagoAndrade/saldo-futuro/pull/180), integrada em `main` (`e5fe034587f36bc3ae49ef6397a231da3c1bf641`); [#184 — Item 1, issue #182](https://github.com/EuThiagoAndrade/saldo-futuro/pull/184), integrada em `main` (`c31081d56d7ce0d0ff2f51de3db655f90db6b36b`); ação externa relatada pelo responsável em 2026-10-31; [#186 — Item 2, issue #183](https://github.com/EuThiagoAndrade/saldo-futuro/pull/186), aberta |
+| Branch(es) | `chore/cycle-018-plan` — publicação documental, numa pasta separada (`git worktree`) para não interferir no encerramento do 017 feito em paralelo; `feature/issue-182` — Item 1, task `018_task_issue-182.md`; `feature/issue-183` — Item 2, task `018_task_issue-183.md` |
 | Destino após conclusão | `_project/executed/018_organizacao_atributos_previdencia/018_plan.md` |
 
 ## Próximo passo
@@ -212,8 +213,8 @@ Uma branch por issue (`feature/issue-N`), commit `feat(issue-N): ...`, task `018
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 018 (completo)
 Quem: Responsável
-Conferir: Checks e diff da [PR #184](https://github.com/EuThiagoAndrade/saldo-futuro/pull/184); roteiro de teste local em 018_task_issue-182.md
-Diga: "aprovo o merge da PR #184"
+Conferir: Checks e diff da [PR #186](https://github.com/EuThiagoAndrade/saldo-futuro/pull/186); roteiro de teste local em 018_task_issue-183.md
+Diga: "aprovo o merge da PR #186"
 ```
 
 ## Handoff de saída

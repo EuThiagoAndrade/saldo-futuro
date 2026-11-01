@@ -1,18 +1,19 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { botaoSecundario, botaoTexto } from "@/components/botoes";
 import { classeCampo } from "@/components/campos";
+import { ListaSuspensaFiltro } from "@/components/lista-suspensa";
 import {
   COBERTURAS_FGC,
-  INDEXADORES_REMUNERACAO,
+  type ColunaIndicador,
   INDICADORES_VISIVEIS,
   type OpcaoAtributo,
   REGIMES_TRIBUTARIOS,
   resumoDosAtributos,
   SITUACOES_PRAZO,
   UNIDADES_PRAZO,
-  VEICULOS_ACESSO,
 } from "@/lib/telas/detalhes-ativo";
-import { COMPARACOES, enderecoDaAba, NAO_INFORMADO_FILTRO, type Parametros } from "@/lib/telas/filtros-ativos";
+import { COMPARACOES, consultaDosFiltros, enderecoDaAba, OPCAO_NAO_INFORMADO, type Parametros } from "@/lib/telas/filtros-ativos";
 import type { Ativo } from "@/lib/telas/leituras";
 
 // Consulta dos atributos complementares na página Ativos (ciclo 017, issue #174, P5 e P6): o resumo
@@ -45,8 +46,6 @@ export function ResumoAtivo({ ativo }: { ativo: Ativo }) {
   );
 }
 
-const NAO_INFORMADO = { codigo: NAO_INFORMADO_FILTRO, rotulo: "Não informado" } as const;
-
 const valores = (p: Parametros, nome: string) => {
   const v = p[nome];
   return v === undefined ? [] : Array.isArray(v) ? v : [v];
@@ -76,111 +75,125 @@ function Selecao({ id, rotulo, nome, opcoes, p, vazio = "Todos" }: { id: string;
   );
 }
 
-function Caixas({ id, legenda, nome, opcoes, p }: { id: string; legenda: string; nome: string; opcoes: readonly OpcaoAtributo[]; p: Parametros }) {
-  const marcados = valores(p, nome);
+/** Grupo do painel com título (ciclo 018, D13), na mesma ordem do formulário do ativo. */
+function GrupoFiltro({ titulo, children }: { titulo: string; children: ReactNode }) {
   return (
-    <fieldset className="flex min-w-0 flex-col gap-1 sm:col-span-2">
-      <legend className="mb-1 text-sm/5 font-medium text-text">{legenda}</legend>
-      <div className="flex flex-wrap gap-x-5">
-        {opcoes.map((o) => (
-          <label key={o.codigo} className="flex min-h-11 items-center gap-2 text-base/6">
-            <input type="checkbox" id={`${id}-${o.codigo}`} name={nome} value={o.codigo} defaultChecked={marcados.includes(o.codigo)} className="size-5" />
-            {o.rotulo}
-          </label>
-        ))}
-      </div>
-    </fieldset>
+    <section aria-label={titulo} className="grid gap-4 border-t border-border pt-4 first:border-t-0 first:pt-0 sm:grid-cols-2">
+      <h2 className="text-base/6 font-semibold text-text sm:col-span-2">{titulo}</h2>
+      {children}
+    </section>
   );
 }
 
-const SIM_NAO = [
-  { codigo: "sim", rotulo: "Sim" },
-  { codigo: "nao", rotulo: "Não" },
-  NAO_INFORMADO,
-] as const;
+const SIM_NAO = [{ codigo: "sim", rotulo: "Sim" }, { codigo: "nao", rotulo: "Não" }, OPCAO_NAO_INFORMADO] as const;
+
+const indicador = (coluna: ColunaIndicador, p: Parametros) => {
+  const definicao = INDICADORES_VISIVEIS.find((i) => i.coluna === coluna)!;
+  return <Selecao id={`filtro-${coluna}`} rotulo={definicao.rotulo} nome={coluna} opcoes={SIM_NAO} p={p} />;
+};
 
 /**
- * Painel "Filtrar", abaixo das abas: fechado sem filtro e aberto com filtro aplicado ou erro. Os
- * filtros aplicados, o resultado e "Limpar filtros" ficam fora dele, visíveis com o painel fechado.
+ * Painel "Filtrar", abaixo das abas (ciclo 017, issue #174; reorganizado no ciclo 018, issue #183):
+ * quatro grupos com título; veículo e indexador em listas suspensas só com as opções em uso. Fica
+ * fechado depois de aplicar e só abre sozinho com erro, para a página mostrar a lista (o envio vai à
+ * âncora dela). O resumo mostra quantos campos têm filtro, e "Limpar filtros" fica ao lado, visível
+ * com o painel fechado. Comparação, dias e unidade só aparecem com "Prazo em dias", por CSS.
+ *
+ * "Limpar filtros", voltar e avançar trocam a página sem recarregá-la: o painel é recriado sempre que
+ * os filtros da URL mudam, para nunca mostrar escolhas que não estão valendo.
  */
 export function FiltrosDosAtivos({
   aba,
   parametros,
-  aplicados,
+  campos,
   erro,
-  resultado,
+  opcoesVeiculo,
+  opcoesIndexador,
 }: {
   aba: "em-uso" | "desativados";
   parametros: Parametros;
-  /** Filtros aplicados em texto; vazio sem filtro. */
-  aplicados: string[];
+  /** Campos com filtro aplicado (o contador). */
+  campos: number;
   erro: string | null;
-  /** Ativos que correspondem e total da aba, quando há filtro válido. */
-  resultado: { correspondem: number; total: number } | null;
+  opcoesVeiculo: readonly OpcaoAtributo[];
+  opcoesIndexador: readonly OpcaoAtributo[];
 }) {
   const p = parametros;
-  const ativos = aplicados.length > 0 || erro !== null;
-  const limpar = enderecoDaAba(aba, {});
   return (
-    <div className="flex flex-col gap-3">
-      <details open={ativos} className="rounded-md border border-border bg-surface">
-        <summary className="flex min-h-11 cursor-pointer items-center px-4 text-sm/5 font-medium text-primary hover:bg-surface-subtle">
+    <div key={consultaDosFiltros(p).toString()} className="flex items-start gap-2">
+      <details open={erro !== null} className="min-w-0 flex-1 rounded-md border border-border bg-surface">
+        <summary className="flex min-h-11 cursor-pointer items-center gap-2 px-4 text-sm/5 font-medium text-primary hover:bg-surface-subtle">
           Filtrar
+          {campos > 0 ? (
+            <>
+              <span aria-hidden="true" className="rounded-full bg-primary-subtle px-2 py-0.5 text-xs/4 font-medium text-primary">
+                {campos}
+              </span>
+              <span className="sr-only">({campos === 1 ? "1 campo com filtro" : `${campos} campos com filtro`})</span>
+            </>
+          ) : null}
         </summary>
-        <form method="get" action="/ativos" className="grid gap-4 border-t border-border p-4 sm:grid-cols-2">
+        <form method="get" action="/ativos#ativos-da-aba" className="flex flex-col gap-4 border-t border-border p-4">
           {aba === "desativados" ? <input type="hidden" name="aba" value="desativados" /> : null}
-          <p className="text-sm/5 text-text-secondary sm:col-span-2">
+          <p className="text-sm/5 text-text-secondary">
             Opções marcadas no mesmo campo valem com “ou”; campos diferentes, com “e”. Com qualquer filtro, o ativo Em trânsito fica de fora.
           </p>
-          <Caixas id="filtro-veiculo" legenda="Veículo de acesso" nome="veiculo" opcoes={[...VEICULOS_ACESSO, NAO_INFORMADO]} p={p} />
-          <Caixas id="filtro-indexador" legenda="Indexador da remuneração" nome="indexador" opcoes={[...INDEXADORES_REMUNERACAO, NAO_INFORMADO]} p={p} />
-          <Selecao id="filtro-regime" rotulo="Regime tributário" nome="regime" opcoes={[...REGIMES_TRIBUTARIOS, NAO_INFORMADO]} p={p} />
-          <Selecao id="filtro-fgc" rotulo="Cobertura do FGC" nome="fgc" opcoes={[...COBERTURAS_FGC, NAO_INFORMADO]} p={p} />
-          <fieldset className="grid min-w-0 gap-4 sm:col-span-2 sm:grid-cols-2" aria-describedby="filtro-prazo-dica">
-            <legend className="mb-1 text-sm/5 font-medium text-text">Prazo para resgate ou venda</legend>
-            <p id="filtro-prazo-dica" className="text-sm/5 text-text-secondary sm:col-span-2">
-              Comparação, dias e unidade só valem com Prazo em dias. O número é comparado na unidade escolhida, sem converter dias úteis e corridos.
-            </p>
-            <Selecao id="filtro-prazo" rotulo="Situação" nome="prazo_resgate_tipo" opcoes={[...SITUACOES_PRAZO, NAO_INFORMADO]} p={p} />
-            <Selecao id="filtro-prazo-comparacao" rotulo="Comparação" nome="prazo_resgate_comparacao" opcoes={COMPARACOES} p={p} vazio="Escolha" />
-            <div className="flex min-w-0 flex-col gap-1">
-              <label htmlFor="filtro-prazo-dias" className="text-sm/5 font-medium text-text">
-                Dias
-              </label>
-              <input
-                id="filtro-prazo-dias"
-                name="prazo_resgate_dias"
-                inputMode="numeric"
-                autoComplete="off"
-                defaultValue={valores(p, "prazo_resgate_dias")[0] ?? ""}
-                className={classeCampo}
-              />
-            </div>
-            <Selecao id="filtro-prazo-unidade" rotulo="Unidade" nome="prazo_resgate_unidade" opcoes={UNIDADES_PRAZO} p={p} vazio="Escolha" />
-          </fieldset>
-          {INDICADORES_VISIVEIS.map((i) => (
-            <Selecao key={i.coluna} id={`filtro-${i.coluna}`} rotulo={i.rotulo} nome={i.coluna} opcoes={SIM_NAO} p={p} />
-          ))}
-          <button type="submit" className={`${botaoSecundario} sm:col-span-2 sm:justify-self-end`}>
+          <GrupoFiltro titulo="Produto">
+            <ListaSuspensaFiltro id="filtro-veiculo" legenda="Veículo de acesso" nome="veiculo" opcoes={opcoesVeiculo} iniciais={valores(p, "veiculo")} vazio="Todos" />
+            <ListaSuspensaFiltro
+              id="filtro-indexador"
+              legenda="Indexador da remuneração"
+              nome="indexador"
+              opcoes={opcoesIndexador}
+              iniciais={valores(p, "indexador")}
+              vazio="Todos"
+            />
+          </GrupoFiltro>
+          <GrupoFiltro titulo="Tributação">
+            <Selecao id="filtro-regime" rotulo="Regime tributário" nome="regime" opcoes={[...REGIMES_TRIBUTARIOS, OPCAO_NAO_INFORMADO]} p={p} />
+            {indicador("isento_ir", p)}
+          </GrupoFiltro>
+          <GrupoFiltro titulo="Resgate">
+            <fieldset className="group/prazo grid min-w-0 gap-4 sm:col-span-2 sm:grid-cols-2">
+              <legend className="sr-only">Prazo para resgate ou venda</legend>
+              <Selecao id="filtro-prazo" rotulo="Prazo para resgate ou venda" nome="prazo_resgate_tipo" opcoes={[...SITUACOES_PRAZO, OPCAO_NAO_INFORMADO]} p={p} />
+              {indicador("liquidez_imediata", p)}
+              {/* Sem JavaScript: aparecem só com "Prazo em dias" escolhido; sem suporte a :has(), ficam sempre à vista. */}
+              <div className="hidden gap-4 sm:col-span-2 sm:grid-cols-3 group-has-[option[value=prazo]:checked]/prazo:grid supports-[not_selector(:has(*))]:grid">
+                <Selecao id="filtro-prazo-comparacao" rotulo="Comparação" nome="prazo_resgate_comparacao" opcoes={COMPARACOES} p={p} vazio="Escolha" />
+                <div className="flex min-w-0 flex-col gap-1">
+                  <label htmlFor="filtro-prazo-dias" className="text-sm/5 font-medium text-text">
+                    Dias
+                  </label>
+                  <input
+                    id="filtro-prazo-dias"
+                    name="prazo_resgate_dias"
+                    inputMode="numeric"
+                    autoComplete="off"
+                    defaultValue={valores(p, "prazo_resgate_dias")[0] ?? ""}
+                    className={classeCampo}
+                  />
+                </div>
+                <Selecao id="filtro-prazo-unidade" rotulo="Unidade" nome="prazo_resgate_unidade" opcoes={UNIDADES_PRAZO} p={p} vazio="Escolha" />
+                <p className="text-sm/5 text-text-secondary sm:col-span-3">
+                  O número é comparado na unidade escolhida, sem converter dias úteis e corridos.
+                </p>
+              </div>
+            </fieldset>
+          </GrupoFiltro>
+          <GrupoFiltro titulo="Proteção e exposição">
+            <Selecao id="filtro-fgc" rotulo="Cobertura do FGC" nome="fgc" opcoes={[...COBERTURAS_FGC, OPCAO_NAO_INFORMADO]} p={p} />
+            {indicador("exposicao_cambial", p)}
+          </GrupoFiltro>
+          <button type="submit" className={`${botaoSecundario} sm:self-end`}>
             Aplicar filtros
           </button>
         </form>
       </details>
-      {ativos ? (
-        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
-          {erro !== null ? (
-            <p role="alert" className="min-w-0 text-sm/5 break-words text-loss">
-              Não foi possível aplicar os filtros: {erro}
-            </p>
-          ) : (
-            <p role="status" className="min-w-0 text-sm/5 break-words text-text-secondary">
-              {aplicados.join(" · ")}. {resultado ? `${resultado.correspondem} de ${resultado.total} nesta aba.` : null}
-            </p>
-          )}
-          <Link href={limpar} className={`${botaoTexto} -mr-4`}>
-            Limpar filtros
-          </Link>
-        </div>
+      {campos > 0 || erro !== null ? (
+        <Link href={enderecoDaAba(aba, {})} className={`${botaoTexto} shrink-0`}>
+          Limpar filtros
+        </Link>
       ) : null}
     </div>
   );

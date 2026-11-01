@@ -70,9 +70,20 @@ test.describe("consulta dos atributos (#174)", () => {
   };
   // A tabela (desktop) e a lista (celular) coexistem no DOM: só o resumo visível conta.
   const resumo = (page: Page, nome: string) => principal(page).locator("summary").filter({ hasText: `Ver detalhes de ${nome}` }).filter({ visible: true });
-  const filtrar = (page: Page) => principal(page).locator("details").filter({ has: page.locator("summary", { hasText: /^Filtrar$/ }) });
-  const caixa = (page: Page, grupo: string, opcao: string) =>
-    filtrar(page).getByRole("group", { name: grupo }).getByRole("checkbox", { name: opcao, exact: true });
+  // "Filtrar" (ciclo 018, issue #183): o resumo leva um contador; veículo e indexador são listas
+  // suspensas, que o auxiliar abre antes de marcar.
+  const filtrar = (page: Page) => principal(page).locator("details").filter({ has: page.locator("summary", { hasText: /^Filtrar/ }) });
+  const resumoFiltrar = (page: Page) => filtrar(page).locator("summary").first();
+  const abrirFiltrar = async (page: Page) => {
+    if ((await filtrar(page).getAttribute("open")) === null) await resumoFiltrar(page).click();
+  };
+  const caixa = async (page: Page, grupo: string, opcao: string) => {
+    await abrirFiltrar(page);
+    const campo = filtrar(page).getByRole("group", { name: grupo });
+    if ((await campo.locator("details").getAttribute("open")) === null) await campo.locator("summary").click();
+    return campo.getByRole("checkbox", { name: opcao, exact: true });
+  };
+  const aplicar = (page: Page) => page.getByRole("button", { name: "Aplicar filtros" }).click();
 
   test("Ver detalhes nas duas abas, no desktop e no celular, sem colunas nem campos novos na linha", async ({ page }) => {
     await page.setViewportSize(DESKTOP);
@@ -123,35 +134,37 @@ test.describe("consulta dos atributos (#174)", () => {
     await expect(itemD.getByRole("link", { name: "Editar Ativo D fictício" })).toBeVisible();
   });
 
-  test("Filtrar: OU no mesmo campo, E entre campos, estado na URL, abas que preservam, contadores e Limpar", async ({ page }) => {
+  test("Filtrar: OU no mesmo campo, E entre campos, painel fechado ao aplicar, contador, abas e Limpar", async ({ page }) => {
     await page.setViewportSize(DESKTOP);
     await entrar(page, u.dono);
     await page.goto("/ativos");
     await expect(filtrar(page)).not.toHaveAttribute("open");
     await expect(principal(page).getByRole("link", { name: "Limpar filtros" })).toHaveCount(0);
-    await filtrar(page).locator("summary").click();
-    await caixa(page, "Veículo de acesso", "Fundo").check();
-    await caixa(page, "Veículo de acesso", "ETF").check();
-    await page.getByRole("button", { name: "Aplicar filtros" }).click();
-    await expect(page).toHaveURL(/veiculo=fundo&veiculo=etf/);
+    await abrirFiltrar(page);
+    await expect(filtrar(page).getByRole("heading", { level: 2 })).toHaveText(["Produto", "Tributação", "Resgate", "Proteção e exposição"]);
+    await expect(filtrar(page).getByRole("combobox", { name: "Previdência", exact: true })).toHaveCount(0);
+    await (await caixa(page, "Veículo de acesso", "Fundo")).check();
+    await (await caixa(page, "Veículo de acesso", "ETF")).check();
+    await aplicar(page);
+    // O envio vai à âncora da lista; os campos vazios do formulário também vão na URL e valem como Todos.
+    await expect(page).toHaveURL(/veiculo=fundo&veiculo=etf&.*#ativos-da-aba$/);
     expect(await nomesVisiveis(page)).toEqual(["Ativo A fictício", "Ativo B fictício", "Ativo C fictício"]);
-    await expect(principal(page).getByRole("status")).toHaveText("Veículo: Fundo ou ETF. 3 de 6 nesta aba.");
-    // Contadores continuam com o total de cada situação, e o painel abre com o que foi aplicado.
+    // Depois de aplicar, o painel fica fechado; o contador conta o campo, e Limpar fica ao lado.
+    await expect(filtrar(page)).not.toHaveAttribute("open");
+    await expect(resumoFiltrar(page)).toContainText("1 campo com filtro");
+    await expect(principal(page).getByRole("link", { name: "Limpar filtros" })).toBeVisible();
+    await expect(principal(page).getByRole("status")).toHaveCount(0);
+    // Contadores das abas continuam com o total de cada situação.
     await expect(aba(page, "Em uso")).toHaveText(/Em uso\s*6/);
     await expect(aba(page, "Desativados")).toHaveText(/Desativados\s*1/);
-    await expect(filtrar(page)).toHaveAttribute("open");
-    await expect(caixa(page, "Veículo de acesso", "ETF")).toBeChecked();
+    await expect(await caixa(page, "Veículo de acesso", "ETF")).toBeChecked();
 
-    await caixa(page, "Indexador da remuneração", "CDI").check();
-    await page.getByRole("button", { name: "Aplicar filtros" }).click();
+    await (await caixa(page, "Indexador da remuneração", "CDI")).check();
+    await aplicar(page);
     expect(await nomesVisiveis(page)).toEqual(["Ativo A fictício", "Ativo C fictício"]);
+    await expect(resumoFiltrar(page)).toContainText("2 campos com filtro");
     await page.reload();
     expect(await nomesVisiveis(page)).toEqual(["Ativo A fictício", "Ativo C fictício"]);
-
-    // Fechado, o painel deixa à vista os filtros e Limpar.
-    await filtrar(page).locator("summary").click();
-    await expect(principal(page).getByRole("status")).toBeVisible();
-    await expect(principal(page).getByRole("link", { name: "Limpar filtros" })).toBeVisible();
 
     // A aba Desativados recebe os mesmos filtros: D (Direto) não corresponde.
     await aba(page, "Desativados").click();
@@ -160,25 +173,61 @@ test.describe("consulta dos atributos (#174)", () => {
     await principal(page).getByRole("link", { name: "Limpar filtros" }).click();
     await expect(page).toHaveURL(/\/ativos\?aba=desativados$/);
     await expect(page.locator("#ativos-da-aba").getByText("Ativo D fictício", { exact: true })).toBeVisible();
+    // Limpar troca a página sem recarregar: o painel volta a Todos, sem nenhuma escolha antiga marcada.
+    await expect(resumoFiltrar(page)).not.toContainText("com filtro");
+    await expect(await caixa(page, "Veículo de acesso", "Fundo")).not.toBeChecked();
+    await expect(await caixa(page, "Veículo de acesso", "ETF")).not.toBeChecked();
+    await expect(await caixa(page, "Indexador da remuneração", "CDI")).not.toBeChecked();
+    await expect(filtrar(page).getByRole("group", { name: "Veículo de acesso" }).locator("summary")).toContainText("Todos");
+    // Voltar restaura a lista filtrada e as escolhas no painel.
     await page.goBack();
     await expect(page.getByRole("heading", { name: "Nenhum ativo corresponde aos filtros" })).toBeVisible();
+    await expect(resumoFiltrar(page)).toContainText("2 campos com filtro");
+    await expect(await caixa(page, "Veículo de acesso", "Fundo")).toBeChecked();
+    await expect(await caixa(page, "Indexador da remuneração", "CDI")).toBeChecked();
   });
 
-  test("prazo: Exatamente e Até na mesma unidade, sem conversão, e situação sem número", async ({ page }) => {
+  test("opções em uso nas listas, e Prefixado combina por OU com outro indexador", async ({ page }) => {
     await page.setViewportSize(DESKTOP);
     await entrar(page, u.dono);
     await page.goto("/ativos");
-    await filtrar(page).locator("summary").click();
-    await page.getByLabel("Situação", { exact: true }).selectOption({ label: "Prazo em dias" });
-    await page.getByLabel("Comparação", { exact: true }).selectOption({ label: "Exatamente" });
+    await abrirFiltrar(page);
+    const veiculo = filtrar(page).getByRole("group", { name: "Veículo de acesso" });
+    await veiculo.locator("summary").click();
+    // Das duas abas: D (desativado) usa Direto; ninguém usa Plano ou contrato nem Previdência.
+    await expect(veiculo.getByRole("checkbox")).toHaveCount(5);
+    for (const nome of ["Direto", "Fundo", "ETF", "BDR ou certificado de depósito", "Não informado"]) {
+      await expect(veiculo.getByRole("checkbox", { name: nome, exact: true })).toHaveCount(1);
+    }
+    await expect(veiculo.getByRole("checkbox", { name: "Plano ou contrato", exact: true })).toHaveCount(0);
+    await (await caixa(page, "Indexador da remuneração", "Prefixado (sem indexador)")).check();
+    await (await caixa(page, "Indexador da remuneração", "IPCA")).check();
+    await aplicar(page);
+    expect(await nomesVisiveis(page)).toEqual(["Ativo B fictício", LONGO]);
+  });
+
+  test("prazo: campos só com Prazo em dias, Exatamente e Até na mesma unidade, e situação sem número", async ({ page }) => {
+    await page.setViewportSize(DESKTOP);
+    await entrar(page, u.dono);
+    await page.goto("/ativos");
+    await abrirFiltrar(page);
+    const comparacao = page.getByLabel("Comparação", { exact: true });
+    await expect(comparacao).toBeHidden();
+    await page.locator("#filtro-prazo").selectOption({ label: "No vencimento" });
+    await expect(comparacao).toBeHidden();
+    await page.locator("#filtro-prazo").selectOption({ label: "Prazo em dias" });
+    await expect(comparacao).toBeVisible();
+    await comparacao.selectOption({ label: "Exatamente" });
     await page.getByLabel("Dias", { exact: true }).fill("1");
     await page.getByLabel("Unidade", { exact: true }).selectOption({ label: "Dias úteis" });
-    await page.getByRole("button", { name: "Aplicar filtros" }).click();
+    await aplicar(page);
     expect(await nomesVisiveis(page)).toEqual(["Ativo B fictício"]);
-    await page.getByLabel("Comparação", { exact: true }).selectOption({ label: "Até" });
-    await page.getByRole("button", { name: "Aplicar filtros" }).click();
+    await expect(resumoFiltrar(page)).toContainText("1 campo com filtro");
+    await abrirFiltrar(page);
+    await expect(comparacao).toBeVisible();
+    await comparacao.selectOption({ label: "Até" });
+    await aplicar(page);
     expect(await nomesVisiveis(page)).toEqual(["Ativo A fictício", "Ativo B fictício"]);
-    await expect(principal(page).getByRole("status")).toHaveText("Prazo: até 1 dia útil. 2 de 6 nesta aba.");
     // Até 100 dias úteis não inclui C, que tem 3 dias corridos.
     await page.goto("/ativos?prazo_resgate_tipo=prazo&prazo_resgate_comparacao=ate&prazo_resgate_dias=100&prazo_resgate_unidade=uteis");
     expect(await nomesVisiveis(page)).toEqual(["Ativo A fictício", "Ativo B fictício"]);
@@ -186,7 +235,7 @@ test.describe("consulta dos atributos (#174)", () => {
     await expect(page.locator("#ativos-da-aba").getByText("Ativo D fictício", { exact: true })).toBeVisible();
   });
 
-  test("Não informado seleciona só o nulo, sem o trânsito; combinações inválidas mostram erro, sem lista", async ({ page }) => {
+  test("Não informado seleciona só o nulo, sem o trânsito; combinações inválidas abrem o painel e mostram o erro no lugar da lista", async ({ page }) => {
     await page.setViewportSize(DESKTOP);
     await entrar(page, u.dono);
     await page.goto("/ativos?regime=nao_informado");
@@ -197,16 +246,19 @@ test.describe("consulta dos atributos (#174)", () => {
     expect(await nomesVisiveis(page)).toEqual(["Ativo E fictício"]);
     await page.goto("/ativos?liquidez_imediata=sim");
     expect(await nomesVisiveis(page)).toEqual(["Ativo A fictício"]);
+    // Um parâmetro antigo do indicador Previdência é ignorado (ciclo 018, D18).
+    await page.goto("/ativos?previdencia=sim");
+    expect(await nomesVisiveis(page)).toHaveLength(6);
 
     for (const [consulta, mensagem] of [
       ["prazo_resgate_tipo=nao_informado&prazo_resgate_dias=3", "Comparação, dias e unidade só valem com Prazo em dias."],
       ["prazo_resgate_tipo=prazo&prazo_resgate_dias=1&prazo_resgate_unidade=uteis", "Com Prazo em dias, escolha a comparação, os dias e a unidade."],
       ["fgc=talvez", "Cobertura do FGC tem uma opção desconhecida."],
       ["regime=outro&regime=renda_variavel", "Regime tributário aparece mais de uma vez."],
-      ["veiculo=nao_informado&veiculo=fundo", "Veículo de acesso: Não informado e as opções exclusivas não combinam com outras."],
+      ["veiculo=nao_informado&veiculo=fundo", "Veículo de acesso: Não informado não combina com outras opções."],
     ]) {
       await page.goto(`/ativos?${consulta}`);
-      await expect(principal(page).getByRole("alert"), consulta).toHaveText(`Não foi possível aplicar os filtros: ${mensagem}`);
+      await expect(page.locator("#ativos-da-aba").getByRole("alert"), consulta).toHaveText(`Não foi possível aplicar os filtros: ${mensagem}`);
       await expect(page.locator("#ativos-da-aba").getByText("Ativo A fictício", { exact: true }), consulta).toHaveCount(0);
       await expect(filtrar(page), consulta).toHaveAttribute("open");
     }
@@ -221,17 +273,23 @@ test.describe("consulta dos atributos (#174)", () => {
       await entrar(page, u.dono);
       for (const rota of ["/ativos?veiculo=certificado_representativo", "/ativos?aba=desativados", "/ativos?fgc=talvez"]) {
         await page.goto(rota);
-        if (!(await filtrar(page).getAttribute("open"))) await filtrar(page).locator("summary").click();
+        await abrirFiltrar(page);
+        await page.locator("#filtro-prazo").selectOption({ label: "Prazo em dias" });
         for (const aberto of await principal(page).locator("summary").filter({ hasText: /^Ver detalhes/ }).filter({ visible: true }).all()) await aberto.click();
-        const resultado = await new AxeBuilder({ page }).withTags(WCAG).analyze();
-        expect(resultado.violations, rota).toEqual([]);
-        const largura = await page.evaluate(() => ({ cliente: document.documentElement.clientWidth, rolagem: document.documentElement.scrollWidth }));
-        expect(largura.rolagem, rota).toBeLessThanOrEqual(largura.cliente);
+        // Uma lista suspensa aberta por vez: abrir uma fecha a outra.
+        for (const lista of ["Veículo de acesso", "Indexador da remuneração"]) {
+          const campo = filtrar(page).getByRole("group", { name: lista });
+          await campo.locator("summary").click();
+          const resultado = await new AxeBuilder({ page }).withTags(WCAG).analyze();
+          expect(resultado.violations, `${rota} ${lista}`).toEqual([]);
+          const largura = await page.evaluate(() => ({ cliente: document.documentElement.clientWidth, rolagem: document.documentElement.scrollWidth }));
+          expect(largura.rolagem, `${rota} ${lista}`).toBeLessThanOrEqual(largura.cliente);
+          for (const alvo of await campo.getByRole("checkbox").all()) {
+            expect((await alvo.locator("xpath=..").boundingBox())!.height, `${rota} ${lista}`).toBeGreaterThanOrEqual(44);
+          }
+        }
         for (const alvo of await principal(page).locator("summary").filter({ visible: true }).all()) {
           expect((await alvo.boundingBox())!.height, rota).toBeGreaterThanOrEqual(44);
-        }
-        for (const alvo of await filtrar(page).getByRole("checkbox").all()) {
-          expect((await alvo.locator("xpath=..").boundingBox())!.height, rota).toBeGreaterThanOrEqual(44);
         }
       }
       // Teclado: Enter no resumo o abre, e o foco continua nele.

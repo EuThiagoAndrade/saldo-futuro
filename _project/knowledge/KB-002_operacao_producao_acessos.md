@@ -436,6 +436,22 @@ Ação externa da issue #182, feita pelo responsável **logo depois** do deploy 
 
 Não executar `tests/fixtures/previdencia018/upgrade_pre.sql` nem `upgrade_post.sql` em produção: são fixtures do ensaio local descartável. Em caso de erro no AP4, a transação desfaz tudo; não repetir nem corrigir no painel, e relatar a mensagem de erro sem dados. Não há `down migration`; uma correção é migração nova. Enquanto o AP4 não for feito, escolher "Previdência" no veículo é recusado pelo banco, sem gravar nada; por isso o `db push` deve vir logo depois do deploy.
 
+#### Verificação em produção do ciclo 018
+
+Depois de "autorizo a verificação em produção do ciclo 018", com as issues #182 e #183 integradas e implantadas e a ação externa da #182 concluída. O responsável executa no próprio login, no desktop e no celular, e relata só **passou** ou **falhou** por item, sem nomes de ativos, instituições, valores, e-mails ou prints. Nenhum passo exige salvar.
+
+| Passo | O que fazer | Resultado esperado |
+| :-- | :-- | :-- |
+| VB1 | Em `/novidades`, conferir a versão corrente | Igual à da release publicada do ciclo |
+| VB2 | Abrir a edição de um ativo e "Mais detalhes" | Quatro grupos com título; veículo e indexador em lista suspensa, que fecha com Esc e com clique fora; nenhum indicador "Previdência" separado |
+| VB3 | Em `/ativos`, abrir "Ver detalhes" de um ativo nas duas abas | Quatro grupos com título, sem a frase de aviso; Previdência, se houver, aparece no veículo |
+| VB4 | Abrir "Filtrar" | Quatro grupos; nas listas de veículo e indexador, só as opções que você usa, mais "Não informado"; Comparação, Dias e Unidade só aparecem com "Prazo em dias" |
+| VB5 | Marcar duas opções de veículo e aplicar | O painel fecha, a página mostra a lista filtrada, o "Filtrar" mostra o contador e "Limpar filtros" fica ao lado |
+| VB6 | Trocar de aba e voltar; depois usar "Limpar filtros" | As abas mantêm os filtros e os contadores das abas não mudam; Limpar volta à lista completa |
+| VB7 | No celular, repetir VB2, VB4 e VB5 | Campos em coluna, alvos confortáveis ao toque e nenhuma rolagem horizontal |
+
+Relatar com a frase pedida no encerramento. Uma falha vira pendência explícita na task de encerramento.
+
 ## Fontes
 
 Consultadas em 2026-10-12 e conferidas na execução de 2026-10-13. São documentação oficial, sem versão fixada; os valores que dependem do plano ou do painel devem ser reconferidos.
@@ -473,3 +489,4 @@ Consultadas em 2026-10-12 e conferidas na execução de 2026-10-13. São documen
 | 2026-10-30 | `017` | Issue #174: roteiro VA1 a VA8 da verificação em produção da consulta e dos filtros de Ativos, com relato só de passou ou falhou |
 | 2026-10-31 | `017` | Encerramento: ação externa e VA1 a VA8 relatados como concluídos; release `0.13.0` publicada; evidências humanas e conferências do agente distinguidas no resultado |
 | 2026-10-31 | `018` | Issue #182: roteiro AP1 a AP7 da ação externa da Previdência como veículo, logo depois do deploy, com consultas só de estrutura e uma contagem agregada |
+| 2026-10-31 | `018` | Issue #183: roteiro VB1 a VB7 da verificação em produção do ciclo 018 (grupos, listas suspensas, Filtrar fechado ao aplicar e contador) |

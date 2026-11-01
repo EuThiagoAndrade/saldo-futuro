@@ -2,13 +2,13 @@
 
 > **Ciclo:** `018`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#182`
 > **Plano:** `_project/drafts/018_organizacao_atributos_previdencia/018_plan.md`
 > **Branch:** `feature/issue-182`
 > **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/184
-> **Integração:** `Pendente`
+> **Integração:** PR #184 integrada por squash (`c31081d56d7ce0d0ff2f51de3db655f90db6b36b`) em 2026-10-31, com todos os checks verdes e o teste local do responsável; deploy de produção concluído; ação externa concluída, conforme o relato do responsável em 2026-10-31; issue #182 aberta até o encerramento do ciclo
 > **Autorização inicial:** "Autorizo a #182" em 2026-10-31, em resposta à pergunta "Autoriza a implementação da issue #182?"
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-31
@@ -60,7 +60,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 | Ensaio de upgrade | Instância descartável `saldo-futuro-issue182-upgrade` (portas 553xx) com as migrações até `20261031000721`: `e1_pre.sql` → `f|f|f`; `upgrade_pre.sql` com os 8 casos de D18, aporte e fechamento; a "tela nova" editou um ativo com "Sim" antes da migração e o valor ficou preservado; o banco recusou `previdencia` no veículo antes da migração, sem gravar; migração aplicada; `upgrade_post.sql` → "retrato integral preservado e casos de D18 convertidos", os 8 casos conferidos um a um, código novo aceito e indicador não nulo recusado; `e1_post.sql` → `t|t|t|t`. Reexecutar `upgrade_post.sql` reprova com "caso de conversão divergente da tabela de D18", provando que a conferência detecta diferença |
 | Validador | 48/48 testes de governança; validador sem erros depois do registro do número da PR |
 | `git diff --check` | Passou |
-| Checks remotos | Em execução na PR #184 |
+| Checks remotos | Verdes na PR #184 no commit `9785cd0` antes do merge: governança; lint, tipos, testes, build e e2e de preview; Supabase local, testes de banco e e2e autenticado; Vercel. Deploy de produção de `c31081d`: "Deployment has completed" |
 
 ## Revisão da correção
 
@@ -94,18 +94,26 @@ Se tudo estiver certo, diga "aprovo o merge da PR #184". Logo depois do merge e 
 
 Feito pelo responsável no navegador do app, com o código da PR #184 rodando na pasta do 018 (porta 3018), contra o Supabase local já com a migração, e um usuário fictício só do banco local (`teste-local.responsavel@example.com`, senha de teste dos e2e). Seis blocos guiados: grupos no cadastro, lista suspensa do veículo (Esc, clique fora, exclusividade), indexador abrindo de primeira com a lista do veículo aberta, salvar e conferir no "Ver detalhes" e na edição, celular e filtro sem o indicador. Relato do responsável: "Tudo passou".
 
+## Registro da ação externa
+
+Merge aprovado com "Aprovo o merge", em resposta à pergunta sobre a PR #184, depois do teste local; checks verdes e head `9785cd0` conferidos antes do squash. O deploy de produção de `c31081d` foi conferido como concluído pelo status da Vercel no GitHub.
+
+Em 2026-10-31, com a frase "concluí a ação externa da issue #182", o responsável relatou: AP2 com só `20261031213611_previdencia_veiculo_acesso.sql` pendente; AP3 (`e1_pre.sql`) `false`/`false`/`false`; AP4 aplicada e local/remoto alinhados; AP5 (`e1_post.sql`) `true`/`true`/`true`/`true` (restrição do legado, catálogo com Previdência, conversão fora da Data API e nenhum indicador restante); AP6 ok (Previdência no veículo e sem indicador separado, sem salvar). É relato humano: o agente não tem acesso ao banco de produção e não o conferiu. Nenhum dado de carteira foi relatado; a única contagem é agregada. Com isso, a issue #183 pode ser autorizada.
+
 ## Encerramento
 
 Não se aplica — ciclo completo; encerramento em PR própria.
 
 ## Próximo passo
 
+Esta task está concluída; a ação externa foi relatada e o ciclo segue para a issue #183.
+
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 018 (completo)
+Situação: Aguardando autorização de implementação — ciclo 018 (completo)
 Quem: Responsável
-Conferir: Checks e diff da [PR #184](https://github.com/EuThiagoAndrade/saldo-futuro/pull/184); roteiro de teste local desta task
-Diga: "aprovo o merge da PR #184"
+Conferir: Issue [#183](https://github.com/EuThiagoAndrade/saldo-futuro/issues/183) e escopo do Item 2 do plano
+Diga: "autorizo a implementação da issue #183"
 ```
 
 ## Handoff de saída

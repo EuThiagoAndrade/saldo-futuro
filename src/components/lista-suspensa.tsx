@@ -1,6 +1,6 @@
 "use client";
 
-import { type KeyboardEvent, useEffect, useRef } from "react";
+import { type ComponentProps, type KeyboardEvent, useEffect, useRef, useState } from "react";
 import type { OpcaoAtributo } from "@/lib/telas/detalhes-ativo";
 
 // Lista suspensa de múltipla escolha (ciclo 018, issue #182, P2 e D14), para veículo e indexador no
@@ -91,5 +91,26 @@ export function ListaSuspensa({
         </div>
       </details>
     </fieldset>
+  );
+}
+
+/**
+ * A mesma lista no filtro de Ativos (ciclo 018, issue #183, D14 e D16): guarda o próprio estado,
+ * parte do que veio na URL e não desmarca nada sozinha, porque no filtro as opções combinam por OU.
+ * "Não informado" exclusivo continua conferido pelo servidor.
+ */
+export function ListaSuspensaFiltro({
+  iniciais,
+  ...props
+}: Omit<ComponentProps<typeof ListaSuspensa>, "marcados" | "aoAlternar"> & { iniciais: readonly string[] }) {
+  const [marcados, setMarcados] = useState<readonly string[]>(iniciais);
+  return (
+    <ListaSuspensa
+      {...props}
+      marcados={marcados}
+      aoAlternar={(codigo, marcado) =>
+        setMarcados((atual) => props.opcoes.map((o) => o.codigo).filter((c) => (c === codigo ? marcado : atual.includes(c))))
+      }
+    />
   );
 }
