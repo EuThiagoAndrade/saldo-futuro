@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.14.0](https://github.com/EuThiagoAndrade/saldo-futuro/compare/v0.13.0...v0.14.0) (2026-11-01)
+
+
+### Features
+
+* **issue-182:** tratar Previdência como veículo e organizar os detalhes do ativo em grupos ([#184](https://github.com/EuThiagoAndrade/saldo-futuro/issues/184)) ([c31081d](https://github.com/EuThiagoAndrade/saldo-futuro/commit/c31081d56d7ce0d0ff2f51de3db655f90db6b36b))
+* **issue-183:** reorganizar o filtro de Ativos em grupos com listas suspensas ([#186](https://github.com/EuThiagoAndrade/saldo-futuro/issues/186)) ([44920c7](https://github.com/EuThiagoAndrade/saldo-futuro/commit/44920c7401e0faba7dc76114ac261b8554181405))
+
 ## [0.13.0](https://github.com/EuThiagoAndrade/saldo-futuro/compare/v0.12.1...v0.13.0) (2026-10-31)
 
 
