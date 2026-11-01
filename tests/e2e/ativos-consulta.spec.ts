@@ -173,8 +173,18 @@ test.describe("consulta dos atributos (#174)", () => {
     await principal(page).getByRole("link", { name: "Limpar filtros" }).click();
     await expect(page).toHaveURL(/\/ativos\?aba=desativados$/);
     await expect(page.locator("#ativos-da-aba").getByText("Ativo D fictício", { exact: true })).toBeVisible();
+    // Limpar troca a página sem recarregar: o painel volta a Todos, sem nenhuma escolha antiga marcada.
+    await expect(resumoFiltrar(page)).not.toContainText("com filtro");
+    await expect(await caixa(page, "Veículo de acesso", "Fundo")).not.toBeChecked();
+    await expect(await caixa(page, "Veículo de acesso", "ETF")).not.toBeChecked();
+    await expect(await caixa(page, "Indexador da remuneração", "CDI")).not.toBeChecked();
+    await expect(filtrar(page).getByRole("group", { name: "Veículo de acesso" }).locator("summary")).toContainText("Todos");
+    // Voltar restaura a lista filtrada e as escolhas no painel.
     await page.goBack();
     await expect(page.getByRole("heading", { name: "Nenhum ativo corresponde aos filtros" })).toBeVisible();
+    await expect(resumoFiltrar(page)).toContainText("2 campos com filtro");
+    await expect(await caixa(page, "Veículo de acesso", "Fundo")).toBeChecked();
+    await expect(await caixa(page, "Indexador da remuneração", "CDI")).toBeChecked();
   });
 
   test("opções em uso nas listas, e Prefixado combina por OU com outro indexador", async ({ page }) => {

@@ -13,7 +13,7 @@ import {
   SITUACOES_PRAZO,
   UNIDADES_PRAZO,
 } from "@/lib/telas/detalhes-ativo";
-import { COMPARACOES, enderecoDaAba, OPCAO_NAO_INFORMADO, type Parametros } from "@/lib/telas/filtros-ativos";
+import { COMPARACOES, consultaDosFiltros, enderecoDaAba, OPCAO_NAO_INFORMADO, type Parametros } from "@/lib/telas/filtros-ativos";
 import type { Ativo } from "@/lib/telas/leituras";
 
 // Consulta dos atributos complementares na página Ativos (ciclo 017, issue #174, P5 e P6): o resumo
@@ -98,6 +98,9 @@ const indicador = (coluna: ColunaIndicador, p: Parametros) => {
  * fechado depois de aplicar e só abre sozinho com erro, para a página mostrar a lista (o envio vai à
  * âncora dela). O resumo mostra quantos campos têm filtro, e "Limpar filtros" fica ao lado, visível
  * com o painel fechado. Comparação, dias e unidade só aparecem com "Prazo em dias", por CSS.
+ *
+ * "Limpar filtros", voltar e avançar trocam a página sem recarregá-la: o painel é recriado sempre que
+ * os filtros da URL mudam, para nunca mostrar escolhas que não estão valendo.
  */
 export function FiltrosDosAtivos({
   aba,
@@ -117,7 +120,7 @@ export function FiltrosDosAtivos({
 }) {
   const p = parametros;
   return (
-    <div className="flex items-start gap-2">
+    <div key={consultaDosFiltros(p).toString()} className="flex items-start gap-2">
       <details open={erro !== null} className="min-w-0 flex-1 rounded-md border border-border bg-surface">
         <summary className="flex min-h-11 cursor-pointer items-center gap-2 px-4 text-sm/5 font-medium text-primary hover:bg-surface-subtle">
           Filtrar

@@ -55,10 +55,10 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 
 | Validação | Resultado |
 | :-- | :-- |
-| Testes | Unitários 512/512; lint sem erros; typecheck e build passaram; banco 671/671 (sem migração nova); as três especificações de Ativos juntas: 33 passed e 1 flaky (`ativos.spec.ts`, acessibilidade a 1280 px, falha em 0 ms na primeira tentativa e aprovado na repetição). E2e completo sobre o build com dois workers: 230 passed, 12 skipped (preview sem backend), 1 flaky e 3 failed, todos fora de Ativos: em `migracao.spec.ts`, o processo do CLI e um worker saíram com o código do Windows 3221226505 (o mesmo do ciclo 015), e em `periodo-intervalo.spec.ts` o servidor de teste parou de responder (`ERR_CONNECTION_REFUSED`). Repetidos só esses dois arquivos: 42 passed e 1 flaky (o de mais de 1.000 eventos, mesmo código de saída, aprovado na repetição), saída 0. Nenhum teste ou código foi alterado para contornar |
+| Testes | Unitários 512/512; lint sem erros; typecheck e build passaram; banco 671/671 (sem migração nova); as três especificações de Ativos juntas: 33 passed e 1 flaky (`ativos.spec.ts`, acessibilidade a 1280 px, falha em 0 ms na primeira tentativa e aprovado na repetição). E2e completo sobre o build com dois workers: 230 passed, 12 skipped (preview sem backend), 1 flaky e 3 failed, todos fora de Ativos: em `migracao.spec.ts`, o processo do CLI e um worker saíram com o código do Windows 3221226505 (o mesmo do ciclo 015), e em `periodo-intervalo.spec.ts` o servidor de teste parou de responder (`ERR_CONNECTION_REFUSED`). Repetidos só esses dois arquivos: 42 passed e 1 flaky (o de mais de 1.000 eventos, mesmo código de saída, aprovado na repetição), saída 0. Nenhum teste ou código foi alterado para contornar. Depois da correção de Limpar: as três especificações de Ativos 34/34, unitários 512/512 e lint sem erros |
 | Validador | 48/48 testes de governança; validador sem erros depois do registro do número da PR |
 | `git diff --check` | Passou |
-| Checks remotos | Em execução na PR #186 |
+| Checks remotos | Em execução na PR #186 (depois da correção de Limpar, novo commit) |
 
 ## Revisão da correção
 
@@ -70,6 +70,7 @@ Não se aplica — trilha normal.
 - **"Limpar filtros" fora do resumo:** fica ao lado do `<details>` "Filtrar", não dentro do `summary`, para não pôr um link dentro de um controle de abrir e fechar.
 - **URL com campos vazios:** o envio pelo formulário continua levando os campos vazios, que valem como Todos; os links das abas seguem sem eles.
 - **E2e:** a linha de status sumiu, então os testes passaram a conferir o contador e o painel fechado; o seletor do prazo é pelo id, porque o rótulo também nomeia o grupo do prazo.
+- **Defeito achado no teste local do responsável e corrigido nesta PR:** depois de "Limpar filtros", o painel ainda mostrava as escolhas anteriores marcadas, embora a lista e o contador já estivessem sem filtro. "Limpar filtros", voltar e avançar trocam a página sem recarregá-la (navegação do Next), e as listas e os campos do painel só liam a URL na primeira montagem. O painel agora tem a chave dos filtros da URL e é recriado sempre que eles mudam; trocar de aba não muda os filtros e mantém o painel. Conferido no navegador (filtro aplicado → Limpar: nada marcado e FGC em Todos → Voltar: escolhas de volta) e coberto pelo e2e "Filtrar: OU…" (Limpar desmarca tudo; Voltar restaura). Os outros blocos do teste local passaram, conforme o relato do responsável.
 - **Servidor de teste local parado antes do build**, porque o build e o servidor de desenvolvimento usam a mesma pasta `.next`.
 
 ## Roteiro de teste local — antes de aprovar o merge
