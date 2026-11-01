@@ -479,3 +479,81 @@ Na visão de Renda fixa, a base de “% na classe” é o total positivo de Rend
 
 - 2026-10-30 — Pedido explícito de guardar a proposta de nomenclatura dos percentuais no detalhe por classe; captura local.
 - 2026-10-30 — Retorno pós-integração da seleção original do ciclo 016; necessidade integralmente encaminhada (issue #163, PR #164, release 0.12.0 pela PR #165).
+
+## BL-018 — Remoção física da coluna e do parâmetro legados de previdência
+
+> **Criado em:** `2026-10-31`
+> **Atualizado em:** `2026-10-31`
+> **Estado:** `Disponível`
+
+### Problema e benefício esperado
+
+A coluna física `previdencia` na tabela `public.ativos` e o parâmetro legado `p_previdencia` nas funções de persistência foram descontinuados funcionalmente no ciclo 018 com a introdução do veículo `previdência`, mas foram mantidos no banco de dados e nos schemas por compatibilidade e transição segura. Essa permanência gera redundância física e acoplamento a um modelo de dados descontinuado. O benefício esperado é simplificar o schema do banco e as assinaturas de persistência, removendo definitivamente a coluna e o parâmetro legados após a estabilização em produção.
+
+### Contexto
+
+No ciclo 018 (PR #184 e PR #187), a leitura e a escrita passaram a operar exclusivamente através de `veiculo = 'previdencia'`. A coluna física e o parâmetro legado foram preservados temporariamente com defaults e fallback para permitir rollback sem quebra. A remoção definitiva exige migração de schema e atualização das RPCs e tipos TypeScript.
+
+### Encaminhamentos
+
+—
+
+### Restante
+
+—
+
+### Registro
+
+- 2026-10-31 — Pedido explícito de guardar a necessidade deixada fora do ciclo 018; captura local.
+
+## BL-019 — Preservação de filtros na edição e faixa de prazo com dois limites no filtro de ativos
+
+> **Criado em:** `2026-10-31`
+> **Atualizado em:** `2026-10-31`
+> **Estado:** `Disponível`
+
+### Problema e benefício esperado
+
+Ao navegar da listagem de ativos para a tela de edição de um ativo e retornar, os filtros e a paginação atualmente ativos na URL não são preservados, exigindo que o usuário reconfigure os critérios de busca. Além disso, o filtro de prazo até o vencimento opera atualmente apenas com operador único e valor pontual (limite único), não permitindo selecionar ativos dentro de um intervalo de tempo fechado (por exemplo, vencendo entre X e Y dias). O benefício esperado é melhorar a fluidez de navegação na edição preservando o estado do filtro e aumentar a expressividade temporal na filtragem de ativos.
+
+### Contexto
+
+Ambas as melhorias foram avaliadas durante o refinamento do filtro de ativos no ciclo 018 (issue #183), mas foram explicitamente deixadas fora do escopo daquele ciclo para priorizar a reorganização dos grupos em listas suspensas (dropdowns) e conter a complexidade da entrega.
+
+### Encaminhamentos
+
+—
+
+### Restante
+
+—
+
+### Registro
+
+- 2026-10-31 — Pedido explícito de guardar a necessidade deixada fora do ciclo 018; captura local.
+
+## BL-020 — Filtro de ativos por classe e por instituição na tela de consulta
+
+> **Criado em:** `2026-10-31`
+> **Atualizado em:** `2026-10-31`
+> **Estado:** `Disponível`
+
+### Problema e benefício esperado
+
+Na tela de consulta de ativos (`/ativos`), o filtro atual permite filtrar por atributos como liquidez, indexador, tributação e veículo, mas não oferece opção de filtrar por instituição financeira custodiante nem por classe de ativo (nós da taxonomia). Sem essas opções, o usuário não consegue visualizar isoladamente os ativos vinculados a uma determinada instituição ou pertencentes a uma classe específica da carteira. O benefício esperado é permitir que o usuário refine a lista de ativos por classe e por instituição, facilitando a conferência e o gerenciamento setorial ou por custodiante.
+
+### Contexto
+
+Instituição e classe já são dimensões fundamentais da carteira e estão presentes nas visões de distribuição patrimonial da tela inicial e no cadastro de cada ativo. A proposta estende o painel de filtros da tela `/ativos` para contemplar a seleção de uma instituição e/ou de uma classe, integrando-as aos parâmetros de URL e aos critérios de consulta.
+
+### Encaminhamentos
+
+—
+
+### Restante
+
+—
+
+### Registro
+
+- 2026-10-31 — Pedido explícito de guardar a sugestão de inclusão de filtros por classe e por instituição; captura local.
