@@ -7,7 +7,7 @@
 > **Issue:** — (encerramento sem issue recursiva; fecha #182 e #183)
 > **Plano:** `_project/executed/018_organizacao_atributos_previdencia/018_plan.md`
 > **Branch:** `chore/cycle-018-closure`
-> **PR:** —
+> **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/187
 > **Integração:** prospectiva; conclusão válida somente depois do merge desta PR, conferido no GitHub
 > **Autorização inicial:** "aprovo o plano do ciclo 018" em 2026-10-31 (cobre o encerramento); "autorizo a verificação em produção do ciclo 018" em 2026-10-31; relato "todos os itens passaram" para VB1 a VB7 em 2026-10-31; "Aprovo o merge da release #185 com os checks agora verdes!" em 2026-10-31
 > **Modo contínuo:** `—`
