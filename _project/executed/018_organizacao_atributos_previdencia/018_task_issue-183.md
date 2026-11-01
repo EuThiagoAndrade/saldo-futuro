@@ -2,13 +2,13 @@
 
 > **Ciclo:** `018`
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#183`
-> **Plano:** `_project/drafts/018_organizacao_atributos_previdencia/018_plan.md`
+> **Plano:** `_project/executed/018_organizacao_atributos_previdencia/018_plan.md`
 > **Branch:** `feature/issue-183`
 > **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/186
-> **Integração:** `Pendente`
+> **Integração:** PR #186 integrada por squash (`44920c7401e0faba7dc76114ac261b8554181405`); release 0.14.0 pela PR #185 (`90078ca05bcc5ac43fc6adcf4bd8da8fd39d38ad`); verificação em produção VB1 a VB7 relatada pelo responsável em 2026-10-31 com "todos os itens passaram"; issue #183 aberta até o merge do encerramento
 > **Autorização inicial:** "Autorizo a #183" em 2026-10-31, em resposta à pergunta "Autoriza a implementação da issue #183?"
 > **Modo contínuo:** `—`
 > **Início:** 2026-10-31
@@ -85,21 +85,38 @@ No navegador do app, com a PR rodando na pasta do 018 e o mesmo usuário local d
 6. **Erro:** abra a URL `/ativos?fgc=talvez`; o painel abre e a mensagem aparece no lugar da lista.
 7. **Celular:** simule 360 px e repita 1 a 4; nada cortado nem rolagem para o lado.
 
+### Resultado do teste local e verificação em produção
+
+- **Teste local da PR #186 (2026-10-31):** o responsável testou o roteiro guiado e detectou que "Limpar filtros" mantinha os campos marcados no painel após navegação SPA; corrigido na PR #186 antes do merge. Com a correção, todos os blocos passaram e o merge foi aprovado ("aprovo o merge da PR #186").
+- **Release 0.14.0 (2026-10-31):** PR #185 integrada por squash com checks verdes após liberação das runs de pull_request (`90078ca05bcc5ac43fc6adcf4bd8da8fd39d38ad`), tag `v0.14.0` publicada no GitHub.
+- **Verificação em produção (2026-10-31):** sob autorização "autorizo a verificação em produção do ciclo 018", o responsável executou o roteiro VB1 a VB7 em produção (desktop e celular) e relatou "todos os itens passaram".
+
 ## Encerramento
 
-Não se aplica — ciclo completo; encerramento em PR própria, depois da verificação em produção.
+Encerramento prospectivo do ciclo 018 na PR de encerramento (`chore/cycle-018-closure`), que fecha a issue #183 por `Closes #183`.
 
 ## Próximo passo
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 018 (completo)
-Quem: Responsável
-Conferir: Checks e diff da [PR #186](https://github.com/EuThiagoAndrade/saldo-futuro/pull/186); roteiro de teste local desta task
-Diga: "aprovo o merge da PR #186"
+Situação: Concluído — ciclo 018 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
+
+- `handoff_schema_version: 2`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 018 + atualizar_docs + 018_task_issue-183/encerramento + 90078ca05bcc5ac43fc6adcf4bd8da8fd39d38ad`
+- `effect_class`: `remote_mutation`
+- `state_before`: PR #186 integrada em `main` (`44920c7`); release 0.14.0 publicada (`90078ca`); VB1 a VB7 aprovados; issue #183 aberta.
+- `state_after`: task reconciliada em `executed/`, com encerramento prospectivo; issue #183 fecha na PR de encerramento.
+- `result`: `executed`
+- `evidence`: PRs #186 e #185 integradas, release v0.14.0, relato humano de VB1 a VB7 e PR de encerramento.
+- `blockers`: merge da PR de encerramento.
+
+### Histórico — handoff da implementação
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 018 + implementar_issue + 183 + c31081d56d7ce0d0ff2f51de3db655f90db6b36b`
