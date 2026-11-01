@@ -450,6 +450,8 @@ Depois de "autorizo a verificação em produção do ciclo 018", com as issues #
 | VB6 | Trocar de aba e voltar; depois usar "Limpar filtros" | As abas mantêm os filtros e os contadores das abas não mudam; Limpar volta à lista completa |
 | VB7 | No celular, repetir VB2, VB4 e VB5 | Campos em coluna, alvos confortáveis ao toque e nenhuma rolagem horizontal |
 
+Resultado em 2026-10-31: o responsável relatou que todos os itens (VB1 a VB7) passaram.
+
 Relatar com a frase pedida no encerramento. Uma falha vira pendência explícita na task de encerramento.
 
 ## Fontes
@@ -490,3 +492,4 @@ Consultadas em 2026-10-12 e conferidas na execução de 2026-10-13. São documen
 | 2026-10-31 | `017` | Encerramento: ação externa e VA1 a VA8 relatados como concluídos; release `0.13.0` publicada; evidências humanas e conferências do agente distinguidas no resultado |
 | 2026-10-31 | `018` | Issue #182: roteiro AP1 a AP7 da ação externa da Previdência como veículo, logo depois do deploy, com consultas só de estrutura e uma contagem agregada |
 | 2026-10-31 | `018` | Issue #183: roteiro VB1 a VB7 da verificação em produção do ciclo 018 (grupos, listas suspensas, Filtrar fechado ao aplicar e contador) |
+| 2026-10-31 | `018` | Encerramento: ação externa (AP1 a AP7) e verificação em produção (VB1 a VB7) relatadas como concluídas pelo responsável; release `0.14.0` publicada |

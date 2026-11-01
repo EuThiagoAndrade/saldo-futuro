@@ -5,7 +5,7 @@
 > **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#182`
-> **Plano:** `_project/drafts/018_organizacao_atributos_previdencia/018_plan.md`
+> **Plano:** `_project/executed/018_organizacao_atributos_previdencia/018_plan.md`
 > **Branch:** `feature/issue-182`
 > **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/184
 > **Integração:** PR #184 integrada por squash (`c31081d56d7ce0d0ff2f51de3db655f90db6b36b`) em 2026-10-31, com todos os checks verdes e o teste local do responsável; deploy de produção concluído; ação externa concluída, conforme o relato do responsável em 2026-10-31; issue #182 aberta até o encerramento do ciclo
@@ -102,21 +102,30 @@ Em 2026-10-31, com a frase "concluí a ação externa da issue #182", o respons�
 
 ## Encerramento
 
-Não se aplica — ciclo completo; encerramento em PR própria.
+Encerramento prospectivo do ciclo 018 na PR de encerramento (`chore/cycle-018-closure`), que fecha a issue #182 por `Closes #182`.
 
 ## Próximo passo
 
-Esta task está concluída; a ação externa foi relatada e o ciclo segue para a issue #183.
-
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando autorização de implementação — ciclo 018 (completo)
-Quem: Responsável
-Conferir: Issue [#183](https://github.com/EuThiagoAndrade/saldo-futuro/issues/183) e escopo do Item 2 do plano
-Diga: "autorizo a implementação da issue #183"
+Situação: Concluído — ciclo 018 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
+
+- `handoff_schema_version: 2`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 018 + atualizar_docs + 018_task_issue-182/encerramento + 90078ca05bcc5ac43fc6adcf4bd8da8fd39d38ad`
+- `effect_class`: `remote_mutation`
+- `state_before`: PR #184 integrada em `main` (`c31081d`), ação externa relatada em 2026-10-31; issue #182 aberta.
+- `state_after`: task reconciliada em `executed/`, com encerramento prospectivo; issue #182 fecha na PR de encerramento.
+- `result`: `executed`
+- `evidence`: PR #184 integrada, ação externa relatada, release 0.14.0 publicada e PR de encerramento.
+- `blockers`: merge da PR de encerramento.
+
+### Histórico — handoff da implementação
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 018 + implementar_issue + 182 + 2385623`

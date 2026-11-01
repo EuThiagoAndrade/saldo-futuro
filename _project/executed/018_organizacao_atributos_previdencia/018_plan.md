@@ -1,7 +1,7 @@
 # Plano de Implementação — Organização dos atributos e Previdência como veículo
 
 > **Ciclo:** `018`
-> **Status:** `Em Execução`
+> **Status:** `Concluído`
 > **Versão:** `v1`
 > **Data de criação:** 2026-10-30
 > **Última atualização:** 2026-10-31
@@ -203,32 +203,32 @@ Uma branch por issue (`feature/issue-N`), commit `feat(issue-N): ...`, task `018
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | [#182](https://github.com/EuThiagoAndrade/saldo-futuro/issues/182) e [#183](https://github.com/EuThiagoAndrade/saldo-futuro/issues/183) |
-| PR(s) | [#180 — publicação documental da ideação, do plano e do registro do ciclo](https://github.com/EuThiagoAndrade/saldo-futuro/pull/180), integrada em `main` (`e5fe034587f36bc3ae49ef6397a231da3c1bf641`); [#184 — Item 1, issue #182](https://github.com/EuThiagoAndrade/saldo-futuro/pull/184), integrada em `main` (`c31081d56d7ce0d0ff2f51de3db655f90db6b36b`); ação externa relatada pelo responsável em 2026-10-31; [#186 — Item 2, issue #183](https://github.com/EuThiagoAndrade/saldo-futuro/pull/186), aberta |
-| Branch(es) | `chore/cycle-018-plan` — publicação documental, numa pasta separada (`git worktree`) para não interferir no encerramento do 017 feito em paralelo; `feature/issue-182` — Item 1, task `018_task_issue-182.md`; `feature/issue-183` — Item 2, task `018_task_issue-183.md` |
+| PR(s) | [#180 — publicação documental da ideação, do plano e do registro do ciclo](https://github.com/EuThiagoAndrade/saldo-futuro/pull/180), integrada em `main` (`e5fe034587f36bc3ae49ef6397a231da3c1bf641`); [#184 — Item 1, issue #182](https://github.com/EuThiagoAndrade/saldo-futuro/pull/184), integrada em `main` (`c31081d56d7ce0d0ff2f51de3db655f90db6b36b`); ação externa relatada pelo responsável em 2026-10-31; [#186 — Item 2, issue #183](https://github.com/EuThiagoAndrade/saldo-futuro/pull/186), integrada em `main` (`44920c7401e0faba7dc76114ac261b8554181405`); [#185 — release 0.14.0](https://github.com/EuThiagoAndrade/saldo-futuro/pull/185), integrada em `main` (`90078ca05bcc5ac43fc6adcf4bd8da8fd39d38ad`); verificação em produção VB1 a VB7 relatada como aprovada em 2026-10-31; [PR #187 — encerramento](https://github.com/EuThiagoAndrade/saldo-futuro/pull/187) |
+| Branch(es) | `chore/cycle-018-plan` — publicação documental, numa pasta separada (`git worktree`) para não interferir no encerramento do 017 feito em paralelo; `feature/issue-182` — Item 1, task `018_task_issue-182.md`; `feature/issue-183` — Item 2, task `018_task_issue-183.md`; `chore/cycle-018-closure` — encerramento documental |
 | Destino após conclusão | `_project/executed/018_organizacao_atributos_previdencia/018_plan.md` |
 
 ## Próximo passo
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 018 (completo)
-Quem: Responsável
-Conferir: Checks e diff da [PR #186](https://github.com/EuThiagoAndrade/saldo-futuro/pull/186); roteiro de teste local em 018_task_issue-183.md
-Diga: "aprovo o merge da PR #186"
+Situação: Concluído — ciclo 018 (completo)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
-- `logical_key`: `EuThiagoAndrade/saldo-futuro + 018 + criar_issues + issues-182-183 + e5fe034587f36bc3ae49ef6397a231da3c1bf641`
+- `logical_key`: `EuThiagoAndrade/saldo-futuro + 018 + atualizar_docs + 018_plan/encerramento + 90078ca05bcc5ac43fc6adcf4bd8da8fd39d38ad`
 - `effect_class`: `remote_mutation`
-- `state_before`: plano v1 `Aprovado` e integrado pela PR #180 (`e5fe034`); payloads apresentados ao responsável; nenhuma issue do 018.
-- `state_after`: issues #182 e #183 criadas e conferidas como `OPEN`; registros locais em `018_plan.md` e `cycles.md`, sem commit, para a branch da #182; nenhuma implementação iniciada.
+- `state_before`: entregas #182 e #183 integradas; release 0.14.0 publicada; VB1 a VB7 aprovados; ciclo movido para `executed/`.
+- `state_after`: plano concluído com encerramento prospectivo; PR de encerramento publicada fechando as issues #182 e #183.
 - `result`: `executed`
-- `evidence`: ver "Registro de criação das issues".
-- `blockers`: "autorizo a implementação da issue #182".
+- `evidence`: PRs #180, #184, #186, #185; release v0.14.0; relatos de ação externa e verificação em produção; gates locais aprovados.
+- `blockers`: checks e aprovação do merge da PR de encerramento.
 
-### Registro de criação das issues
+### Histórico — handoff da criação das issues
 
 - **Data e autorização:** 2026-10-31, "pode criar as issues", depois da apresentação dos dois payloads.
 - **Precondições conferidas:** plano `Aprovado` e integrado (PR #180, `e5fe034587f36bc3ae49ef6397a231da3c1bf641`); busca no GitHub sem issue equivalente e sem issue aberta.
