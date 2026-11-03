@@ -584,7 +584,7 @@ A tela `src/app/(app)/ativos/novo/page.tsx` serve de referência para o link de 
 
 - 2026-11-03 — Pedido explícito de guardar as necessidades de retorno em Novo Lançamento e de auditoria dos links de retorno nas telas; captura local.
 
-## BL-022 — Seleção contextual de ativos em lançamentos e transferências
+## BL-022 — Seletor compartilhado de ativos em lançamentos e transferências
 
 > **Criado em:** `2026-11-03`
 > **Atualizado em:** `2026-11-03`
@@ -592,11 +592,11 @@ A tela `src/app/(app)/ativos/novo/page.tsx` serve de referência para o link de 
 
 ### Problema e benefício esperado
 
-Nas telas Novo Lançamento e Transferências, a seleção baseada somente no nome pode não identificar o registro correto quando existem ativos com o mesmo nome em instituições diferentes. Isso deixa incerta a escolha do ativo que receberá um lançamento ou será origem ou destino de uma transferência. O benefício esperado é permitir uma seleção contextual e previsível, reduzindo o risco de escolher o ativo errado.
+Nas telas Novo Lançamento e Transferências, a seleção baseada somente no nome pode não identificar o ativo correto quando existem registros com o mesmo nome em instituições diferentes. Isso deixa incerta a escolha do ativo que receberá um lançamento ou será origem ou destino de uma transferência. O benefício esperado é permitir uma seleção clara e consistente, reduzindo o risco de escolher o ativo errado.
 
 ### Contexto
 
-O pedido propõe padronizar a escolha nessas telas com o filtro da página Ativos. O BL-020 registra a etapa anterior: aprimorar o filtro de `/ativos` com instituição e classe. A sequência desejada é concluir primeiro essa ampliação e, depois, reaproveitar ou alinhar esses critérios de seleção em Novo Lançamento e Transferências. O BL-010 cobre busca e ordenação alfabética nos seletores, mas não resolve por si só a desambiguação entre ativos com nomes iguais em instituições diferentes. O desenho exato do seletor e os demais critérios ainda ficam para decisão futura.
+O responsável decidiu padronizar a consulta e a escolha de ativos com o mesmo componente e conjunto de filtros em Ativos, Novo Lançamento e Transferências. A sequência acordada é concluir primeiro o BL-020, que acrescenta instituição e classe ao filtro de Ativos, e depois reutilizar o componente nos formulários. Os mesmos filtros ficam disponíveis na seleção; para manter os formulários concisos, os grupos menos usados começam recolhidos. Cada opção exibe nome, instituição e classe. No lançamento se escolhe um ativo; na transferência, o seletor é usado separadamente para origem e destino, e cada seleção envia o ID do ativo confirmado. O BL-010 já cobre busca e ordenação alfabética dos seletores, mas não resolve sozinho a desambiguação entre registros homônimos.
 
 ### Encaminhamentos
 
@@ -609,6 +609,7 @@ O pedido propõe padronizar a escolha nessas telas com o filtro da página Ativo
 ### Registro
 
 - 2026-11-03 — Pedido explícito de detalhar BL-022 para abranger Novo Lançamento e Transferências, registrar a desambiguação por instituição e a sequência após BL-020; edição local.
+- 2026-11-03 — Decisão do responsável: reutilizar o mesmo componente e conjunto de filtros após o BL-020 adicionar instituição e classe; manter grupos menos usados recolhidos nos formulários; edição local.
 
 ## BL-023 — Ordenação alfabética nas etapas e no relatório do fechamento mensal
 
