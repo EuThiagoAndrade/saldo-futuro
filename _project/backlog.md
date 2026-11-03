@@ -557,3 +557,81 @@ Instituição e classe já são dimensões fundamentais da carteira e estão pre
 ### Registro
 
 - 2026-10-31 — Pedido explícito de guardar a sugestão de inclusão de filtros por classe e por instituição; captura local.
+
+## BL-021 — Navegação de retorno consistente em todas as telas
+
+> **Criado em:** `2026-11-03`
+> **Atualizado em:** `2026-11-03`
+> **Estado:** `Disponível`
+
+### Problema e benefício esperado
+
+A tela Novo Lançamento não oferece um link explícito para voltar ao contexto anterior, ao contrário da tela Novo Ativo, que apresenta “Voltar para Ativos”. Também falta conferir se outras telas têm a mesma lacuna. O benefício esperado é oferecer caminhos de retorno claros e consistentes, ajudando o usuário a manter a orientação durante a navegação.
+
+### Contexto
+
+A tela `src/app/(app)/ativos/novo/page.tsx` serve de referência para o link de retorno; `/lancamentos/novo` é o caso conhecido sem link equivalente. O pedido inclui conferir todas as telas e identificar as demais lacunas, destinando cada link ao contexto adequado.
+
+### Encaminhamentos
+
+—
+
+### Restante
+
+—
+
+### Registro
+
+- 2026-11-03 — Pedido explícito de guardar as necessidades de retorno em Novo Lançamento e de auditoria dos links de retorno nas telas; captura local.
+
+## BL-022 — Mais contexto para identificar ativos no Novo Lançamento
+
+> **Criado em:** `2026-11-03`
+> **Atualizado em:** `2026-11-03`
+> **Estado:** `Disponível`
+
+### Problema e benefício esperado
+
+Na tela Novo Lançamento, mostrar somente o nome pode dificultar a escolha quando há ativos com nomes semelhantes. O benefício esperado é permitir que o usuário identifique e selecione o ativo correto com apoio de informações ou filtros adequados.
+
+### Contexto
+
+O pedido sugere aproveitar a capacidade de filtragem disponível na tela Ativos. Relaciona-se ao BL-010, que cobre busca e ordenação nos seletores de ativos, e ao BL-020, que cobre filtros na listagem `/ativos`; este item trata da identificação do ativo no formulário de lançamento. Quais informações ou filtros serão exibidos ficam para decisão futura.
+
+### Encaminhamentos
+
+—
+
+### Restante
+
+—
+
+### Registro
+
+- 2026-11-03 — Pedido explícito de guardar a necessidade de distinguir ativos semelhantes na seleção do Novo Lançamento; captura local.
+
+## BL-023 — Ordenação alfabética nas etapas e no relatório do fechamento mensal
+
+> **Criado em:** `2026-11-03`
+> **Atualizado em:** `2026-11-03`
+> **Estado:** `Disponível`
+
+### Problema e benefício esperado
+
+As listas de ativos no fechamento mensal e no relatório Mês Fechado precisam aparecer em ordem alfabética pelo nome do ativo. A ordenação A–Z facilita localizar e revisar os itens com previsibilidade.
+
+### Contexto
+
+O pedido abrange as listas da etapa “1. Saldo real de cada ativo”, da etapa “2. Revisão” e do relatório final “Mês Fechado”. As três pertencem ao mesmo fluxo de fechamento mensal.
+
+### Encaminhamentos
+
+—
+
+### Restante
+
+—
+
+### Registro
+
+- 2026-11-03 — Pedido explícito de guardar a ordenação A–Z das listas do fechamento e do relatório Mês Fechado; captura local.
