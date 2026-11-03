@@ -584,7 +584,7 @@ A tela `src/app/(app)/ativos/novo/page.tsx` serve de referência para o link de 
 
 - 2026-11-03 — Pedido explícito de guardar as necessidades de retorno em Novo Lançamento e de auditoria dos links de retorno nas telas; captura local.
 
-## BL-022 — Mais contexto para identificar ativos no Novo Lançamento
+## BL-022 — Seleção contextual de ativos em lançamentos e transferências
 
 > **Criado em:** `2026-11-03`
 > **Atualizado em:** `2026-11-03`
@@ -592,11 +592,11 @@ A tela `src/app/(app)/ativos/novo/page.tsx` serve de referência para o link de 
 
 ### Problema e benefício esperado
 
-Na tela Novo Lançamento, mostrar somente o nome pode dificultar a escolha quando há ativos com nomes semelhantes. O benefício esperado é permitir que o usuário identifique e selecione o ativo correto com apoio de informações ou filtros adequados.
+Nas telas Novo Lançamento e Transferências, a seleção baseada somente no nome pode não identificar o registro correto quando existem ativos com o mesmo nome em instituições diferentes. Isso deixa incerta a escolha do ativo que receberá um lançamento ou será origem ou destino de uma transferência. O benefício esperado é permitir uma seleção contextual e previsível, reduzindo o risco de escolher o ativo errado.
 
 ### Contexto
 
-O pedido sugere aproveitar a capacidade de filtragem disponível na tela Ativos. Relaciona-se ao BL-010, que cobre busca e ordenação nos seletores de ativos, e ao BL-020, que cobre filtros na listagem `/ativos`; este item trata da identificação do ativo no formulário de lançamento. Quais informações ou filtros serão exibidos ficam para decisão futura.
+O pedido propõe padronizar a escolha nessas telas com o filtro da página Ativos. O BL-020 registra a etapa anterior: aprimorar o filtro de `/ativos` com instituição e classe. A sequência desejada é concluir primeiro essa ampliação e, depois, reaproveitar ou alinhar esses critérios de seleção em Novo Lançamento e Transferências. O BL-010 cobre busca e ordenação alfabética nos seletores, mas não resolve por si só a desambiguação entre ativos com nomes iguais em instituições diferentes. O desenho exato do seletor e os demais critérios ainda ficam para decisão futura.
 
 ### Encaminhamentos
 
@@ -608,7 +608,7 @@ O pedido sugere aproveitar a capacidade de filtragem disponível na tela Ativos.
 
 ### Registro
 
-- 2026-11-03 — Pedido explícito de guardar a necessidade de distinguir ativos semelhantes na seleção do Novo Lançamento; captura local.
+- 2026-11-03 — Pedido explícito de detalhar BL-022 para abranger Novo Lançamento e Transferências, registrar a desambiguação por instituição e a sequência após BL-020; edição local.
 
 ## BL-023 — Ordenação alfabética nas etapas e no relatório do fechamento mensal
 
