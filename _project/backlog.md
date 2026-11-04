@@ -557,3 +557,82 @@ Instituição e classe já são dimensões fundamentais da carteira e estão pre
 ### Registro
 
 - 2026-10-31 — Pedido explícito de guardar a sugestão de inclusão de filtros por classe e por instituição; captura local.
+
+## BL-021 — Navegação de retorno consistente em todas as telas
+
+> **Criado em:** `2026-11-03`
+> **Atualizado em:** `2026-11-03`
+> **Estado:** `Disponível`
+
+### Problema e benefício esperado
+
+A tela Novo Lançamento não oferece um link explícito para voltar ao contexto anterior, ao contrário da tela Novo Ativo, que apresenta “Voltar para Ativos”. Também falta conferir se outras telas têm a mesma lacuna. O benefício esperado é oferecer caminhos de retorno claros e consistentes, ajudando o usuário a manter a orientação durante a navegação.
+
+### Contexto
+
+A tela `src/app/(app)/ativos/novo/page.tsx` serve de referência para o link de retorno; `/lancamentos/novo` é o caso conhecido sem link equivalente. O pedido inclui conferir todas as telas e identificar as demais lacunas, destinando cada link ao contexto adequado.
+
+### Encaminhamentos
+
+—
+
+### Restante
+
+—
+
+### Registro
+
+- 2026-11-03 — Pedido explícito de guardar as necessidades de retorno em Novo Lançamento e de auditoria dos links de retorno nas telas; captura local.
+
+## BL-022 — Seletor compartilhado de ativos em lançamentos e transferências
+
+> **Criado em:** `2026-11-03`
+> **Atualizado em:** `2026-11-03`
+> **Estado:** `Disponível`
+
+### Problema e benefício esperado
+
+Nas telas Novo Lançamento e Transferências, a seleção baseada somente no nome pode não identificar o ativo correto quando existem registros com o mesmo nome em instituições diferentes. Isso deixa incerta a escolha do ativo que receberá um lançamento ou será origem ou destino de uma transferência. O benefício esperado é permitir uma seleção clara e consistente, reduzindo o risco de escolher o ativo errado.
+
+### Contexto
+
+O responsável decidiu padronizar a consulta e a escolha de ativos com o mesmo componente e conjunto de filtros em Ativos, Novo Lançamento e Transferências. A sequência acordada é concluir primeiro o BL-020, que acrescenta instituição e classe ao filtro de Ativos, e depois reutilizar o componente nos formulários. Os mesmos filtros ficam disponíveis na seleção; para manter os formulários concisos, os grupos menos usados começam recolhidos. Cada opção exibe nome, instituição e classe. No lançamento se escolhe um ativo; na transferência, o seletor é usado separadamente para origem e destino, e cada seleção envia o ID do ativo confirmado. O BL-010 já cobre busca e ordenação alfabética dos seletores, mas não resolve sozinho a desambiguação entre registros homônimos.
+
+### Encaminhamentos
+
+—
+
+### Restante
+
+—
+
+### Registro
+
+- 2026-11-03 — Pedido explícito de detalhar BL-022 para abranger Novo Lançamento e Transferências, registrar a desambiguação por instituição e a sequência após BL-020; edição local.
+- 2026-11-03 — Decisão do responsável: reutilizar o mesmo componente e conjunto de filtros após o BL-020 adicionar instituição e classe; manter grupos menos usados recolhidos nos formulários; edição local.
+
+## BL-023 — Ordenação alfabética nas etapas e no relatório do fechamento mensal
+
+> **Criado em:** `2026-11-03`
+> **Atualizado em:** `2026-11-03`
+> **Estado:** `Disponível`
+
+### Problema e benefício esperado
+
+As listas de ativos no fechamento mensal e no relatório Mês Fechado precisam aparecer em ordem alfabética pelo nome do ativo. A ordenação A–Z facilita localizar e revisar os itens com previsibilidade.
+
+### Contexto
+
+O pedido abrange as listas da etapa “1. Saldo real de cada ativo”, da etapa “2. Revisão” e do relatório final “Mês Fechado”. As três pertencem ao mesmo fluxo de fechamento mensal.
+
+### Encaminhamentos
+
+—
+
+### Restante
+
+—
+
+### Registro
+
+- 2026-11-03 — Pedido explícito de guardar a ordenação A–Z das listas do fechamento e do relatório Mês Fechado; captura local.
