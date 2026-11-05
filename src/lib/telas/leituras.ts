@@ -51,6 +51,16 @@ export function lerClassesLegadas(cliente: Cliente, sinal?: AbortSignal): Promis
   return lerTabela<EntradaCatalogo>(cliente, "classes_ativo", { colunas: "id, nome", sinal });
 }
 
+/**
+ * Nós da taxonomia global (ciclo 013), validados como árvore (incoerente é erro de leitura). Os seletores
+ * de ativo recebem os nós, que são dados simples, e remontam a árvore no navegador (ciclo 019, issue #191).
+ */
+export async function lerNosDaTaxonomia(cliente: Cliente, sinal?: AbortSignal): Promise<NoTaxonomia[]> {
+  const nos = await lerTabela<NoTaxonomia>(cliente, "taxonomia_ativos", { colunas: "id, parent_id, nivel, nome, ordem", sinal });
+  montarTaxonomia(nos);
+  return nos;
+}
+
 /** Taxonomia global de classes (ciclo 013): a árvore inteira, validada; árvore incoerente é erro de leitura. */
 export async function lerTaxonomia(cliente: Cliente, sinal?: AbortSignal): Promise<Taxonomia> {
   return montarTaxonomia(await lerTabela<NoTaxonomia>(cliente, "taxonomia_ativos", { colunas: "id, parent_id, nivel, nome, ordem", sinal }));

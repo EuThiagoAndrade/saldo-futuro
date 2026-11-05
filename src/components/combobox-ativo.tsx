@@ -4,7 +4,9 @@
 // O ID da opção confirmada vai num campo oculto com o `name` do formulário; a política de seleção
 // está em `@/lib/telas/combobox` (DESIGN.md 6.8). A busca só funciona depois da hidratação.
 // O mesmo componente serve aos seletores de instituição e classe (ciclo 012, issue #128): com
-// `nomeNovo`, oferece "Cadastrar «texto»" e envia o nome novo nesse segundo campo oculto.
+// `nomeNovo`, oferece "Cadastrar «texto»" e envia o nome novo nesse segundo campo oculto. Com
+// `detalhe` nas opções (ciclo 019, issue #191), cada uma ganha uma segunda linha em texto secundário, e a
+// opção confirmada a repete abaixo do campo; só apresentação, a busca e o valor enviado não mudam.
 
 import { useEffect, useId, useReducer, useRef, useState, type KeyboardEvent } from "react";
 import { classeCampo } from "@/components/campos";
@@ -89,6 +91,7 @@ export function ComboboxAtivo({
   const campo = useRef<HTMLInputElement>(null);
   const idLista = useId();
   const idErro = `${id}-erro`;
+  const idDetalhe = `${id}-detalhe`;
 
   const lista = listaFiltrada(configuracao, estado.filtro);
   const listaAberta = estado.aberta && lista.length > 0;
@@ -132,6 +135,9 @@ export function ComboboxAtivo({
   }
 
   const invalido = tentou && mensagem !== "";
+  // Segunda linha da opção confirmada, que mantém o ativo identificável com a lista fechada.
+  const detalheConfirmado = estado.confirmada?.detalhe;
+  const descricao = [invalido ? idErro : null, detalheConfirmado ? idDetalhe : null].filter((v) => v !== null).join(" ");
 
   return (
     <div className="relative">
@@ -145,7 +151,7 @@ export function ComboboxAtivo({
         aria-autocomplete="list"
         aria-activedescendant={listaAberta && estado.ativa >= 0 ? `${idLista}-${estado.ativa}` : undefined}
         aria-invalid={invalido ? true : undefined}
-        aria-describedby={invalido ? idErro : undefined}
+        aria-describedby={descricao || undefined}
         autoComplete="off"
         maxLength={nomeNovo === undefined ? undefined : 100}
         required={obrigatorio}
@@ -181,15 +187,34 @@ export function ComboboxAtivo({
                 setTentou(false);
                 despachar({ tipo: "confirmar", opcao });
               }}
-              className={`flex min-h-11 cursor-pointer items-center px-3 py-2 text-base/6 break-words text-text ${i === estado.ativa ? "bg-primary-subtle" : "hover:bg-surface-subtle"}`}
+              // Com segunda linha, o nome acessível é só o nome, e a linha é a descrição da opção.
+              aria-labelledby={opcao.detalhe ? `${idLista}-${i}-nome` : undefined}
+              aria-describedby={opcao.detalhe ? `${idLista}-${i}-detalhe` : undefined}
+              className={`flex min-h-11 cursor-pointer px-3 py-2 text-base/6 break-words text-text ${opcao.detalhe ? "flex-col justify-center" : "items-center"} ${i === estado.ativa ? "bg-primary-subtle" : "hover:bg-surface-subtle"}`}
             >
-              {opcao.nova ? `Cadastrar «${opcao.nome}»` : opcao.nome}
+              {opcao.detalhe ? (
+                <>
+                  <span id={`${idLista}-${i}-nome`}>{opcao.nome}</span>
+                  <span id={`${idLista}-${i}-detalhe`} className="text-sm/5 break-words text-text-secondary">
+                    {opcao.detalhe}
+                  </span>
+                </>
+              ) : opcao.nova ? (
+                `Cadastrar «${opcao.nome}»`
+              ) : (
+                opcao.nome
+              )}
             </li>
           ))}
         </ul>
       ) : estado.aberta ? (
         <p role="status" className="absolute z-20 mt-1 w-full rounded-md border border-border bg-surface px-3 py-3 text-sm/5 text-text-secondary shadow-overlay">
           {semResultado}
+        </p>
+      ) : null}
+      {detalheConfirmado ? (
+        <p id={idDetalhe} className="mt-1 text-sm/5 break-words text-text-secondary">
+          {detalheConfirmado}
         </p>
       ) : null}
       {invalido ? (

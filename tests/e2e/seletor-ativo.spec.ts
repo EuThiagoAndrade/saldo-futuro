@@ -30,6 +30,10 @@ test.describe("seletor de ativo (#97)", () => {
   const valorOculto = (page: Page, nome: string) => page.locator(`input[type=hidden][name="${nome}"]`).inputValue();
   const naLista = (page: Page) => page.getByRole("listbox").getByRole("option");
   const opcoes = (page: Page) => naLista(page).allTextContents();
+  // Nos seletores de Novo lançamento e Transferências (ciclo 019, issue #191), cada opção tem uma segunda linha
+  // ("Instituição · Classe"), que é a descrição da opção; o nome é o texto que a nomeia.
+  const nomes = (page: Page) =>
+    naLista(page).evaluateAll((els) => els.map((el) => document.getElementById(el.getAttribute("aria-labelledby") ?? "")?.textContent ?? el.textContent));
   const mesmaOrdem = (nomes: string[]) => [...nomes].sort((a, b) => a.localeCompare(b, "pt-BR"));
 
   test("ordem alfabética pelo nome exibido nos três seletores, com 'Todos os ativos' no topo do filtro", async ({ page }) => {
@@ -43,15 +47,19 @@ test.describe("seletor de ativo (#97)", () => {
 
     await page.goto("/lancamentos/novo");
     await page.getByLabel("Ativo").click();
-    const novo = await opcoes(page);
-    expect(novo).toEqual(["Ação Fictícia", "Cofrinho", "Fundo Beta"]);
+    expect(await nomes(page)).toEqual(["Ação Fictícia", "Cofrinho", "Fundo Beta"]);
+    // Sem instituição nem classe: a segunda linha diz isso, e não fica vazia.
+    await expect(naLista(page).first()).toContainText("Sem instituição · Sem classe");
 
     await page.goto("/transferencias");
     for (const rotulo of ["Origem", "Destino"]) {
       await page.getByLabel(rotulo, { exact: true }).click();
-      const lista = await opcoes(page);
+      const lista = await nomes(page);
       expect(lista).toEqual(mesmaOrdem(lista));
       expect(lista).toEqual(["Ação Fictícia", "Cofrinho", "Em trânsito", "Fundo Beta"]);
+      // O trânsito tem segunda linha própria, e não parece cadastro incompleto (R1-1).
+      await expect(naLista(page).filter({ hasText: "Em trânsito" })).toContainText("Ativo de sistema");
+      await expect(naLista(page).filter({ hasText: "Em trânsito" })).not.toContainText("Sem instituição");
       await page.keyboard.press("Escape");
     }
   });
@@ -61,9 +69,11 @@ test.describe("seletor de ativo (#97)", () => {
     await page.goto("/lancamentos/novo");
     const campo = page.getByLabel("Ativo");
     await campo.fill("ACAO");
-    await expect(naLista(page)).toHaveText(["Ação Fictícia"]);
+    expect(await nomes(page)).toEqual(["Ação Fictícia"]);
     await page.keyboard.press("Enter");
     expect(await valorOculto(page, "ativo")).toBe(ids.acao);
+    // Confirmado, o campo mostra o nome e, logo abaixo, a segunda linha do ativo.
+    await expect(page.getByText("Sem instituição · Sem classe")).toBeVisible();
     await page.getByLabel("Valor").fill("12,34");
     await page.getByRole("button", { name: "Registrar lançamento" }).click();
     await expect(page).toHaveURL(/\/lancamentos/);

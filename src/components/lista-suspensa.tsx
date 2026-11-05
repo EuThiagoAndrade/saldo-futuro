@@ -21,8 +21,8 @@ export function ListaSuspensa({
 }: {
   id: string;
   legenda: string;
-  /** `name` das caixas no formulário. */
-  nome: string;
+  /** `name` das caixas no formulário; sem ele, as caixas não são enviadas (filtros dentro de outro formulário). */
+  nome?: string;
   opcoes: readonly OpcaoAtributo[];
   marcados: readonly string[];
   aoAlternar: (codigo: string, marcado: boolean) => void;
@@ -101,16 +101,23 @@ export function ListaSuspensa({
  */
 export function ListaSuspensaFiltro({
   iniciais,
+  aoMudar,
   ...props
-}: Omit<ComponentProps<typeof ListaSuspensa>, "marcados" | "aoAlternar"> & { iniciais: readonly string[] }) {
+}: Omit<ComponentProps<typeof ListaSuspensa>, "marcados" | "aoAlternar"> & {
+  iniciais: readonly string[];
+  /** Avisa os códigos marcados depois de cada mudança (filtro dentro de outro formulário, ciclo 019). */
+  aoMudar?: (marcados: readonly string[]) => void;
+}) {
   const [marcados, setMarcados] = useState<readonly string[]>(iniciais);
   return (
     <ListaSuspensa
       {...props}
       marcados={marcados}
-      aoAlternar={(codigo, marcado) =>
-        setMarcados((atual) => props.opcoes.map((o) => o.codigo).filter((c) => (c === codigo ? marcado : atual.includes(c))))
-      }
+      aoAlternar={(codigo, marcado) => {
+        const novos = props.opcoes.map((o) => o.codigo).filter((c) => (c === codigo ? marcado : marcados.includes(c)));
+        setMarcados(novos);
+        aoMudar?.(novos);
+      }}
     />
   );
 }

@@ -101,7 +101,7 @@ function conjunto(p: Parametros, nome: string, catalogo: readonly OpcaoAtributo[
 /** Catálogos que dão sentido aos IDs de classe e de instituição da URL. */
 export interface CatalogosDoFiltro {
   taxonomia: Taxonomia;
-  instituicoes: readonly { id: string }[];
+  instituicoes: readonly { id: string; nome: string }[];
 }
 
 /** Conjunto de IDs de um catálogo: conferido contra ele, na ordem dele, com a opção exclusiva sozinha. */
