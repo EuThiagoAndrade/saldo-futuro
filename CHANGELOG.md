@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.15.0](https://github.com/EuThiagoAndrade/saldo-futuro/compare/v0.14.0...v0.15.0) (2026-11-05)
+
+
+### Features
+
+* **issue-190:** filtrar ativos por classe e por instituição ([#193](https://github.com/EuThiagoAndrade/saldo-futuro/issues/193)) ([8963b25](https://github.com/EuThiagoAndrade/saldo-futuro/commit/8963b257aa5280451498f69484d7c2f8164dfc2b)), closes [#190](https://github.com/EuThiagoAndrade/saldo-futuro/issues/190)
+* **issue-191:** seletor de ativo com filtros em lançamentos e transferências ([#195](https://github.com/EuThiagoAndrade/saldo-futuro/issues/195)) ([33973c9](https://github.com/EuThiagoAndrade/saldo-futuro/commit/33973c94c26633c75240f039ed091efdc20d260f)), closes [#191](https://github.com/EuThiagoAndrade/saldo-futuro/issues/191)
+
 ## [0.14.0](https://github.com/EuThiagoAndrade/saldo-futuro/compare/v0.13.0...v0.14.0) (2026-11-01)
 
 
