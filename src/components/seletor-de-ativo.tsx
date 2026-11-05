@@ -23,6 +23,7 @@ export function SeletorDeAtivo({
   mensagemObrigatoria,
   placeholder,
   nivelDoTitulo,
+  rotuloDoFiltro = "Filtrar ativos",
 }: {
   id: string;
   /** `name` do campo oculto com o ID do ativo confirmado. */
@@ -36,6 +37,8 @@ export function SeletorDeAtivo({
   placeholder: string;
   /** Nível dos títulos dos grupos do filtro, abaixo do título da seção que contém o seletor. */
   nivelDoTitulo: 2 | 3;
+  /** Texto do resumo do painel; na transferência, "Filtrar origem" e "Filtrar destino" distinguem os dois painéis. */
+  rotuloDoFiltro?: string;
 }) {
   const [valores, setValores] = useState<ValoresDoFiltro>({});
   // Troca a chave do painel para recriar os campos (e o que eles guardam) quando os filtros são limpos.
@@ -80,7 +83,7 @@ export function SeletorDeAtivo({
           ref={resumo}
           className="flex min-h-11 cursor-pointer items-center gap-2 px-3 text-sm/5 font-medium text-primary hover:bg-surface-subtle"
         >
-          Filtrar ativos
+          {rotuloDoFiltro}
           {campos > 0 ? (
             <>
               <span aria-hidden="true" className="rounded-full bg-primary-subtle px-2 py-0.5 text-xs/4 font-medium text-primary">

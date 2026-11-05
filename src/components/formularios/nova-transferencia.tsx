@@ -44,6 +44,7 @@ export function FormNovaTransferencia({
           mensagemObrigatoria="Escolha o ativo de origem."
           placeholder="Escolha a origem"
           nivelDoTitulo={3}
+          rotuloDoFiltro="Filtrar origem"
         />
       </Campo>
       <Campo id="transferencia-destino" rotulo="Destino">
@@ -56,6 +57,7 @@ export function FormNovaTransferencia({
           mensagemObrigatoria="Escolha o ativo de destino."
           placeholder="Escolha o destino"
           nivelDoTitulo={3}
+          rotuloDoFiltro="Filtrar destino"
         />
       </Campo>
       <CampoMonetario nome="valor" rotulo="Valor" />

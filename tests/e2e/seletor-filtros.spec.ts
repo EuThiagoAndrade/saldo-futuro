@@ -89,7 +89,7 @@ test.describe("seletor de ativo com filtros (#191)", () => {
     naLista(page).evaluateAll((els) => els.map((el) => document.getElementById(el.getAttribute("aria-labelledby") ?? "")?.textContent ?? el.textContent));
   /** O seletor inteiro (campo, segunda linha e painel de filtros) pelo id do campo. */
   const seletor = (page: Page, id: string) => page.locator(`[data-seletor-ativo="${id}"]`);
-  const resumoFiltrar = (page: Page, id: string) => seletor(page, id).locator("summary").filter({ hasText: /^Filtrar ativos/ });
+  const resumoFiltrar = (page: Page, id: string) => seletor(page, id).locator("summary").filter({ hasText: /^Filtrar (ativos|origem|destino)/ });
   const abrirPainel = async (page: Page, id: string) => {
     const painel = seletor(page, id).locator("details").first();
     if ((await painel.getAttribute("open")) === null) await resumoFiltrar(page, id).click();
@@ -246,6 +246,10 @@ test.describe("seletor de ativo com filtros (#191)", () => {
     await abrirLista(page, "transferencia-destino");
     expect(await nomes(page)).toEqual(["Ativo solto fictício", "Em trânsito", "Fundo Homônimo", "Fundo Homônimo"]);
     await page.keyboard.press("Escape");
+    // Cada painel tem o nome do seu campo, para não haver dois "Filtrar ativos" iguais na tela.
+    await expect(resumoFiltrar(page, "transferencia-origem")).toContainText("Filtrar origem");
+    await expect(resumoFiltrar(page, "transferencia-destino")).toContainText("Filtrar destino");
+    await expect(page.getByText("Filtrar ativos")).toHaveCount(0);
     // Os grupos do filtro de cada seletor ficam em h3, abaixo do h2 da seção.
     await abrirPainel(page, "transferencia-origem");
     await expect(seletor(page, "transferencia-origem").getByRole("heading", { level: 3 }).first()).toHaveText("Classe e instituição");
