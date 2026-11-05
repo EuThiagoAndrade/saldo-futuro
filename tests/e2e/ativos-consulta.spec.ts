@@ -328,7 +328,10 @@ test.describe("consulta dos atributos (#174)", () => {
     await expect(filtrar(page).getByRole("heading", { level: 2 })).toHaveText(["Classe e instituição", "Produto", "Tributação", "Resgate", "Proteção e exposição"]);
     const classe = await abrirLista(page, "Classe");
     await expect(classe.locator("label")).toHaveText(ROTULOS_CLASSE);
-    await expect(classe.getByText("Marcar uma classe inclui as subclasses.")).toBeVisible();
+    await expect(filtrar(page).getByText("Marcar uma classe inclui as subclasses.")).toBeVisible();
+    // As duas listas do grupo ficam alinhadas: o resumo de cada uma começa na mesma altura.
+    const topo = async (campo: Locator) => Math.round((await campo.locator("summary").boundingBox())!.y);
+    expect(await topo(classe)).toBe(await topo(filtrar(page).getByRole("group", { name: "Instituição", exact: true })));
     const instituicao = await abrirLista(page, "Instituição");
     // Uma lista suspensa aberta por vez; Banco Três só é usado pelo ativo desativado, e a instituição sem uso não aparece.
     await expect(instituicao.locator("label")).toHaveText(["Banco Dois fictício", "Banco Três fictício", "Banco Um fictício", "Sem instituição"]);

@@ -141,18 +141,10 @@ export function FiltrosDosAtivos({
         <form method="get" action="/ativos#ativos-da-aba" className="flex flex-col gap-4 border-t border-border p-4">
           {aba === "desativados" ? <input type="hidden" name="aba" value="desativados" /> : null}
           <p className="text-sm/5 text-text-secondary">
-            Opções marcadas no mesmo campo valem com “ou”; campos diferentes, com “e”. Com qualquer filtro, o ativo Em trânsito fica de fora.
+            Opções marcadas no mesmo campo valem com “ou”; campos diferentes, com “e”. Marcar uma classe inclui as subclasses. Com qualquer filtro, o ativo Em trânsito fica de fora.
           </p>
           <GrupoFiltro titulo="Classe e instituição">
-            <ListaSuspensaFiltro
-              id="filtro-classe"
-              legenda="Classe"
-              nome="classe"
-              opcoes={opcoesClasse}
-              iniciais={valores(p, "classe")}
-              vazio="Todas"
-              dica="Marcar uma classe inclui as subclasses."
-            />
+            <ListaSuspensaFiltro id="filtro-classe" legenda="Classe" nome="classe" opcoes={opcoesClasse} iniciais={valores(p, "classe")} vazio="Todas" />
             <ListaSuspensaFiltro id="filtro-instituicao" legenda="Instituição" nome="instituicao" opcoes={opcoesInstituicao} iniciais={valores(p, "instituicao")} vazio="Todas" />
           </GrupoFiltro>
           <GrupoFiltro titulo="Produto">
