@@ -2,13 +2,13 @@
 
 > **Ciclo:** `019` (trilha curta: `—`)
 > **Trilha:** `normal`
-> **Estado:** `Em andamento`
+> **Estado:** `Aguardando integração`
 > **Tipo:** `feature`
 > **Issue:** `#190`
 > **Plano:** `_project/drafts/019_filtros_selecao_ativos/019_plan.md`
 > **Branch:** `feature/issue-190`
-> **PR:** —
-> **Integração:** `Pendente`
+> **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/193
+> **Integração:** `Pendente` (PR #193 aberta; checks remotos e aprovação do merge)
 > **Autorização inicial:** "autorizo a implementação da issue #190" em 2026-11-05
 > **Modo contínuo:** `—`
 > **Início:** 2026-11-05
@@ -51,7 +51,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 - [x] Testes unitários e e2e (`filtros-ativos.test.ts`, `taxonomia.test.ts`, `ativos-consulta.spec.ts`).
 - [x] DESIGN.md 6.12, KB-003 e nota da `0.15.0` em `/novidades`; plano `Em Execução` e ciclo `Em execução`.
 - [x] Gates locais completos e staging revisado.
-- [ ] PR publicada com `Closes #190`; merge só depois de "aprovo o merge da PR #N" e checks verdes.
+- [x] PR #193 publicada com `Closes #190`; merge só depois de "aprovo o merge da PR #193" e checks verdes.
 
 ## Evidências
 
@@ -60,7 +60,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 | Testes | Unitários 524/524 (inclui os novos de classe, instituição, opções em uso e `comDescendentes`); typecheck sem erros; lint com 0 erros e 3 avisos preexistentes em `local/` (ignorado pelo Git); build passou. E2e sobre o build de produção, Supabase local e Chrome da máquina: `ativos-consulta.spec.ts` 14/14 (9 novos, inclusive sem JavaScript, axe, 44 px e sem rolagem horizontal em 360 e 1280 px). Conjunto afetado (`ativos-consulta`, `ativos-detalhes`, `ativos`, `novidades`, `navegacao`, `seletor-ativo`, `carteira`): 79/79 com um worker. Com dois workers, duas execuções tiveram falhas em arquivos não alterados (`seletor-ativo.spec.ts` "buscar 'acao'", que confere o banco logo depois de um `toHaveURL(/\/lancamentos/)` que já casa com `/lancamentos/novo`, e `carteira.spec.ts` CR-04), que passaram isolados e com um worker; nenhum teste foi alterado para contornar. Banco: sem migração nova, `supabase test db` não aplicável. A CI roda a suíte completa |
 | Validador | 48/48 testes de governança; `node scripts/validate-governance.mjs`: 0 erros, 0 avisos |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos | Em execução na PR #193 |
 
 ## Revisão da correção
 
@@ -82,19 +82,19 @@ Não se aplica — não é a última issue do ciclo (a #192 traz o encerramento 
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 019 (leve)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 019"
+Situação: Aguardando merge — ciclo 019 (leve)
+Quem: Responsável
+Conferir: Checks e diff da PR ([PR #193](https://github.com/EuThiagoAndrade/saldo-futuro/pull/193))
+Diga: "aprovo o merge da PR #193"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 019 + implementar_issue + issue-190/BL-020 + d7533c6ae904b3e1379f90028c3e6a5c84c25b8e`
-- `effect_class`: `local_mutation`
+- `effect_class`: `remote_mutation`
 - `state_before`: plano v1 `Aprovado`; ciclo 019 em `Planejamento`; issue #190 aberta; `main` = `origin/main` em `d7533c6`; plano e reserva do ciclo ainda sem commit; nenhuma PR aberta.
-- `state_after`: branch `feature/issue-190` com a implementação, os testes e a documentação deste item, ainda sem commit; plano `Em Execução` e ciclo `Em execução`; gates em execução.
+- `state_after`: branch `feature/issue-190` commitada (`359e0bf`) e publicada; PR #193 aberta com `Closes #190`; plano `Em Execução` e ciclo `Em execução`; gates locais concluídos; aguardando checks remotos e aprovação do merge.
 - `result`: `executed`
-- `evidence`: diff local; unitários 524/524; tipos, lint e governança sem erros; e2e de `ativos-consulta.spec.ts` 14/14 (resultados finais dos gates na tabela de evidências).
-- `blockers`: nenhum para os gates; falta commit, PR e aprovação de merge.
+- `evidence`: PR #193; unitários 524/524; tipos, lint e governança sem erros; e2e de `ativos-consulta.spec.ts` 14/14 e conjunto afetado 79/79 com um worker (tabela de evidências).
+- `blockers`: checks remotos e "aprovo o merge da PR #193".
