@@ -2,13 +2,13 @@
 
 > **Ciclo:** `019` (trilha curta: `—`)
 > **Trilha:** `normal`
-> **Estado:** `Em andamento`
+> **Estado:** `Aguardando integração`
 > **Tipo:** `feature`
 > **Issue:** `#191`
 > **Plano:** `_project/drafts/019_filtros_selecao_ativos/019_plan.md`
 > **Branch:** `feature/issue-191`
-> **PR:** —
-> **Integração:** `Pendente`
+> **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/195
+> **Integração:** `Pendente` (PR #195 aberta; checks remotos e aprovação do merge)
 > **Autorização inicial:** "Autorizar #191" em 2026-11-05, em resposta à pergunta "Autoriza a implementação da issue #191?"
 > **Modo contínuo:** `—`
 > **Início:** 2026-11-05
@@ -52,7 +52,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 - [x] `SeletorDeAtivo` (`seletor-de-ativo.tsx`) e segunda linha em `ComboboxAtivo`; Novo lançamento e Transferências (origem e destino).
 - [x] Testes unitários e e2e (`seletor-ativo.test.ts`, `seletor-filtros.spec.ts`, ajustes em `seletor-ativo.spec.ts`); DESIGN.md 6.8 e 6.12, KB-003 e nota da `0.15.0`.
 - [x] Gates locais completos e staging revisado.
-- [ ] PR publicada com `Closes #191`; merge só depois de "aprovo o merge da PR #N" e checks verdes.
+- [x] PR #195 publicada com `Closes #191`; merge só depois de "aprovo o merge da PR #195" e checks verdes.
 
 ## Evidências
 
@@ -61,7 +61,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 | Testes | Unitários 537/537 (13 novos: segunda linha, filtros, opções em uso sobre os selecionáveis, prazo inativo, política de seleção); typecheck sem erros; lint com 0 erros e 3 avisos preexistentes em `local/` (ignorado pelo Git); build passou. E2e sobre o build de produção, Supabase local e Chrome da máquina, com um worker: `seletor-filtros.spec.ts` 9/9 (novo; homônimos, filtros, ID enviado, nada do filtro no envio, origem e destino independentes, reset, prazo, Enter, axe, 44 px e sem rolagem horizontal em 360 e 1280 px); conjunto afetado (`seletor-filtros`, `seletor-ativo`, `carteira`, `botoes`, `navegacao`, `navegacao-desempenho`, `ativos-consulta`, `ativos-detalhes`, `ativos`, `novidades`): 96 passed, 3 skipped. Banco: sem migração nova, `supabase test db` não aplicável. A CI roda a suíte completa |
 | Validador | 48/48 testes de governança; `node scripts/validate-governance.mjs`: 0 erros, 0 avisos |
 | `git diff --check` | Passou |
-| Checks remotos | Pendente |
+| Checks remotos | Em execução na PR #195 |
 
 ## Revisão da correção
 
@@ -86,19 +86,19 @@ Não se aplica — não é a última issue do ciclo (a #192 traz o encerramento 
 
 ```text
 PRÓXIMO PASSO
-Situação: Pronto para continuar — ciclo 019 (leve)
-Quem: Qualquer ferramenta, a pedido do responsável
-Conferir: —
-Diga: "continue o ciclo 019"
+Situação: Aguardando merge — ciclo 019 (leve)
+Quem: Responsável
+Conferir: Checks e diff da PR ([PR #195](https://github.com/EuThiagoAndrade/saldo-futuro/pull/195))
+Diga: "aprovo o merge da PR #195"
 ```
 
 ## Handoff de saída
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 019 + implementar_issue + issue-191/BL-022 + 8963b257aa5280451498f69484d7c2f8164dfc2b`
-- `effect_class`: `local_mutation`
+- `effect_class`: `remote_mutation`
 - `state_before`: plano v1 `Em Execução`; issue #191 aberta; #190 integrada em `main` (`8963b25`); task da #190 ainda `Aguardando integração`; PR de release #194 aberta.
-- `state_after`: branch `feature/issue-191` com a implementação, os testes e a documentação deste item, ainda sem commit; task da #190 reconciliada; gates locais concluídos.
+- `state_after`: branch `feature/issue-191` commitada (`d8027dc`) e publicada; PR #195 aberta com `Closes #191`; task da #190 reconciliada; gates locais concluídos; aguardando checks remotos e aprovação do merge.
 - `result`: `executed`
-- `evidence`: diff local; unitários 537/537; tipos, lint e governança sem erros; e2e dos arquivos afetados 96 passed e 3 skipped, `seletor-filtros.spec.ts` 9/9.
-- `blockers`: nenhum para os gates; falta commit, PR e aprovação de merge.
+- `evidence`: PR #195; unitários 537/537; tipos, lint e governança sem erros; e2e dos arquivos afetados 96 passed e 3 skipped, `seletor-filtros.spec.ts` 9/9.
+- `blockers`: checks remotos e "aprovo o merge da PR #195".

@@ -204,7 +204,7 @@ BL-019, BL-020 e BL-022 existem em `main` (`d7533c6`). Revisão formal, aprovaç
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | [#190](https://github.com/EuThiagoAndrade/saldo-futuro/issues/190), [#191](https://github.com/EuThiagoAndrade/saldo-futuro/issues/191) e [#192](https://github.com/EuThiagoAndrade/saldo-futuro/issues/192) |
-| PR(s) | [#193](https://github.com/EuThiagoAndrade/saldo-futuro/pull/193) (issue #190, integrada) |
+| PR(s) | [#193](https://github.com/EuThiagoAndrade/saldo-futuro/pull/193) (issue #190, integrada) e [#195](https://github.com/EuThiagoAndrade/saldo-futuro/pull/195) (issue #191) |
 | Branch(es) | `feature/issue-190` e `feature/issue-191` |
 | Destino após conclusão | `_project/executed/019_filtros_selecao_ativos/019_plan.md` |
 
@@ -214,8 +214,8 @@ BL-019, BL-020 e BL-022 existem em `main` (`d7533c6`). Revisão formal, aprovaç
 PRÓXIMO PASSO
 Situação: Aguardando merge — ciclo 019 (leve)
 Quem: Responsável
-Conferir: Checks e diff da PR ([PR #193](https://github.com/EuThiagoAndrade/saldo-futuro/pull/193))
-Diga: "aprovo o merge da PR #193"
+Conferir: Checks e diff da PR ([PR #195](https://github.com/EuThiagoAndrade/saldo-futuro/pull/195))
+Diga: "aprovo o merge da PR #195"
 ```
 
 ## Handoff de saída

@@ -83,10 +83,10 @@ Não se aplica — não é a última issue do ciclo (a #192 traz o encerramento 
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando autorização de implementação — ciclo 019 (leve)
+Situação: Aguardando merge — ciclo 019 (leve)
 Quem: Responsável
-Conferir: Issue e escopo ([#191](https://github.com/EuThiagoAndrade/saldo-futuro/issues/191))
-Diga: "autorizo a implementação da issue #191"
+Conferir: Checks e diff da PR ([PR #195](https://github.com/EuThiagoAndrade/saldo-futuro/pull/195))
+Diga: "aprovo o merge da PR #195"
 ```
 
 ## Handoff de saída
