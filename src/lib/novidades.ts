@@ -16,6 +16,13 @@ export const VERSAO_ATUAL: string = pacote.version;
 
 export const HISTORICO: readonly Novidade[] = [
   {
+    versao: "0.15.0",
+    publicadaEm: null,
+    notas: [
+      "Na tela de Ativos, Filtrar agora também filtra por classe e por instituição, num grupo novo no topo do painel. Marcar uma classe inclui as subclasses, e Sem classe e Sem instituição mostram os ativos que ainda não têm esse dado.",
+    ],
+  },
+  {
     versao: "0.14.0",
     publicadaEm: "2026-10-31",
     notas: [

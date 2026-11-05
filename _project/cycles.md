@@ -1,7 +1,7 @@
 # Registro de ciclos
 
-> **Próximo ciclo:** `019`
-> **Última atualização:** 2026-10-31
+> **Próximo ciclo:** `020`
+> **Última atualização:** 2026-11-05
 
 | Ciclo | Assunto | Estado | Ideação | Plano | Issues | Encerramento |
 | :-- | :-- | :-- | :-- | :-- | :-- | :-- |
@@ -26,5 +26,6 @@
 | `016` | Ordem e rótulos da distribuição | `Concluído` | — (ciclo leve) | `_project/executed/016_distribuicao_ordem_rotulos/016_plan.md` | [#163](https://github.com/EuThiagoAndrade/saldo-futuro/issues/163) — fechada pela PR da entrega (`Closes #163`); release e data da nota em `/novidades` depois do merge, por procedimento próprio | [PR #164](https://github.com/EuThiagoAndrade/saldo-futuro/pull/164), encerramento prospectivo até seu merge |
 | `017` | Atributos complementares dos ativos | `Concluído` | `_project/ideations/017_atributos_complementares_ativos.md` | `_project/executed/017_atributos_complementares_ativos/017_plan.md` | [#172](https://github.com/EuThiagoAndrade/saldo-futuro/issues/172), [#173](https://github.com/EuThiagoAndrade/saldo-futuro/issues/173) e [#174](https://github.com/EuThiagoAndrade/saldo-futuro/issues/174) — #173 fechada pela PR #177; #172 e #174 fecham no encerramento após ação externa e VA1 a VA8 relatados como concluídos; release `0.13.0` pela [PR #176](https://github.com/EuThiagoAndrade/saldo-futuro/pull/176) | [PR #179](https://github.com/EuThiagoAndrade/saldo-futuro/pull/179), encerramento prospectivo até seu merge |
 | `018` | Organização dos atributos e Previdência como veículo | `Concluído` | `_project/ideations/018_organizacao_atributos_previdencia.md` | `_project/executed/018_organizacao_atributos_previdencia/018_plan.md` | [#182](https://github.com/EuThiagoAndrade/saldo-futuro/issues/182) e [#183](https://github.com/EuThiagoAndrade/saldo-futuro/issues/183) — #182 com código integrado pela [PR #184](https://github.com/EuThiagoAndrade/saldo-futuro/pull/184) e ação externa concluída em 2026-10-31; #183 com código integrado pela [PR #186](https://github.com/EuThiagoAndrade/saldo-futuro/pull/186); verificação em produção VB1 a VB7 concluída em 2026-10-31; release `0.14.0` pela [PR #185](https://github.com/EuThiagoAndrade/saldo-futuro/pull/185); fechadas pela PR de encerramento (`Closes #182` e `Closes #183`) | [PR #187](https://github.com/EuThiagoAndrade/saldo-futuro/pull/187), encerramento prospectivo até seu merge |
+| `019` | Filtros e seleção compartilhada de ativos | `Em execução` | — (ciclo leve) | `_project/drafts/019_filtros_selecao_ativos/019_plan.md` | [#190](https://github.com/EuThiagoAndrade/saldo-futuro/issues/190), [#191](https://github.com/EuThiagoAndrade/saldo-futuro/issues/191) e [#192](https://github.com/EuThiagoAndrade/saldo-futuro/issues/192) | — |
 
 O ciclo `000` não tem ideação retroativa. Sua origem e as aprovações anteriores à implantação da governança estão registradas no próprio plano.

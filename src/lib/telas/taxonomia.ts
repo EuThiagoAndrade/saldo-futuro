@@ -25,6 +25,8 @@ export interface Taxonomia {
   caminho: (id: string) => string | undefined;
   /** Nome do próprio nó (último elemento do caminho), ou undefined se o nó não existe. */
   nome: (id: string) => string | undefined;
+  /** O nó e todos os seus descendentes (ciclo 019, BL-020), ou lista vazia se o nó não existe. */
+  comDescendentes: (id: string) => string[];
 }
 
 function incoerente(motivo: string): never {
@@ -48,14 +50,20 @@ export function montarTaxonomia(nos: readonly NoTaxonomia[]): Taxonomia {
   }
 
   const caminhos = new Map<string, string[]>();
+  const subarvores = new Map<string, string[]>();
   const opcoes: Opcao[] = [];
-  const descer = (pai: string | null, acima: string[]) => {
+  // Devolve os ids dos nós abaixo de `pai`, para compor a subárvore de cada nó.
+  const descer = (pai: string | null, acima: string[]): string[] => {
+    const abaixo: string[] = [];
     for (const no of [...(filhos.get(pai) ?? [])].sort((a, b) => a.ordem - b.ordem)) {
       const caminho = [...acima, no.nome];
       caminhos.set(no.id, caminho);
       opcoes.push({ id: no.id, nome: caminho.join(SEPARADOR_CAMINHO) });
-      descer(no.id, caminho);
+      const subarvore = [no.id, ...descer(no.id, caminho)];
+      subarvores.set(no.id, subarvore);
+      abaixo.push(...subarvore);
     }
+    return abaixo;
   };
   descer(null, []);
   if (opcoes.length !== nos.length) incoerente("nó fora da árvore");
@@ -64,6 +72,7 @@ export function montarTaxonomia(nos: readonly NoTaxonomia[]): Taxonomia {
     opcoes,
     caminho: (id) => caminhos.get(id)?.join(SEPARADOR_CAMINHO),
     nome: (id) => caminhos.get(id)?.at(-1),
+    comDescendentes: (id) => subarvores.get(id) ?? [],
   };
 }
 

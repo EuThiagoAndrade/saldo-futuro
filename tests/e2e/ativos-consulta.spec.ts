@@ -13,6 +13,39 @@ const DESKTOP = { width: 1280, height: 900 };
 const WCAG = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 // 96 caracteres, para a quebra de linha no resumo e na lista.
 const LONGO = "Ativo fictício com um nome bem comprido para conferir a quebra de linha do resumo no celular!!";
+// Nós da taxonomia global (migrações do ciclo 013), por ID.
+const no = (codigo: string) => `a5000000-0000-4000-8000-000000${codigo}`;
+const CAIXA = "010000";
+const SALDOS = "010100";
+const ESPECIE = "010200";
+const RENDA_FIXA = "020000";
+const CREDITO_BANCARIO = "020200";
+const CDB = "020201";
+const RENDA_VARIAVEL = "030000";
+
+async function criarAtivo(cliente: SupabaseClient, nome: string, extras: Record<string, unknown> = {}) {
+  const r = await cliente.rpc("cadastrar_ativo_com_atributos", {
+    p_nome: nome,
+    p_tipo_ajuste: "rendimento",
+    p_instituicao: null,
+    p_instituicao_nova: null,
+    p_taxonomia: null,
+    p_previdencia: null,
+    p_liquidez_imediata: null,
+    p_exposicao_cambial: null,
+    p_isento_ir: null,
+    p_veiculos_acesso: [],
+    p_indexadores_remuneracao: [],
+    p_regime_tributario: null,
+    p_prazo_resgate_tipo: null,
+    p_prazo_resgate_dias: null,
+    p_prazo_resgate_unidade: null,
+    p_cobertura_fgc: null,
+    ...extras,
+  });
+  expect(r.error).toBeNull();
+  return r.data as string;
+}
 
 test.describe("consulta dos atributos (#174)", () => {
   test.skip(!configurado, "Roda só com o Supabase local configurado.");
@@ -20,32 +53,12 @@ test.describe("consulta dos atributos (#174)", () => {
 
   let u: Record<string, UsuarioDeTeste>;
   let cliente: SupabaseClient;
+  // IDs das instituições do usuário "classe": Um, Dois, Três (só do desativado) e a sem uso.
+  const ids = { um: "", dois: "", tres: "", semUso: "" };
   test.beforeAll(async () => {
-    u = await criarUsuarios("consulta174", { dono: "user" });
+    u = await criarUsuarios("consulta174", { dono: "user", classe: "user" });
     cliente = await clienteDoUsuario(u.dono);
-    const criar = async (nome: string, a: Record<string, unknown> = {}) => {
-      const r = await cliente.rpc("cadastrar_ativo_com_atributos", {
-        p_nome: nome,
-        p_tipo_ajuste: "rendimento",
-        p_instituicao: null,
-        p_instituicao_nova: null,
-        p_taxonomia: null,
-        p_previdencia: null,
-        p_liquidez_imediata: null,
-        p_exposicao_cambial: null,
-        p_isento_ir: null,
-        p_veiculos_acesso: [],
-        p_indexadores_remuneracao: [],
-        p_regime_tributario: null,
-        p_prazo_resgate_tipo: null,
-        p_prazo_resgate_dias: null,
-        p_prazo_resgate_unidade: null,
-        p_cobertura_fgc: null,
-        ...a,
-      });
-      expect(r.error).toBeNull();
-      return r.data as string;
-    };
+    const criar = (nome: string, a: Record<string, unknown> = {}) => criarAtivo(cliente, nome, a);
     const prazo = (dias: number, unidade: string) => ({ p_prazo_resgate_tipo: "prazo", p_prazo_resgate_dias: dias, p_prazo_resgate_unidade: unidade });
     await criar("Ativo A fictício", { p_veiculos_acesso: ["fundo"], p_indexadores_remuneracao: ["cdi"], ...prazo(0, "uteis"), p_cobertura_fgc: "sim", p_liquidez_imediata: true });
     await criar("Ativo B fictício", { p_veiculos_acesso: ["etf"], p_indexadores_remuneracao: ["ipca"], ...prazo(1, "uteis"), p_regime_tributario: "renda_variavel", p_cobertura_fgc: "nao" });
@@ -54,6 +67,26 @@ test.describe("consulta dos atributos (#174)", () => {
     await criar(LONGO, { p_veiculos_acesso: ["certificado_representativo"], p_indexadores_remuneracao: ["sem_indexador"], p_regime_tributario: "previdencia_regressivo", ...prazo(2147483647, "corridos") });
     const d = await criar("Ativo D fictício", { p_veiculos_acesso: ["direto"], p_prazo_resgate_tipo: "no_vencimento" });
     expect((await cliente.rpc("desativar_ativo", { p_ativo: d })).error).toBeNull();
+
+    const clienteClasse = await clienteDoUsuario(u.classe);
+    const banco = async (nome: string) => {
+      const r = await clienteClasse.rpc("criar_instituicao", { p_nome: nome });
+      expect(r.error).toBeNull();
+      return r.data as string;
+    };
+    ids.um = await banco("Banco Um fictício");
+    ids.dois = await banco("Banco Dois fictício");
+    ids.tres = await banco("Banco Três fictício");
+    ids.semUso = await banco("Banco sem uso fictício");
+    const classificado = (nome: string, codigo: string, instituicao: string) =>
+      criarAtivo(clienteClasse, nome, { p_taxonomia: no(codigo), p_instituicao: instituicao });
+    await classificado("Filtro CDB Um", CDB, ids.um);
+    await classificado("Filtro Crédito Dois", CREDITO_BANCARIO, ids.dois);
+    await classificado("Filtro Ações Um", RENDA_VARIAVEL, ids.um);
+    await classificado("Filtro Saldo Dois", SALDOS, ids.dois);
+    await criarAtivo(clienteClasse, "Filtro Solto");
+    const antigo = await classificado("Filtro Antigo", ESPECIE, ids.tres);
+    expect((await clienteClasse.rpc("desativar_ativo", { p_ativo: antigo })).error).toBeNull();
   });
   test.afterAll(async () => {
     if (u) await removerUsuarios(u);
@@ -141,7 +174,7 @@ test.describe("consulta dos atributos (#174)", () => {
     await expect(filtrar(page)).not.toHaveAttribute("open");
     await expect(principal(page).getByRole("link", { name: "Limpar filtros" })).toHaveCount(0);
     await abrirFiltrar(page);
-    await expect(filtrar(page).getByRole("heading", { level: 2 })).toHaveText(["Produto", "Tributação", "Resgate", "Proteção e exposição"]);
+    await expect(filtrar(page).getByRole("heading", { level: 2 })).toHaveText(["Classe e instituição", "Produto", "Tributação", "Resgate", "Proteção e exposição"]);
     await expect(filtrar(page).getByRole("combobox", { name: "Previdência", exact: true })).toHaveCount(0);
     await (await caixa(page, "Veículo de acesso", "Fundo")).check();
     await (await caixa(page, "Veículo de acesso", "ETF")).check();
@@ -267,6 +300,184 @@ test.describe("consulta dos atributos (#174)", () => {
     expect(await nomesVisiveis(page)).toHaveLength(6);
   });
 
+  // Classe e instituição (ciclo 019, issue #190, BL-020), com o segundo usuário: cinco ativos em uso, um
+  // sem classe nem instituição, e um desativado cuja classe e instituição só ele usa. Nomes fictícios.
+  const SEM_USO = "00000000-0000-4000-8000-000000000000";
+  const ROTULOS_CLASSE = [
+    "Caixa e disponibilidades",
+    "Caixa e disponibilidades › Saldos em conta",
+    "Caixa e disponibilidades › Dinheiro em espécie",
+    "Renda fixa",
+    "Renda fixa › Crédito bancário",
+    "Renda fixa › Crédito bancário › CDB",
+    "Renda variável",
+    "Sem classe",
+  ];
+  const abrirLista = async (page: Page, grupo: string) => {
+    await abrirFiltrar(page);
+    const campo = filtrar(page).getByRole("group", { name: grupo, exact: true });
+    if ((await campo.locator("details").getAttribute("open")) === null) await campo.locator("summary").click();
+    return campo;
+  };
+
+  test("classe e instituição: grupo no topo, só as opções em uso e as marcadas, em ordem hierárquica e alfabética", async ({ page }) => {
+    await page.setViewportSize(DESKTOP);
+    await entrar(page, u.classe);
+    await page.goto("/ativos");
+    await abrirFiltrar(page);
+    await expect(filtrar(page).getByRole("heading", { level: 2 })).toHaveText(["Classe e instituição", "Produto", "Tributação", "Resgate", "Proteção e exposição"]);
+    const classe = await abrirLista(page, "Classe");
+    await expect(classe.locator("label")).toHaveText(ROTULOS_CLASSE);
+    await expect(classe.getByText("Marcar uma classe inclui as subclasses.")).toBeVisible();
+    const instituicao = await abrirLista(page, "Instituição");
+    // Uma lista suspensa aberta por vez; Banco Três só é usado pelo ativo desativado, e a instituição sem uso não aparece.
+    await expect(instituicao.locator("label")).toHaveText(["Banco Dois fictício", "Banco Três fictício", "Banco Um fictício", "Sem instituição"]);
+    await expect(instituicao.getByRole("checkbox", { name: "Banco sem uso fictício" })).toHaveCount(0);
+    // Uma opção marcada na URL e sem ativo continua na lista, para poder ser desmarcada.
+    await page.goto(`/ativos?classe=${no(RENDA_VARIAVEL)}&instituicao=${ids.semUso}`);
+    await expect(page.locator("#ativos-da-aba").getByRole("alert")).toHaveCount(0);
+    expect(await nomesVisiveis(page)).toEqual([]);
+    await expect(await caixa(page, "Instituição", "Banco sem uso fictício")).toBeChecked();
+  });
+
+  test("classe e instituição: nó com descendentes, OU entre instituições, E entre campos, contador, abas e Limpar", async ({ page }) => {
+    await page.setViewportSize(DESKTOP);
+    await entrar(page, u.classe);
+    await page.goto("/ativos");
+    expect(await nomesVisiveis(page)).toEqual(["Filtro Ações Um", "Filtro CDB Um", "Filtro Crédito Dois", "Filtro Saldo Dois", "Filtro Solto", "Em trânsito"]);
+    // Um nó inclui os descendentes: Renda fixa traz o ativo de Crédito bancário e o de CDB.
+    await (await caixa(page, "Classe", "Renda fixa")).check();
+    await aplicar(page);
+    await expect(page).toHaveURL(new RegExp(`classe=${no(RENDA_FIXA)}&.*#ativos-da-aba$`));
+    expect(await nomesVisiveis(page)).toEqual(["Filtro CDB Um", "Filtro Crédito Dois"]);
+    await expect(filtrar(page)).not.toHaveAttribute("open");
+    await expect(resumoFiltrar(page)).toContainText("1 campo com filtro");
+    await expect(principal(page).getByRole("link", { name: "Limpar filtros" })).toBeVisible();
+    await expect(aba(page, "Em uso")).toHaveText(/Em uso\s*6/);
+    await expect(aba(page, "Desativados")).toHaveText(/Desativados\s*1/);
+    // Trocar o nó pelo mais profundo restringe a lista.
+    await (await caixa(page, "Classe", "Renda fixa")).uncheck();
+    await (await caixa(page, "Classe", "Renda fixa › Crédito bancário › CDB")).check();
+    await aplicar(page);
+    expect(await nomesVisiveis(page)).toEqual(["Filtro CDB Um"]);
+    // Duas instituições combinam por OU; com a classe, por E.
+    await page.goto("/ativos");
+    await (await caixa(page, "Instituição", "Banco Um fictício")).check();
+    await aplicar(page);
+    expect(await nomesVisiveis(page)).toEqual(["Filtro Ações Um", "Filtro CDB Um"]);
+    await (await caixa(page, "Instituição", "Banco Dois fictício")).check();
+    await aplicar(page);
+    expect(await nomesVisiveis(page)).toEqual(["Filtro Ações Um", "Filtro CDB Um", "Filtro Crédito Dois", "Filtro Saldo Dois"]);
+    await (await caixa(page, "Classe", "Renda fixa")).check();
+    await aplicar(page);
+    expect(await nomesVisiveis(page)).toEqual(["Filtro CDB Um", "Filtro Crédito Dois"]);
+    await (await caixa(page, "Instituição", "Banco Dois fictício")).uncheck();
+    await aplicar(page);
+    expect(await nomesVisiveis(page)).toEqual(["Filtro CDB Um"]);
+    await expect(resumoFiltrar(page)).toContainText("2 campos com filtro");
+    await page.reload();
+    expect(await nomesVisiveis(page)).toEqual(["Filtro CDB Um"]);
+    // E com os demais filtros: Fundo não é de ninguém aqui.
+    await page.goto(`/ativos?classe=${no(RENDA_FIXA)}&veiculo=fundo`);
+    await expect(page.getByRole("heading", { name: "Nenhum ativo corresponde aos filtros" })).toBeVisible();
+
+    // A aba Desativados recebe os mesmos filtros, e a classe e a instituição só do desativado aparecem nas opções.
+    await page.goto(`/ativos?classe=${no(CAIXA)}&instituicao=${ids.tres}`);
+    // Nenhum ativo em uso tem essa classe e essa instituição; o desativado tem.
+    await expect(page.getByRole("heading", { name: "Nenhum ativo corresponde aos filtros" })).toBeVisible();
+    await aba(page, "Desativados").click();
+    await expect(page).toHaveURL(new RegExp(`aba=desativados&classe=${no(CAIXA)}&instituicao=${ids.tres}`));
+    expect(await nomesVisiveis(page)).toEqual(["Filtro Antigo"]);
+    await expect(resumoFiltrar(page)).toContainText("2 campos com filtro");
+    await principal(page).getByRole("link", { name: "Limpar filtros" }).click();
+    await expect(page).toHaveURL(/\/ativos\?aba=desativados$/);
+    await expect(resumoFiltrar(page)).not.toContainText("com filtro");
+    await abrirFiltrar(page);
+    await expect(filtrar(page).getByRole("group", { name: "Classe", exact: true }).locator("summary")).toContainText("Todas");
+    await expect(filtrar(page).getByRole("group", { name: "Instituição", exact: true }).locator("summary")).toContainText("Todas");
+  });
+
+  test("Sem classe e Sem instituição selecionam só os sem vínculo, e o trânsito sai com qualquer filtro", async ({ page }) => {
+    await page.setViewportSize(DESKTOP);
+    await entrar(page, u.classe);
+    await page.goto("/ativos?classe=sem_classe");
+    expect(await nomesVisiveis(page)).toEqual(["Filtro Solto"]);
+    await page.goto("/ativos?instituicao=sem_instituicao");
+    expect(await nomesVisiveis(page)).toEqual(["Filtro Solto"]);
+    await page.goto("/ativos?classe=sem_classe&instituicao=sem_instituicao");
+    expect(await nomesVisiveis(page)).toEqual(["Filtro Solto"]);
+    await expect(await caixa(page, "Classe", "Sem classe")).toBeChecked();
+    await page.goto(`/ativos?classe=sem_classe&instituicao=${ids.um}`);
+    await expect(page.getByRole("heading", { name: "Nenhum ativo corresponde aos filtros" })).toBeVisible();
+    // Pelo painel: marcar e aplicar.
+    await page.goto("/ativos");
+    await (await caixa(page, "Classe", "Sem classe")).check();
+    await aplicar(page);
+    await expect(page).toHaveURL(/classe=sem_classe&.*#ativos-da-aba$/);
+    expect(await nomesVisiveis(page)).toEqual(["Filtro Solto"]);
+  });
+
+  test("classe e instituição: ID desconhecido e combinações inválidas abrem o painel e mostram o erro no lugar da lista", async ({ page }) => {
+    await page.setViewportSize(DESKTOP);
+    await entrar(page, u.classe);
+    for (const [consulta, mensagem] of [
+      [`classe=${SEM_USO}`, "Classe tem uma opção desconhecida."],
+      [`classe=${no(RENDA_FIXA)}&classe=${SEM_USO}`, "Classe tem uma opção desconhecida."],
+      [`instituicao=${SEM_USO}`, "Instituição tem uma opção desconhecida."],
+      ["instituicao=nao_informado", "Instituição tem uma opção desconhecida."],
+      [`classe=sem_classe&classe=${no(RENDA_FIXA)}`, "Classe: Sem classe não combina com outras opções."],
+      [`instituicao=${ids.um}&instituicao=sem_instituicao`, "Instituição: Sem instituição não combina com outras opções."],
+    ]) {
+      await page.goto(`/ativos?${consulta}`);
+      await expect(page.locator("#ativos-da-aba").getByRole("alert"), consulta).toHaveText(`Não foi possível aplicar os filtros: ${mensagem}`);
+      await expect(page.locator("#ativos-da-aba").getByText("Filtro Solto", { exact: true }), consulta).toHaveCount(0);
+      await expect(filtrar(page), consulta).toHaveAttribute("open");
+    }
+    await principal(page).getByRole("link", { name: "Limpar filtros" }).click();
+    await expect(page).toHaveURL(/\/ativos$/);
+    expect(await nomesVisiveis(page)).toHaveLength(6);
+  });
+
+  test("o painel de classe e instituição funciona sem JavaScript", async ({ page, browser }) => {
+    await page.setViewportSize(DESKTOP);
+    await entrar(page, u.classe);
+    const contexto = await browser.newContext({ storageState: await page.context().storageState(), javaScriptEnabled: false, viewport: DESKTOP });
+    const semJs = await contexto.newPage();
+    await semJs.goto("/ativos");
+    // Sem JavaScript os resumos abrem pelo <details> nativo, e as caixas são enviadas pelo formulário GET.
+    await semJs.locator("summary", { hasText: /^Filtrar/ }).click();
+    const classe = filtrar(semJs).getByRole("group", { name: "Classe", exact: true });
+    await classe.locator("summary").click();
+    await classe.getByRole("checkbox", { name: "Renda fixa", exact: true }).check();
+    const instituicao = filtrar(semJs).getByRole("group", { name: "Instituição", exact: true });
+    await instituicao.locator("summary").click();
+    await instituicao.getByRole("checkbox", { name: "Banco Um fictício", exact: true }).check();
+    await semJs.getByRole("button", { name: "Aplicar filtros" }).click();
+    await expect(semJs).toHaveURL(new RegExp(`classe=${no(RENDA_FIXA)}&instituicao=${ids.um}&.*#ativos-da-aba$`));
+    expect(await nomesVisiveis(semJs)).toEqual(["Filtro CDB Um"]);
+    await contexto.close();
+  });
+
+  for (const tamanho of [MOVEL, DESKTOP]) {
+    test(`classe e instituição: listas abertas, sem violações nem rolagem horizontal, com alvos de 44 px em ${tamanho.width} px`, async ({ page }) => {
+      await page.setViewportSize(tamanho);
+      await entrar(page, u.classe);
+      for (const rota of [`/ativos?classe=${no(CDB)}`, "/ativos?aba=desativados", `/ativos?instituicao=${SEM_USO}`]) {
+        await page.goto(rota);
+        for (const lista of ["Classe", "Instituição"]) {
+          const campo = await abrirLista(page, lista);
+          const resultado = await new AxeBuilder({ page }).withTags(WCAG).analyze();
+          expect(resultado.violations, `${rota} ${lista}`).toEqual([]);
+          const largura = await page.evaluate(() => ({ cliente: document.documentElement.clientWidth, rolagem: document.documentElement.scrollWidth }));
+          expect(largura.rolagem, `${rota} ${lista}`).toBeLessThanOrEqual(largura.cliente);
+          for (const alvo of await campo.getByRole("checkbox").all()) {
+            expect((await alvo.locator("xpath=..").boundingBox())!.height, `${rota} ${lista}`).toBeGreaterThanOrEqual(44);
+          }
+        }
+      }
+    });
+  }
+
   for (const tamanho of [MOVEL, DESKTOP]) {
     test(`Filtrar e Ver detalhes abertos, sem violações nem rolagem horizontal, com alvos de 44 px em ${tamanho.width} px`, async ({ page }) => {
       await page.setViewportSize(tamanho);
@@ -277,7 +488,7 @@ test.describe("consulta dos atributos (#174)", () => {
         await page.locator("#filtro-prazo").selectOption({ label: "Prazo em dias" });
         for (const aberto of await principal(page).locator("summary").filter({ hasText: /^Ver detalhes/ }).filter({ visible: true }).all()) await aberto.click();
         // Uma lista suspensa aberta por vez: abrir uma fecha a outra.
-        for (const lista of ["Veículo de acesso", "Indexador da remuneração"]) {
+        for (const lista of ["Classe", "Instituição", "Veículo de acesso", "Indexador da remuneração"]) {
           const campo = filtrar(page).getByRole("group", { name: lista });
           await campo.locator("summary").click();
           const resultado = await new AxeBuilder({ page }).withTags(WCAG).analyze();
