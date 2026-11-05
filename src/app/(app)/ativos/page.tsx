@@ -8,9 +8,9 @@ import { dataBr } from "@/lib/apresentacao/datas";
 import { backend } from "@/lib/config";
 import { hojeEmCuiaba } from "@/lib/financeiro/datas";
 import { exigirSessao } from "@/lib/sessao";
-import { INDEXADORES_REMUNERACAO, VEICULOS_ACESSO } from "@/lib/telas/detalhes-ativo";
-import { camposComFiltro, enderecoDaAba, filtrarAtivos, lerFiltros, opcoesDeClasse, opcoesDeInstituicao, opcoesEmUso, type Parametros } from "@/lib/telas/filtros-ativos";
+import { camposComFiltro, enderecoDaAba, filtrarAtivos, lerFiltros, type Parametros } from "@/lib/telas/filtros-ativos";
 import { type Ativo, lerAtivos, lerClassesLegadas, lerInstituicoes, lerTaxonomia } from "@/lib/telas/leituras";
+import { opcoesDoFiltro } from "@/lib/telas/seletor-ativo";
 import { classeDoAtivo } from "@/lib/telas/taxonomia";
 import { desativarAtivo } from "./acoes";
 
@@ -222,7 +222,8 @@ export default async function AtivosPage({ searchParams }: { searchParams: Promi
     lerClassesLegadas(supabase),
     lerInstituicoes(supabase),
   ]);
-  const lido = lerFiltros(parametros, { taxonomia, instituicoes });
+  const catalogos = { taxonomia, instituicoes };
+  const lido = lerFiltros(parametros, catalogos);
   const classesLegadas = new Map(legado.map((c) => [c.id, c.nome]));
   const nomeDaInstituicao = new Map(instituicoes.map((i) => [i.id, i.nome]));
   const detalhes: Detalhes = {
@@ -236,13 +237,8 @@ export default async function AtivosPage({ searchParams }: { searchParams: Promi
   const campos = filtros ? camposComFiltro(filtros) : 0;
   const daAba = aba === "em-uso" ? emUso : desativados;
   const visiveis = filtros ? filtrarAtivos(daAba, filtros, taxonomia) : [];
-  // Opções do filtro (ciclo 018, D14): só as usadas por algum ativo comum, das duas abas, e as marcadas na URL.
-  const comuns = ativos.filter((a) => a.sistema === null);
-  const marcados = (nome: string) => [parametros[nome] ?? []].flat();
-  const opcoesClasse = opcoesDeClasse(taxonomia, comuns.map((a) => a.taxonomia_id), marcados("classe"));
-  const opcoesInstituicao = opcoesDeInstituicao(instituicoes, comuns.map((a) => a.instituicao_id), marcados("instituicao"));
-  const opcoesVeiculo = opcoesEmUso(VEICULOS_ACESSO, comuns.map((a) => a.veiculos_acesso), marcados("veiculo"));
-  const opcoesIndexador = opcoesEmUso(INDEXADORES_REMUNERACAO, comuns.map((a) => a.indexadores_remuneracao), marcados("indexador"));
+  // Opções do filtro (ciclo 018, D14, e ciclo 019, D3): só as usadas por algum ativo comum, das duas abas, e as marcadas na URL.
+  const opcoes = opcoesDoFiltro(ativos, parametros, catalogos);
 
   return (
     <div className="flex flex-col gap-6">
@@ -273,10 +269,7 @@ export default async function AtivosPage({ searchParams }: { searchParams: Promi
         parametros={parametros}
         campos={campos}
         erro={"erro" in lido ? lido.erro : null}
-        opcoesClasse={opcoesClasse}
-        opcoesInstituicao={opcoesInstituicao}
-        opcoesVeiculo={opcoesVeiculo}
-        opcoesIndexador={opcoesIndexador}
+        opcoes={opcoes}
       />
 
       <section id="ativos-da-aba" aria-label={aba === "em-uso" ? "Ativos em uso" : "Ativos desativados"} className="flex scroll-mt-4 flex-col gap-3">

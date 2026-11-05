@@ -12,6 +12,11 @@ export interface Opcao {
   nome: string;
   /** Opção "Cadastrar «nome»": envia o nome como novo, sem ID. */
   nova?: boolean;
+  /**
+   * Segunda linha da opção, em texto secundário (ciclo 019, issue #191): só apresentação. A busca e a política
+   * de seleção usam apenas o nome, e o ID enviado continua sendo o da opção confirmada.
+   */
+  detalhe?: string;
 }
 
 export interface EstadoCombo {

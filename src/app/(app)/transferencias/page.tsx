@@ -11,7 +11,19 @@ import { backend } from "@/lib/config";
 import { hojeEmCuiaba } from "@/lib/financeiro/datas";
 import { exigirSessao } from "@/lib/sessao";
 import { montarTransferencias, type Transferencia } from "@/lib/telas/carteira";
-import { type Ativo, ativosTransferiveis, lerAtivos, lerCabecalhosDeTransferencia, lerEventos, nomeDoAtivo, opcoesDeAtivo } from "@/lib/telas/leituras";
+import {
+  type Ativo,
+  ativosTransferiveis,
+  lerAtivos,
+  lerCabecalhosDeTransferencia,
+  lerClassesLegadas,
+  lerEventos,
+  lerInstituicoes,
+  lerNosDaTaxonomia,
+  nomeDoAtivo,
+} from "@/lib/telas/leituras";
+import { ativosDoSeletor } from "@/lib/telas/seletor-ativo";
+import { montarTaxonomia } from "@/lib/telas/taxonomia";
 import { corrigirTransferencia } from "./acoes";
 
 export const metadata = { title: "Transferências — Saldo Futuro" };
@@ -46,13 +58,22 @@ function Trajeto({ t, ativos }: { t: Transferencia; ativos: Ativo[] }) {
 export default async function TransferenciasPage() {
   if (!backend) return <PreviewNotice />;
   const { supabase } = await exigirSessao();
-  const [ativos, eventos, cabecalhos] = await Promise.all([
+  const [ativos, eventos, cabecalhos, nos, legado, instituicoes] = await Promise.all([
     lerAtivos(supabase),
     lerEventos(supabase),
     lerCabecalhosDeTransferencia(supabase),
+    lerNosDaTaxonomia(supabase),
+    lerClassesLegadas(supabase),
+    lerInstituicoes(supabase),
   ]);
   const transferencias = montarTransferencias(cabecalhos, eventos).sort((a, b) => b.data.localeCompare(a.data));
-  const opcoes = opcoesDeAtivo(ativosTransferiveis(ativos));
+  // Classe e instituição de cada opção e os filtros dos seletores usam os mesmos leitores de /ativos (ciclo 019, issue #191).
+  const opcoes = ativosDoSeletor(
+    ativosTransferiveis(ativos),
+    montarTaxonomia(nos),
+    new Map(legado.map((c) => [c.id, c.nome])),
+    new Map(instituicoes.map((i) => [i.id, i.nome])),
+  );
   const hoje = hojeEmCuiaba();
 
   return (
@@ -72,7 +93,7 @@ export default async function TransferenciasPage() {
         </EstadoVazio>
       ) : (
         <div className="max-w-xl">
-          <FormNovaTransferencia ativos={opcoes} hoje={hoje} />
+          <FormNovaTransferencia ativos={opcoes} nos={nos} instituicoes={instituicoes} hoje={hoje} />
         </div>
       )}
 

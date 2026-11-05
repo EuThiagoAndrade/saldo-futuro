@@ -2,13 +2,13 @@
 
 > **Ciclo:** `019` (trilha curta: `—`)
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#190`
 > **Plano:** `_project/drafts/019_filtros_selecao_ativos/019_plan.md`
 > **Branch:** `feature/issue-190`
 > **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/193
-> **Integração:** `Pendente` (PR #193 aberta; checks remotos e aprovação do merge)
+> **Integração:** PR #193 integrada por squash (`8963b257aa5280451498f69484d7c2f8164dfc2b`) em 2026-11-05, com os cinco checks verdes no head `ea0b16a`; issue #190 fechada pelo merge (`Closes #190`); release `0.15.0` pela PR #194, ainda aberta
 > **Autorização inicial:** "autorizo a implementação da issue #190" em 2026-11-05
 > **Modo contínuo:** `—`
 > **Início:** 2026-11-05
@@ -60,7 +60,7 @@ Toda linha é obrigatória. "Não se aplica" exige justificativa. Com G1 ou G2 m
 | Testes | Unitários 524/524 (inclui os novos de classe, instituição, opções em uso e `comDescendentes`); typecheck sem erros; lint com 0 erros e 3 avisos preexistentes em `local/` (ignorado pelo Git); build passou. E2e sobre o build de produção, Supabase local e Chrome da máquina: `ativos-consulta.spec.ts` 14/14 (9 novos, inclusive sem JavaScript, axe, 44 px e sem rolagem horizontal em 360 e 1280 px). Conjunto afetado (`ativos-consulta`, `ativos-detalhes`, `ativos`, `novidades`, `navegacao`, `seletor-ativo`, `carteira`): 79/79 com um worker. Com dois workers, duas execuções tiveram falhas em arquivos não alterados (`seletor-ativo.spec.ts` "buscar 'acao'", que confere o banco logo depois de um `toHaveURL(/\/lancamentos/)` que já casa com `/lancamentos/novo`, e `carteira.spec.ts` CR-04), que passaram isolados e com um worker; nenhum teste foi alterado para contornar. Banco: sem migração nova, `supabase test db` não aplicável. A CI roda a suíte completa |
 | Validador | 48/48 testes de governança; `node scripts/validate-governance.mjs`: 0 erros, 0 avisos |
 | `git diff --check` | Passou |
-| Checks remotos | Em execução na PR #193 |
+| Checks remotos | Verdes no head `ea0b16a` da PR #193 (lint, tipos, testes, build e e2e de preview; governança; Supabase local, banco e e2e de autenticação; Vercel) |
 
 ## Revisão da correção
 
@@ -83,10 +83,10 @@ Não se aplica — não é a última issue do ciclo (a #192 traz o encerramento 
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 019 (leve)
+Situação: Aguardando autorização de implementação — ciclo 019 (leve)
 Quem: Responsável
-Conferir: Checks e diff da PR ([PR #193](https://github.com/EuThiagoAndrade/saldo-futuro/pull/193))
-Diga: "aprovo o merge da PR #193"
+Conferir: Issue e escopo ([#191](https://github.com/EuThiagoAndrade/saldo-futuro/issues/191))
+Diga: "autorizo a implementação da issue #191"
 ```
 
 ## Handoff de saída
