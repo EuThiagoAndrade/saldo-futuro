@@ -328,7 +328,15 @@ test.describe("consulta dos atributos (#174)", () => {
     await expect(filtrar(page).getByRole("heading", { level: 2 })).toHaveText(["Classe e instituição", "Produto", "Tributação", "Resgate", "Proteção e exposição"]);
     const classe = await abrirLista(page, "Classe");
     await expect(classe.locator("label")).toHaveText(ROTULOS_CLASSE);
-    await expect(filtrar(page).getByText("Marcar uma classe inclui as subclasses.")).toBeVisible();
+    // Sem frase de abertura no painel, e sem divisória acima do primeiro grupo (nem com o campo oculto da aba).
+    await expect(filtrar(page).getByText(/Opções marcadas no mesmo campo|Marcar uma classe inclui/)).toHaveCount(0);
+    const divisoria = (p: Page) => filtrar(p).locator("section").first().evaluate((el) => getComputedStyle(el).borderTopWidth);
+    expect(await divisoria(page)).toBe("0px");
+    await page.goto("/ativos?aba=desativados");
+    await abrirFiltrar(page);
+    expect(await divisoria(page)).toBe("0px");
+    await page.goto("/ativos");
+    await abrirFiltrar(page);
     // As duas listas do grupo ficam alinhadas: o resumo de cada uma começa na mesma altura.
     const topo = async (campo: Locator) => Math.round((await campo.locator("summary").boundingBox())!.y);
     expect(await topo(classe)).toBe(await topo(filtrar(page).getByRole("group", { name: "Instituição", exact: true })));

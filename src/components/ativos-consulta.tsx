@@ -79,9 +79,6 @@ export function FiltrosDosAtivos({
         </summary>
         <form method="get" action="/ativos#ativos-da-aba" className="flex flex-col gap-4 border-t border-border p-4">
           {aba === "desativados" ? <input type="hidden" name="aba" value="desativados" /> : null}
-          <p className="text-sm/5 text-text-secondary">
-            Opções marcadas no mesmo campo valem com “ou”; campos diferentes, com “e”. Marcar uma classe inclui as subclasses. Com qualquer filtro, o ativo Em trânsito fica de fora.
-          </p>
           <CamposDoFiltro modo={{ tipo: "url", parametros: p }} opcoes={opcoes} />
           <button type="submit" className={`${botaoSecundario} sm:self-end`}>
             Aplicar filtros

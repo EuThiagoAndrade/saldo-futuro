@@ -80,7 +80,7 @@ function Selecao({
 function GrupoFiltro({ titulo, nivel, children }: { titulo: string; nivel: 2 | 3; children: ReactNode }) {
   const Titulo = nivel === 2 ? "h2" : "h3";
   return (
-    <section aria-label={titulo} className="grid gap-4 border-t border-border pt-4 first:border-t-0 first:pt-0 sm:grid-cols-2">
+    <section aria-label={titulo} className="grid gap-4 border-t border-border pt-4 first-of-type:border-t-0 first-of-type:pt-0 sm:grid-cols-2">
       <Titulo className="text-base/6 font-semibold text-text sm:col-span-2">{titulo}</Titulo>
       {children}
     </section>

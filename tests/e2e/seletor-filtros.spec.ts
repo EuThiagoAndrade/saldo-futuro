@@ -154,6 +154,11 @@ test.describe("seletor de ativo com filtros (#191)", () => {
     await page.goto("/lancamentos/novo");
     // O painel começa recolhido, e "Mais filtros" também.
     await expect(seletor(page, "lancamento-ativo").locator("details").first()).not.toHaveAttribute("open");
+    // Sem frase de abertura no painel, e sem divisória acima do primeiro grupo.
+    await abrirPainel(page, "lancamento-ativo");
+    await expect(seletor(page, "lancamento-ativo").getByText(/Opções marcadas no mesmo campo|Marcar uma classe inclui|continua escolhido/)).toHaveCount(0);
+    expect(await seletor(page, "lancamento-ativo").locator("section").first().evaluate((el) => getComputedStyle(el).borderTopWidth)).toBe("0px");
+    await resumoFiltrar(page, "lancamento-ativo").click();
     await expect(resumoFiltrar(page, "lancamento-ativo")).not.toContainText("com filtro");
     const classe = await lista(page, "lancamento-ativo", "Classe");
     // Só o que os ativos selecionáveis usam: a classe e a instituição do desativado não aparecem (R1-1).

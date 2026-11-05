@@ -91,10 +91,6 @@ export function SeletorDeAtivo({
           ) : null}
         </summary>
         <div className="flex flex-col gap-4 border-t border-border p-3">
-          <p className="text-sm/5 text-text-secondary">
-            Opções marcadas no mesmo campo valem com “ou”; campos diferentes, com “e”. Marcar uma classe inclui as subclasses. Com qualquer filtro, o ativo Em
-            trânsito fica de fora da lista. Os filtros só restringem a lista: o ativo que você já escolheu continua escolhido.
-          </p>
           <CamposDoFiltro
             key={versao}
             modo={{ tipo: "formulario", aoMudar: (campo, valor) => setValores((atual) => ({ ...atual, [campo]: valor })) }}
