@@ -11,6 +11,7 @@ import {
   VEICULOS_ACESSO,
 } from "./detalhes-ativo";
 import type { Ativo } from "./leituras";
+import type { Taxonomia } from "./taxonomia";
 
 // Filtros da página Ativos (ciclo 017, issue #174, P5 e D8). A URL é a fonte do estado: um
 // formulário GET em /ativos, sem JavaScript para enviar. Mesmo atributo combina por OU (interseção
@@ -19,8 +20,14 @@ import type { Ativo } from "./leituras";
 // datas. "nao_informado" existe só aqui e seleciona o vazio ou o nulo, nunca o trânsito, que fica
 // fora de qualquer filtro de atributos. Código desconhecido, escalar repetido, conjunto inválido ou
 // tupla parcial são erro: a lista não vira Todos em silêncio.
+//
+// Classe e instituição (ciclo 019, issue #190, BL-020): repetíveis, por ID. Marcar um nó da taxonomia
+// inclui o próprio nó e todos os descendentes. "Sem classe" (sem nó, inclusive quem só tem a classe
+// legada) e "Sem instituição" são exclusivos, como "Não informado". ID fora do catálogo é erro.
 
 export const NAO_INFORMADO_FILTRO = "nao_informado";
+export const SEM_CLASSE_FILTRO = "sem_classe";
+export const SEM_INSTITUICAO_FILTRO = "sem_instituicao";
 
 export type Comparacao = "exato" | "ate";
 
@@ -35,6 +42,10 @@ export type FiltroPrazo =
   | { tipo: "prazo"; dias: number; unidade: string; comparacao: Comparacao };
 
 export interface FiltrosAtivos {
+  /** IDs de nós da taxonomia, em ordem hierárquica, ou só `SEM_CLASSE_FILTRO`. */
+  classe: string[];
+  /** IDs de instituições, na ordem do catálogo, ou só `SEM_INSTITUICAO_FILTRO`. */
+  instituicao: string[];
   veiculo: string[];
   indexador: string[];
   regime: string | null;
@@ -47,6 +58,8 @@ export type Parametros = Record<string, string | string[] | undefined>;
 
 /** Nomes dos parâmetros dos filtros (`aba` fica de fora). */
 export const PARAMETROS_FILTRO = [
+  "classe",
+  "instituicao",
   "veiculo",
   "indexador",
   "regime",
@@ -85,6 +98,20 @@ function conjunto(p: Parametros, nome: string, catalogo: readonly OpcaoAtributo[
   return validos.filter((v) => valores.includes(v));
 }
 
+/** Catálogos que dão sentido aos IDs de classe e de instituição da URL. */
+export interface CatalogosDoFiltro {
+  taxonomia: Taxonomia;
+  instituicoes: readonly { id: string }[];
+}
+
+/** Conjunto de IDs de um catálogo: conferido contra ele, na ordem dele, com a opção exclusiva sozinha. */
+function conjuntoDeIds(p: Parametros, nome: string, ordem: readonly string[], exclusiva: string, rotulo: string, rotuloExclusiva: string): string[] {
+  const valores = [...new Set(preenchidos(p, nome))];
+  if (valores.some((v) => v !== exclusiva && !ordem.includes(v))) throw new ErroFiltro(`${rotulo} tem uma opção desconhecida.`);
+  if (valores.length > 1 && valores.includes(exclusiva)) throw new ErroFiltro(`${rotulo}: ${rotuloExclusiva} não combina com outras opções.`);
+  return valores.includes(exclusiva) ? [exclusiva] : ordem.filter((id) => valores.includes(id));
+}
+
 function prazo(p: Parametros): FiltroPrazo | null {
   const codigos = (c: readonly OpcaoAtributo[]) => c.map((o) => o.codigo);
   const tipo = escalar(p, "prazo_resgate_tipo", [...codigos(SITUACOES_PRAZO), NAO_INFORMADO_FILTRO], "A situação do prazo");
@@ -107,7 +134,7 @@ function prazo(p: Parametros): FiltroPrazo | null {
 }
 
 /** Lê os filtros da URL; erro quando a combinação não é interpretável. */
-export function lerFiltros(p: Parametros): { filtros: FiltrosAtivos } | { erro: string } {
+export function lerFiltros(p: Parametros, catalogos: CatalogosDoFiltro): { filtros: FiltrosAtivos } | { erro: string } {
   try {
     const indicadores: FiltrosAtivos["indicadores"] = {};
     for (const i of INDICADORES_VISIVEIS) {
@@ -117,6 +144,8 @@ export function lerFiltros(p: Parametros): { filtros: FiltrosAtivos } | { erro: 
     const codigos = (c: readonly OpcaoAtributo[]) => [...c.map((o) => o.codigo), NAO_INFORMADO_FILTRO];
     return {
       filtros: {
+        classe: conjuntoDeIds(p, "classe", catalogos.taxonomia.opcoes.map((o) => o.id), SEM_CLASSE_FILTRO, "Classe", "Sem classe"),
+        instituicao: conjuntoDeIds(p, "instituicao", catalogos.instituicoes.map((i) => i.id), SEM_INSTITUICAO_FILTRO, "Instituição", "Sem instituição"),
         veiculo: conjunto(p, "veiculo", VEICULOS_ACESSO, "Veículo de acesso"),
         indexador: conjunto(p, "indexador", INDEXADORES_REMUNERACAO, "Indexador da remuneração"),
         regime: escalar(p, "regime", codigos(REGIMES_TRIBUTARIOS), "Regime tributário"),
@@ -132,7 +161,7 @@ export function lerFiltros(p: Parametros): { filtros: FiltrosAtivos } | { erro: 
 }
 
 export function algumFiltro(f: FiltrosAtivos): boolean {
-  return f.veiculo.length > 0 || f.indexador.length > 0 || f.regime !== null || f.prazo !== null || f.fgc !== null || Object.keys(f.indicadores).length > 0;
+  return f.classe.length > 0 || f.instituicao.length > 0 || f.veiculo.length > 0 || f.indexador.length > 0 || f.regime !== null || f.prazo !== null || f.fgc !== null || Object.keys(f.indicadores).length > 0;
 }
 
 const confere = (filtro: string | null, valor: string | null) =>
@@ -152,11 +181,16 @@ function conferePrazo(f: FiltroPrazo | null, a: Ativo): boolean {
 const valorDoIndicador = (v: boolean | null) => (v === true ? "sim" : v === false ? "nao" : NAO_INFORMADO_FILTRO);
 
 /** Aplica os filtros às linhas já lidas; com algum filtro, o trânsito fica de fora (D8). */
-export function filtrarAtivos<A extends Ativo>(ativos: readonly A[], f: FiltrosAtivos): A[] {
+export function filtrarAtivos<A extends Ativo>(ativos: readonly A[], f: FiltrosAtivos, taxonomia: Taxonomia): A[] {
   if (!algumFiltro(f)) return [...ativos];
+  const semClasse = f.classe[0] === SEM_CLASSE_FILTRO;
+  const nos = new Set(semClasse ? [] : f.classe.flatMap((id) => taxonomia.comDescendentes(id)));
   return ativos.filter(
     (a) =>
       a.sistema === null &&
+      (f.classe.length === 0 || (semClasse ? a.taxonomia_id === null : a.taxonomia_id !== null && nos.has(a.taxonomia_id))) &&
+      (f.instituicao.length === 0 ||
+        (f.instituicao[0] === SEM_INSTITUICAO_FILTRO ? a.instituicao_id === null : a.instituicao_id !== null && f.instituicao.includes(a.instituicao_id))) &&
       confereConjunto(f.veiculo, a.veiculos_acesso) &&
       confereConjunto(f.indexador, a.indexadores_remuneracao) &&
       confere(f.regime, a.regime_tributario) &&
@@ -175,6 +209,8 @@ export function filtrarAtivos<A extends Ativo>(ativos: readonly A[], f: FiltrosA
  */
 export function camposComFiltro(f: FiltrosAtivos): number {
   return (
+    Number(f.classe.length > 0) +
+    Number(f.instituicao.length > 0) +
     Number(f.veiculo.length > 0) +
     Number(f.indexador.length > 0) +
     Number(f.regime !== null) +
@@ -194,6 +230,35 @@ export const OPCAO_NAO_INFORMADO = { codigo: NAO_INFORMADO_FILTRO, rotulo: "Não
 export function opcoesEmUso(catalogo: readonly OpcaoAtributo[], conjuntos: readonly (readonly string[])[], marcados: readonly string[]): OpcaoAtributo[] {
   const usados = new Set([...conjuntos.flat(), ...marcados]);
   return [...catalogo.filter((o) => usados.has(o.codigo)), OPCAO_NAO_INFORMADO];
+}
+
+export const OPCAO_SEM_CLASSE = { codigo: SEM_CLASSE_FILTRO, rotulo: "Sem classe" } as const;
+export const OPCAO_SEM_INSTITUICAO = { codigo: SEM_INSTITUICAO_FILTRO, rotulo: "Sem instituição" } as const;
+
+/**
+ * Opções de classe no filtro (ciclo 019, D3): os nós usados por algum ativo comum, das duas abas, com
+ * seus ancestrais, mais os marcados na URL, em ordem hierárquica, com o caminho completo como rótulo, e
+ * "Sem classe" no fim. Um ancestral entra quando algum nó da sua subárvore está em uso.
+ */
+export function opcoesDeClasse(taxonomia: Taxonomia, usados: readonly (string | null)[], marcados: readonly string[]): OpcaoAtributo[] {
+  const emUso = new Set(usados);
+  const marcadas = new Set(marcados);
+  const nos = taxonomia.opcoes.filter((o) => marcadas.has(o.id) || taxonomia.comDescendentes(o.id).some((id) => emUso.has(id)));
+  return [...nos.map((o) => ({ codigo: o.id, rotulo: o.nome })), OPCAO_SEM_CLASSE];
+}
+
+/**
+ * Opções de instituição no filtro (ciclo 019, D3): as usadas por algum ativo comum, das duas abas, mais
+ * as marcadas na URL, em ordem alfabética, e "Sem instituição" no fim.
+ */
+export function opcoesDeInstituicao(
+  instituicoes: readonly { id: string; nome: string }[],
+  usadas: readonly (string | null)[],
+  marcadas: readonly string[],
+): OpcaoAtributo[] {
+  const emUso = new Set([...usadas, ...marcadas]);
+  const ordenadas = instituicoes.filter((i) => emUso.has(i.id)).sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
+  return [...ordenadas.map((i) => ({ codigo: i.id, rotulo: i.nome })), OPCAO_SEM_INSTITUICAO];
 }
 
 /** Consulta só com os parâmetros de filtro preenchidos, na ordem fixa, para os links das abas. */

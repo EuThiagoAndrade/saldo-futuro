@@ -94,7 +94,8 @@ const indicador = (coluna: ColunaIndicador, p: Parametros) => {
 
 /**
  * Painel "Filtrar", abaixo das abas (ciclo 017, issue #174; reorganizado no ciclo 018, issue #183):
- * quatro grupos com título; veículo e indexador em listas suspensas só com as opções em uso. Fica
+ * cinco grupos com título, o primeiro com classe e instituição (ciclo 019, issue #190); classe,
+ * instituição, veículo e indexador em listas suspensas só com as opções em uso. Fica
  * fechado depois de aplicar e só abre sozinho com erro, para a página mostrar a lista (o envio vai à
  * âncora dela). O resumo mostra quantos campos têm filtro, e "Limpar filtros" fica ao lado, visível
  * com o painel fechado. Comparação, dias e unidade só aparecem com "Prazo em dias", por CSS.
@@ -107,6 +108,8 @@ export function FiltrosDosAtivos({
   parametros,
   campos,
   erro,
+  opcoesClasse,
+  opcoesInstituicao,
   opcoesVeiculo,
   opcoesIndexador,
 }: {
@@ -115,6 +118,8 @@ export function FiltrosDosAtivos({
   /** Campos com filtro aplicado (o contador). */
   campos: number;
   erro: string | null;
+  opcoesClasse: readonly OpcaoAtributo[];
+  opcoesInstituicao: readonly OpcaoAtributo[];
   opcoesVeiculo: readonly OpcaoAtributo[];
   opcoesIndexador: readonly OpcaoAtributo[];
 }) {
@@ -136,8 +141,12 @@ export function FiltrosDosAtivos({
         <form method="get" action="/ativos#ativos-da-aba" className="flex flex-col gap-4 border-t border-border p-4">
           {aba === "desativados" ? <input type="hidden" name="aba" value="desativados" /> : null}
           <p className="text-sm/5 text-text-secondary">
-            Opções marcadas no mesmo campo valem com “ou”; campos diferentes, com “e”. Com qualquer filtro, o ativo Em trânsito fica de fora.
+            Opções marcadas no mesmo campo valem com “ou”; campos diferentes, com “e”. Marcar uma classe inclui as subclasses. Com qualquer filtro, o ativo Em trânsito fica de fora.
           </p>
+          <GrupoFiltro titulo="Classe e instituição">
+            <ListaSuspensaFiltro id="filtro-classe" legenda="Classe" nome="classe" opcoes={opcoesClasse} iniciais={valores(p, "classe")} vazio="Todas" />
+            <ListaSuspensaFiltro id="filtro-instituicao" legenda="Instituição" nome="instituicao" opcoes={opcoesInstituicao} iniciais={valores(p, "instituicao")} vazio="Todas" />
+          </GrupoFiltro>
           <GrupoFiltro titulo="Produto">
             <ListaSuspensaFiltro id="filtro-veiculo" legenda="Veículo de acesso" nome="veiculo" opcoes={opcoesVeiculo} iniciais={valores(p, "veiculo")} vazio="Todos" />
             <ListaSuspensaFiltro

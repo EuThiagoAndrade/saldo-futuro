@@ -35,6 +35,15 @@ describe("montarTaxonomia", () => {
     expect(t.nome("x")).toBeUndefined();
   });
 
+  it("devolve o nó e todos os descendentes, em ordem hierárquica, e nada para um nó inexistente (ciclo 019)", () => {
+    const t = montarTaxonomia(nos);
+    expect(t.comDescendentes("r1")).toEqual(["r1", "s1", "s2", "t2", "t3"]);
+    expect(t.comDescendentes("s2")).toEqual(["s2", "t2", "t3"]);
+    expect(t.comDescendentes("t3")).toEqual(["t3"]);
+    expect(t.comDescendentes("r2")).toEqual(["r2"]);
+    expect(t.comDescendentes("x")).toEqual([]);
+  });
+
   it("aceita uma árvore vazia", () => {
     expect(montarTaxonomia([]).opcoes).toEqual([]);
   });
