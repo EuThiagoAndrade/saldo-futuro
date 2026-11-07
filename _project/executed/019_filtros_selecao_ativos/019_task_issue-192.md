@@ -7,7 +7,7 @@
 > **Issue:** `#192`
 > **Plano:** `_project/executed/019_filtros_selecao_ativos/019_plan.md`
 > **Branch:** `feature/issue-192`
-> **PR:** —
+> **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/196
 > **Integração:** `Pendente` — conclusão prospectiva condicionada ao merge desta PR.
 > **Autorização inicial:** "autorizo a implementação da issue #192" em 2026-11-07
 > **Modo contínuo:** `—`
@@ -53,7 +53,7 @@ Não se aplica.
 | Testes | Typecheck, build, lint (0 erros, 3 avisos preexistentes), 540 testes unitários e 48 testes de governança passaram. E2e com Supabase local, Chrome e um worker: 35/35 em consulta e seletores, mais 35/35 em ativos, detalhes e carteira; inclui sem JavaScript, acessibilidade, retorno e isolamento. Uma execução anterior sofreu encerramento do worker; a repetição completa passou sem falhas. |
 | Validador | 0 erros, 0 avisos; revisão manual de privacidade, barreiras e rastreabilidade realizada. |
 | `git diff --check` | Passou na revisão parcial, com avisos de final de linha. |
-| Checks remotos | Pendente |
+| Checks remotos | Pendentes na PR #196. |
 
 ## Revisão da correção
 
@@ -69,6 +69,8 @@ Encerramento prospectivo autorizado pelo plano: DESIGN.md e KB-003 consolidados;
 
 ## Próximo passo
 
+Antes do merge, a situação efetiva é Aguardando merge da [PR #196](https://github.com/EuThiagoAndrade/saldo-futuro/pull/196); a conclusão abaixo é prospectiva.
+
 ```text
 PRÓXIMO PASSO
 Situação: Concluído — ciclo 019 (leve)
@@ -81,9 +83,9 @@ Diga: —
 
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 019 + implementar_issue + 192/BL-019 + 33973c94c26633c75240f039ed091efdc20d260f`
-- `effect_class`: `local_mutation`
+- `effect_class`: `remote_mutation`
 - `state_before`: plano aprovado, #192 aberta, #191 integrada pela PR #195.
-- `state_after`: implementação validada e encerramento prospectivo preparado; ainda sem commit ou PR.
+- `state_after`: implementação validada, encerramento prospectivo preparado e PR #196 aberta; integração pendente.
 - `result`: `executed`
-- `evidence`: GitHub PR #195, base `33973c9`, código e resultados registrados em Evidências.
-- `blockers`: publicação da PR e aprovação específica de seu merge pendentes.
+- `evidence`: PR #196, base `33973c9`, código e resultados registrados em Evidências.
+- `blockers`: checks remotos verdes e "aprovo o merge da PR #196".

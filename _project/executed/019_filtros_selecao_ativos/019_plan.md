@@ -206,7 +206,7 @@ BL-019, BL-020 e BL-022 existem em `main` (`d7533c6`). Revisão formal, aprovaç
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | [#190](https://github.com/EuThiagoAndrade/saldo-futuro/issues/190), [#191](https://github.com/EuThiagoAndrade/saldo-futuro/issues/191) e [#192](https://github.com/EuThiagoAndrade/saldo-futuro/issues/192) |
-| PR(s) | [#193](https://github.com/EuThiagoAndrade/saldo-futuro/pull/193) (issue #190, integrada) e [#195](https://github.com/EuThiagoAndrade/saldo-futuro/pull/195) (issue #191) |
+| PR(s) | [#193](https://github.com/EuThiagoAndrade/saldo-futuro/pull/193) (issue #190), [#195](https://github.com/EuThiagoAndrade/saldo-futuro/pull/195) (issue #191), integradas, e [#196](https://github.com/EuThiagoAndrade/saldo-futuro/pull/196) (issue #192 e encerramento prospectivo) |
 | Branch(es) | `feature/issue-190`, `feature/issue-191` e `feature/issue-192` |
 | Destino após conclusão | `_project/executed/019_filtros_selecao_ativos/019_plan.md` |
 
