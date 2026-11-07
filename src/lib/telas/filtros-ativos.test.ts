@@ -82,6 +82,12 @@ const erro = (p: Parametros) => {
 };
 
 describe("filtrarAtivos — exemplos da P5", () => {
+  it("aplica Entre com limites inclusivos e unidade idêntica", () => {
+    const faixa = { prazo_resgate_tipo: "prazo", prazo_resgate_comparacao: "entre", prazo_resgate_dias: "0", prazo_resgate_dias_ate: "1", prazo_resgate_unidade: "uteis" };
+    expect(filtrar(faixa)).toEqual(["A", "B"]);
+    expect(filtrar({ ...faixa, prazo_resgate_unidade: "corridos" })).toEqual([]);
+    expect(filtrar({ ...faixa, prazo_resgate_dias: "1" })).toEqual(["B"]);
+  });
   it("sem filtro, todos, inclusive o trânsito", () => {
     expect(filtrar({})).toEqual(["A", "B", "C", "D", "E", "T"]);
     // Valores vazios vindos do formulário são Todos.
@@ -228,6 +234,12 @@ describe("classe e instituição (ciclo 019, issue #190)", () => {
 });
 
 describe("lerFiltros — recusas explícitas", () => {
+  it("recusa limites finais ausentes, inválidos ou avulsos", () => {
+    const faixa = { prazo_resgate_tipo: "prazo", prazo_resgate_comparacao: "entre", prazo_resgate_dias: "1", prazo_resgate_unidade: "uteis" };
+    for (const parametros of [faixa, { ...faixa, prazo_resgate_dias_ate: "0" }, { ...faixa, prazo_resgate_dias_ate: "1,5" }, { ...faixa, prazo_resgate_dias_ate: "2147483648" }, { ...faixa, prazo_resgate_comparacao: "ate", prazo_resgate_dias_ate: "2" }, { prazo_resgate_dias_ate: "2" }]) {
+      expect(lerFiltros(parametros, CATALOGOS)).toHaveProperty("erro");
+    }
+  });
   it("código desconhecido, escalar repetido e conjunto inválido", () => {
     expect(erro({ veiculo: "Fundo" })).toBe("Veículo de acesso tem uma opção desconhecida.");
     expect(erro({ regime: ["outro", "renda_variavel"] })).toBe("Regime tributário aparece mais de uma vez.");
@@ -261,6 +273,10 @@ describe("lerFiltros — recusas explícitas", () => {
 });
 
 describe("estado na URL", () => {
+  it("reconstrói o retorno apenas com a aba e parâmetros conhecidos", () => {
+    const p = { veiculo: ["fundo", "etf"], retorno: "https://example.com", desconhecido: "x", prazo_resgate_dias_ate: "90" };
+    expect(enderecoDaAba("desativados", p)).toBe("/ativos?aba=desativados&veiculo=fundo&veiculo=etf&prazo_resgate_dias_ate=90");
+  });
   it("algumFiltro e o contador conta campos, não opções (ciclo 018, D15)", () => {
     const lido = lerFiltros({ veiculo: ["etf", "fundo"], prazo_resgate_tipo: "prazo", prazo_resgate_dias: "1", prazo_resgate_unidade: "uteis", prazo_resgate_comparacao: "ate", isento_ir: "nao_informado" }, CATALOGOS);
     expect("filtros" in lido).toBe(true);

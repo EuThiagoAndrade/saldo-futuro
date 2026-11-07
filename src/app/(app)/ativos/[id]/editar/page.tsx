@@ -5,6 +5,7 @@ import { FormEditarAtivo } from "@/components/formularios/editar-ativo";
 import { PreviewNotice } from "@/components/preview-notice";
 import { backend } from "@/lib/config";
 import { exigirSessao } from "@/lib/sessao";
+import { enderecoDaAba, consultaDosFiltros, type Parametros } from "@/lib/telas/filtros-ativos";
 import { ordenarPorNome } from "@/lib/telas/combobox";
 import { lerAtivos, lerClassesLegadas, lerInstituicoes, lerTaxonomia } from "@/lib/telas/leituras";
 import { classeAtualDoAtivo } from "@/lib/telas/taxonomia";
@@ -17,7 +18,7 @@ const ROTULO_AJUSTE = { rendimento: "Rendimento", marcacao: "Marcação a mercad
 // taxonomia global desde o ciclo 013, issue #138), aberta pelo link
 // Editar das duas abas de /ativos. Ativo inexistente, de outro usuário (a RLS não o devolve) ou
 // o trânsito mostram a recusa, sem formulário.
-export default async function EditarAtivoPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function EditarAtivoPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<Parametros> }) {
   if (!backend) return <PreviewNotice />;
   const { supabase } = await exigirSessao();
   const { id } = await params;
@@ -28,7 +29,10 @@ export default async function EditarAtivoPage({ params }: { params: Promise<{ id
     lerInstituicoes(supabase),
   ]);
   const ativo = ativos.find((a) => a.id === id);
-  const voltar = ativo && !ativo.ativo ? "/ativos?aba=desativados" : "/ativos";
+  const consulta = await searchParams;
+  const aba = consulta.aba === "desativados" ? "desativados" : consulta.aba === "em-uso" ? "em-uso" : ativo && !ativo.ativo ? "desativados" : "em-uso";
+  const voltar = enderecoDaAba(aba, consulta);
+  const filtrosRetorno = [...consultaDosFiltros(consulta)];
 
   return (
     <div className="flex max-w-xl flex-col gap-6">
@@ -45,6 +49,8 @@ export default async function EditarAtivoPage({ params }: { params: Promise<{ id
       ) : (
         <FormEditarAtivo
           ativo={ativo}
+          abaRetorno={aba}
+          filtrosRetorno={filtrosRetorno}
           rotuloAjuste={ROTULO_AJUSTE[ativo.tipo_ajuste ?? "rendimento"]}
           classes={taxonomia.opcoes}
           classeAtual={classeAtualDoAtivo(ativo, taxonomia, new Map(legado.map((c) => [c.id, c.nome])))}

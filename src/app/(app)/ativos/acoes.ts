@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { enderecoDaAba, PARAMETROS_FILTRO, type Parametros } from "@/lib/telas/filtros-ativos";
 import type { EstadoAcao } from "@/lib/telas/acao";
 import { mensagemDeRecusa } from "@/lib/telas/carteira";
 import { lerDetalhes, lerNome } from "@/lib/telas/detalhes-ativo";
@@ -63,5 +64,7 @@ export async function editarAtivo(_estado: EstadoAcao, dados: FormData): Promise
   const { error } = await supabase.rpc("editar_ativo_com_atributos", { p_ativo: id.data, p_nome: nome.nome, ...detalhes.parametros });
   if (error) return { erro: mensagemDeRecusa(error) };
   revalidatePath("/", "layout");
-  redirect(dados.get("aba") === "desativados" ? "/ativos?aba=desativados" : "/ativos");
+  const retorno: Parametros = {};
+  for (const nome of PARAMETROS_FILTRO) retorno[nome] = dados.getAll(`retorno_${nome}`).filter((v): v is string => typeof v === "string");
+  redirect(enderecoDaAba(dados.get("abaRetorno") === "desativados" ? "desativados" : "em-uso", retorno));
 }

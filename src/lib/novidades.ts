@@ -21,6 +21,7 @@ export const HISTORICO: readonly Novidade[] = [
     notas: [
       "Na tela de Ativos, Filtrar agora também filtra por classe e por instituição, num grupo novo no topo do painel. Marcar uma classe inclui as subclasses, e Sem classe e Sem instituição mostram os ativos que ainda não têm esse dado.",
       "Em Novo lançamento e Transferências, cada ativo da lista mostra a instituição e a classe abaixo do nome, o que ajuda a distinguir ativos com o mesmo nome. Abaixo de cada campo, Filtrar ativos reduz a lista pelos mesmos filtros da tela de Ativos, sem mudar o ativo que você já escolheu.",
+      "Ao editar um ativo, voltar ou salvar mantém a aba e os filtros da lista. O prazo para resgate também pode ser filtrado entre dois limites, inclusive nos seletores de ativos.",
     ],
   },
   {

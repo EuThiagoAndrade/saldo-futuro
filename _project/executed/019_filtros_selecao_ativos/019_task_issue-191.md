@@ -2,13 +2,13 @@
 
 > **Ciclo:** `019` (trilha curta: `—`)
 > **Trilha:** `normal`
-> **Estado:** `Aguardando integração`
+> **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#191`
-> **Plano:** `_project/drafts/019_filtros_selecao_ativos/019_plan.md`
+> **Plano:** `_project/executed/019_filtros_selecao_ativos/019_plan.md`
 > **Branch:** `feature/issue-191`
 > **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/195
-> **Integração:** `Pendente` (PR #195 aberta; checks remotos e aprovação do merge)
+> **Integração:** PR #195 integrada por squash (`33973c94c26633c75240f039ed091efdc20d260f`) em 2026-11-05; checks verdes e issue #191 fechada.
 > **Autorização inicial:** "Autorizar #191" em 2026-11-05, em resposta à pergunta "Autoriza a implementação da issue #191?"
 > **Modo contínuo:** `—`
 > **Início:** 2026-11-05
@@ -88,10 +88,10 @@ Não se aplica — não é a última issue do ciclo (a #192 traz o encerramento 
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 019 (leve)
-Quem: Responsável
-Conferir: Checks e diff da PR ([PR #195](https://github.com/EuThiagoAndrade/saldo-futuro/pull/195))
-Diga: "aprovo o merge da PR #195"
+Situação: Concluído — ciclo 019 (leve)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída

@@ -65,9 +65,9 @@ interface Detalhes {
   instituicao: (ativo: Ativo) => string | null;
 }
 
-function Editar({ ativo }: { ativo: Ativo }) {
+function Editar({ ativo, retorno }: { ativo: Ativo; retorno: string }) {
   return (
-    <Link href={`/ativos/${ativo.id}/editar`} className={botaoTexto} aria-label={`Editar ${ativo.nome}`}>
+    <Link href={`/ativos/${ativo.id}/editar${retorno}`} className={botaoTexto} aria-label={`Editar ${ativo.nome}`}>
       Editar
     </Link>
   );
@@ -102,7 +102,7 @@ function SemResultado() {
   );
 }
 
-function EmUso({ ativos, detalhes, filtrado }: { ativos: Ativo[]; detalhes: Detalhes; filtrado: boolean }) {
+function EmUso({ ativos, detalhes, filtrado, retorno }: { ativos: Ativo[]; detalhes: Detalhes; filtrado: boolean; retorno: string }) {
   if (ativos.length === 0 && filtrado) return <SemResultado />;
   if (ativos.length === 0) {
     return (
@@ -148,7 +148,7 @@ function EmUso({ ativos, detalhes, filtrado }: { ativos: Ativo[]; detalhes: Deta
                   <span className="text-sm/5 text-text-secondary">{TRANSITO}</span>
                 ) : (
                   <div className="flex items-start justify-end gap-2">
-                    <Editar ativo={ativo} />
+                    <Editar ativo={ativo} retorno={retorno} />
                     <Desativar ativo={ativo} />
                   </div>
                 )}
@@ -171,7 +171,7 @@ function EmUso({ ativos, detalhes, filtrado }: { ativos: Ativo[]; detalhes: Deta
             </div>
             {ativo.sistema === "transito" ? null : (
               <div className="flex shrink-0 flex-col items-end gap-1">
-                <Editar ativo={ativo} />
+                <Editar ativo={ativo} retorno={retorno} />
                 <Desativar ativo={ativo} />
               </div>
             )}
@@ -182,7 +182,7 @@ function EmUso({ ativos, detalhes, filtrado }: { ativos: Ativo[]; detalhes: Deta
   );
 }
 
-function Desativados({ ativos, detalhes, filtrado }: { ativos: Ativo[]; detalhes: Detalhes; filtrado: boolean }) {
+function Desativados({ ativos, detalhes, filtrado, retorno }: { ativos: Ativo[]; detalhes: Detalhes; filtrado: boolean; retorno: string }) {
   if (ativos.length === 0 && filtrado) return <SemResultado />;
   if (ativos.length === 0) {
     return (
@@ -203,7 +203,7 @@ function Desativados({ ativos, detalhes, filtrado }: { ativos: Ativo[]; detalhes
             <ResumoAtivo ativo={ativo} />
           </div>
           <div className="shrink-0">
-            <Editar ativo={ativo} />
+            <Editar ativo={ativo} retorno={retorno} />
           </div>
         </li>
       ))}
@@ -239,6 +239,7 @@ export default async function AtivosPage({ searchParams }: { searchParams: Promi
   const visiveis = filtros ? filtrarAtivos(daAba, filtros, taxonomia) : [];
   // Opções do filtro (ciclo 018, D14, e ciclo 019, D3): só as usadas por algum ativo comum, das duas abas, e as marcadas na URL.
   const opcoes = opcoesDoFiltro(ativos, parametros, catalogos);
+  const retorno = enderecoDaAba(aba, parametros).slice("/ativos".length);
 
   return (
     <div className="flex flex-col gap-6">
@@ -279,9 +280,9 @@ export default async function AtivosPage({ searchParams }: { searchParams: Promi
             Não foi possível aplicar os filtros: {lido.erro}
           </p>
         ) : aba === "em-uso" ? (
-          <EmUso ativos={visiveis} detalhes={detalhes} filtrado={campos > 0} />
+          <EmUso ativos={visiveis} detalhes={detalhes} filtrado={campos > 0} retorno={retorno} />
         ) : (
-          <Desativados ativos={visiveis} detalhes={detalhes} filtrado={campos > 0} />
+          <Desativados ativos={visiveis} detalhes={detalhes} filtrado={campos > 0} retorno={retorno} />
         )}
       </section>
     </div>

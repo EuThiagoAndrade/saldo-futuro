@@ -25,6 +25,7 @@ const PARAMETROS_DO_FILTRO = [
   "isento_ir",
   "prazo_resgate_tipo",
   "prazo_resgate_dias",
+  "prazo_resgate_dias_ate",
   "prazo_resgate_unidade",
   "prazo_resgate_comparacao",
   "liquidez_imediata",
@@ -124,6 +125,26 @@ test.describe("seletor de ativo com filtros (#191)", () => {
     expect(r.error).toBeNull();
     return r.data!;
   };
+
+  test("faixa no seletor limpa limites ao trocar a comparação e a situação", async ({ page }) => {
+    await entrar(page, u.dono);
+    await page.goto("/lancamentos/novo");
+    await abrirMaisFiltros(page, "lancamento-ativo");
+    const painel = seletor(page, "lancamento-ativo");
+    await painel.getByLabel("Prazo para resgate ou venda").selectOption("prazo");
+    await painel.getByLabel("Comparação").selectOption("entre");
+    await painel.getByLabel("Dias", { exact: true }).fill("0");
+    await painel.getByLabel("Até (dias)").fill("10");
+    await painel.getByLabel("Unidade").selectOption("uteis");
+    await expect(painel.getByRole("status")).toHaveCount(0);
+    await painel.getByLabel("Comparação").selectOption("ate");
+    await painel.getByLabel("Comparação").selectOption("entre");
+    await expect(painel.getByLabel("Até (dias)")).toHaveValue("");
+    await painel.getByLabel("Prazo para resgate ou venda").selectOption("no_vencimento");
+    await painel.getByLabel("Prazo para resgate ou venda").selectOption("prazo");
+    await expect(painel.getByLabel("Dias", { exact: true })).toHaveValue("");
+    await expect(painel.getByLabel("Comparação")).toHaveValue("");
+  });
 
   test("Novo lançamento: opções com nome, instituição e classe, o trânsito fora, e o ativo confirmado continua identificável", async ({ page }) => {
     await page.setViewportSize(DESKTOP);
