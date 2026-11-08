@@ -509,8 +509,8 @@ No ciclo 018 (PR #184 e PR #187), a leitura e a escrita passaram a operar exclus
 ## BL-019 — Preservação de filtros na edição e faixa de prazo com dois limites no filtro de ativos
 
 > **Criado em:** `2026-10-31`
-> **Atualizado em:** `2026-10-31`
-> **Estado:** `Disponível`
+> **Atualizado em:** `2026-11-07`
+> **Estado:** `Encaminhado`
 
 ### Problema e benefício esperado
 
@@ -522,7 +522,7 @@ Ambas as melhorias foram avaliadas durante o refinamento do filtro de ativos no 
 
 ### Encaminhamentos
 
-—
+- ciclo 019 — 2026-11-07 — integral
 
 ### Restante
 
@@ -531,12 +531,13 @@ Ambas as melhorias foram avaliadas durante o refinamento do filtro de ativos no 
 ### Registro
 
 - 2026-10-31 — Pedido explícito de guardar a necessidade deixada fora do ciclo 018; captura local.
+- 2026-11-07 — Retorno pós-integração da seleção original do ciclo 019; necessidade integralmente encaminhada (issue #192, PR #196).
 
 ## BL-020 — Filtro de ativos por classe e por instituição na tela de consulta
 
 > **Criado em:** `2026-10-31`
-> **Atualizado em:** `2026-10-31`
-> **Estado:** `Disponível`
+> **Atualizado em:** `2026-11-07`
+> **Estado:** `Encaminhado`
 
 ### Problema e benefício esperado
 
@@ -548,7 +549,7 @@ Instituição e classe já são dimensões fundamentais da carteira e estão pre
 
 ### Encaminhamentos
 
-—
+- ciclo 019 — 2026-11-07 — integral
 
 ### Restante
 
@@ -557,6 +558,7 @@ Instituição e classe já são dimensões fundamentais da carteira e estão pre
 ### Registro
 
 - 2026-10-31 — Pedido explícito de guardar a sugestão de inclusão de filtros por classe e por instituição; captura local.
+- 2026-11-07 — Retorno pós-integração da seleção original do ciclo 019; necessidade integralmente encaminhada (issue #190, PR #193).
 
 ## BL-021 — Navegação de retorno consistente em todas as telas
 
@@ -587,8 +589,8 @@ A tela `src/app/(app)/ativos/novo/page.tsx` serve de referência para o link de 
 ## BL-022 — Seletor compartilhado de ativos em lançamentos e transferências
 
 > **Criado em:** `2026-11-03`
-> **Atualizado em:** `2026-11-03`
-> **Estado:** `Disponível`
+> **Atualizado em:** `2026-11-07`
+> **Estado:** `Encaminhado`
 
 ### Problema e benefício esperado
 
@@ -600,7 +602,7 @@ O responsável decidiu padronizar a consulta e a escolha de ativos com o mesmo c
 
 ### Encaminhamentos
 
-—
+- ciclo 019 — 2026-11-07 — integral
 
 ### Restante
 
@@ -610,6 +612,7 @@ O responsável decidiu padronizar a consulta e a escolha de ativos com o mesmo c
 
 - 2026-11-03 — Pedido explícito de detalhar BL-022 para abranger Novo Lançamento e Transferências, registrar a desambiguação por instituição e a sequência após BL-020; edição local.
 - 2026-11-03 — Decisão do responsável: reutilizar o mesmo componente e conjunto de filtros após o BL-020 adicionar instituição e classe; manter grupos menos usados recolhidos nos formulários; edição local.
+- 2026-11-07 — Retorno pós-integração da seleção original do ciclo 019; necessidade integralmente encaminhada (issue #191, PR #195).
 
 ## BL-023 — Ordenação alfabética nas etapas e no relatório do fechamento mensal
 
