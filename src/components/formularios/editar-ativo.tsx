@@ -15,12 +15,16 @@ import type { Ativo } from "@/lib/telas/leituras";
 // sucesso volta à aba de onde o ativo veio.
 export function FormEditarAtivo({
   ativo,
+  abaRetorno,
+  filtrosRetorno,
   rotuloAjuste,
   classes,
   classeAtual,
   instituicoes,
 }: {
   ativo: Ativo;
+  abaRetorno: "em-uso" | "desativados";
+  filtrosRetorno: [string, string][];
   rotuloAjuste: string;
   classes: readonly Opcao[];
   /** Caminho completo do nó atual, ou "Sem classe" com a dica do legado. */
@@ -33,7 +37,8 @@ export function FormEditarAtivo({
   return (
     <form action={executar} className="flex flex-col gap-4 rounded-md border border-border bg-surface p-4">
       <input type="hidden" name="ativo" value={ativo.id} />
-      <input type="hidden" name="aba" value={ativo.ativo ? "" : "desativados"} />
+      <input type="hidden" name="abaRetorno" value={abaRetorno} />
+      {filtrosRetorno.map(([chave, valor], i) => <input key={`${chave}-${i}`} type="hidden" name={`retorno_${chave}`} value={valor} />)}
       <Campo id="editar-nome" rotulo="Nome">
         <input
           id="editar-nome"

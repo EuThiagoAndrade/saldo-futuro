@@ -1,7 +1,7 @@
 # Plano de Implementação — Filtros e seleção compartilhada de ativos
 
 > **Ciclo:** `019`
-> **Status:** `Em Execução`
+> **Status:** `Concluído`
 > **Versão:** `v1`
 > **Data de criação:** 2026-11-05
 > **Última atualização:** 2026-11-05
@@ -84,6 +84,8 @@ Autoridades: `.agent/ai_behavior.md`, `_project/README.md`, DESIGN.md 6.7, 6.8 e
 | D9 — Faixa do prazo | Nova comparação **Entre**, com dois limites inteiros e inclusivos na mesma unidade: `prazo_resgate_dias` é o inicial e `prazo_resgate_dias_ate`, o final, que só aparece (por CSS) e só vale com Entre. Limite inicial maior que o final, final ausente com Entre ou final presente sem Entre são erro de filtro. Exemplo fictício: um ativo com 30 dias corridos entra em "Entre 30 e 90 dias corridos", fica fora de "Entre 31 e 90" e de "Entre 30 e 90 dias úteis". | Comparação "A partir de" (>=) em vez da faixa. |
 
 A faixa do prazo compara números informados pelo usuário, como Exatamente e Até (D8 do ciclo 017); não calcula prazo, data nem valor. Se algum ponto passar a exigir regra de cálculo, isolamento ou schema, o trabalho para e é retriado.
+
+**Esclarecimento de R1-2 em 2026-11-07:** o responsável escolheu manter a interação sem JavaScript e limpar os campos inativos ao aplicar. Se a pessoa mudar e voltar à opção anterior antes do envio sem JavaScript, o valor oculto permanece e volta a valer; com JavaScript a troca limpa imediatamente. URLs diretas com parâmetros avulsos continuam recusadas.
 
 **Novidades:** cada PR acrescenta, em linguagem simples e sem identificadores técnicos, as notas da sua mudança à entrada da próxima versão em `src/lib/novidades.ts`, com `publicadaEm: null`. A versão esperada é `0.15.0` a partir de `0.14.0`; na preparação de cada PR, conferir a versão corrente e eventual PR de release aberta e, se não for possível associar a nota à próxima versão com segurança, parar para conciliar.
 
@@ -204,18 +206,18 @@ BL-019, BL-020 e BL-022 existem em `main` (`d7533c6`). Revisão formal, aprovaç
 | Campo | Valor |
 | :-- | :-- |
 | Issue(s) | [#190](https://github.com/EuThiagoAndrade/saldo-futuro/issues/190), [#191](https://github.com/EuThiagoAndrade/saldo-futuro/issues/191) e [#192](https://github.com/EuThiagoAndrade/saldo-futuro/issues/192) |
-| PR(s) | [#193](https://github.com/EuThiagoAndrade/saldo-futuro/pull/193) (issue #190, integrada) e [#195](https://github.com/EuThiagoAndrade/saldo-futuro/pull/195) (issue #191) |
-| Branch(es) | `feature/issue-190` e `feature/issue-191` |
+| PR(s) | [#193](https://github.com/EuThiagoAndrade/saldo-futuro/pull/193) (issue #190), [#195](https://github.com/EuThiagoAndrade/saldo-futuro/pull/195) (issue #191), integradas, e [#196](https://github.com/EuThiagoAndrade/saldo-futuro/pull/196) (issue #192 e encerramento prospectivo) |
+| Branch(es) | `feature/issue-190`, `feature/issue-191` e `feature/issue-192` |
 | Destino após conclusão | `_project/executed/019_filtros_selecao_ativos/019_plan.md` |
 
 ## Próximo passo
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 019 (leve)
-Quem: Responsável
-Conferir: Checks e diff da PR ([PR #195](https://github.com/EuThiagoAndrade/saldo-futuro/pull/195))
-Diga: "aprovo o merge da PR #195"
+Situação: Concluído — ciclo 019 (leve)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída
@@ -261,7 +263,7 @@ Três issues do Issue Form Feature, criadas na ordem abaixo. As ressalvas R1-1 e
 - [ ] Opções só em uso e marcadas na URL, na ordem de D3; contador, abas e "Limpar filtros" tratam os campos novos como os demais; trânsito fora com qualquer filtro.
 - [ ] Painel sem JavaScript, sem violações de acessibilidade e sem rolagem horizontal em 360 px.
 
-**Ciclo e plano relacionados:** Ciclo 019 — `_project/drafts/019_filtros_selecao_ativos/019_plan.md` (v1 aprovado; segue nesta primeira PR).
+**Ciclo e plano relacionados:** Ciclo 019 — `_project/executed/019_filtros_selecao_ativos/019_plan.md` (v1 aprovado; segue nesta primeira PR).
 
 **Dependências, riscos e autorizações:** Primeira do ciclo; a PR leva também o plano e `cycles.md`. Implementação exige "autorizo a implementação da issue #N"; merge exige checks verdes e aprovação própria. Só dados fictícios.
 
@@ -279,7 +281,7 @@ Três issues do Issue Form Feature, criadas na ordem abaixo. As ressalvas R1-1 e
 - [ ] Com dois homônimos fictícios em instituições distintas, lançamento e transferência são registrados para o ativo escolhido; validação e mensagens do servidor mantidas.
 - [ ] `/ativos` mantém o comportamento da issue #190; auxiliares e specs e2e afetados pela segunda linha (inclusive `carteira.spec.ts`) ajustados (R1-1).
 
-**Ciclo e plano relacionados:** Ciclo 019 — `_project/drafts/019_filtros_selecao_ativos/019_plan.md` (v1 aprovado).
+**Ciclo e plano relacionados:** Ciclo 019 — `_project/executed/019_filtros_selecao_ativos/019_plan.md` (v1 aprovado).
 
 **Dependências, riscos e autorizações:** Depende da issue #190 integrada. Riscos: componente em dois modos sem formulário aninhado, formulários mais longos, leituras extras nas duas páginas. Implementação e merge com autorizações próprias. Só dados fictícios.
 
@@ -297,7 +299,7 @@ Três issues do Issue Form Feature, criadas na ordem abaixo. As ressalvas R1-1 e
 - [ ] Campos condicionais inativos do prazo não são enviados nem mantidos ao trocar a situação ou a comparação, sem causar erro indevido; parâmetros avulsos na URL continuam recusados (R1-2).
 - [ ] Documentação viva consolidada e encerramento prospectivo do ciclo 019.
 
-**Ciclo e plano relacionados:** Ciclo 019 — `_project/drafts/019_filtros_selecao_ativos/019_plan.md` (v1 aprovado).
+**Ciclo e plano relacionados:** Ciclo 019 — `_project/executed/019_filtros_selecao_ativos/019_plan.md` (v1 aprovado).
 
 **Dependências, riscos e autorizações:** Depende da issue #191 integrada. Risco de redirecionamento aberto mitigado por D8 e teste. Implementação e merge com autorizações próprias; o encerramento é autorizado pela aprovação do plano. Só dados fictícios.
 
@@ -345,14 +347,14 @@ Três issues do Issue Form Feature, criadas na ordem abaixo. As ressalvas R1-1 e
 - `handoff_schema_version: 2`
 - `logical_key`: `EuThiagoAndrade/saldo-futuro + 019 + revisar_plano + 019_plan/rodada-1 + v1`
 - `effect_class`: `local_mutation`
-- `state_before`: `_project/drafts/019_filtros_selecao_ativos/019_plan.md` em `v1`, inicialmente em `Status: Rascunho` (`Aguardando revisão (rodada 1)`) e já atualizado nesta sessão com a Rodada 1 (`Status: Em Revisão`, `Revisão formal: Concluída`, `Veredito da revisão: APTO COM RESSALVAS`); plano e reserva em `_project/cycles.md` locais, sem commit.
-- `state_after`: mesma Rodada 1 preservada e reconciliada sem duplicação em `_project/drafts/019_filtros_selecao_ativos/019_plan.md` (`Status: Em Revisão`, `Revisão formal: Concluída`, `Veredito da revisão: APTO COM RESSALVAS`, `Aprovação humana pós-revisão: Pendente`, `## Próximo passo` em `Aguardando aprovação do plano`).
+- `state_before`: `_project/executed/019_filtros_selecao_ativos/019_plan.md` em `v1`, inicialmente em `Status: Rascunho` (`Aguardando revisão (rodada 1)`) e já atualizado nesta sessão com a Rodada 1 (`Status: Em Revisão`, `Revisão formal: Concluída`, `Veredito da revisão: APTO COM RESSALVAS`); plano e reserva em `_project/cycles.md` locais, sem commit.
+- `state_after`: mesma Rodada 1 preservada e reconciliada sem duplicação em `_project/executed/019_filtros_selecao_ativos/019_plan.md` (`Status: Em Revisão`, `Revisão formal: Concluída`, `Veredito da revisão: APTO COM RESSALVAS`, `Aprovação humana pós-revisão: Pendente`, `## Próximo passo` em `Aguardando aprovação do plano`).
 - `result`: `already_executed_and_reconciled`
 - `evidence`: inspeção somente leitura dos arquivos de código, testes, backlog, `DESIGN.md`, `KB-003` e estado Git/GitHub citados na revisão; localização pela `logical_key` existente; execução dos gates mínimos de governança após a gravação.
 - `blockers`: nenhum bloqueador técnico ou de governança. R1-1 e R1-2 são ressalvas não bloqueantes para conferência na aprovação e atendimento na implementação; aguarda aprovação humana do plano e das decisões propostas D1 a D9.
 
 ## Pós-mortem
 
-- **Data de conclusão:** —
-- **Desvios:** —
+- **Data de conclusão:** 2026-11-07 (prospectiva, condicionada ao merge da última PR)
+- **Desvios:** Sem JavaScript, a limpeza dos campos inativos ocorre ao aplicar, conforme decisão do responsável em 2026-11-07; com JavaScript ocorre ao trocar.
 - **Lições comprovadas:** —

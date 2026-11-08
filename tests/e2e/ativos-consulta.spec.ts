@@ -118,6 +118,55 @@ test.describe("consulta dos atributos (#174)", () => {
   };
   const aplicar = (page: Page) => page.getByRole("button", { name: "Aplicar filtros" }).click();
 
+  test("faixa inclusiva e limpeza de campos condicionais, com e sem JavaScript", async ({ page, browser }) => {
+    await page.setViewportSize(DESKTOP);
+    await entrar(page, u.dono);
+    for (const semJs of [false, true]) {
+      const contexto = semJs ? await browser.newContext({ storageState: await page.context().storageState(), javaScriptEnabled: false, viewport: DESKTOP }) : null;
+      const p = contexto ? await contexto.newPage() : page;
+      await p.goto("/ativos");
+      await abrirFiltrar(p);
+      await p.locator("#filtro-prazo").selectOption("prazo");
+      await p.getByLabel("Comparação", { exact: true }).selectOption("entre");
+      await p.getByLabel("Dias", { exact: true }).fill("0");
+      await p.getByLabel("Até (dias)").fill("1");
+      await p.getByLabel("Unidade", { exact: true }).selectOption("uteis");
+      await aplicar(p);
+      expect(await nomesVisiveis(p)).toEqual(["Ativo A fictício", "Ativo B fictício"]);
+      await abrirFiltrar(p);
+      await p.getByLabel("Comparação", { exact: true }).selectOption("ate");
+      await aplicar(p);
+      expect(new URL(p.url()).searchParams.has("prazo_resgate_dias_ate")).toBe(false);
+      expect(await nomesVisiveis(p)).toEqual(["Ativo A fictício"]);
+      await abrirFiltrar(p);
+      await p.locator("#filtro-prazo").selectOption("no_vencimento");
+      await aplicar(p);
+      const consulta = new URL(p.url()).searchParams;
+      expect(consulta.has("prazo_resgate_comparacao")).toBe(false);
+      expect(consulta.has("prazo_resgate_dias")).toBe(false);
+      if (contexto) await contexto.close();
+    }
+  });
+
+  test("editar preserva aba e filtros ao voltar e salvar, descartando destino externo", async ({ page }) => {
+    await page.setViewportSize(DESKTOP);
+    await entrar(page, u.dono);
+    for (const [consulta, nome] of [["veiculo=fundo", "Ativo A fictício"], ["aba=desativados&prazo_resgate_tipo=no_vencimento", "Ativo D fictício"]]) {
+      await page.goto(`/ativos?${consulta}`);
+      await page.getByRole("link", { name: `Editar ${nome}`, exact: true }).filter({ visible: true }).click();
+      await page.getByRole("link", { name: "Voltar para Ativos" }).click();
+      await expect(page).toHaveURL(new RegExp(consulta));
+      await page.getByRole("link", { name: `Editar ${nome}`, exact: true }).filter({ visible: true }).click();
+      await page.getByRole("button", { name: "Salvar alterações" }).click();
+      await expect(page).toHaveURL(new RegExp(consulta));
+    }
+    await page.getByRole("link", { name: "Editar Ativo D fictício" }).click();
+    await expect(page).toHaveURL(/\/editar\?/);
+    await page.goto(`${page.url()}&retorno=https%3A%2F%2Fexample.com&desconhecido=sim`);
+    const voltar = await page.getByRole("link", { name: "Voltar para Ativos" }).getAttribute("href");
+    expect(voltar).toBe("/ativos?aba=desativados&prazo_resgate_tipo=no_vencimento");
+  });
+
   test("Ver detalhes nas duas abas, no desktop e no celular, sem colunas nem campos novos na linha", async ({ page }) => {
     await page.setViewportSize(DESKTOP);
     await entrar(page, u.dono);

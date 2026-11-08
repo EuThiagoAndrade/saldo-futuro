@@ -29,17 +29,18 @@ export const NAO_INFORMADO_FILTRO = "nao_informado";
 export const SEM_CLASSE_FILTRO = "sem_classe";
 export const SEM_INSTITUICAO_FILTRO = "sem_instituicao";
 
-export type Comparacao = "exato" | "ate";
+export type Comparacao = "exato" | "ate" | "entre";
 
 export const COMPARACOES = [
   { codigo: "exato", rotulo: "Exatamente" },
   { codigo: "ate", rotulo: "Até" },
+  { codigo: "entre", rotulo: "Entre" },
 ] as const satisfies readonly OpcaoAtributo<Comparacao>[];
 
 /** Situação do prazo filtrada: só "prazo" leva número, unidade e comparação. */
 export type FiltroPrazo =
   | { tipo: string }
-  | { tipo: "prazo"; dias: number; unidade: string; comparacao: Comparacao };
+  | { tipo: "prazo"; dias: number; unidade: string; comparacao: Comparacao; diasAte?: number };
 
 export interface FiltrosAtivos {
   /** IDs de nós da taxonomia, em ordem hierárquica, ou só `SEM_CLASSE_FILTRO`. */
@@ -65,6 +66,7 @@ export const PARAMETROS_FILTRO = [
   "regime",
   "prazo_resgate_tipo",
   "prazo_resgate_dias",
+  "prazo_resgate_dias_ate",
   "prazo_resgate_unidade",
   "prazo_resgate_comparacao",
   "fgc",
@@ -116,10 +118,11 @@ function prazo(p: Parametros): FiltroPrazo | null {
   const codigos = (c: readonly OpcaoAtributo[]) => c.map((o) => o.codigo);
   const tipo = escalar(p, "prazo_resgate_tipo", [...codigos(SITUACOES_PRAZO), NAO_INFORMADO_FILTRO], "A situação do prazo");
   const dias = escalar(p, "prazo_resgate_dias", preenchidos(p, "prazo_resgate_dias"), "O número de dias");
+  const diasAte = escalar(p, "prazo_resgate_dias_ate", preenchidos(p, "prazo_resgate_dias_ate"), "O limite final de dias");
   const unidade = escalar(p, "prazo_resgate_unidade", codigos(UNIDADES_PRAZO), "A unidade do prazo");
   const comparacao = escalar(p, "prazo_resgate_comparacao", codigos(COMPARACOES), "A comparação do prazo") as Comparacao | null;
   if (tipo !== "prazo") {
-    if (dias !== null || unidade !== null || comparacao !== null) {
+    if (dias !== null || diasAte !== null || unidade !== null || comparacao !== null) {
       throw new ErroFiltro("Comparação, dias e unidade só valem com Prazo em dias.");
     }
     return tipo === null ? null : { tipo };
@@ -130,7 +133,14 @@ function prazo(p: Parametros): FiltroPrazo | null {
   if (!/^\d+$/.test(dias) || Number(dias) > MAXIMO_DIAS_PRAZO) {
     throw new ErroFiltro("Informe os dias como número inteiro, de 0 a 2.147.483.647, sem vírgula.");
   }
-  return { tipo, dias: Number(dias), unidade, comparacao };
+  if (comparacao === "entre") {
+    if (diasAte === null || !/^\d+$/.test(diasAte) || Number(diasAte) > MAXIMO_DIAS_PRAZO || Number(dias) > Number(diasAte)) {
+      throw new ErroFiltro("Informe uma faixa válida de dias, com o limite inicial menor ou igual ao final.");
+    }
+  } else if (diasAte !== null) {
+    throw new ErroFiltro("O limite final só vale com Entre.");
+  }
+  return { tipo, dias: Number(dias), unidade, comparacao, ...(diasAte === null ? {} : { diasAte: Number(diasAte) }) };
 }
 
 /** Lê os filtros da URL; erro quando a combinação não é interpretável. */
@@ -175,6 +185,7 @@ function conferePrazo(f: FiltroPrazo | null, a: Ativo): boolean {
   if (f.tipo === NAO_INFORMADO_FILTRO) return a.prazo_resgate_tipo === null;
   if (!("comparacao" in f)) return a.prazo_resgate_tipo === f.tipo;
   if (a.prazo_resgate_tipo !== "prazo" || a.prazo_resgate_unidade !== f.unidade || a.prazo_resgate_dias === null) return false;
+  if (f.comparacao === "entre") return a.prazo_resgate_dias >= f.dias && a.prazo_resgate_dias <= (f.diasAte ?? -1);
   return f.comparacao === "exato" ? a.prazo_resgate_dias === f.dias : a.prazo_resgate_dias <= f.dias;
 }
 

@@ -77,7 +77,7 @@ export function FiltrosDosAtivos({
             </>
           ) : null}
         </summary>
-        <form method="get" action="/ativos#ativos-da-aba" className="flex flex-col gap-4 border-t border-border p-4">
+        <form method="get" action="/ativos/filtrar" className="flex flex-col gap-4 border-t border-border p-4">
           {aba === "desativados" ? <input type="hidden" name="aba" value="desativados" /> : null}
           <CamposDoFiltro modo={{ tipo: "url", parametros: p }} opcoes={opcoes} />
           <button type="submit" className={`${botaoSecundario} sm:self-end`}>

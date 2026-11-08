@@ -52,7 +52,7 @@ export function ativosDoSeletor(
 /** Valores dos campos do filtro no formulário, pelos mesmos nomes de parâmetro da URL de /ativos. */
 export type ValoresDoFiltro = Record<string, string | string[]>;
 
-const CONDICIONAIS_DO_PRAZO = ["prazo_resgate_dias", "prazo_resgate_unidade", "prazo_resgate_comparacao"];
+const CONDICIONAIS_DO_PRAZO = ["prazo_resgate_dias", "prazo_resgate_dias_ate", "prazo_resgate_unidade", "prazo_resgate_comparacao"];
 
 /**
  * Parâmetros que valem: Comparação, Dias e Unidade só valem com "Prazo em dias" (ciclo 019, R1-2). Os campos
@@ -60,7 +60,10 @@ const CONDICIONAIS_DO_PRAZO = ["prazo_resgate_dias", "prazo_resgate_unidade", "p
  * um erro de filtro por um campo que a pessoa não está vendo. Na URL de /ativos, o mesmo parâmetro avulso continua recusado.
  */
 export function parametrosEfetivos(valores: ValoresDoFiltro): Parametros {
-  if (valores.prazo_resgate_tipo === "prazo") return valores;
+  if (valores.prazo_resgate_tipo === "prazo") {
+    if (valores.prazo_resgate_comparacao === "entre") return valores;
+    return Object.fromEntries(Object.entries(valores).filter(([nome]) => nome !== "prazo_resgate_dias_ate"));
+  }
   return Object.fromEntries(Object.entries(valores).filter(([nome]) => !CONDICIONAIS_DO_PRAZO.includes(nome)));
 }
 

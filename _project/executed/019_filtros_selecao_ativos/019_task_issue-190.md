@@ -5,7 +5,7 @@
 > **Estado:** `Concluída`
 > **Tipo:** `feature`
 > **Issue:** `#190`
-> **Plano:** `_project/drafts/019_filtros_selecao_ativos/019_plan.md`
+> **Plano:** `_project/executed/019_filtros_selecao_ativos/019_plan.md`
 > **Branch:** `feature/issue-190`
 > **PR:** https://github.com/EuThiagoAndrade/saldo-futuro/pull/193
 > **Integração:** PR #193 integrada por squash (`8963b257aa5280451498f69484d7c2f8164dfc2b`) em 2026-11-05, com os cinco checks verdes no head `ea0b16a`; issue #190 fechada pelo merge (`Closes #190`); release `0.15.0` pela PR #194, ainda aberta
@@ -83,10 +83,10 @@ Não se aplica — não é a última issue do ciclo (a #192 traz o encerramento 
 
 ```text
 PRÓXIMO PASSO
-Situação: Aguardando merge — ciclo 019 (leve)
-Quem: Responsável
-Conferir: Checks e diff da PR ([PR #195](https://github.com/EuThiagoAndrade/saldo-futuro/pull/195))
-Diga: "aprovo o merge da PR #195"
+Situação: Concluído — ciclo 019 (leve)
+Quem: —
+Conferir: —
+Diga: —
 ```
 
 ## Handoff de saída

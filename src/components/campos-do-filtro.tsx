@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { classeCampo } from "@/components/campos";
 import { ListaSuspensaFiltro } from "@/components/lista-suspensa";
 import {
@@ -45,6 +45,8 @@ function Selecao({
   opcoes,
   modo,
   vazio = "Todos",
+  aoTrocar,
+  valor,
 }: {
   id: string;
   rotulo: string;
@@ -52,6 +54,8 @@ function Selecao({
   opcoes: readonly OpcaoAtributo[];
   modo: ModoDoFiltro;
   vazio?: string;
+  aoTrocar?: (valor: string) => void;
+  valor?: string;
 }) {
   return (
     <div className="flex min-w-0 flex-col gap-1">
@@ -61,8 +65,12 @@ function Selecao({
       <select
         id={id}
         name={modo.tipo === "url" ? nome : undefined}
-        defaultValue={modo.tipo === "url" ? inicial(modo.parametros, nome, opcoes) : ""}
-        onChange={modo.tipo === "formulario" ? (evento) => modo.aoMudar(nome, evento.currentTarget.value) : undefined}
+        {...(valor === undefined ? { defaultValue: modo.tipo === "url" ? inicial(modo.parametros, nome, opcoes) : "" } : { value: valor })}
+        onChange={(evento) => {
+          const valor = evento.currentTarget.value;
+          aoTrocar?.(valor);
+          if (modo.tipo === "formulario") modo.aoMudar(nome, valor);
+        }}
         className={classeCampo}
       >
         <option value="">{vazio}</option>
@@ -106,6 +114,10 @@ export function CamposDoFiltro({
   nivelDoTitulo?: 2 | 3;
 }) {
   const p: Parametros = modo.tipo === "url" ? modo.parametros : {};
+  const [comparacao, setComparacao] = useState(valores(p, "prazo_resgate_comparacao")[0] ?? "");
+  const [unidade, setUnidade] = useState(valores(p, "prazo_resgate_unidade")[0] ?? "");
+  const [dias, setDias] = useState(valores(p, "prazo_resgate_dias")[0] ?? "");
+  const [diasAte, setDiasAte] = useState(valores(p, "prazo_resgate_dias_ate")[0] ?? "");
   const nome = (n: string) => (modo.tipo === "url" ? n : undefined);
   const lista = (id: string, legenda: string, n: string, opcoesDaLista: readonly OpcaoAtributo[], vazio: string) => (
     <ListaSuspensaFiltro
@@ -136,11 +148,16 @@ export function CamposDoFiltro({
       <GrupoFiltro titulo="Resgate" nivel={nivelDoTitulo}>
         <fieldset className="group/prazo grid min-w-0 gap-4 sm:col-span-2 sm:grid-cols-2">
           <legend className="sr-only">Prazo para resgate ou venda</legend>
-          <Selecao id={`${idBase}-prazo`} rotulo="Prazo para resgate ou venda" nome="prazo_resgate_tipo" opcoes={[...SITUACOES_PRAZO, OPCAO_NAO_INFORMADO]} modo={modo} />
+          <Selecao id={`${idBase}-prazo`} rotulo="Prazo para resgate ou venda" nome="prazo_resgate_tipo" opcoes={[...SITUACOES_PRAZO, OPCAO_NAO_INFORMADO]} modo={modo} aoTrocar={(v) => {
+            if (v !== "prazo") {
+              setDias(""); setDiasAte(""); setComparacao(""); setUnidade("");
+              if (modo.tipo === "formulario") for (const campo of ["prazo_resgate_dias", "prazo_resgate_dias_ate", "prazo_resgate_comparacao", "prazo_resgate_unidade"]) modo.aoMudar(campo, "");
+            }
+          }} />
           {indicador("liquidez_imediata")}
           {/* Sem JavaScript: aparecem só com "Prazo em dias" escolhido; sem suporte a :has(), ficam sempre à vista. */}
           <div className="hidden gap-4 sm:col-span-2 sm:grid-cols-3 group-has-[option[value=prazo]:checked]/prazo:grid supports-[not_selector(:has(*))]:grid">
-            <Selecao id={`${idBase}-prazo-comparacao`} rotulo="Comparação" nome="prazo_resgate_comparacao" opcoes={COMPARACOES} modo={modo} vazio="Escolha" />
+            <Selecao id={`${idBase}-prazo-comparacao`} rotulo="Comparação" nome="prazo_resgate_comparacao" opcoes={COMPARACOES} modo={modo} vazio="Escolha" valor={comparacao} aoTrocar={(v) => { setComparacao(v); if (v !== "entre") { setDiasAte(""); if (modo.tipo === "formulario") modo.aoMudar("prazo_resgate_dias_ate", ""); } }} />
             <div className="flex min-w-0 flex-col gap-1">
               <label htmlFor={`${idBase}-prazo-dias`} className="text-sm/5 font-medium text-text">
                 Dias
@@ -150,14 +167,18 @@ export function CamposDoFiltro({
                 name={nome("prazo_resgate_dias")}
                 inputMode="numeric"
                 autoComplete="off"
-                defaultValue={valores(p, "prazo_resgate_dias")[0] ?? ""}
-                onChange={modo.tipo === "formulario" ? (evento) => modo.aoMudar("prazo_resgate_dias", evento.currentTarget.value) : undefined}
+                value={dias}
+                onChange={(evento) => { setDias(evento.currentTarget.value); if (modo.tipo === "formulario") modo.aoMudar("prazo_resgate_dias", evento.currentTarget.value); }}
                 // Dentro de outro formulário, Enter não pode enviá-lo.
                 onKeyDown={modo.tipo === "formulario" ? (evento) => evento.key === "Enter" && evento.preventDefault() : undefined}
                 className={classeCampo}
               />
             </div>
-            <Selecao id={`${idBase}-prazo-unidade`} rotulo="Unidade" nome="prazo_resgate_unidade" opcoes={UNIDADES_PRAZO} modo={modo} vazio="Escolha" />
+            <div className="hidden min-w-0 flex-col gap-1 group-has-[option[value=entre]:checked]/prazo:flex supports-[not_selector(:has(*))]:flex">
+              <label htmlFor={`${idBase}-prazo-dias-ate`} className="text-sm/5 font-medium text-text">Até (dias)</label>
+              <input id={`${idBase}-prazo-dias-ate`} name={nome("prazo_resgate_dias_ate")} inputMode="numeric" autoComplete="off" value={diasAte} onChange={(evento) => { setDiasAte(evento.currentTarget.value); if (modo.tipo === "formulario") modo.aoMudar("prazo_resgate_dias_ate", evento.currentTarget.value); }} onKeyDown={modo.tipo === "formulario" ? (evento) => evento.key === "Enter" && evento.preventDefault() : undefined} className={classeCampo} />
+            </div>
+            <Selecao id={`${idBase}-prazo-unidade`} rotulo="Unidade" nome="prazo_resgate_unidade" opcoes={UNIDADES_PRAZO} modo={modo} vazio="Escolha" valor={unidade} aoTrocar={setUnidade} />
             <p className="text-sm/5 text-text-secondary sm:col-span-3">O número é comparado na unidade escolhida, sem converter dias úteis e corridos.</p>
           </div>
         </fieldset>
